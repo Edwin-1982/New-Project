@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_3_0 -)
 
 class QDirIterator
 {
@@ -41,12 +39,7 @@ public:
     QDirIterator(const QString &path, QFlags<QDirIterator::IteratorFlag> flags = NoIteratorFlags);
     QDirIterator(const QString &path, QFlags<QDir::Filter> filters, QFlags<QDirIterator::IteratorFlag> flags = NoIteratorFlags);
     QDirIterator(const QString &path, const QStringList &nameFilters, QFlags<QDir::Filter> filters = QDir::NoFilter, QFlags<QDirIterator::IteratorFlag> flags = NoIteratorFlags);
-%If (Qt_5_0_0 -)
     ~QDirIterator();
-%End
-%If (- Qt_5_0_0)
-    virtual ~QDirIterator();
-%End
     QString next();
     bool hasNext() const;
     QString fileName() const;
@@ -58,7 +51,4 @@ private:
     QDirIterator(const QDirIterator &);
 };
 
-%End
-%If (Qt_4_3_0 -)
 QFlags<QDirIterator::IteratorFlag> operator|(QDirIterator::IteratorFlag f1, QFlags<QDirIterator::IteratorFlag> f2);
-%End

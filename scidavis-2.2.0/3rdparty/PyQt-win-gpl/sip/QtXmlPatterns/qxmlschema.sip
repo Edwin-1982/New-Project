@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QXmlSchema
 {
 %TypeHeaderCode
@@ -30,17 +28,10 @@ class QXmlSchema
 
 public:
     QXmlSchema();
-%If (Qt_5_0_0 -)
     QXmlSchema(const QXmlSchema &other);
-%End
 
 private:
-%If (Qt_5_0_0 -)
     QXmlSchema &operator=(const QXmlSchema &);
-%End
-%If (- Qt_5_0_0)
-    QXmlSchema(const QXmlSchema &other);
-%End
 
 public:
     ~QXmlSchema();
@@ -57,5 +48,3 @@ public:
     void setNetworkAccessManager(QNetworkAccessManager *networkmanager /KeepReference/);
     QNetworkAccessManager *networkAccessManager() const;
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -55,9 +55,7 @@ public:
     QRect scaledClipRect() const;
     bool canRead() const;
     QImage read() /ReleaseGIL/;
-%If (Qt_4_2_0 -)
     bool read(QImage *image) /ReleaseGIL/;
-%End
     bool jumpToNextImage();
     bool jumpToImage(int imageNumber);
     int loopCount() const;
@@ -75,29 +73,40 @@ public:
     void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
     bool supportsAnimation() const;
-%If (Qt_4_2_0 -)
     void setQuality(int quality);
-%End
-%If (Qt_4_2_0 -)
     int quality() const;
-%End
-%If (Qt_4_2_0 -)
     bool supportsOption(QImageIOHandler::ImageOption option) const;
-%End
-%If (Qt_4_5_0 -)
     void setAutoDetectImageFormat(bool enabled);
-%End
-%If (Qt_4_5_0 -)
     bool autoDetectImageFormat() const;
-%End
-%If (Qt_4_5_0 -)
     QImage::Format imageFormat() const;
-%End
-%If (Qt_4_6_0 -)
     void setDecideFormatFromContent(bool ignored);
-%End
-%If (Qt_4_6_0 -)
     bool decideFormatFromContent() const;
+%If (Qt_5_1_0 -)
+    static QList<QByteArray> supportedMimeTypes();
+%End
+%If (Qt_5_4_0 -)
+    QByteArray subType() const;
+%End
+%If (Qt_5_4_0 -)
+    QList<QByteArray> supportedSubTypes() const;
+%End
+%If (Qt_5_5_0 -)
+    QImageIOHandler::Transformations transformation() const;
+%End
+%If (Qt_5_5_0 -)
+    void setAutoTransform(bool enabled);
+%End
+%If (Qt_5_5_0 -)
+    bool autoTransform() const;
+%End
+%If (Qt_5_6_0 -)
+    void setGamma(float gamma);
+%End
+%If (Qt_5_6_0 -)
+    float gamma() const;
+%End
+%If (Qt_5_12_0 -)
+    static QList<QByteArray> imageFormatsForMimeType(const QByteArray &mimeType);
 %End
 
 private:

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QNetworkCookie
 {
@@ -55,44 +53,9 @@ public:
     static QList<QNetworkCookie> parseCookies(const QByteArray &cookieString);
     bool operator==(const QNetworkCookie &other) const;
     bool operator!=(const QNetworkCookie &other) const;
-%If (Qt_4_5_0 -)
     bool isHttpOnly() const;
-%End
-%If (Qt_4_5_0 -)
     void setHttpOnly(bool enable);
-%End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkCookie &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QNetworkCookie &other /Constrained/);
     bool hasSameIdentifier(const QNetworkCookie &other) const;
-%End
-%If (Qt_5_0_0 -)
     void normalize(const QUrl &url);
-%End
 };
-
-%End
-%If (Qt_4_4_0 - Qt_4_6_0)
-
-class QNetworkCookieJar : QObject
-{
-%TypeHeaderCode
-#include <qnetworkcookie.h>
-%End
-
-public:
-    QNetworkCookieJar(QObject *parent /TransferThis/ = 0);
-    virtual ~QNetworkCookieJar();
-    virtual QList<QNetworkCookie> cookiesForUrl(const QUrl &url) const;
-    virtual bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url);
-
-protected:
-    QList<QNetworkCookie> allCookies() const;
-    void setAllCookies(const QList<QNetworkCookie> &cookieList);
-
-private:
-    QNetworkCookieJar(const QNetworkCookieJar &);
-};
-
-%End

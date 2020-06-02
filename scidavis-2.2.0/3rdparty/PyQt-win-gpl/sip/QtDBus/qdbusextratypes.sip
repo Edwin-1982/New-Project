@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_5_0_0 -)
 
 class QDBusObjectPath
 {
@@ -37,43 +35,15 @@ public:
 %MethodCode
         sipRes = qHash(*sipCpp, 0);
 %End
-};
 
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-
-class QDBusObjectPath : private QString
-{
-%TypeHeaderCode
-#include <qdbusextratypes.h>
-%End
-
-%TypeCode
-#include <QHash>
-%End
-
-public:
-    QDBusObjectPath();
-    explicit QDBusObjectPath(const QString &path);
-    QString path() const;
-    void setPath(const QString &path);
-    long __hash__() const;
-%MethodCode
-        sipRes = qHash(*sipCpp);
+%If (Qt_5_6_0 -)
+    void swap(QDBusObjectPath &other /Constrained/);
 %End
 };
 
-%End
-%If (Qt_4_7_0 -)
 bool operator==(const QDBusObjectPath &lhs, const QDBusObjectPath &rhs);
-%End
-%If (Qt_4_7_0 -)
 bool operator!=(const QDBusObjectPath &lhs, const QDBusObjectPath &rhs);
-%End
-%If (Qt_4_7_0 -)
 bool operator<(const QDBusObjectPath &lhs, const QDBusObjectPath &rhs);
-%End
-%If (Qt_5_0_0 -)
 
 class QDBusSignature
 {
@@ -90,43 +60,15 @@ public:
 %MethodCode
         sipRes = qHash(*sipCpp, 0);
 %End
-};
 
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-
-class QDBusSignature : private QString
-{
-%TypeHeaderCode
-#include <qdbusextratypes.h>
-%End
-
-%TypeCode
-#include <QHash>
-%End
-
-public:
-    QDBusSignature();
-    explicit QDBusSignature(const QString &signature);
-    QString signature() const;
-    void setSignature(const QString &signature);
-    long __hash__() const;
-%MethodCode
-        sipRes = qHash(*sipCpp);
+%If (Qt_5_6_0 -)
+    void swap(QDBusSignature &other /Constrained/);
 %End
 };
 
-%End
-%If (Qt_4_7_0 -)
 bool operator==(const QDBusSignature &lhs, const QDBusSignature &rhs);
-%End
-%If (Qt_4_7_0 -)
 bool operator!=(const QDBusSignature &lhs, const QDBusSignature &rhs);
-%End
-%If (Qt_4_7_0 -)
 bool operator<(const QDBusSignature &lhs, const QDBusSignature &rhs);
-%End
-%If (Qt_5_0_0 -)
 
 class QDBusVariant
 {
@@ -139,25 +81,9 @@ public:
     explicit QDBusVariant(const QVariant &dBusVariant);
     QVariant variant() const;
     void setVariant(const QVariant &dBusVariant);
+%If (Qt_5_6_0 -)
+    void swap(QDBusVariant &other /Constrained/);
+%End
 };
 
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-
-class QDBusVariant : private QVariant
-{
-%TypeHeaderCode
-#include <qdbusextratypes.h>
-%End
-
-public:
-    QDBusVariant();
-    explicit QDBusVariant(const QVariant &variant);
-    QVariant variant() const;
-    void setVariant(const QVariant &variant);
-};
-
-%End
-%If (Qt_4_7_0 -)
 bool operator==(const QDBusVariant &v1, const QDBusVariant &v2);
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,12 +28,7 @@ class QSessionManager : QObject
 #include <qsessionmanager.h>
 %End
 
-%If (Qt_5_0_0 -)
     QSessionManager(QGuiApplication *app /TransferThis/, QString &id, QString &key);
-%End
-%If (- Qt_5_0_0)
-    QSessionManager(QApplication *app /TransferThis/, QString &id, QString &key);
-%End
     virtual ~QSessionManager();
 
 public:

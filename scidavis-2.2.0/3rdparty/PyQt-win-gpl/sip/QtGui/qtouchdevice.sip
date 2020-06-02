@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_5_0_0 -)
 
 class QTouchDevice
 {
@@ -43,24 +41,27 @@ public:
         Velocity,
         RawPositions,
         NormalizedPosition,
+%If (Qt_5_5_0 -)
+        MouseEmulation,
+%End
     };
 
     typedef QFlags<QTouchDevice::CapabilityFlag> Capabilities;
     QTouchDevice();
     ~QTouchDevice();
-    static QList<const QTouchDevice*> devices();
+    static QList<const QTouchDevice *> devices();
     QString name() const;
     QTouchDevice::DeviceType type() const;
-    QFlags<QTouchDevice::CapabilityFlag> capabilities() const;
+    QTouchDevice::Capabilities capabilities() const;
     void setName(const QString &name);
     void setType(QTouchDevice::DeviceType devType);
-    void setCapabilities(QFlags<QTouchDevice::CapabilityFlag> caps);
+    void setCapabilities(QTouchDevice::Capabilities caps);
+%If (Qt_5_2_0 -)
+    int maximumTouchPoints() const;
+%End
+%If (Qt_5_2_0 -)
+    void setMaximumTouchPoints(int max);
+%End
 };
 
-%End
-%If (Qt_5_0_0 -)
 QFlags<QTouchDevice::CapabilityFlag> operator|(QTouchDevice::CapabilityFlag f1, QFlags<QTouchDevice::CapabilityFlag> f2);
-%End
-%If (Qt_5_0_0 -)
-QFlags<QTouchDevice::CapabilityFlag> operator|(QTouchDevice::CapabilityFlag f1, QTouchDevice::CapabilityFlag f2);
-%End

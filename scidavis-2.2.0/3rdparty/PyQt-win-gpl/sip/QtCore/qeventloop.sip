@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,14 +37,11 @@ public:
         ExcludeSocketNotifiers,
         WaitForMoreEvents,
         X11ExcludeTimers,
-%If (- Qt_5_0_0)
-        DeferredDeletion,
-%End
     };
 
     typedef QFlags<QEventLoop::ProcessEventsFlag> ProcessEventsFlags;
-    bool processEvents(QFlags<QEventLoop::ProcessEventsFlag> flags = AllEvents) /ReleaseGIL/;
-    void processEvents(QFlags<QEventLoop::ProcessEventsFlag> flags, int maximumTime) /ReleaseGIL/;
+    bool processEvents(QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents) /ReleaseGIL/;
+    void processEvents(QEventLoop::ProcessEventsFlags flags, int maximumTime) /ReleaseGIL/;
     int exec(QFlags<QEventLoop::ProcessEventsFlag> flags = AllEvents) /PostHook=__pyQtPostEventLoopHook__,PreHook=__pyQtPreEventLoopHook__,PyName=exec_,ReleaseGIL/;
 %If (Py_v3)
     int exec(QFlags<QEventLoop::ProcessEventsFlag> flags = AllEvents) /PostHook=__pyQtPostEventLoopHook__,PreHook=__pyQtPreEventLoopHook__,ReleaseGIL/;
@@ -57,9 +54,23 @@ public slots:
     void quit();
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool event(QEvent *event);
-%End
 };
 
 QFlags<QEventLoop::ProcessEventsFlag> operator|(QEventLoop::ProcessEventsFlag f1, QFlags<QEventLoop::ProcessEventsFlag> f2);
+
+class QEventLoopLocker
+{
+%TypeHeaderCode
+#include <qeventloop.h>
+%End
+
+public:
+    QEventLoopLocker() /ReleaseGIL/;
+    explicit QEventLoopLocker(QEventLoop *loop) /ReleaseGIL/;
+    explicit QEventLoopLocker(QThread *thread) /ReleaseGIL/;
+    ~QEventLoopLocker();
+
+private:
+    QEventLoopLocker(const QEventLoopLocker &);
+};

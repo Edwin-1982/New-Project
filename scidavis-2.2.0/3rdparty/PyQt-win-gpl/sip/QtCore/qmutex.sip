@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,32 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-class QMutex
-{
-%TypeHeaderCode
-#include <qmutex.h>
-%End
-
-public:
-    enum RecursionMode
-    {
-        NonRecursive,
-        Recursive,
-    };
-
-    explicit QMutex(QMutex::RecursionMode mode = QMutex::NonRecursive);
-    ~QMutex();
-    void lock() /ReleaseGIL/;
-    bool tryLock();
-%If (Qt_4_3_0 -)
-    bool tryLock(int timeout) /ReleaseGIL/;
-%End
-    void unlock();
-
-private:
-    QMutex(const QMutex &);
-};
 
 class QMutexLocker
 {
@@ -72,4 +46,34 @@ public:
 
 private:
     QMutexLocker(const QMutexLocker &);
+};
+
+class QMutex
+{
+%TypeHeaderCode
+#include <qmutex.h>
+%End
+
+public:
+    enum RecursionMode
+    {
+        NonRecursive,
+        Recursive,
+    };
+
+    explicit QMutex(QMutex::RecursionMode mode = QMutex::NonRecursive);
+    ~QMutex();
+    void lock() /ReleaseGIL/;
+    bool tryLock(int timeout = 0) /ReleaseGIL/;
+    void unlock() /ReleaseGIL/;
+%If (Qt_5_7_0 -)
+    bool isRecursive() const;
+%End
+%If (- Qt_5_7_0)
+// Methods implemented in QBasicMutex.
+bool isRecursive();
+%End
+
+private:
+    QMutex(const QMutex &);
 };

@@ -1,8 +1,8 @@
 #############################################################################
 ##
-## Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+## Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 ## 
-## This file is part of PyQt4.
+## This file is part of PyQt5.
 ## 
 ## This file may be used under the terms of the GNU General Public License
 ## version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,7 +23,7 @@
 import sys
 import logging
 
-from PyQt4.uic import compileUi, loadUi
+from . import compileUi, loadUi
 
 
 class Driver(object):
@@ -31,7 +31,7 @@ class Driver(object):
     called by code that is Python v2/v3 specific.
     """
 
-    LOGGER_NAME = 'PyQt4.uic'
+    LOGGER_NAME = 'PyQt5.uic'
 
     def __init__(self, opts, ui_file):
         """ Initialise the object.  opts is the parsed options.  ui_file is the
@@ -65,9 +65,9 @@ class Driver(object):
         the parent process.
         """
 
-        from PyQt4 import QtGui
+        from PyQt5 import QtWidgets
 
-        app = QtGui.QApplication([self._ui_file])
+        app = QtWidgets.QApplication([self._ui_file])
         widget = loadUi(self._ui_file)
         widget.show()
 
@@ -93,9 +93,18 @@ class Driver(object):
                 pyfile = open(self._opts.output, 'wt')
                 needs_close = True
 
+        import_from = self._opts.import_from
+
+        if import_from:
+            from_imports = True
+        elif self._opts.from_imports:
+            from_imports = True
+            import_from = '.'
+        else:
+            from_imports = False
+
         compileUi(self._ui_file, pyfile, self._opts.execute, self._opts.indent,
-                self._opts.pyqt3_wrapper, self._opts.from_imports,
-                self._opts.resource_suffix)
+                from_imports, self._opts.resource_suffix, import_from)
 
         if needs_close:
             pyfile.close()
@@ -110,13 +119,15 @@ class Driver(object):
 
         sys.stderr.write("Error in input file: %s\n" % e)
 
+    def on_NoSuchClassError(self, e):
+        """ Handle a NoSuchClassError exception. """
+
+        sys.stderr.write(str(e) + "\n")
+
     def on_NoSuchWidgetError(self, e):
         """ Handle a NoSuchWidgetError exception. """
 
-        if e.args[0].startswith("Q3"):
-            sys.stderr.write("Error: Q3Support widgets are not supported by PyQt4.\n")
-        else:
-            sys.stderr.write(str(e) + "\n")
+        sys.stderr.write(str(e) + "\n")
 
     def on_Exception(self, e):
         """ Handle a generic exception. """
@@ -126,13 +137,13 @@ class Driver(object):
 
             traceback.print_exception(*sys.exc_info())
         else:
-            from PyQt4 import QtCore
+            from PyQt5 import QtCore
 
             sys.stderr.write("""An unexpected error occurred.
-Check that you are using the latest version of PyQt and send an error report to
+Check that you are using the latest version of PyQt5 and send an error report to
 support@riverbankcomputing.com, including the following information:
 
   * your version of PyQt (%s)
   * the UI file that caused this error
-  * the debug output of pyuic4 (use the -d flag when calling pyuic4)
+  * the debug output of pyuic5 (use the -d flag when calling pyuic5)
 """ % QtCore.PYQT_VERSION_STR)

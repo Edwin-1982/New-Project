@@ -2,9 +2,9 @@
 //
 // This file is part of the QtHelp Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QHelpSearchQueryWidget : QWidget
 {
 %TypeHeaderCode
@@ -29,27 +27,36 @@ class QHelpSearchQueryWidget : QWidget
 %End
 
 public:
+%If (Qt_5_6_1 -)
+    explicit QHelpSearchQueryWidget(QWidget *parent /TransferThis/ = 0);
+%End
+%If (- Qt_5_6_1)
     QHelpSearchQueryWidget(QWidget *parent /TransferThis/ = 0);
+%End
     virtual ~QHelpSearchQueryWidget();
     QList<QHelpSearchQuery> query() const;
-%If (Qt_4_8_0 -)
     void setQuery(const QList<QHelpSearchQuery> &queryList);
-%End
-%If (Qt_4_8_0 -)
     void expandExtendedSearch();
-%End
-%If (Qt_4_8_0 -)
     void collapseExtendedSearch();
-%End
 
 signals:
     void search();
 
 private:
     virtual void focusInEvent(QFocusEvent *focusEvent);
-%If (Qt_4_6_2 -)
     virtual void changeEvent(QEvent *event);
+
+public:
+%If (Qt_5_3_0 -)
+    bool isCompactMode() const;
+%End
+%If (Qt_5_3_0 -)
+    void setCompactMode(bool on);
+%End
+%If (Qt_5_9_0 -)
+    QString searchInput() const;
+%End
+%If (Qt_5_9_0 -)
+    void setSearchInput(const QString &searchInput);
 %End
 };
-
-%End

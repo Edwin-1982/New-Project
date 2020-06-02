@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -31,9 +31,7 @@ public:
     ~QTextTableCell();
     QTextTableCell(const QTextTableCell &o);
     QTextCharFormat format() const;
-%If (Qt_4_2_0 -)
     void setFormat(const QTextCharFormat &format);
-%End
     int row() const;
     int column() const;
     int rowSpan() const;
@@ -41,9 +39,7 @@ public:
     bool isValid() const;
     QTextCursor firstCursorPosition() const;
     QTextCursor lastCursorPosition() const;
-%If (Qt_4_5_0 -)
     int tableCellFormatIndex() const;
-%End
     bool operator==(const QTextTableCell &other) const;
     bool operator!=(const QTextTableCell &other) const;
 };
@@ -74,13 +70,6 @@ public:
     QTextCursor rowEnd(const QTextCursor &c) const;
     QTextTableFormat format() const;
     void setFormat(const QTextTableFormat &aformat);
-%If (Qt_4_5_0 -)
     void appendRows(int count);
-%End
-%If (Qt_4_5_0 -)
     void appendColumns(int count);
-%End
-
-private:
-    QTextTable(const QTextTable &);
 };

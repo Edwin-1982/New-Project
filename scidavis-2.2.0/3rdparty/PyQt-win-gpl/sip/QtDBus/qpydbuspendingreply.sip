@@ -1,8 +1,8 @@
 // This is the SIP specification of the QPyDBusPendingReply class.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -17,8 +17,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QPyDBusPendingReply : QDBusPendingCall /PyName=QDBusPendingReply/
 {
@@ -44,5 +42,3 @@ public:
 
     SIP_PYOBJECT value(SIP_PYOBJECT type /TypeHintValue="None"/ = 0) const /HoldGIL/;
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtMultimedia Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QAbstractVideoBuffer
 {
 %TypeHeaderCode
@@ -33,14 +31,11 @@ public:
     {
         NoHandle,
         GLTextureHandle,
-%If (Qt_4_7_0 -)
         XvShmImageHandle,
-%End
-%If (Qt_4_7_0 -)
         CoreImageHandle,
-%End
-%If (Qt_4_7_0 -)
         QPixmapHandle,
+%If (Qt_5_4_0 -)
+        EGLImageHandle,
 %End
         UserHandle,
     };
@@ -81,12 +76,8 @@ public:
 
     virtual void unmap() = 0;
     virtual QVariant handle() const;
-%If (Qt_5_0_0 -)
     virtual void release();
-%End
 
 private:
     QAbstractVideoBuffer(const QAbstractVideoBuffer &);
 };
-
-%End

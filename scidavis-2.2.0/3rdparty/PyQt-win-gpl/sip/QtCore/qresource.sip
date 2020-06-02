@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_2_0 -)
 
 class QResource
 {
@@ -55,26 +53,34 @@ public:
     void setFileName(const QString &file);
     void setLocale(const QLocale &locale);
     qint64 size() const;
-    static void addSearchPath(const QString &path);
     static bool registerResource(const QString &rccFileName, const QString &mapRoot = QString());
-%If (Qt_4_3_0 -)
     static bool registerResource(const uchar *rccData, const QString &mapRoot = QString()) /PyName=registerResourceData/;
-%End
-    static QStringList searchPaths();
     static bool unregisterResource(const QString &rccFileName, const QString &mapRoot = QString());
-%If (Qt_4_3_0 -)
     static bool unregisterResource(const uchar *rccData, const QString &mapRoot = QString()) /PyName=unregisterResourceData/;
-%End
 
 protected:
     QStringList children() const;
     bool isDir() const;
     bool isFile() const;
 
-private:
-%If (Qt_4_6_0 -)
-    QResource(const QResource &);
+public:
+%If (Qt_5_8_0 -)
+    QDateTime lastModified() const;
 %End
-};
+%If (Qt_5_13_0 -)
+
+    enum Compression
+    {
+        NoCompression,
+        ZlibCompression,
+        ZstdCompression,
+    };
 
 %End
+%If (Qt_5_13_0 -)
+    QResource::Compression compressionAlgorithm() const;
+%End
+
+private:
+    QResource(const QResource &);
+};

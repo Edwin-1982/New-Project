@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,35 +27,20 @@ class QReadWriteLock
 %End
 
 public:
-%If (Qt_4_4_0 -)
-
     enum RecursionMode
     {
         NonRecursive,
         Recursive,
     };
 
-%End
-%If (Qt_5_0_0 -)
     explicit QReadWriteLock(QReadWriteLock::RecursionMode recursionMode = QReadWriteLock::NonRecursive);
-%End
-%If (- Qt_5_0_0)
-    QReadWriteLock();
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    QReadWriteLock(QReadWriteLock::RecursionMode recursionMode);
-%End
     ~QReadWriteLock();
     void lockForRead() /ReleaseGIL/;
     bool tryLockForRead();
-%If (Qt_4_3_0 -)
     bool tryLockForRead(int timeout) /ReleaseGIL/;
-%End
     void lockForWrite() /ReleaseGIL/;
     bool tryLockForWrite();
-%If (Qt_4_3_0 -)
     bool tryLockForWrite(int timeout) /ReleaseGIL/;
-%End
     void unlock();
 
 private:

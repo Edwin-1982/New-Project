@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 class QSslSocket : QTcpSocket
 {
@@ -37,31 +36,11 @@ public:
         SslServerMode,
     };
 
-%If (Qt_5_0_0 -)
     explicit QSslSocket(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QSslSocket(QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QSslSocket();
-%If (Qt_5_0_0 -)
-    void connectToHostEncrypted(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    void connectToHostEncrypted(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    void connectToHostEncrypted(const QString &hostName, quint16 port, const QString &sslPeerName, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    void connectToHostEncrypted(const QString &hostName, quint16 port, const QString &sslPeerName, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    virtual bool setSocketDescriptor(qintptr socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite);
-%End
-%If (- Qt_5_0_0)
-    bool setSocketDescriptor(int socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
-%End
+    void connectToHostEncrypted(const QString &hostName, quint16 port, QIODevice::OpenMode mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
+    void connectToHostEncrypted(const QString &hostName, quint16 port, const QString &sslPeerName, QIODevice::OpenMode mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
+    virtual bool setSocketDescriptor(qintptr socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
     QSslSocket::SslMode mode() const;
     bool isEncrypted() const;
     QSsl::SslProtocol protocol() const;
@@ -99,21 +78,11 @@ public:
     static void setDefaultCaCertificates(const QList<QSslCertificate> &certificates);
     static QList<QSslCertificate> defaultCaCertificates();
     static QList<QSslCertificate> systemCaCertificates();
-%If (Qt_5_0_0 -)
     virtual bool waitForConnected(int msecs = 30000) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    bool waitForConnected(int msecs = 30000) /ReleaseGIL/;
-%End
     bool waitForEncrypted(int msecs = 30000) /ReleaseGIL/;
     virtual bool waitForReadyRead(int msecs = 30000) /ReleaseGIL/;
     virtual bool waitForBytesWritten(int msecs = 30000) /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     virtual bool waitForDisconnected(int msecs = 30000) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    bool waitForDisconnected(int msecs = 30000) /ReleaseGIL/;
-%End
     QList<QSslError> sslErrors() const;
     static bool supportsSsl();
 
@@ -126,13 +95,8 @@ signals:
     void encrypted();
     void sslErrors(const QList<QSslError> &errors);
     void modeChanged(QSslSocket::SslMode newMode);
-
-protected slots:
-%If (- Qt_5_0_0)
-    void connectToHostImplementation(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> openMode);
-%End
-%If (- Qt_5_0_0)
-    void disconnectFromHostImplementation();
+%If (Qt_5_5_0 -)
+    void preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *authenticator);
 %End
 
 protected:
@@ -174,11 +138,9 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) /ReleaseGIL/;
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) /ReleaseGIL/;
 
 public:
-%If (Qt_4_4_0 -)
-
     enum PeerVerifyMode
     {
         VerifyNone,
@@ -187,87 +149,49 @@ public:
         AutoVerifyPeer,
     };
 
-%End
-%If (Qt_4_4_0 -)
     QSslSocket::PeerVerifyMode peerVerifyMode() const;
-%End
-%If (Qt_4_4_0 -)
     void setPeerVerifyMode(QSslSocket::PeerVerifyMode mode);
-%End
-%If (Qt_4_4_0 -)
     int peerVerifyDepth() const;
-%End
-%If (Qt_4_4_0 -)
     void setPeerVerifyDepth(int depth);
-%End
-%If (Qt_5_0_0 -)
     virtual void setReadBufferSize(qint64 size);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    void setReadBufferSize(qint64 size);
-%End
-%If (Qt_4_4_0 -)
     qint64 encryptedBytesAvailable() const;
-%End
-%If (Qt_4_4_0 -)
     qint64 encryptedBytesToWrite() const;
-%End
-%If (Qt_4_4_0 -)
     QSslConfiguration sslConfiguration() const;
-%End
-%If (Qt_4_4_0 -)
     void setSslConfiguration(const QSslConfiguration &config);
-%End
 
 signals:
-%If (Qt_4_4_0 -)
     void peerVerifyError(const QSslError &error);
-%End
-%If (Qt_4_4_0 -)
     void encryptedBytesWritten(qint64 totalBytes);
-%End
 
 public:
-%If (Qt_5_0_0 -)
     virtual void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &value);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &value);
-%End
-%If (Qt_5_0_0 -)
     virtual QVariant socketOption(QAbstractSocket::SocketOption option);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    QVariant socketOption(QAbstractSocket::SocketOption option);
-%End
-%If (Qt_4_6_0 -)
     void ignoreSslErrors(const QList<QSslError> &errors);
-%End
-%If (Qt_4_8_0 -)
     QString peerVerifyName() const;
-%End
-%If (Qt_4_8_0 -)
     void setPeerVerifyName(const QString &hostName);
-%End
-%If (Qt_5_0_0 -)
     virtual void resume() /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    virtual void connectToHost(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
+    virtual void connectToHost(const QString &hostName, quint16 port, QIODevice::OpenMode mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
     virtual void disconnectFromHost() /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static long sslLibraryVersionNumber();
-%End
-%If (Qt_5_0_0 -)
     static QString sslLibraryVersionString();
+%If (Qt_5_1_0 -)
+    void setLocalCertificateChain(const QList<QSslCertificate> &localChain);
 %End
-
-private:
-    QSslSocket(const QSslSocket &);
+%If (Qt_5_1_0 -)
+    QList<QSslCertificate> localCertificateChain() const;
+%End
+%If (Qt_5_4_0 -)
+    QSsl::SslProtocol sessionProtocol() const;
+%End
+%If (Qt_5_4_0 -)
+    static long sslLibraryBuildVersionNumber();
+%End
+%If (Qt_5_4_0 -)
+    static QString sslLibraryBuildVersionString();
+%End
+%If (Qt_5_13_0 -)
+    QVector<QOcspResponse> ocspResponses() const;
+%End
 };
 
-%End
 %End

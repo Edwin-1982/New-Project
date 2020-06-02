@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 class QSslError
 {
@@ -57,38 +56,63 @@ public:
         NoPeerCertificate,
         HostNameMismatch,
         NoSslSupport,
-%If (Qt_4_8_0 -)
         CertificateBlacklisted,
+%If (Qt_5_13_0 -)
+        CertificateStatusUnknown,
+%End
+%If (Qt_5_13_0 -)
+        OcspNoResponseFound,
+%End
+%If (Qt_5_13_0 -)
+        OcspMalformedRequest,
+%End
+%If (Qt_5_13_0 -)
+        OcspMalformedResponse,
+%End
+%If (Qt_5_13_0 -)
+        OcspInternalError,
+%End
+%If (Qt_5_13_0 -)
+        OcspTryLater,
+%End
+%If (Qt_5_13_0 -)
+        OcspSigRequred,
+%End
+%If (Qt_5_13_0 -)
+        OcspUnauthorized,
+%End
+%If (Qt_5_13_0 -)
+        OcspResponseCannotBeTrusted,
+%End
+%If (Qt_5_13_0 -)
+        OcspResponseCertIdUnknown,
+%End
+%If (Qt_5_13_0 -)
+        OcspResponseExpired,
+%End
+%If (Qt_5_13_0 -)
+        OcspStatusUnknown,
 %End
     };
 
-%If (Qt_4_6_0 -)
     QSslError();
-%End
-%If (Qt_4_6_0 -)
     QSslError(QSslError::SslError error);
-%End
-%If (Qt_4_6_0 -)
     QSslError(QSslError::SslError error, const QSslCertificate &certificate);
-%End
-%If (- Qt_4_6_0)
-    QSslError(QSslError::SslError error = QSslError::NoError, const QSslCertificate &certificate = QSslCertificate());
-%End
     QSslError(const QSslError &other);
     ~QSslError();
     QSslError::SslError error() const;
     QString errorString() const;
     QSslCertificate certificate() const;
-%If (Qt_4_4_0 -)
     bool operator==(const QSslError &other) const;
-%End
-%If (Qt_4_4_0 -)
     bool operator!=(const QSslError &other) const;
+    void swap(QSslError &other /Constrained/);
+%If (Qt_5_4_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
 %End
-%If (Qt_5_0_0 -)
-    void swap(QSslError &other);
+
 %End
 };
 
-%End
 %End

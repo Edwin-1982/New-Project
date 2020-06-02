@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QLocalSocket : QIODevice
 {
@@ -40,9 +38,7 @@ public:
         DatagramTooLargeError,
         ConnectionError,
         UnsupportedSocketOperationError,
-%If (Qt_5_0_0 -)
         OperationError,
-%End
         UnknownSocketError,
     };
 
@@ -56,14 +52,18 @@ public:
 
     QLocalSocket(QObject *parent /TransferThis/ = 0);
     virtual ~QLocalSocket();
-%If (Qt_5_0_0 -)
-    void connectToServer(const QString &name, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
     void connectToServer(const QString &name, QIODevice::OpenMode mode = QIODevice::ReadWrite) /ReleaseGIL/;
+%If (Qt_5_1_0 -)
+    void connectToServer(QIODevice::OpenMode mode = QIODevice::ReadWrite) /ReleaseGIL/;
 %End
     void disconnectFromServer() /ReleaseGIL/;
+%If (Qt_5_1_0 -)
+    virtual bool open(QIODevice::OpenMode mode = QIODevice::ReadWrite);
+%End
     QString serverName() const;
+%If (Qt_5_1_0 -)
+    void setServerName(const QString &name);
+%End
     QString fullServerName() const;
     void abort();
     virtual bool isSequential() const;
@@ -76,18 +76,8 @@ public:
     bool isValid() const;
     qint64 readBufferSize() const;
     void setReadBufferSize(qint64 size);
-%If (Qt_5_0_0 -)
-    bool setSocketDescriptor(qintptr socketDescriptor, QLocalSocket::LocalSocketState state = QLocalSocket::ConnectedState, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite);
-%End
-%If (- Qt_5_0_0)
-    bool setSocketDescriptor(quintptr socketDescriptor, QLocalSocket::LocalSocketState state = QLocalSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
-%End
-%If (Qt_5_0_0 -)
+    bool setSocketDescriptor(qintptr socketDescriptor, QLocalSocket::LocalSocketState state = QLocalSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
     qintptr socketDescriptor() const;
-%End
-%If (- Qt_5_0_0)
-    quintptr socketDescriptor() const;
-%End
     QLocalSocket::LocalSocketState state() const;
     virtual bool waitForBytesWritten(int msecs = 30000) /ReleaseGIL/;
     bool waitForConnected(int msecs = 30000) /ReleaseGIL/;
@@ -139,10 +129,5 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char * /Array, TypeHint="Py_v3:bytes;str"/, qint64 /ArraySize/) /ReleaseGIL/;
-
-private:
-    QLocalSocket(const QLocalSocket &);
+    virtual qint64 writeData(const char * /Array/, qint64 /ArraySize/) /ReleaseGIL/;
 };
-
-%End

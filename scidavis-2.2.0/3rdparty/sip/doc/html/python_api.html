@@ -1,19 +1,18 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Python API for Applications &#8212; SIP v4.19.22 Reference Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python API for Applications &#8212; SIP v4.19.19 Reference Guide</title>
     <link rel="stylesheet" href="_static/riverbank.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +34,7 @@
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -51,7 +50,7 @@ all SIP generated bindings.  It is loaded automatically and most of the time
 you will completely ignore it.  However, it does expose some functionality that
 can be used by applications.</p>
 <div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.4.</span></p>
+<p><span class="versionmodified">New in version 4.19.4.</span></p>
 </div>
 <p>When a private copy of the SIP module is being used it would normally be
 imported from the package containing the private copy.  However, in order to
@@ -60,9 +59,9 @@ as a top-level module <em>so long as a SIP-generated extension module has
 previously been imported</em>.</p>
 <dl class="class">
 <dt id="sip.array">
-<em class="property">class </em><code class="sig-prename descclassname">sip.</code><code class="sig-name descname">array</code><a class="headerlink" href="#sip.array" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sip.</code><code class="descname">array</code><a class="headerlink" href="#sip.array" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.15.</span></p>
+<p><span class="versionmodified">New in version 4.15.</span></p>
 </div>
 <p>This is the type object for the type SIP uses to represent an array of a
 limited number of C/C++ types.  Typically the memory is not owned by Python
@@ -75,220 +74,255 @@ quickly.</p>
 
 <dl class="function">
 <dt id="sip.assign">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">assign</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">other</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.assign" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">assign</code><span class="sig-paren">(</span><em>obj</em>, <em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.assign" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.</span></p>
+<p><span class="versionmodified">New in version 4.19.</span></p>
 </div>
 <p>This does the Python equivalent of invoking the assignment operator of a
 C++ instance (i.e. <code class="docutils literal notranslate"><span class="pre">*obj</span> <span class="pre">=</span> <span class="pre">other</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – the Python object being assigned to.</p></li>
-<li><p><strong>other</strong> – the Python object being assigned.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> – the Python object being assigned to.</li>
+<li><strong>other</strong> – the Python object being assigned.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.cast">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">cast</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">type</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#sip.cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">cast</code><span class="sig-paren">(</span><em>obj</em>, <em>type</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#sip.cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>This does the Python equivalent of casting a C++ instance to one of its
 sub or super-class types.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – the Python object.</p></li>
-<li><p><strong>type</strong> – the type.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> – the Python object.</li>
+<li><strong>type</strong> – the type.</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a new Python object is that wraps the same C++ instance as <em>obj</em>, but
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new Python object is that wraps the same C++ instance as <em>obj</em>, but
 has the type <em>type</em>.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.delete">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.delete" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">delete</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>For C++ instances this calls the C++ destructor.  For C structures it
 returns the structure’s memory to the heap.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.dump">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.dump" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">dump</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.dump" title="Permalink to this definition">¶</a></dt>
 <dd><p>This displays various bits of useful information about the internal state
 of the Python object that wraps a C++ instance or C structure.  Note that
 the reference count that is displayed has the same caveat as that of
 <code class="xref py py-func docutils literal notranslate"><span class="pre">sys.getrefcount()</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.enableautoconversion">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">enableautoconversion</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">enable</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.enableautoconversion" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">enableautoconversion</code><span class="sig-paren">(</span><em>type</em>, <em>enable</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.enableautoconversion" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.14.7.</span></p>
+<p><span class="versionmodified">New in version 4.14.7.</span></p>
 </div>
 <p>Instances of some classes may be automatically converted to other Python
 objects even though the class has been wrapped.  This allows that behaviour
 to be suppressed so that an instances of the wrapped class is returned
 instead.  By default it is enabled.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>type</strong> – the Python type object.</p></li>
-<li><p><strong>enable</strong> – is <code class="docutils literal notranslate"><span class="pre">True</span></code> if auto-conversion should be enabled for the type.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>type</strong> – the Python type object.</li>
+<li><strong>enable</strong> – is <code class="docutils literal notranslate"><span class="pre">True</span></code> if auto-conversion should be enabled for the type.</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether or not auto-conversion was
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether or not auto-conversion was
 previously enabled for the type.  This allows the previous state to be
 restored later on.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.enableoverflowchecking">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">enableoverflowchecking</code><span class="sig-paren">(</span><em class="sig-param">enable</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.enableoverflowchecking" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">enableoverflowchecking</code><span class="sig-paren">(</span><em>enable</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.enableoverflowchecking" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.4.</span></p>
+<p><span class="versionmodified">New in version 4.19.4.</span></p>
 </div>
 <p>This enables or disables the checking for overflows when converting Python
 integer objects to C/C++ integer types.  When it is enabled an exception is
 raised when the value of a Python integer object is too large to fit in the
 corresponding C/C++ type.  By default it is disabled.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>enable</strong> – is <code class="docutils literal notranslate"><span class="pre">True</span></code> if overflow checking should be enabled.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether or not overflow checking was
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enable</strong> – is <code class="docutils literal notranslate"><span class="pre">True</span></code> if overflow checking should be enabled.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether or not overflow checking was
 previously enabled.  This allows the previous state to be restored
-later on.</p>
-</dd>
-</dl>
+later on.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.getapi">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">getapi</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span> &#x2192; version<a class="headerlink" href="#sip.getapi" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">getapi</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span> &#x2192; version<a class="headerlink" href="#sip.getapi" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.9.</span></p>
+<p><span class="versionmodified">New in version 4.9.</span></p>
 </div>
 <p>This returns the version number that has been set for an API.  The version
 number is either set explicitly by a call to <a class="reference internal" href="#sip.setapi" title="sip.setapi"><code class="xref py py-func docutils literal notranslate"><span class="pre">sip.setapi()</span></code></a> or
 implicitly by importing the module that defines it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> – the name of the API.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The version number that has been set for the API.  An exception will
-be raised if the API is unknown.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – the name of the API.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The version number that has been set for the API.  An exception will
+be raised if the API is unknown.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.isdeleted">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">isdeleted</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.isdeleted" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">isdeleted</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.isdeleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>This checks if the C++ instance or C structure has been deleted and
 returned to the heap.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance has been deleted.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance has been deleted.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.ispycreated">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">ispycreated</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.ispycreated" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">ispycreated</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.ispycreated" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.1.</span></p>
+<p><span class="versionmodified">New in version 4.12.1.</span></p>
 </div>
 <p>This checks if the C++ instance or C structure was created by Python.  If
 it was then it is possible to call a C++ instance’s protected methods.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance was created by Python.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance was created by Python.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.ispyowned">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">ispyowned</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.ispyowned" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">ispyowned</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.ispyowned" title="Permalink to this definition">¶</a></dt>
 <dd><p>This checks if the C++ instance or C structure is owned by Python.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance is owned by Python.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the C/C++ instance is owned by Python.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.setapi">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">setapi</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setapi" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">setapi</code><span class="sig-paren">(</span><em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setapi" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.9.</span></p>
+<p><span class="versionmodified">New in version 4.9.</span></p>
 </div>
 <p>This sets the version number of an API.  An exception is raised if a
 different version number has already been set, either explicitly by a
 previous call, or implicitly by importing the module that defines it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – the name of the API.</p></li>
-<li><p><strong>version</strong> – The version number to set for the API.  Version numbers must be
-greater than or equal to 1.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – the name of the API.</li>
+<li><strong>version</strong> – The version number to set for the API.  Version numbers must be
+greater than or equal to 1.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.setdeleted">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">setdeleted</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setdeleted" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">setdeleted</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setdeleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>This marks the C++ instance or C structure as having been deleted and
 returned to the heap so that future references to it raise an exception
 rather than cause a program crash.  Normally SIP handles such things
 automatically, but there may be circumstances where this isn’t possible.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.setdestroyonexit">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">setdestroyonexit</code><span class="sig-paren">(</span><em class="sig-param">destroy</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setdestroyonexit" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">setdestroyonexit</code><span class="sig-paren">(</span><em>destroy</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.setdestroyonexit" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.14.2.</span></p>
+<p><span class="versionmodified">New in version 4.14.2.</span></p>
 </div>
 <p>When the Python interpreter exits it garbage collects those objects that it
 can.  This means that any corresponding C++ instances and C structures
@@ -296,34 +330,40 @@ owned by Python are destroyed.  Unfortunately this happens in an
 unpredictable order and so can cause memory faults within the wrapped
 library.  Calling this function with a value of <code class="docutils literal notranslate"><span class="pre">False</span></code> disables the
 automatic destruction of C++ instances and C structures.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>destroy</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if all C++ instances and C structures owned by Python should
-be destroyed when the interpreter exits.  This is the default.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destroy</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if all C++ instances and C structures owned by Python should
+be destroyed when the interpreter exits.  This is the default.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.settracemask">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">settracemask</code><span class="sig-paren">(</span><em class="sig-param">mask</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.settracemask" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">settracemask</code><span class="sig-paren">(</span><em>mask</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.settracemask" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the bindings have been created with SIP’s <a class="reference internal" href="command_line.html#cmdoption-sip-r"><code class="xref std std-option docutils literal notranslate"><span class="pre">-r</span></code></a> command
 line option then the generated code will include debugging statements that
 trace the execution of the code.  (It is particularly useful when trying to
 understand the operation of a C++ library’s virtual function calls.)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>mask</strong> – the mask that determines which debugging statements are enabled.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mask</strong> – the mask that determines which debugging statements are enabled.</td>
+</tr>
+</tbody>
+</table>
 <p>Debugging statements are generated at the following points:</p>
 <ul class="simple">
-<li><p>in a C++ virtual function (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0001</span></code>)</p></li>
-<li><p>in a C++ constructor (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0002</span></code>)</p></li>
-<li><p>in a C++ destructor (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0004</span></code>)</p></li>
-<li><p>in a Python type’s __init__ method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0008</span></code>)</p></li>
-<li><p>in a Python type’s __del__ method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0010</span></code>)</p></li>
-<li><p>in a Python type’s ordinary method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0020</span></code>).</p></li>
+<li>in a C++ virtual function (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0001</span></code>)</li>
+<li>in a C++ constructor (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0002</span></code>)</li>
+<li>in a C++ destructor (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0004</span></code>)</li>
+<li>in a Python type’s __init__ method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0008</span></code>)</li>
+<li>in a Python type’s __del__ method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0010</span></code>)</li>
+<li>in a Python type’s ordinary method (<em>mask</em> is <code class="docutils literal notranslate"><span class="pre">0x0020</span></code>).</li>
 </ul>
 <p>By default the trace mask is zero and all debugging statements are
 disabled.</p>
@@ -331,7 +371,7 @@ disabled.</p>
 
 <dl class="class">
 <dt id="sip.simplewrapper">
-<em class="property">class </em><code class="sig-prename descclassname">sip.</code><code class="sig-name descname">simplewrapper</code><a class="headerlink" href="#sip.simplewrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sip.</code><code class="descname">simplewrapper</code><a class="headerlink" href="#sip.simplewrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is an alternative type object than can be used as the base type of an
 instance wrapped by SIP.  Objects using this are smaller than those that
 use the default <a class="reference internal" href="#sip.wrapper" title="sip.wrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.wrapper</span></code></a> type but do not support the concept of
@@ -340,9 +380,9 @@ object ownership.</p>
 
 <dl class="data">
 <dt id="sip.SIP_VERSION">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">SIP_VERSION</code><a class="headerlink" href="#sip.SIP_VERSION" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">SIP_VERSION</code><a class="headerlink" href="#sip.SIP_VERSION" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.2.</span></p>
+<p><span class="versionmodified">New in version 4.2.</span></p>
 </div>
 <p>This is a Python integer object that represents the SIP version number as
 a 3 part hexadecimal number (e.g. v4.0.0 is represented as <code class="docutils literal notranslate"><span class="pre">0x040000</span></code>).</p>
@@ -350,9 +390,9 @@ a 3 part hexadecimal number (e.g. v4.0.0 is represented as <code class="docutils
 
 <dl class="data">
 <dt id="sip.SIP_VERSION_STR">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">SIP_VERSION_STR</code><a class="headerlink" href="#sip.SIP_VERSION_STR" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">SIP_VERSION_STR</code><a class="headerlink" href="#sip.SIP_VERSION_STR" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.3.</span></p>
+<p><span class="versionmodified">New in version 4.3.</span></p>
 </div>
 <p>This is a Python string object that defines the SIP version number as
 represented as a string.  For development versions it will contain either
@@ -361,272 +401,319 @@ represented as a string.  For development versions it will contain either
 
 <dl class="function">
 <dt id="sip.transferback">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">transferback</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.transferback" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">transferback</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.transferback" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is a wrapper around <a class="reference internal" href="c_api.html#c.sipTransferBack" title="sipTransferBack"><code class="xref c c-func docutils literal notranslate"><span class="pre">sipTransferBack()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.transferto">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">transferto</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">owner</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.transferto" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">transferto</code><span class="sig-paren">(</span><em>obj</em>, <em>owner</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.transferto" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is a wrapper around <a class="reference internal" href="c_api.html#c.sipTransferTo" title="sipTransferTo"><code class="xref c c-func docutils literal notranslate"><span class="pre">sipTransferTo()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.unwrapinstance">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">unwrapinstance</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.unwrapinstance" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">unwrapinstance</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.unwrapinstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the address, as an integer, of a wrapped C/C++ structure or
 class instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> – the Python object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>an integer that is the address of the C/C++ instance.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – the Python object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">an integer that is the address of the C/C++ instance.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
 <dt id="sip.voidptr">
-<em class="property">class </em><code class="sig-prename descclassname">sip.</code><code class="sig-name descname">voidptr</code><a class="headerlink" href="#sip.voidptr" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sip.</code><code class="descname">voidptr</code><a class="headerlink" href="#sip.voidptr" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the type object for the type SIP uses to represent a C/C++
 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>.  It may have a size associated with the address in which case
 the Python buffer interface is supported.  The type has the following
 methods.</p>
 <dl class="method">
 <dt id="sip.voidptr.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">address</em><span class="optional">[</span>, <em class="sig-param">size=-1</em><span class="optional">[</span>, <em class="sig-param">writeable=True</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>address</strong> – the address, either another <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.voidptr</span></code></a>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, a
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>address</em><span class="optional">[</span>, <em>size=-1</em><span class="optional">[</span>, <em>writeable=True</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>address</strong> – the address, either another <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.voidptr</span></code></a>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, a
 Python Capsule, a Python CObject, an object that implements the
-buffer protocol or an integer.</p></li>
-<li><p><strong>size</strong> – the optional associated size of the block of memory and is negative
-if the size is not known.</p></li>
-<li><p><strong>writeable</strong> – set if the memory is writeable.  If it is not specified, and
+buffer protocol or an integer.</li>
+<li><strong>size</strong> – the optional associated size of the block of memory and is negative
+if the size is not known.</li>
+<li><strong>writeable</strong> – set if the memory is writeable.  If it is not specified, and
 <em>address</em> is a <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.voidptr</span></code></a> instance then its value will be
-used.</p></li>
+used.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.__int__">
-<code class="sig-name descname">__int__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.__int__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__int__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.__int__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the address as an integer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the integer address.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the integer address.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.__getitem__">
-<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span> &#x2192; item<a class="headerlink" href="#sip.voidptr.__getitem__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>idx</em><span class="sig-paren">)</span> &#x2192; item<a class="headerlink" href="#sip.voidptr.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.</span></p>
+<p><span class="versionmodified">New in version 4.12.</span></p>
 </div>
 <p>This returns the item at a given index.  An exception will be raised if
 the address does not have an associated size.  In this way it behaves
 like a Python <code class="docutils literal notranslate"><span class="pre">memoryview</span></code> object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>idx</strong> – is the index which may either be an integer, an object that
-implements <code class="docutils literal notranslate"><span class="pre">__index__()</span></code> or a slice object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the item.  If the index is an integer then the item will be a
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idx</strong> – is the index which may either be an integer, an object that
+implements <code class="docutils literal notranslate"><span class="pre">__index__()</span></code> or a slice object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the item.  If the index is an integer then the item will be a
 Python v2 string object or a Python v3 bytes object containing the
 single byte at that index.  If the index is a slice object then the
 item will be a new <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><code class="xref py py-class docutils literal notranslate"><span class="pre">voidptr</span></code></a> object defining the subset of
-the memory corresponding to the slice.</p>
-</dd>
-</dl>
+the memory corresponding to the slice.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.__hex__">
-<code class="sig-name descname">__hex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; string<a class="headerlink" href="#sip.voidptr.__hex__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__hex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; string<a class="headerlink" href="#sip.voidptr.__hex__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the address as a hexadecimal string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the hexadecimal string address.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the hexadecimal string address.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.__len__">
-<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.__len__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.</span></p>
+<p><span class="versionmodified">New in version 4.12.</span></p>
 </div>
 <p>This returns the size associated with the address.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the associated size.  An exception will be raised if there is none.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the associated size.  An exception will be raised if there is none.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.__setitem__">
-<code class="sig-name descname">__setitem__</code><span class="sig-paren">(</span><em class="sig-param">idx</em>, <em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.__setitem__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__setitem__</code><span class="sig-paren">(</span><em>idx</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.__setitem__" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.</span></p>
+<p><span class="versionmodified">New in version 4.12.</span></p>
 </div>
 <p>This updates the memory at a given index.  An exception will be raised
 if the address does not have an associated size or is not writable.  In
 this way it behaves like a Python <code class="docutils literal notranslate"><span class="pre">memoryview</span></code> object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>idx</strong> – is the index which may either be an integer, an object that
-implements <code class="docutils literal notranslate"><span class="pre">__index__()</span></code> or a slice object.</p></li>
-<li><p><strong>item</strong> – is the data that will update the memory defined by the index.  It
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>idx</strong> – is the index which may either be an integer, an object that
+implements <code class="docutils literal notranslate"><span class="pre">__index__()</span></code> or a slice object.</li>
+<li><strong>item</strong> – is the data that will update the memory defined by the index.  It
 must implement the buffer interface and be the same size as the
-data that is being updated.</p></li>
+data that is being updated.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.asarray">
-<code class="sig-name descname">asarray</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">size=-1</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; :class:`sip.array`<a class="headerlink" href="#sip.voidptr.asarray" title="Permalink to this definition">¶</a></dt>
+<code class="descname">asarray</code><span class="sig-paren">(</span><span class="optional">[</span><em>size=-1</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; :class:`sip.array`<a class="headerlink" href="#sip.voidptr.asarray" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.5.</span></p>
+<p><span class="versionmodified">New in version 4.16.5.</span></p>
 </div>
 <p>This returned the block of memory as a <a class="reference internal" href="#sip.array" title="sip.array"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.array</span></code></a> object.  The
 memory is <em>not</em> copied.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>size</strong> – the size of the array.  If it is negative then the size associated
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – the size of the array.  If it is negative then the size associated
 with the address is used.  If there is no associated size then an
-exception is raised.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a class="reference internal" href="#sip.array" title="sip.array"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.array</span></code></a> object.</p>
-</dd>
-</dl>
+exception is raised.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the <a class="reference internal" href="#sip.array" title="sip.array"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.array</span></code></a> object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.ascapsule">
-<code class="sig-name descname">ascapsule</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; capsule<a class="headerlink" href="#sip.voidptr.ascapsule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ascapsule</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; capsule<a class="headerlink" href="#sip.voidptr.ascapsule" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.10.</span></p>
+<p><span class="versionmodified">New in version 4.10.</span></p>
 </div>
 <p>This returns the address as an unnamed Python Capsule.  This requires
 Python v3.1 or later or Python v2.7 or later.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the Capsule.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the Capsule.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.ascobject">
-<code class="sig-name descname">ascobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; cObject<a class="headerlink" href="#sip.voidptr.ascobject" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ascobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; cObject<a class="headerlink" href="#sip.voidptr.ascobject" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the address as a Python CObject.  This is deprecated with
 Python v3.1 and is not supported with Python v3.2 and later.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the CObject.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the CObject.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.asstring">
-<code class="sig-name descname">asstring</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">size=-1</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; string/bytes<a class="headerlink" href="#sip.voidptr.asstring" title="Permalink to this definition">¶</a></dt>
+<code class="descname">asstring</code><span class="sig-paren">(</span><span class="optional">[</span><em>size=-1</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; string/bytes<a class="headerlink" href="#sip.voidptr.asstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns a copy of the block of memory as a Python v2 string object
 or a Python v3 bytes object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>size</strong> – the number of bytes to copy.  If it is negative then the size
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – the number of bytes to copy.  If it is negative then the size
 associated with the address is used.  If there is no associated
-size then an exception is raised.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the string or bytes object.</p>
-</dd>
-</dl>
+size then an exception is raised.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the string or bytes object.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.getsize">
-<code class="sig-name descname">getsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.getsize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; integer<a class="headerlink" href="#sip.voidptr.getsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the size associated with the address.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the associated size which will be negative if there is none.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the associated size which will be negative if there is none.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.setsize">
-<code class="sig-name descname">setsize</code><span class="sig-paren">(</span><em class="sig-param">size</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.setsize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setsize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.setsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>This sets the size associated with the address.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>size</strong> – the size to associate.  If it is negative then no size is
-associated.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – the size to associate.  If it is negative then no size is
+associated.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.getwriteable">
-<code class="sig-name descname">getwriteable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.voidptr.getwriteable" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getwriteable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#sip.voidptr.getwriteable" title="Permalink to this definition">¶</a></dt>
 <dd><p>This returns the writeable state of the memory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the memory is writeable.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the memory is writeable.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="sip.voidptr.setwriteable">
-<code class="sig-name descname">setwriteable</code><span class="sig-paren">(</span><em class="sig-param">writeable</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.setwriteable" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setwriteable</code><span class="sig-paren">(</span><em>writeable</em><span class="sig-paren">)</span><a class="headerlink" href="#sip.voidptr.setwriteable" title="Permalink to this definition">¶</a></dt>
 <dd><p>This sets the writeable state of the memory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>writeable</strong> – the writeable state to set.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>writeable</strong> – the writeable state to set.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="sip.wrapinstance">
-<code class="sig-prename descclassname">sip.</code><code class="sig-name descname">wrapinstance</code><span class="sig-paren">(</span><em class="sig-param">addr</em>, <em class="sig-param">type</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#sip.wrapinstance" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sip.</code><code class="descname">wrapinstance</code><span class="sig-paren">(</span><em>addr</em>, <em>type</em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#sip.wrapinstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>This wraps a C structure or C++ class instance in a Python object.  If the
 instance has already been wrapped then a new reference to the existing
 object is returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>addr</strong> – the address of the instance as a number.</p></li>
-<li><p><strong>type</strong> – the Python type of the instance.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>addr</strong> – the address of the instance as a number.</li>
+<li><strong>type</strong> – the Python type of the instance.</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the Python object that wraps the instance.</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object that wraps the instance.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
 <dt id="sip.wrapper">
-<em class="property">class </em><code class="sig-prename descclassname">sip.</code><code class="sig-name descname">wrapper</code><a class="headerlink" href="#sip.wrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sip.</code><code class="descname">wrapper</code><a class="headerlink" href="#sip.wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the type object of the default base type of all instances wrapped
 by SIP.  The <a class="reference internal" href="annotations.html#class-annotation-Supertype"><code class="xref std std-canno docutils literal notranslate"><span class="pre">Supertype</span></code></a> class annotation can be used to specify a
 different base type for a class.</p>
@@ -634,7 +721,7 @@ different base type for a class.</p>
 
 <dl class="class">
 <dt id="sip.wrappertype">
-<em class="property">class </em><code class="sig-prename descclassname">sip.</code><code class="sig-name descname">wrappertype</code><a class="headerlink" href="#sip.wrappertype" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sip.</code><code class="descname">wrappertype</code><a class="headerlink" href="#sip.wrappertype" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the type object of the metatype of the <a class="reference internal" href="#sip.wrapper" title="sip.wrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">sip.wrapper</span></code></a> type.</p>
 </dd></dl>
 
@@ -656,15 +743,17 @@ different base type for a class.</p>
   <p class="topless"><a href="build_system.html"
                         title="next chapter">The Build System</a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -684,12 +773,12 @@ different base type for a class.</p>
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020 Riverbank Computing Limited.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+        &#169; Copyright 2019 Riverbank Computing Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
     </div>
   </body>
 </html>

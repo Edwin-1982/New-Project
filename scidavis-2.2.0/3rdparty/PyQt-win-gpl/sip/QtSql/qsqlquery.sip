@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,28 +27,23 @@ class QSqlQuery
 %End
 
 public:
-%If (Qt_4_2_0 -)
-
     enum BatchExecutionMode
     {
         ValuesAsRows,
         ValuesAsColumns,
     };
 
-%End
-%If (Qt_5_0_0 -)
     explicit QSqlQuery(QSqlResult *r);
-%End
-%If (- Qt_5_0_0)
-    QSqlQuery(QSqlResult *r);
-%End
-    QSqlQuery(const QString &query = QString(), QSqlDatabase db = QSqlDatabase());
+    QSqlQuery(const QString &query = QString(), QSqlDatabase db = QSqlDatabase()) /ReleaseGIL/;
     explicit QSqlQuery(QSqlDatabase db);
     QSqlQuery(const QSqlQuery &other);
     ~QSqlQuery();
     bool isValid() const;
     bool isActive() const;
     bool isNull(int field) const;
+%If (Qt_5_3_0 -)
+    bool isNull(const QString &name) const;
+%End
     int at() const;
     QString lastQuery() const;
     int numRowsAffected() const;
@@ -65,9 +60,7 @@ public:
     bool exec(const QString &query) /ReleaseGIL/;
 %End
     QVariant value(int i) const;
-%If (Qt_5_0_0 -)
     QVariant value(const QString &name) const;
-%End
     bool seek(int index, bool relative = false) /ReleaseGIL/;
     bool next() /ReleaseGIL/;
     bool previous() /ReleaseGIL/;
@@ -75,9 +68,10 @@ public:
     bool last() /ReleaseGIL/;
     void clear() /ReleaseGIL/;
     bool exec() /PyName=exec_,ReleaseGIL/;
-%If (Qt_4_2_0 -)
-    bool execBatch(QSqlQuery::BatchExecutionMode mode = QSqlQuery::ValuesAsRows);
+%If (Py_v3)
+    bool exec() /ReleaseGIL/;
 %End
+    bool execBatch(QSqlQuery::BatchExecutionMode mode = QSqlQuery::ValuesAsRows);
     bool prepare(const QString &query) /ReleaseGIL/;
     void bindValue(const QString &placeholder, const QVariant &val, QSql::ParamType type = QSql::In);
     void bindValue(int pos, const QVariant &val, QSql::ParamType type = QSql::In);
@@ -87,16 +81,8 @@ public:
     QMap<QString, QVariant> boundValues() const;
     QString executedQuery() const;
     QVariant lastInsertId() const;
-%If (Qt_4_3_0 -)
     void setNumericalPrecisionPolicy(QSql::NumericalPrecisionPolicy precisionPolicy);
-%End
-%If (Qt_4_3_0 -)
     QSql::NumericalPrecisionPolicy numericalPrecisionPolicy() const;
-%End
-%If (Qt_4_4_0 -)
     void finish();
-%End
-%If (Qt_4_4_0 -)
     bool nextResult();
-%End
 };

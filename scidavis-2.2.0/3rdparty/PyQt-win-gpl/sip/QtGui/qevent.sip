@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -59,11 +59,9 @@ class QInputEvent : QEvent /NoDefaultCtors/
         sipType = sipType_QDropEvent;
         break;
     
-    #if QT_VERSION >= 0x050000
     case QEvent::Enter:
         sipType = sipType_QEnterEvent;
         break;
-    #endif
     
     case QEvent::FileOpen:
         sipType = sipType_QFileOpenEvent;
@@ -132,10 +130,8 @@ class QInputEvent : QEvent /NoDefaultCtors/
     case QEvent::TabletMove:
     case QEvent::TabletPress:
     case QEvent::TabletRelease:
-    #if QT_VERSION >= 0x040200
     case QEvent::TabletEnterProximity:
     case QEvent::TabletLeaveProximity:
-    #endif
         sipType = sipType_QTabletEvent;
         break;
     
@@ -156,63 +152,13 @@ class QInputEvent : QEvent /NoDefaultCtors/
         sipType = sipType_QWindowStateChangeEvent;
         break;
     
-    #if QT_VERSION >= 0x040200
-    case QEvent::GraphicsSceneContextMenu:
-        sipType = sipType_QGraphicsSceneContextMenuEvent;
-        break;
-    
-    case QEvent::GraphicsSceneDragEnter:
-    case QEvent::GraphicsSceneDragLeave:
-    case QEvent::GraphicsSceneDragMove:
-    case QEvent::GraphicsSceneDrop:
-        sipType = sipType_QGraphicsSceneDragDropEvent;
-        break;
-    
-    case QEvent::GraphicsSceneHelp:
-        sipType = sipType_QGraphicsSceneHelpEvent;
-        break;
-    
-    case QEvent::GraphicsSceneHoverEnter:
-    case QEvent::GraphicsSceneHoverLeave:
-    case QEvent::GraphicsSceneHoverMove:
-        sipType = sipType_QGraphicsSceneHoverEvent;
-        break;
-    
-    case QEvent::GraphicsSceneMouseDoubleClick:
-    case QEvent::GraphicsSceneMouseMove:
-    case QEvent::GraphicsSceneMousePress:
-    case QEvent::GraphicsSceneMouseRelease:
-        sipType = sipType_QGraphicsSceneMouseEvent;
-        break;
-    
-    case QEvent::GraphicsSceneWheel:
-        sipType = sipType_QGraphicsSceneWheelEvent;
-        break;
-    #endif
-    
-    #if QT_VERSION >= 0x040400
-    case QEvent::GraphicsSceneMove:
-        sipType = sipType_QGraphicsSceneMoveEvent;
-        break;
-    
-    case QEvent::GraphicsSceneResize:
-        sipType = sipType_QGraphicsSceneResizeEvent;
-        break;
-    #endif
-    
-    #if QT_VERSION >= 0x040600
     case QEvent::TouchBegin:
     case QEvent::TouchUpdate:
     case QEvent::TouchEnd:
+    case QEvent::TouchCancel:
         sipType = sipType_QTouchEvent;
         break;
     
-    case QEvent::Gesture:
-        sipType = sipType_QGestureEvent;
-        break;
-    #endif
-    
-    #if QT_VERSION >= 0x050000
     case QEvent::InputMethodQuery:
         sipType = sipType_QInputMethodQueryEvent;
         break;
@@ -228,6 +174,17 @@ class QInputEvent : QEvent /NoDefaultCtors/
     case QEvent::Scroll:
         sipType = sipType_QScrollEvent;
         break;
+    
+    #if QT_VERSION >= 0x050200
+    case QEvent::NativeGesture:
+        sipType = sipType_QNativeGestureEvent;
+        break;
+    #endif
+    
+    #if QT_VERSION >= 0x050500
+    case QEvent::PlatformSurface:
+        sipType = sipType_QPlatformSurfaceEvent;
+        break;
     #endif
     
     default:
@@ -238,12 +195,8 @@ class QInputEvent : QEvent /NoDefaultCtors/
 public:
     virtual ~QInputEvent();
     Qt::KeyboardModifiers modifiers() const;
-%If (Qt_5_0_0 -)
     ulong timestamp() const;
-%End
-%If (Qt_5_0_0 -)
     void setTimestamp(ulong atimestamp);
-%End
 };
 
 class QMouseEvent : QInputEvent
@@ -253,60 +206,31 @@ class QMouseEvent : QInputEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     QMouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-%End
-%If (- Qt_5_0_0)
-    QMouseEvent(QEvent::Type type, const QPoint &pos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-%End
-%If (Qt_5_0_0 -)
     QMouseEvent(QEvent::Type type, const QPointF &pos, const QPointF &globalPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-%End
-%If (- Qt_5_0_0)
-    QMouseEvent(QEvent::Type type, const QPoint &pos, const QPoint &globalPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-%End
-%If (Qt_5_0_0 -)
     QMouseEvent(QEvent::Type type, const QPointF &pos, const QPointF &windowPos, const QPointF &globalPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
+%If (Qt_5_6_0 -)
+    QMouseEvent(QEvent::Type type, const QPointF &localPos, const QPointF &windowPos, const QPointF &screenPos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::MouseEventSource source);
 %End
     virtual ~QMouseEvent();
-%If (Qt_5_0_0 -)
     QPoint pos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &pos() const;
-%End
-%If (Qt_5_0_0 -)
     QPoint globalPos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &globalPos() const;
-%End
     int x() const;
     int y() const;
     int globalX() const;
     int globalY() const;
     Qt::MouseButton button() const;
     Qt::MouseButtons buttons() const;
-%If (Qt_4_4_0 - Qt_5_0_0)
-    bool hasExtendedInfo() const;
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QPointF posF() const;
-%End
-%End
-%If (Qt_5_0_0 -)
     const QPointF &localPos() const;
-%End
-%If (Qt_5_0_0 -)
     const QPointF &windowPos() const;
-%End
-%If (Qt_5_0_0 -)
     const QPointF &screenPos() const;
+%If (Qt_5_3_0 -)
+    Qt::MouseEventSource source() const;
+%End
+%If (Qt_5_3_0 -)
+    Qt::MouseEventFlags flags() const;
 %End
 };
-
-%If (Qt_5_0_0 -)
 
 class QHoverEvent : QInputEvent
 {
@@ -323,24 +247,6 @@ public:
     const QPointF &oldPosF() const;
 };
 
-%End
-%If (- Qt_5_0_0)
-
-class QHoverEvent : QEvent
-{
-%TypeHeaderCode
-#include <qevent.h>
-%End
-
-public:
-    QHoverEvent(QEvent::Type type, const QPoint &pos, const QPoint &oldPos);
-    virtual ~QHoverEvent();
-    const QPoint &pos() const;
-    const QPoint &oldPos() const;
-};
-
-%End
-
 class QWheelEvent : QInputEvent
 {
 %TypeHeaderCode
@@ -348,52 +254,39 @@ class QWheelEvent : QInputEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
-    QWheelEvent(const QPointF &pos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orientation = Qt::Vertical);
-%End
-%If (- Qt_5_0_0)
-    QWheelEvent(const QPoint &pos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orientation = Qt::Vertical);
-%End
-%If (Qt_5_0_0 -)
-    QWheelEvent(const QPointF &pos, const QPointF &globalPos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orientation = Qt::Vertical);
-%End
-%If (- Qt_5_0_0)
-    QWheelEvent(const QPoint &pos, const QPoint &globalPos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::Orientation orientation = Qt::Vertical);
-%End
-%If (Qt_5_0_0 -)
     QWheelEvent(const QPointF &pos, const QPointF &globalPos, QPoint pixelDelta, QPoint angleDelta, int qt4Delta, Qt::Orientation qt4Orientation, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
+%If (Qt_5_2_0 -)
+    QWheelEvent(const QPointF &pos, const QPointF &globalPos, QPoint pixelDelta, QPoint angleDelta, int qt4Delta, Qt::Orientation qt4Orientation, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::ScrollPhase phase);
+%End
+%If (Qt_5_5_0 -)
+    QWheelEvent(const QPointF &pos, const QPointF &globalPos, QPoint pixelDelta, QPoint angleDelta, int qt4Delta, Qt::Orientation qt4Orientation, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::ScrollPhase phase, Qt::MouseEventSource source);
+%End
+%If (Qt_5_7_0 -)
+    QWheelEvent(const QPointF &pos, const QPointF &globalPos, QPoint pixelDelta, QPoint angleDelta, int qt4Delta, Qt::Orientation qt4Orientation, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::ScrollPhase phase, Qt::MouseEventSource source, bool inverted);
+%End
+%If (Qt_5_12_0 -)
+    QWheelEvent(QPointF pos, QPointF globalPos, QPoint pixelDelta, QPoint angleDelta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, Qt::ScrollPhase phase, bool inverted, Qt::MouseEventSource source = Qt::MouseEventNotSynthesized);
 %End
     virtual ~QWheelEvent();
-    int delta() const;
-%If (Qt_5_0_0 -)
     QPoint pos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &pos() const;
-%End
-%If (Qt_5_0_0 -)
     QPoint globalPos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &globalPos() const;
-%End
     int x() const;
     int y() const;
     int globalX() const;
     int globalY() const;
     Qt::MouseButtons buttons() const;
-    Qt::Orientation orientation() const;
-%If (Qt_5_0_0 -)
     QPoint pixelDelta() const;
-%End
-%If (Qt_5_0_0 -)
     QPoint angleDelta() const;
-%End
-%If (Qt_5_0_0 -)
     const QPointF &posF() const;
-%End
-%If (Qt_5_0_0 -)
     const QPointF &globalPosF() const;
+%If (Qt_5_2_0 -)
+    Qt::ScrollPhase phase() const;
+%End
+%If (Qt_5_5_0 -)
+    Qt::MouseEventSource source() const;
+%End
+%If (Qt_5_7_0 -)
+    bool inverted() const;
 %End
 };
 
@@ -423,28 +316,13 @@ public:
         Eraser,
     };
 
-%If (Qt_5_0_0 -)
+%If (Qt_5_4_0 -)
+    QTabletEvent(QEvent::Type t, const QPointF &pos, const QPointF &globalPos, int device, int pointerType, qreal pressure, int xTilt, int yTilt, qreal tangentialPressure, qreal rotation, int z, Qt::KeyboardModifiers keyState, qint64 uniqueID, Qt::MouseButton button, Qt::MouseButtons buttons);
+%End
     QTabletEvent(QEvent::Type t, const QPointF &pos, const QPointF &globalPos, int device, int pointerType, qreal pressure, int xTilt, int yTilt, qreal tangentialPressure, qreal rotation, int z, Qt::KeyboardModifiers keyState, qint64 uniqueID);
-%End
-%If (- Qt_5_0_0)
-    QTabletEvent(QEvent::Type t, const QPoint &pos, const QPoint &globalPos, const QPointF &hiResGlobalPos, int device, int pointerType, qreal pressure, int xTilt, int yTilt, qreal tangentialPressure, qreal rotation, int z, Qt::KeyboardModifiers keyState, qint64 uniqueID);
-%End
     virtual ~QTabletEvent();
-%If (Qt_5_0_0 -)
     QPoint pos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &pos() const;
-%End
-%If (Qt_5_0_0 -)
     QPoint globalPos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint &globalPos() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    const QPointF &hiResGlobalPos() const;
-%End
     int x() const;
     int y() const;
     int globalX() const;
@@ -460,11 +338,13 @@ public:
     qreal rotation() const;
     int xTilt() const;
     int yTilt() const;
-%If (Qt_5_0_0 -)
     const QPointF &posF() const;
-%End
-%If (Qt_5_0_0 -)
     const QPointF &globalPosF() const;
+%If (Qt_5_4_0 -)
+    Qt::MouseButton button() const;
+%End
+%If (Qt_5_4_0 -)
+    Qt::MouseButtons buttons() const;
 %End
 };
 
@@ -475,9 +355,7 @@ class QKeyEvent : QInputEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     QKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, quint32 nativeScanCode, quint32 nativeVirtualKey, quint32 nativeModifiers, const QString &text = QString(), bool autorep = false, ushort count = 1);
-%End
     QKeyEvent(QEvent::Type type, int key, Qt::KeyboardModifiers modifiers, const QString &text = QString(), bool autorep = false, ushort count = 1);
     virtual ~QKeyEvent();
     int key() const;
@@ -485,18 +363,10 @@ public:
     QString text() const;
     bool isAutoRepeat() const;
     int count() const /__len__/;
-%If (Qt_4_2_0 -)
     bool matches(QKeySequence::StandardKey key) const;
-%End
-%If (Qt_4_2_0 -)
     quint32 nativeModifiers() const;
-%End
-%If (Qt_4_2_0 -)
     quint32 nativeScanCode() const;
-%End
-%If (Qt_4_2_0 -)
     quint32 nativeVirtualKey() const;
-%End
 };
 
 class QFocusEvent : QEvent
@@ -510,12 +380,7 @@ public:
     virtual ~QFocusEvent();
     bool gotFocus() const;
     bool lostFocus() const;
-%If (Qt_4_2_0 -)
     Qt::FocusReason reason() const;
-%End
-%If (- Qt_4_2_0)
-    Qt::FocusReason reason();
-%End
 };
 
 class QPaintEvent : QEvent
@@ -525,18 +390,8 @@ class QPaintEvent : QEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QPaintEvent(const QRegion &paintRegion);
-%End
-%If (- Qt_5_0_0)
-    QPaintEvent(const QRegion &paintRegion);
-%End
-%If (Qt_5_0_0 -)
     explicit QPaintEvent(const QRect &paintRect);
-%End
-%If (- Qt_5_0_0)
-    QPaintEvent(const QRect &paintRect);
-%End
     virtual ~QPaintEvent();
     const QRect &rect() const;
     const QRegion &region() const;
@@ -626,9 +481,7 @@ public:
         Other,
     };
 
-%If (Qt_4_4_0 -)
     QContextMenuEvent(QContextMenuEvent::Reason reason, const QPoint &pos, const QPoint &globalPos, Qt::KeyboardModifiers modifiers);
-%End
     QContextMenuEvent(QContextMenuEvent::Reason reason, const QPoint &pos, const QPoint &globalPos);
     QContextMenuEvent(QContextMenuEvent::Reason reason, const QPoint &pos);
     virtual ~QContextMenuEvent();
@@ -654,9 +507,7 @@ public:
         Cursor,
         Language,
         Ruby,
-%If (Qt_4_6_0 -)
         Selection,
-%End
     };
 
     class Attribute
@@ -667,6 +518,9 @@ public:
 
     public:
         Attribute(QInputMethodEvent::AttributeType t, int s, int l, QVariant val);
+%If (Qt_5_8_0 -)
+        Attribute(QInputMethodEvent::AttributeType typ, int s, int l);
+%End
         QInputMethodEvent::AttributeType type;
         int start;
         int length;
@@ -676,6 +530,9 @@ public:
     QInputMethodEvent();
     QInputMethodEvent(const QString &preeditText, const QList<QInputMethodEvent::Attribute> &attributes);
     QInputMethodEvent(const QInputMethodEvent &other);
+%If (Qt_5_6_0 -)
+    virtual ~QInputMethodEvent();
+%End
     void setCommitString(const QString &commitString, int from = 0, int length = 0);
     const QList<QInputMethodEvent::Attribute> &attributes() const;
     const QString &preeditString() const;
@@ -683,8 +540,6 @@ public:
     int replacementStart() const;
     int replacementLength() const;
 };
-
-%If (Qt_5_0_0 -)
 
 class QInputMethodQueryEvent : QEvent
 {
@@ -700,9 +555,6 @@ public:
     QVariant value(Qt::InputMethodQuery query) const;
 };
 
-%End
-%If (Qt_5_0_0 -)
-
 class QDropEvent : QEvent
 {
 %TypeHeaderCode
@@ -712,12 +564,7 @@ class QDropEvent : QEvent
 public:
     QDropEvent(const QPointF &pos, Qt::DropActions actions, const QMimeData *data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, QEvent::Type type = QEvent::Drop);
     virtual ~QDropEvent();
-%If (Qt_5_0_0 -)
     QPoint pos() const;
-%End
-%If (- Qt_5_0_0)
-    const QPoint pos() const;
-%End
     const QPointF &posF() const;
     Qt::MouseButtons mouseButtons() const;
     Qt::KeyboardModifiers keyboardModifiers() const;
@@ -729,35 +576,6 @@ public:
     QObject *source() const;
     const QMimeData *mimeData() const;
 };
-
-%End
-%If (- Qt_5_0_0)
-
-class QDropEvent : QEvent, QMimeSource
-{
-%TypeHeaderCode
-#include <qevent.h>
-%End
-
-public:
-    QDropEvent(const QPoint &pos, Qt::DropActions actions, const QMimeData *data, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, QEvent::Type type = QEvent::Drop);
-    virtual ~QDropEvent();
-    const QPoint &pos() const;
-    Qt::MouseButtons mouseButtons() const;
-    Qt::KeyboardModifiers keyboardModifiers() const;
-    Qt::DropActions possibleActions() const;
-    Qt::DropAction proposedAction() const;
-    void acceptProposedAction();
-    Qt::DropAction dropAction() const;
-    void setDropAction(Qt::DropAction action);
-    QWidget *source() const;
-    const QMimeData *mimeData() const;
-    virtual const char *format(int n = 0) const;
-    virtual QByteArray encodedData(const char *) const;
-    virtual bool provides(const char *) const;
-};
-
-%End
 
 class QDragMoveEvent : QDropEvent
 {
@@ -821,12 +639,7 @@ class QStatusTipEvent : QEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QStatusTipEvent(const QString &tip);
-%End
-%If (- Qt_5_0_0)
-    QStatusTipEvent(const QString &tip);
-%End
     virtual ~QStatusTipEvent();
     QString tip() const;
 };
@@ -838,18 +651,17 @@ class QWhatsThisClickedEvent : QEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QWhatsThisClickedEvent(const QString &href);
-%End
-%If (- Qt_5_0_0)
-    QWhatsThisClickedEvent(const QString &href);
-%End
     virtual ~QWhatsThisClickedEvent();
     QString href() const;
 };
 
 class QActionEvent : QEvent
 {
+%TypeHintCode
+from PyQt5.QtWidgets import QAction
+%End
+
 %TypeHeaderCode
 #include <qevent.h>
 %End
@@ -870,12 +682,8 @@ class QFileOpenEvent : QEvent /NoDefaultCtors/
 public:
     virtual ~QFileOpenEvent();
     QString file() const;
-%If (Qt_4_6_0 -)
     QUrl url() const;
-%End
-%If (Qt_4_8_0 -)
-    bool openFile(QFile &file, QFlags<QIODevice::OpenModeFlag> flags) const;
-%End
+    bool openFile(QFile &file, QIODevice::OpenMode flags) const;
 };
 
 class QShortcutEvent : QEvent
@@ -887,24 +695,9 @@ class QShortcutEvent : QEvent
 public:
     QShortcutEvent(const QKeySequence &key, int id, bool ambiguous = false);
     virtual ~QShortcutEvent();
-%If (Qt_4_2_0 -)
     bool isAmbiguous() const;
-%End
-%If (- Qt_4_2_0)
-    bool isAmbiguous();
-%End
-%If (Qt_4_2_0 -)
     const QKeySequence &key() const;
-%End
-%If (- Qt_4_2_0)
-    const QKeySequence &key();
-%End
-%If (Qt_4_2_0 -)
     int shortcutId() const;
-%End
-%If (- Qt_4_2_0)
-    int shortcutId();
-%End
 };
 
 class QWindowStateChangeEvent : QEvent /NoDefaultCtors/
@@ -917,8 +710,6 @@ public:
     virtual ~QWindowStateChangeEvent();
     Qt::WindowStates oldState() const;
 };
-
-%If (Qt_4_6_0 -)
 
 class QTouchEvent : QInputEvent
 {
@@ -936,9 +727,6 @@ public:
     public:
         int id() const;
         Qt::TouchPointState state() const;
-%If (- Qt_5_0_0)
-        bool isPrimary() const;
-%End
         QPointF pos() const;
         QPointF startPos() const;
         QPointF lastPos() const;
@@ -955,103 +743,42 @@ public:
         QRectF sceneRect() const;
         QRectF screenRect() const;
         qreal pressure() const;
-%If (Qt_5_0_0 -)
 
         enum InfoFlag
         {
             Pen,
+%If (Qt_5_8_0 -)
+            Token,
+%End
         };
 
-%End
-%If (Qt_5_0_0 -)
         typedef QFlags<QTouchEvent::TouchPoint::InfoFlag> InfoFlags;
-%End
-%If (Qt_5_0_0 -)
         QVector2D velocity() const;
-%End
-%If (Qt_5_0_0 -)
-        QFlags<QTouchEvent::TouchPoint::InfoFlag> flags() const;
-%End
-%If (Qt_5_0_0 -)
+        QTouchEvent::TouchPoint::InfoFlags flags() const;
         QVector<QPointF> rawScreenPositions() const;
+%If (Qt_5_8_0 -)
+        QPointingDeviceUniqueId uniqueId() const;
+%End
+%If (Qt_5_8_0 -)
+        qreal rotation() const;
+%End
+%If (Qt_5_9_0 -)
+        QSizeF ellipseDiameters() const;
 %End
     };
 
-%If (PyQt_Deprecated_5_0)
-
-    enum DeviceType
-    {
-        TouchScreen,
-        TouchPad,
-    };
-
-%End
-%If (Qt_5_0_0 -)
-    QTouchEvent(QEvent::Type eventType, QTouchDevice *device = 0, Qt::KeyboardModifiers modifiers = Qt::NoModifier, Qt::TouchPointStates touchPointStates = 0, const QList<QTouchEvent::TouchPoint> &touchPoints = QList<QTouchEvent::TouchPoint>());
-%End
-%If (- Qt_5_0_0)
-    QTouchEvent(QEvent::Type eventType, QTouchEvent::DeviceType deviceType = QTouchEvent::TouchScreen, Qt::KeyboardModifiers modifiers = Qt::NoModifier, Qt::TouchPointStates touchPointStates = 0, const QList<QTouchEvent::TouchPoint> &touchPoints = QList<QTouchEvent::TouchPoint>());
-%End
+    QTouchEvent(QEvent::Type eventType, QTouchDevice *device = 0, Qt::KeyboardModifiers modifiers = Qt::NoModifier, Qt::TouchPointStates touchPointStates = Qt::TouchPointStates(), const QList<QTouchEvent::TouchPoint> &touchPoints = QList<QTouchEvent::TouchPoint>());
     virtual ~QTouchEvent();
-%If (Qt_5_0_0 -)
     QObject *target() const;
-%End
-%If (- Qt_5_0_0)
-    QWidget *widget() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QTouchEvent::DeviceType deviceType() const;
-%End
     Qt::TouchPointStates touchPointStates() const;
     const QList<QTouchEvent::TouchPoint> &touchPoints() const;
-%If (Qt_5_0_0 -)
+    QWindow *window() const;
     QTouchDevice *device() const;
-%End
-%If (Qt_5_0_0 -)
     void setDevice(QTouchDevice *adevice);
-%End
 };
 
-%End
-%If (Qt_5_0_0 -)
 QFlags<QTouchEvent::TouchPoint::InfoFlag> operator|(QTouchEvent::TouchPoint::InfoFlag f1, QFlags<QTouchEvent::TouchPoint::InfoFlag> f2);
-%End
-%If (Qt_5_0_0 -)
 QFlags<QTouchEvent::TouchPoint::InfoFlag> operator|(QTouchEvent::TouchPoint::InfoFlag f1, QTouchEvent::TouchPoint::InfoFlag f2);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-
-class QGestureEvent : QEvent
-{
-%TypeHeaderCode
-#include <qevent.h>
-%End
-
-public:
-    QGestureEvent(const QList<QGesture*> &gestures);
-    virtual ~QGestureEvent();
-    QList<QGesture*> gestures() const;
-    QGesture *gesture(Qt::GestureType type) const;
-    QList<QGesture*> activeGestures() const;
-    QList<QGesture*> canceledGestures() const;
-    void setAccepted(bool accepted);
-    bool isAccepted() const;
-    void accept();
-    void ignore();
-    void setAccepted(QGesture *, bool);
-    void accept(QGesture *);
-    void ignore(QGesture *);
-    bool isAccepted(QGesture *) const;
-    void setAccepted(Qt::GestureType, bool);
-    void accept(Qt::GestureType);
-    void ignore(Qt::GestureType);
-    bool isAccepted(Qt::GestureType) const;
-    QWidget *widget() const;
-    QPointF mapToGraphicsScene(const QPointF &gesturePoint) const;
-};
-
-%End
-%If (Qt_5_0_0 -)
 
 class QExposeEvent : QEvent
 {
@@ -1064,9 +791,6 @@ public:
     virtual ~QExposeEvent();
     const QRegion &region() const;
 };
-
-%End
-%If (Qt_5_0_0 -)
 
 class QScrollPrepareEvent : QEvent
 {
@@ -1085,9 +809,6 @@ public:
     void setContentPosRange(const QRectF &rect);
     void setContentPos(const QPointF &pos);
 };
-
-%End
-%If (Qt_5_0_0 -)
 
 class QScrollEvent : QEvent
 {
@@ -1110,14 +831,8 @@ public:
     QScrollEvent::ScrollState scrollState() const;
 };
 
-%End
-%If (Qt_4_2_0 -)
 bool operator==(QKeyEvent *e, QKeySequence::StandardKey key);
-%End
-%If (Qt_4_2_0 -)
 bool operator==(QKeySequence::StandardKey key, QKeyEvent *e);
-%End
-%If (Qt_5_0_0 -)
 
 class QEnterEvent : QEvent
 {
@@ -1139,4 +854,80 @@ public:
     const QPointF &screenPos() const;
 };
 
+class QAction /External/;
+%If (Qt_5_2_0 -)
+
+class QNativeGestureEvent : QInputEvent
+{
+%TypeHeaderCode
+#include <qevent.h>
+%End
+
+public:
+    QNativeGestureEvent(Qt::NativeGestureType type, const QPointF &localPos, const QPointF &windowPos, const QPointF &screenPos, qreal value, ulong sequenceId, quint64 intArgument);
+%If (Qt_5_10_0 -)
+    QNativeGestureEvent(Qt::NativeGestureType type, const QTouchDevice *dev, const QPointF &localPos, const QPointF &windowPos, const QPointF &screenPos, qreal value, ulong sequenceId, quint64 intArgument);
+%End
+%If (Qt_5_10_0 -)
+    virtual ~QNativeGestureEvent();
+%End
+    Qt::NativeGestureType gestureType() const;
+    qreal value() const;
+    const QPoint pos() const;
+    const QPoint globalPos() const;
+    const QPointF &localPos() const;
+    const QPointF &windowPos() const;
+    const QPointF &screenPos() const;
+%If (Qt_5_10_0 -)
+    const QTouchDevice *device() const;
+%End
+};
+
+%End
+%If (Qt_5_5_0 -)
+
+class QPlatformSurfaceEvent : QEvent
+{
+%TypeHeaderCode
+#include <qevent.h>
+%End
+
+public:
+    enum SurfaceEventType
+    {
+        SurfaceCreated,
+        SurfaceAboutToBeDestroyed,
+    };
+
+    explicit QPlatformSurfaceEvent(QPlatformSurfaceEvent::SurfaceEventType surfaceEventType);
+    virtual ~QPlatformSurfaceEvent();
+    QPlatformSurfaceEvent::SurfaceEventType surfaceEventType() const;
+};
+
+%End
+%If (Qt_5_8_0 -)
+
+class QPointingDeviceUniqueId
+{
+%TypeHeaderCode
+#include <qevent.h>
+%End
+
+public:
+    QPointingDeviceUniqueId();
+    static QPointingDeviceUniqueId fromNumericId(qint64 id);
+    bool isValid() const;
+    qint64 numericId() const;
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
+%End
+};
+
+%End
+%If (Qt_5_8_0 -)
+bool operator==(QPointingDeviceUniqueId lhs, QPointingDeviceUniqueId rhs);
+%End
+%If (Qt_5_8_0 -)
+bool operator!=(QPointingDeviceUniqueId lhs, QPointingDeviceUniqueId rhs);
 %End

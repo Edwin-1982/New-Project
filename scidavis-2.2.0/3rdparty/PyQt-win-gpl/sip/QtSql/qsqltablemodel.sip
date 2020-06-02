@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -40,13 +40,11 @@ public:
     virtual void setTable(const QString &tableName);
     QString tableName() const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex &idx, int role = Qt::ItemDataRole::DisplayRole) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::ItemDataRole::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::ItemDataRole::DisplayRole) const;
     bool isDirty(const QModelIndex &index) const;
-%If (Qt_5_0_0 -)
     bool isDirty() const;
-%End
     virtual void clear();
     virtual void setEditStrategy(QSqlTableModel::EditStrategy strategy);
     QSqlTableModel::EditStrategy editStrategy() const;
@@ -85,21 +83,15 @@ protected:
     virtual QString selectStatement() const;
     void setPrimaryKey(const QSqlIndex &key);
     void setQuery(const QSqlQuery &query);
-%If (Qt_5_0_0 -)
     virtual QModelIndex indexInQuery(const QModelIndex &item) const;
-%End
-%If (- Qt_5_0_0)
-    QModelIndex indexInQuery(const QModelIndex &item) const;
-%End
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool selectRow(int row);
-%End
-%If (Qt_5_0_0 -)
     QSqlRecord record() const;
-%End
-%If (Qt_5_0_0 -)
     QSqlRecord record(int row) const;
+
+protected:
+%If (Qt_5_1_0 -)
+    QSqlRecord primaryValues(int row) const;
 %End
 };

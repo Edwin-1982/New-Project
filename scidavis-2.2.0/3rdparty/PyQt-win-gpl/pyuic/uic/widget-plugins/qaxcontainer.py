@@ -1,8 +1,8 @@
 #############################################################################
 ##
-## Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+## Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 ## 
-## This file is part of PyQt4.
+## This file is part of PyQt5.
 ## 
 ## This file may be used under the terms of the GNU General Public License
 ## version 3.0 as published by the Free Software Foundation and appearing in
@@ -30,4 +30,4 @@ pluginType = MODULE
 # "import A".  If "module" is "A[.B].C", the code generator will write
 # "from A[.B] import C".  Each entry in "widget_list" must be unique.
 def moduleInformation():
-    return "PyQt4.QAxContainer", ("QAxWidget", )
+    return "PyQt5.QAxContainer", ("QAxWidget", )

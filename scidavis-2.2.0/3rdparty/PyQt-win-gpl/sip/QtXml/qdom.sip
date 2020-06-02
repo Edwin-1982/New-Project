@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXml Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,13 +27,6 @@ class QDomImplementation
 %End
 
 public:
-    enum InvalidDataPolicy
-    {
-        AcceptInvalidChars,
-        DropInvalidChars,
-        ReturnNullNode,
-    };
-
     QDomImplementation();
     QDomImplementation(const QDomImplementation &);
     ~QDomImplementation();
@@ -42,9 +35,17 @@ public:
     bool hasFeature(const QString &feature, const QString &version) const;
     QDomDocumentType createDocumentType(const QString &qName, const QString &publicId, const QString &systemId);
     QDomDocument createDocument(const QString &nsURI, const QString &qName, const QDomDocumentType &doctype);
-    bool isNull();
+
+    enum InvalidDataPolicy
+    {
+        AcceptInvalidChars,
+        DropInvalidChars,
+        ReturnNullNode,
+    };
+
     static QDomImplementation::InvalidDataPolicy invalidDataPolicy();
     static void setInvalidDataPolicy(QDomImplementation::InvalidDataPolicy policy);
+    bool isNull();
 };
 
 class QDomNode
@@ -72,11 +73,17 @@ public:
         CharacterDataNode,
     };
 
+    enum EncodingPolicy
+    {
+        EncodingFromDocument,
+        EncodingFromTextStream,
+    };
+
     QDomNode();
     QDomNode(const QDomNode &);
+    ~QDomNode();
     bool operator==(const QDomNode &) const;
     bool operator!=(const QDomNode &) const;
-    ~QDomNode();
     QDomNode insertBefore(const QDomNode &newChild, const QDomNode &refChild);
     QDomNode insertAfter(const QDomNode &newChild, const QDomNode &refChild);
     QDomNode replaceChild(const QDomNode &newChild, const QDomNode &oldChild);
@@ -132,30 +139,13 @@ public:
     QDomProcessingInstruction toProcessingInstruction() const;
     QDomCharacterData toCharacterData() const;
     QDomComment toComment() const;
-%If (- Qt_5_0_0)
-    void save(QTextStream &, int) const /ReleaseGIL/;
-%End
+    void save(QTextStream &, int, QDomNode::EncodingPolicy = QDomNode::EncodingFromDocument) const /ReleaseGIL/;
     QDomElement firstChildElement(const QString &tagName = QString()) const;
     QDomElement lastChildElement(const QString &tagName = QString()) const;
     QDomElement previousSiblingElement(const QString &tagName = QString()) const;
-    QDomElement nextSiblingElement(const QString &tagName = QString()) const;
+    QDomElement nextSiblingElement(const QString &taName = QString()) const;
     int lineNumber() const;
     int columnNumber() const;
-%If (Qt_4_3_0 -)
-
-    enum EncodingPolicy
-    {
-        EncodingFromDocument,
-        EncodingFromTextStream,
-    };
-
-%End
-%If (Qt_4_3_0 - Qt_5_0_0)
-    void save(QTextStream &, int, QDomNode::EncodingPolicy) const /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    void save(QTextStream &, int, QDomNode::EncodingPolicy encodingPolicy = QDomNode::EncodingFromDocument) const /ReleaseGIL/;
-%End
 };
 
 class QDomNodeList
@@ -167,18 +157,13 @@ class QDomNodeList
 public:
     QDomNodeList();
     QDomNodeList(const QDomNodeList &);
+    ~QDomNodeList();
     bool operator==(const QDomNodeList &) const;
     bool operator!=(const QDomNodeList &) const;
-    ~QDomNodeList();
     QDomNode item(int index) const;
-%If (Qt_5_0_0 -)
-    int length() const;
-%End
-%If (- Qt_5_0_0)
-    uint length() const;
-%End
-    int count() const /__len__/;
     QDomNode at(int index) const;
+    int length() const;
+    int count() const /__len__/;
     int size() const;
     bool isEmpty() const;
 };
@@ -231,13 +216,11 @@ public:
     QDomImplementation implementation() const;
     QDomElement documentElement() const;
     QDomNode::NodeType nodeType() const;
-    bool setContent(const QByteArray &data, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
+    bool setContent(const QByteArray &text, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
     bool setContent(const QString &text, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
     bool setContent(QIODevice *dev, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0) /ReleaseGIL/;
-%If (Qt_4_5_0 -)
-    bool setContent(QXmlInputSource *source, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
-%End
-    bool setContent(const QByteArray &buffer, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
+    bool setContent(QXmlInputSource *source, bool namespaceProcessing, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0) /ReleaseGIL/;
+    bool setContent(const QByteArray &text, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
     bool setContent(const QString &text, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0);
     bool setContent(QIODevice *dev, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0) /ReleaseGIL/;
     bool setContent(QXmlInputSource *source, QXmlReader *reader, QString *errorMsg /Out/ = 0, int *errorLine = 0, int *errorColumn = 0) /ReleaseGIL/;
@@ -254,9 +237,9 @@ class QDomNamedNodeMap
 public:
     QDomNamedNodeMap();
     QDomNamedNodeMap(const QDomNamedNodeMap &);
+    ~QDomNamedNodeMap();
     bool operator==(const QDomNamedNodeMap &) const;
     bool operator!=(const QDomNamedNodeMap &) const;
-    ~QDomNamedNodeMap();
     QDomNode namedItem(const QString &name) const;
     QDomNode setNamedItem(const QDomNode &newNode);
     QDomNode removeNamedItem(const QString &name);
@@ -264,12 +247,7 @@ public:
     QDomNode namedItemNS(const QString &nsURI, const QString &localName) const;
     QDomNode setNamedItemNS(const QDomNode &newNode);
     QDomNode removeNamedItemNS(const QString &nsURI, const QString &localName);
-%If (Qt_5_0_0 -)
     int length() const;
-%End
-%If (- Qt_5_0_0)
-    uint length() const;
-%End
     int count() const /__len__/;
     int size() const;
     bool isEmpty() const;
@@ -302,12 +280,7 @@ public:
     void insertData(unsigned long offset, const QString &arg);
     void deleteData(unsigned long offset, unsigned long count);
     void replaceData(unsigned long offset, unsigned long count, const QString &arg);
-%If (Qt_5_0_0 -)
     int length() const;
-%End
-%If (- Qt_5_0_0)
-    uint length() const;
-%End
     QString data() const;
     void setData(const QString &);
     QDomNode::NodeType nodeType() const;
@@ -462,4 +435,4 @@ public:
     QDomNode::NodeType nodeType() const;
 };
 
-QTextStream &operator<<(QTextStream &, const QDomNode &);
+QTextStream &operator<<(QTextStream &, const QDomNode & /Constrained/);

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QHistoryState : QAbstractState
 {
@@ -39,7 +37,7 @@ public:
     QHistoryState(QHistoryState::HistoryType type, QState *parent /TransferThis/ = 0);
     virtual ~QHistoryState();
     QAbstractState *defaultState() const;
-    void setDefaultState(QAbstractState *state /KeepReference/);
+    void setDefaultState(QAbstractState *state /KeepReference=0/);
     QHistoryState::HistoryType historyType() const;
     void setHistoryType(QHistoryState::HistoryType type);
 
@@ -48,8 +46,24 @@ protected:
     virtual void onExit(QEvent *event);
     virtual bool event(QEvent *e);
 
-private:
-    QHistoryState(const QHistoryState &);
-};
-
+signals:
+%If (Qt_5_4_0 -)
+    void defaultStateChanged();
 %End
+%If (Qt_5_4_0 -)
+    void historyTypeChanged();
+%End
+
+public:
+%If (Qt_5_6_0 -)
+    QAbstractTransition *defaultTransition() const;
+%End
+%If (Qt_5_6_0 -)
+    void setDefaultTransition(QAbstractTransition *transition /KeepReference=1/);
+%End
+
+signals:
+%If (Qt_5_6_0 -)
+    void defaultTransitionChanged();
+%End
+};

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -36,7 +36,15 @@ public:
         UnknownError,
     };
 
+%If (Qt_5_3_0 -)
+    QSqlError(const QString &driverText = QString(), const QString &databaseText = QString(), QSqlError::ErrorType type = QSqlError::NoError, const QString &errorCode = QString());
+%End
+%If (Qt_5_3_0 -)
+    QSqlError(const QString &driverText, const QString &databaseText, QSqlError::ErrorType type, int number);
+%End
+%If (- Qt_5_3_0)
     QSqlError(const QString &driverText = QString(), const QString &databaseText = QString(), QSqlError::ErrorType type = QSqlError::NoError, int number = -1);
+%End
     QSqlError(const QSqlError &other);
     ~QSqlError();
     QString driverText() const;
@@ -49,10 +57,12 @@ public:
     void setNumber(int number);
     QString text() const;
     bool isValid() const;
-%If (Qt_5_0_0 -)
     bool operator==(const QSqlError &other) const;
-%End
-%If (Qt_5_0_0 -)
     bool operator!=(const QSqlError &other) const;
+%If (Qt_5_3_0 -)
+    QString nativeErrorCode() const;
+%End
+%If (Qt_5_10_0 -)
+    void swap(QSqlError &other /Constrained/);
 %End
 };

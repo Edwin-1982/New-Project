@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_2_0 -)
 
 class QNetworkAddressEntry
 {
@@ -38,25 +36,49 @@ public:
     void setNetmask(const QHostAddress &newNetmask);
     QHostAddress broadcast() const;
     void setBroadcast(const QHostAddress &newBroadcast);
-%If (Qt_4_5_0 -)
     bool operator==(const QNetworkAddressEntry &other) const;
-%End
-%If (Qt_4_5_0 -)
     bool operator!=(const QNetworkAddressEntry &other) const;
-%End
-%If (Qt_4_5_0 -)
     int prefixLength() const;
-%End
-%If (Qt_4_5_0 -)
     void setPrefixLength(int length);
-%End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkAddressEntry &other);
-%End
-};
+    void swap(QNetworkAddressEntry &other /Constrained/);
+%If (Qt_5_11_0 -)
+
+    enum DnsEligibilityStatus
+    {
+        DnsEligibilityUnknown,
+        DnsIneligible,
+        DnsEligible,
+    };
 
 %End
-%If (Qt_4_2_0 -)
+%If (Qt_5_11_0 -)
+    QNetworkAddressEntry::DnsEligibilityStatus dnsEligibility() const;
+%End
+%If (Qt_5_11_0 -)
+    void setDnsEligibility(QNetworkAddressEntry::DnsEligibilityStatus status);
+%End
+%If (Qt_5_11_0 -)
+    bool isLifetimeKnown() const;
+%End
+%If (Qt_5_11_0 -)
+    QDeadlineTimer preferredLifetime() const;
+%End
+%If (Qt_5_11_0 -)
+    QDeadlineTimer validityLifetime() const;
+%End
+%If (Qt_5_11_0 -)
+    void setAddressLifetime(QDeadlineTimer preferred, QDeadlineTimer validity);
+%End
+%If (Qt_5_11_0 -)
+    void clearAddressLifetime();
+%End
+%If (Qt_5_11_0 -)
+    bool isPermanent() const;
+%End
+%If (Qt_5_11_0 -)
+    bool isTemporary() const;
+%End
+};
 
 class QNetworkInterface
 {
@@ -81,25 +103,50 @@ public:
     ~QNetworkInterface();
     bool isValid() const;
     QString name() const;
-    QFlags<QNetworkInterface::InterfaceFlag> flags() const;
+    QNetworkInterface::InterfaceFlags flags() const;
     QString hardwareAddress() const;
     QList<QNetworkAddressEntry> addressEntries() const;
     static QNetworkInterface interfaceFromName(const QString &name);
     static QNetworkInterface interfaceFromIndex(int index);
     static QList<QNetworkInterface> allInterfaces();
     static QList<QHostAddress> allAddresses();
-%If (Qt_4_5_0 -)
     int index() const;
-%End
-%If (Qt_4_5_0 -)
     QString humanReadableName() const;
+    void swap(QNetworkInterface &other /Constrained/);
+%If (Qt_5_7_0 -)
+    static int interfaceIndexFromName(const QString &name);
 %End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkInterface &other);
+%If (Qt_5_7_0 -)
+    static QString interfaceNameFromIndex(int index);
+%End
+%If (Qt_5_11_0 -)
+
+    enum InterfaceType
+    {
+        Unknown,
+        Loopback,
+        Virtual,
+        Ethernet,
+        Slip,
+        CanBus,
+        Ppp,
+        Fddi,
+        Wifi,
+        Ieee80211,
+        Phonet,
+        Ieee802154,
+        SixLoWPAN,
+        Ieee80216,
+        Ieee1394,
+    };
+
+%End
+%If (Qt_5_11_0 -)
+    QNetworkInterface::InterfaceType type() const;
+%End
+%If (Qt_5_11_0 -)
+    int maximumTransmissionUnit() const;
 %End
 };
 
-%End
-%If (Qt_4_2_0 -)
 QFlags<QNetworkInterface::InterfaceFlag> operator|(QNetworkInterface::InterfaceFlag f1, QFlags<QNetworkInterface::InterfaceFlag> f2);
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -26,30 +26,7 @@ namespace Qt
 #include <qtextdocument.h>
 %End
 
-%If (- Qt_5_0_0)
-
-    enum HitTestAccuracy
-    {
-        ExactHit,
-        FuzzyHit,
-    };
-
-%End
-%If (- Qt_5_0_0)
-
-    enum WhiteSpaceMode
-    {
-        WhiteSpaceNormal,
-        WhiteSpacePre,
-        WhiteSpaceNoWrap,
-        WhiteSpaceModeUndefined,
-    };
-
-%End
     bool mightBeRichText(const QString &);
-%If (- Qt_5_0_0)
-    QString escape(const QString &plain);
-%End
     QString convertFromPlainText(const QString &plain, Qt::WhiteSpaceMode mode = Qt::WhiteSpacePre);
 };
 
@@ -76,9 +53,7 @@ public:
     enum MetaInformation
     {
         DocumentTitle,
-%If (Qt_4_4_0 -)
         DocumentUrl,
-%End
     };
 
     void setMetaInformation(QTextDocument::MetaInformation info, const QString &);
@@ -97,12 +72,14 @@ public:
 
     typedef QFlags<QTextDocument::FindFlag> FindFlags;
     QTextCursor find(const QString &subString, int position = 0, QFlags<QTextDocument::FindFlag> options = 0) const;
-%If (Qt_4_2_0 -)
     QTextCursor find(const QRegExp &expr, int position = 0, QFlags<QTextDocument::FindFlag> options = 0) const;
+%If (Qt_5_5_0 -)
+    QTextCursor find(const QRegularExpression &expr, int position = 0, QFlags<QTextDocument::FindFlag> options = 0) const;
 %End
     QTextCursor find(const QString &subString, const QTextCursor &cursor, QFlags<QTextDocument::FindFlag> options = 0) const;
-%If (Qt_4_2_0 -)
     QTextCursor find(const QRegExp &expr, const QTextCursor &cursor, QFlags<QTextDocument::FindFlag> options = 0) const;
+%If (Qt_5_5_0 -)
+    QTextCursor find(const QRegularExpression &expr, const QTextCursor &cursor, QFlags<QTextDocument::FindFlag> options = 0) const;
 %End
     QTextFrame *rootFrame() const;
     QTextObject *object(int objectIndex) const;
@@ -116,28 +93,12 @@ public:
     QFont defaultFont() const;
     int pageCount() const;
     bool isModified() const;
-%If (Qt_5_0_0 -)
 %If (PyQt_Printer)
     void print(QPagedPaintDevice *printer) const /PyName=print_/;
 %End
-%End
-%If (- Qt_5_0_0)
-%If (PyQt_Printer)
-    void print(QPrinter *printer) const /PyName=print_/;
-%End
-%End
-%If (Qt_5_0_0 -)
 %If (Py_v3)
 %If (PyQt_Printer)
     void print(QPagedPaintDevice *printer) const;
-%End
-%End
-%End
-%If (- Qt_5_0_0)
-%If (Py_v3)
-%If (PyQt_Printer)
-    void print(QPrinter *printer) const;
-%End
 %End
 %End
 
@@ -145,9 +106,7 @@ public:
     {
         HtmlResource,
         ImageResource,
-%If (Qt_4_2_0 -)
         StyleSheetResource,
-%End
         UserResource,
     };
 
@@ -159,9 +118,7 @@ public:
     bool useDesignMetrics() const;
 
 signals:
-%If (Qt_4_3_0 -)
     void blockCountChanged(int newBlockCount);
-%End
     void contentsChange(int from, int charsRemoves, int charsAdded);
     void contentsChanged();
     void cursorPositionChanged(const QTextCursor &cursor);
@@ -179,104 +136,41 @@ protected:
     virtual QVariant loadResource(int type, const QUrl &name);
 
 public:
-%If (Qt_4_2_0 -)
     void drawContents(QPainter *p, const QRectF &rect = QRectF());
-%End
-%If (Qt_4_2_0 -)
     void setTextWidth(qreal width);
-%End
-%If (Qt_4_2_0 -)
     qreal textWidth() const;
-%End
-%If (Qt_4_2_0 -)
     qreal idealWidth() const;
-%End
-%If (Qt_4_2_0 -)
     void adjustSize();
-%End
-%If (Qt_4_2_0 -)
     QSizeF size() const;
-%End
-%If (Qt_4_2_0 -)
     int blockCount() const;
-%End
-%If (Qt_4_2_0 -)
     void setDefaultStyleSheet(const QString &sheet);
-%End
-%If (Qt_4_2_0 -)
     QString defaultStyleSheet() const;
-%End
-%If (Qt_4_2_0 -)
     void undo(QTextCursor *cursor);
-%End
-%If (Qt_4_2_0 -)
     void redo(QTextCursor *cursor);
-%End
-%If (Qt_4_2_0 -)
     int maximumBlockCount() const;
-%End
-%If (Qt_4_2_0 -)
     void setMaximumBlockCount(int maximum);
-%End
-%If (Qt_4_3_0 -)
     QTextOption defaultTextOption() const;
-%End
-%If (Qt_4_3_0 -)
     void setDefaultTextOption(const QTextOption &option);
-%End
-%If (Qt_4_4_0 -)
     int revision() const;
-%End
-%If (Qt_4_4_0 -)
     QTextBlock findBlockByNumber(int blockNumber) const;
-%End
-%If (Qt_4_5_0 -)
     QTextBlock findBlockByLineNumber(int blockNumber) const;
-%End
-%If (Qt_4_4_0 -)
     QTextBlock firstBlock() const;
-%End
-%If (Qt_4_4_0 -)
     QTextBlock lastBlock() const;
-%End
-%If (Qt_4_4_0 -)
     qreal indentWidth() const;
-%End
-%If (Qt_4_4_0 -)
     void setIndentWidth(qreal width);
-%End
 
 signals:
-%If (Qt_4_4_0 -)
     void undoCommandAdded();
-%End
-%If (Qt_4_4_0 -)
     void documentLayoutChanged();
-%End
 
 public:
-%If (Qt_4_5_0 -)
     QChar characterAt(int pos) const;
-%End
-%If (Qt_4_5_0 -)
     qreal documentMargin() const;
-%End
-%If (Qt_4_5_0 -)
     void setDocumentMargin(qreal margin);
-%End
-%If (Qt_4_5_0 -)
     int lineCount() const;
-%End
-%If (Qt_4_5_0 -)
     int characterCount() const;
-%End
-%If (Qt_4_6_0 -)
     int availableUndoSteps() const;
-%End
-%If (Qt_4_6_0 -)
     int availableRedoSteps() const;
-%End
-%If (Qt_4_7_0 -)
 
     enum Stacks
     {
@@ -285,19 +179,25 @@ public:
         UndoAndRedoStacks,
     };
 
-%End
-%If (Qt_4_7_0 -)
     void clearUndoRedoStacks(QTextDocument::Stacks stacks = QTextDocument::UndoAndRedoStacks);
-%End
-%If (Qt_4_8_0 -)
     Qt::CursorMoveStyle defaultCursorMoveStyle() const;
-%End
-%If (Qt_4_8_0 -)
     void setDefaultCursorMoveStyle(Qt::CursorMoveStyle style);
+%If (Qt_5_3_0 -)
+    QUrl baseUrl() const;
+%End
+%If (Qt_5_3_0 -)
+    void setBaseUrl(const QUrl &url);
 %End
 
-private:
-    QTextDocument(const QTextDocument &);
+signals:
+%If (Qt_5_3_0 -)
+    void baseUrlChanged(const QUrl &url);
+%End
+
+public:
+%If (Qt_5_9_0 -)
+    QString toRawText() const;
+%End
 };
 
 QFlags<QTextDocument::FindFlag> operator|(QTextDocument::FindFlag f1, QFlags<QTextDocument::FindFlag> f2);

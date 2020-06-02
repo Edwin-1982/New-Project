@@ -1,8 +1,8 @@
 // This is the SIP interface definition for QAxWidget.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -18,8 +18,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (WS_WIN)
-
 class QAxWidget : QWidget, QAxBase /PyQtNoQMetaObject/
 {
 %TypeHeaderCode
@@ -27,10 +25,10 @@ class QAxWidget : QWidget, QAxBase /PyQtNoQMetaObject/
 %End
 
 public:
-    QAxWidget(QWidget *parent /TransferThis/ = 0, Qt::WFlags flags = 0);
+    QAxWidget(QWidget *parent /TransferThis/ = 0, Qt::WindowFlags flags = 0);
     QAxWidget(const QString &, QWidget *parent /TransferThis/ = 0,
-            Qt::WFlags flags = 0);
-    //QAxWidget(IUnknown *, QWidget *parent /TransferThis/ = 0, Qt::WFlags flags = 0);
+            Qt::WindowFlags flags = 0);
+    //QAxWidget(IUnknown *, QWidget *parent /TransferThis/ = 0, Qt::WindowFlags flags = 0);
     ~QAxWidget();
 
     void clear();
@@ -50,12 +48,5 @@ protected:
 
     virtual bool translateKeyEvent(int,int) const;
 
-%If (Qt_5_0_0 -)
     void connectNotify(const QMetaMethod &);
-%End
-%If (- Qt_5_0_0)
-    void connectNotify(const char *);
-%End
 };
-
-%End

@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2011 Riverbank Computing Limited.
+## Copyright (C) 2019 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -40,19 +40,17 @@
 
 import sys
 
-from PyQt4.uic.properties import Properties
-from PyQt4.uic.uiparser import UIParser
-from PyQt4.uic.Compiler import qtproxies
-from PyQt4.uic.Compiler.indenter import createCodeIndenter, getIndenter, \
-        write_code
-from PyQt4.uic.Compiler.qobjectcreator import CompilerCreatorPolicy
-from PyQt4.uic.Compiler.misc import write_import
+from ..properties import Properties
+from ..uiparser import UIParser
+from . import qtproxies
+from .indenter import createCodeIndenter, getIndenter, write_code
+from .qobjectcreator import CompilerCreatorPolicy
 
 
 class UICompiler(UIParser):
     def __init__(self):
         UIParser.__init__(self, qtproxies.QtCore, qtproxies.QtGui,
-                CompilerCreatorPolicy())
+                qtproxies.QtWidgets, CompilerCreatorPolicy())
 
     def reset(self):
         qtproxies.i18n_strings = []
@@ -65,39 +63,10 @@ class UICompiler(UIParser):
         indenter = getIndenter()
         indenter.level = 0
 
-        indenter.write("from PyQt4 import QtCore, QtGui")
+        indenter.write("from PyQt5 import QtCore, QtGui, QtWidgets")
         indenter.write("")
 
-        indenter.write("try:")
-        indenter.indent()
-        indenter.write("_fromUtf8 = QtCore.QString.fromUtf8")
-        indenter.dedent()
-        indenter.write("except AttributeError:")
-        indenter.indent()
-        indenter.write("def _fromUtf8(s):")
-        indenter.indent()
-        indenter.write("return s")
-        indenter.dedent()
-        indenter.dedent()
         indenter.write("")
-
-        indenter.write("try:")
-        indenter.indent()
-        indenter.write("_encoding = QtGui.QApplication.UnicodeUTF8")
-        indenter.write("def _translate(context, text, disambig):")
-        indenter.indent()
-        indenter.write("return QtGui.QApplication.translate(context, text, disambig, _encoding)")
-        indenter.dedent()
-        indenter.dedent()
-        indenter.write("except AttributeError:")
-        indenter.indent()
-        indenter.write("def _translate(context, text, disambig):")
-        indenter.indent()
-        indenter.write("return QtGui.QApplication.translate(context, text, disambig)")
-        indenter.dedent()
-        indenter.dedent()
-        indenter.write("")
-
         indenter.write("class Ui_%s(object):" % self.uiname)
         indenter.indent()
         indenter.write("def setupUi(self, %s):" % widgetname)
@@ -119,9 +88,11 @@ class UICompiler(UIParser):
         indenter.level = 1
         indenter.write("")
         indenter.write("def retranslateUi(self, %s):" % self.toplevelWidget)
+
         indenter.indent()
 
         if qtproxies.i18n_strings:
+            indenter.write("_translate = QtCore.QCoreApplication.translate")
             for s in qtproxies.i18n_strings:
                 indenter.write(s)
         else:
@@ -135,17 +106,17 @@ class UICompiler(UIParser):
         self._resources = self.resources
         self._resources.sort()
 
-    def compileUi(self, input_stream, output_stream, from_imports, resource_suffix):
+    def compileUi(self, input_stream, output_stream, from_imports, resource_suffix, import_from):
         createCodeIndenter(output_stream)
         w = self.parse(input_stream, resource_suffix)
-
-        indenter = getIndenter()
-        indenter.write("")
 
         self.factory._cpolicy._writeOutImports()
 
         for res in self._resources:
-            write_import(res, from_imports)
+            if from_imports:
+                write_code("from %s import %s" % (import_from, res))
+            else:
+                write_code("import %s" % res)
 
         return {"widgetname": str(w),
                 "uiclass" : w.uiclass,

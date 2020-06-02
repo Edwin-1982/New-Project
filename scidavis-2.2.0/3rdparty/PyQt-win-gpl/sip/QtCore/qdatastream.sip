@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,32 +37,53 @@ public:
         Qt_3_3,
         Qt_4_0,
         Qt_4_1,
-%If (Qt_4_2_0 -)
         Qt_4_2,
-%End
-%If (Qt_4_3_0 -)
         Qt_4_3,
-%End
-%If (Qt_4_4_0 -)
         Qt_4_4,
-%End
-%If (Qt_4_5_0 -)
         Qt_4_5,
-%End
-%If (Qt_4_6_0 -)
         Qt_4_6,
-%End
-%If (Qt_4_7_0 -)
         Qt_4_7,
-%End
-%If (Qt_4_8_0 -)
         Qt_4_8,
-%End
-%If (Qt_5_0_0 -)
         Qt_4_9,
-%End
-%If (Qt_5_0_0 -)
         Qt_5_0,
+%If (Qt_5_1_0 -)
+        Qt_5_1,
+%End
+%If (Qt_5_2_0 -)
+        Qt_5_2,
+%End
+%If (Qt_5_3_0 -)
+        Qt_5_3,
+%End
+%If (Qt_5_4_0 -)
+        Qt_5_4,
+%End
+%If (Qt_5_5_0 -)
+        Qt_5_5,
+%End
+%If (Qt_5_6_0 -)
+        Qt_5_6,
+%End
+%If (Qt_5_7_0 -)
+        Qt_5_7,
+%End
+%If (Qt_5_8_0 -)
+        Qt_5_8,
+%End
+%If (Qt_5_9_0 -)
+        Qt_5_9,
+%End
+%If (Qt_5_10_0 -)
+        Qt_5_10,
+%End
+%If (Qt_5_11_0 -)
+        Qt_5_11,
+%End
+%If (Qt_5_12_0 -)
+        Qt_5_12,
+%End
+%If (Qt_5_13_0 -)
+        Qt_5_13,
 %End
     };
 
@@ -77,24 +98,16 @@ public:
         Ok,
         ReadPastEnd,
         ReadCorruptData,
-%If (Qt_4_8_0 -)
         WriteFailed,
-%End
     };
 
     QDataStream();
     explicit QDataStream(QIODevice *);
-    QDataStream(QByteArray * /Constrained/, QFlags<QIODevice::OpenModeFlag> flags);
+    QDataStream(QByteArray * /Constrained/, QIODevice::OpenMode flags);
     QDataStream(const QByteArray & /Constrained/);
-%If (Qt_5_0_0 -)
     ~QDataStream();
-%End
-%If (- Qt_5_0_0)
-    virtual ~QDataStream();
-%End
     QIODevice *device() const;
     void setDevice(QIODevice *);
-    void unsetDevice();
     bool atEnd() const;
     QDataStream::Status status() const;
     void setStatus(QDataStream::Status status);
@@ -208,7 +221,7 @@ SIP_PYOBJECT readString() /ReleaseGIL,TypeHint="Py_v3:bytes;str"/;
         Py_INCREF(Py_None);
     }
 %End
-
+    
 void writeInt(int i) /ReleaseGIL/;
 %MethodCode
     Py_BEGIN_ALLOW_THREADS
@@ -380,8 +393,6 @@ void writeQVariantMap(const QVariantMap &qvarmap) /ReleaseGIL/;
     Py_END_ALLOW_THREADS
 %End
 
-%If (Qt_4_5_0 -)
-
 QVariantHash readQVariantHash() /ReleaseGIL/;
 %MethodCode
     sipRes = new QVariantHash;
@@ -396,8 +407,6 @@ void writeQVariantHash(const QVariantHash &qvarhash) /ReleaseGIL/;
     Py_BEGIN_ALLOW_THREADS
     *sipCpp << *a0;
     Py_END_ALLOW_THREADS
-%End
-
 %End
     SIP_PYOBJECT readBytes() /TypeHint="Py_v3:bytes;str",ReleaseGIL/;
 %MethodCode
@@ -431,9 +440,8 @@ void writeQVariantHash(const QVariantHash &qvarhash) /ReleaseGIL/;
         delete[] s;
 %End
 
-    QDataStream &writeBytes(const char * /Array, TypeHint="Py_v3:bytes;str"/, uint len /ArraySize/) /ReleaseGIL/;
-    int writeRawData(const char * /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/) /ReleaseGIL/;
-%If (Qt_4_6_0 -)
+    QDataStream &writeBytes(const char * /Array/, uint len /ArraySize/) /ReleaseGIL/;
+    int writeRawData(const char * /Array/, int len /ArraySize/) /ReleaseGIL/;
 
     enum FloatingPointPrecision
     {
@@ -441,12 +449,19 @@ void writeQVariantHash(const QVariantHash &qvarhash) /ReleaseGIL/;
         DoublePrecision,
     };
 
-%End
-%If (Qt_4_6_0 -)
     QDataStream::FloatingPointPrecision floatingPointPrecision() const;
-%End
-%If (Qt_4_6_0 -)
     void setFloatingPointPrecision(QDataStream::FloatingPointPrecision precision);
+%If (Qt_5_7_0 -)
+    void startTransaction();
+%End
+%If (Qt_5_7_0 -)
+    bool commitTransaction();
+%End
+%If (Qt_5_7_0 -)
+    void rollbackTransaction();
+%End
+%If (Qt_5_7_0 -)
+    void abortTransaction();
 %End
 
 private:

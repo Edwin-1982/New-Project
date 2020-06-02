@@ -2,9 +2,9 @@
 //
 // This file is part of the QtMultimedia Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QAbstractVideoSurface : QObject
 {
 %TypeHeaderCode
@@ -34,9 +32,33 @@ class QAbstractVideoSurface : QObject
         sipTypeDef **type;
         int yes, no;
     } graph[] = {
-        {sipName_QAudioOutput, &sipType_QAudioOutput, -1, 1},
-        {sipName_QAudioInput, &sipType_QAudioInput, -1, 2},
-        {sipName_QAbstractVideoSurface, &sipType_QAbstractVideoSurface, -1, -1},
+        {sipName_QSound, &sipType_QSound, -1, 1},
+        {sipName_QCameraImageProcessing, &sipType_QCameraImageProcessing, -1, 2},
+        {sipName_QVideoProbe, &sipType_QVideoProbe, -1, 3},
+        {sipName_QCameraExposure, &sipType_QCameraExposure, -1, 4},
+        {sipName_QAudioInput, &sipType_QAudioInput, -1, 5},
+    #if QT_VERSION >= 0x050500
+        {sipName_QAbstractVideoFilter, &sipType_QAbstractVideoFilter, -1, 6},
+    #else
+        {0, 0, -1, 6},
+    #endif
+        {sipName_QMediaObject, &sipType_QMediaObject, 18, 7},
+        {sipName_QMediaRecorder, &sipType_QMediaRecorder, 22, 8},
+        {sipName_QSoundEffect, &sipType_QSoundEffect, -1, 9},
+        {sipName_QCameraImageCapture, &sipType_QCameraImageCapture, -1, 10},
+        {sipName_QAbstractVideoSurface, &sipType_QAbstractVideoSurface, -1, 11},
+        {sipName_QAudioOutput, &sipType_QAudioOutput, -1, 12},
+        {sipName_QCameraFocus, &sipType_QCameraFocus, -1, 13},
+        {sipName_QMediaService, &sipType_QMediaService, -1, 14},
+        {sipName_QRadioData, &sipType_QRadioData, -1, 15},
+        {sipName_QMediaControl, &sipType_QMediaControl, -1, 16},
+        {sipName_QMediaPlaylist, &sipType_QMediaPlaylist, -1, 17},
+        {sipName_QAudioProbe, &sipType_QAudioProbe, -1, -1},
+        {sipName_QRadioTuner, &sipType_QRadioTuner, -1, 19},
+        {sipName_QCamera, &sipType_QCamera, -1, 20},
+        {sipName_QMediaPlayer, &sipType_QMediaPlayer, -1, 21},
+        {sipName_QAudioDecoder, &sipType_QAudioDecoder, -1, -1},
+        {sipName_QAudioRecorder, &sipType_QAudioRecorder, -1, -1},
     };
     
     int i = 0;
@@ -89,19 +111,11 @@ protected:
     void setError(QAbstractVideoSurface::Error error);
 
 public:
-%If (Qt_5_0_0 -)
     QSize nativeResolution() const;
-%End
 
 protected:
-%If (Qt_5_0_0 -)
     void setNativeResolution(const QSize &resolution);
-%End
 
 signals:
-%If (Qt_5_0_0 -)
     void nativeResolutionChanged(const QSize &);
-%End
 };
-
-%End

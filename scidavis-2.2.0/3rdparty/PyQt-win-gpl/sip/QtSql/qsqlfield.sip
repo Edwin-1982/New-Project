@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -35,6 +35,9 @@ public:
     };
 
     QSqlField(const QString &fieldName = QString(), QVariant::Type type = QVariant::Invalid);
+%If (Qt_5_10_0 -)
+    QSqlField(const QString &fieldName, QVariant::Type type, const QString &tableName);
+%End
     QSqlField(const QSqlField &other);
     bool operator==(const QSqlField &other) const;
     bool operator!=(const QSqlField &other) const;
@@ -65,4 +68,10 @@ public:
     int typeID() const;
     bool isGenerated() const;
     bool isValid() const;
+%If (Qt_5_10_0 -)
+    void setTableName(const QString &tableName);
+%End
+%If (Qt_5_10_0 -)
+    QString tableName() const;
+%End
 };

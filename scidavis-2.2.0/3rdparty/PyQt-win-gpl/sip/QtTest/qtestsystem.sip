@@ -2,9 +2,9 @@
 //
 // This file is part of the QtTest Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -26,19 +26,9 @@ namespace QTest
 #include <qtestsystem.h>
 %End
 
-    void qWait(int ms);
-%If (Qt_4_6_0 - Qt_5_0_0)
-    bool qWaitForWindowShown(QWidget *window);
-%End
-%If (Qt_5_0_0 -)
-    bool qWaitForWindowActive(QWidget *widget, int timeout = 1000);
-%End
-%If (Qt_5_0_0 -)
-    bool qWaitForWindowExposed(QWidget *widget, int timeout = 1000);
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_Deprecated_5_0)
-    bool qWaitForWindowShown(QWidget *widget, int timeout = 1000);
-%End
-%End
+    void qWait(int ms) /ReleaseGIL/;
+    bool qWaitForWindowActive(QWindow *window, int timeout = 5000) /ReleaseGIL/;
+    bool qWaitForWindowExposed(QWindow *window, int timeout = 5000) /ReleaseGIL/;
+    bool qWaitForWindowActive(QWidget *widget, int timeout = 5000) /ReleaseGIL/;
+    bool qWaitForWindowExposed(QWidget *widget, int timeout = 5000) /ReleaseGIL/;
 };

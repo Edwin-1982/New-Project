@@ -1,8 +1,8 @@
 // This is the initialisation support code for the QtDBus module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,18 +20,19 @@
 
 #include <Python.h>
 
-#include "sipAPIQtDBus.h"
-
+#include "qpydbus_api.h"
 #include "qpydbus_chimera_helpers.h"
+
+#include "sipAPIQtDBus.h"
 
 
 // Perform any required initialisation.
 void qpydbus_post_init()
 {
     // Get the Chimera helper registration function.
-    void (*register_from_qvariant)(FromQVariantFn);
-    register_from_qvariant = (void (*)(FromQVariantFn))sipImportSymbol(
-            "pyqt4_register_from_qvariant_convertor");
-    Q_ASSERT(register_from_qvariant);
-    register_from_qvariant(qpydbus_from_qvariant);
+    void (*register_from_qvariant_convertor)(FromQVariantConvertorFn);
+
+    register_from_qvariant_convertor = (void (*)(FromQVariantConvertorFn))sipImportSymbol("pyqt5_register_from_qvariant_convertor");
+    Q_ASSERT(register_from_qvariant_convertor);
+    register_from_qvariant_convertor(qpydbus_from_qvariant_convertor);
 }

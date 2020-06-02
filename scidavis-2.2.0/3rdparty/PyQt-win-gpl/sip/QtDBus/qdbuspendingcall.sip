@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_7_0 -)
-
 class QDBusPendingCall
 {
 %TypeHeaderCode
@@ -33,16 +31,11 @@ public:
     ~QDBusPendingCall();
     static QDBusPendingCall fromError(const QDBusError &error);
     static QDBusPendingCall fromCompletedCall(const QDBusMessage &message);
-%If (Qt_5_0_0 -)
-    void swap(QDBusPendingCall &other);
-%End
+    void swap(QDBusPendingCall &other /Constrained/);
 
 private:
     QDBusPendingCall();
 };
-
-%End
-%If (Qt_4_7_0 -)
 
 class QDBusPendingCallWatcher : QObject, QDBusPendingCall
 {
@@ -57,7 +50,10 @@ public:
     void waitForFinished() /ReleaseGIL/;
 
 signals:
-    void finished(QDBusPendingCallWatcher *self);
-};
-
+%If (- Qt_5_6_0)
+    void finished(QDBusPendingCallWatcher *watcher);
 %End
+%If (Qt_5_6_0 -)
+    void finished(QDBusPendingCallWatcher *watcher = 0);
+%End
+};

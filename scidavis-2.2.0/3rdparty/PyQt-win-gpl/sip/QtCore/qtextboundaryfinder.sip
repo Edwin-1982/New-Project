@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QTextBoundaryFinder
 {
 %TypeHeaderCode
@@ -32,27 +30,11 @@ public:
     enum BoundaryReason
     {
         NotAtBoundary,
-%If (- Qt_5_0_0)
-        StartWord,
-%End
-%If (- Qt_5_0_0)
-        EndWord,
-%End
-%If (Qt_5_0_0 -)
         SoftHyphen,
-%End
-%If (Qt_5_0_0 -)
         BreakOpportunity,
-%End
-%If (Qt_5_0_0 -)
         StartOfItem,
-%End
-%If (Qt_5_0_0 -)
         EndOfItem,
-%End
-%If (Qt_5_0_0 -)
         MandatoryBreak,
-%End
     };
 
     typedef QFlags<QTextBoundaryFinder::BoundaryReason> BoundaryReasons;
@@ -79,10 +61,7 @@ public:
     int toNextBoundary();
     int toPreviousBoundary();
     bool isAtBoundary() const;
-    QFlags<QTextBoundaryFinder::BoundaryReason> boundaryReasons() const;
+    QTextBoundaryFinder::BoundaryReasons boundaryReasons() const;
 };
 
-%End
-%If (Qt_5_0_0 -)
 QFlags<QTextBoundaryFinder::BoundaryReason> operator|(QTextBoundaryFinder::BoundaryReason f1, QFlags<QTextBoundaryFinder::BoundaryReason> f2);
-%End

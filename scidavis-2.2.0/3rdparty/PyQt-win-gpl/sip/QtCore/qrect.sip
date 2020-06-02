@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -57,9 +57,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QRect()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QRect()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QRect()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QRect()");
         #endif
         }
         else
@@ -70,7 +70,7 @@ public:
         #else
                 PyString_FromFormat
         #endif
-                    ("PyQt4.QtCore.QRect(%i, %i, %i, %i)", sipCpp->left(),
+                    ("PyQt5.QtCore.QRect(%i, %i, %i, %i)", sipCpp->left(),
                     sipCpp->top(), sipCpp->width(), sipCpp->height());
         }
 %End
@@ -134,22 +134,27 @@ public:
     bool contains(int ax, int ay) const;
     QRect &operator|=(const QRect &r);
     QRect &operator&=(const QRect &r);
-%If (PyQt_Deprecated_5_0)
-    QRect intersect(const QRect &r) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QRect unite(const QRect &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRect intersected(const QRect &other) const;
-%End
-%If (Qt_4_2_0 -)
     QRect united(const QRect &r) const;
+%If (Qt_5_1_0 -)
+    QRect marginsAdded(const QMargins &margins) const;
+%End
+%If (Qt_5_1_0 -)
+    QRect marginsRemoved(const QMargins &margins) const;
+%End
+%If (Qt_5_1_0 -)
+    QRect &operator+=(const QMargins &margins);
+%End
+%If (Qt_5_1_0 -)
+    QRect &operator-=(const QMargins &margins);
+%End
+%If (Qt_5_7_0 -)
+    QRect transposed() const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QRect & /Constrained/);
-QDataStream &operator>>(QDataStream &, QRect & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QRect & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QRect & /Constrained/) /ReleaseGIL/;
 bool operator==(const QRect &r1, const QRect &r2);
 bool operator!=(const QRect &r1, const QRect &r2);
 
@@ -166,9 +171,7 @@ class QRectF
 public:
     QRectF();
     QRectF(const QPointF &atopLeft, const QSizeF &asize);
-%If (Qt_4_3_0 -)
     QRectF(const QPointF &atopLeft, const QPointF &abottomRight);
-%End
     QRectF(qreal aleft, qreal atop, qreal awidth, qreal aheight);
     QRectF(const QRect &r);
     SIP_PYOBJECT __repr__() const /TypeHint="str"/;
@@ -176,9 +179,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QRectF()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QRectF()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QRectF()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QRectF()");
         #endif
         }
         else
@@ -191,10 +194,10 @@ public:
             if (l && t && w && h)
             {
         #if PY_MAJOR_VERSION >= 3
-                sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QRectF(%R, %R, %R, %R)", l,
+                sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QRectF(%R, %R, %R, %R)", l,
                         t, w, h);
         #else
-                sipRes = PyString_FromString("PyQt4.QtCore.QRectF(");
+                sipRes = PyString_FromString("PyQt5.QtCore.QRectF(");
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(l));
                 PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(t));
@@ -288,25 +291,46 @@ public:
     bool contains(qreal ax, qreal ay) const;
     QRectF &operator|=(const QRectF &r);
     QRectF &operator&=(const QRectF &r);
-%If (PyQt_Deprecated_5_0)
-    QRectF intersect(const QRectF &r) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QRectF unite(const QRectF &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRectF intersected(const QRectF &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRectF united(const QRectF &r) const;
-%End
-%If (Qt_4_3_0 -)
     QRect toAlignedRect() const;
-%End
     QRect toRect() const;
+%If (Qt_5_3_0 -)
+    QRectF marginsAdded(const QMarginsF &margins) const;
+%End
+%If (Qt_5_3_0 -)
+    QRectF marginsRemoved(const QMarginsF &margins) const;
+%End
+%If (Qt_5_3_0 -)
+    QRectF &operator+=(const QMarginsF &margins);
+%End
+%If (Qt_5_3_0 -)
+    QRectF &operator-=(const QMarginsF &margins);
+%End
+%If (Qt_5_7_0 -)
+    QRectF transposed() const;
+%End
 };
 
-QDataStream &operator<<(QDataStream &, const QRectF & /Constrained/);
-QDataStream &operator>>(QDataStream &, QRectF & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QRectF & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QRectF & /Constrained/) /ReleaseGIL/;
 bool operator==(const QRectF &r1, const QRectF &r2);
 bool operator!=(const QRectF &r1, const QRectF &r2);
+%If (Qt_5_3_0 -)
+QRect operator+(const QRect &rectangle, const QMargins &margins);
+%End
+%If (Qt_5_3_0 -)
+QRect operator+(const QMargins &margins, const QRect &rectangle);
+%End
+%If (Qt_5_3_0 -)
+QRect operator-(const QRect &lhs, const QMargins &rhs);
+%End
+%If (Qt_5_3_0 -)
+QRectF operator+(const QRectF &lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QRectF operator+(const QMarginsF &lhs, const QRectF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QRectF operator-(const QRectF &lhs, const QMarginsF &rhs);
+%End

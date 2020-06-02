@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -32,22 +32,22 @@ class QPainter
 template<class TYPE>
 static TYPE *qtgui_inst_array(const TYPE *first, PyObject *t, sipTypeDef *td)
 {
-    TYPE *arr = new TYPE[1 + PyTuple_GET_SIZE(t)];
+    TYPE *arr = new TYPE[1 + PyTuple_Size(t)];
 
     arr[0] = *first;
 
-    for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(t); ++i)
+    for (Py_ssize_t i = 0; i < PyTuple_Size(t); ++i)
     {
         int iserr = 0, state;
         TYPE *itm;
 
-        itm  = reinterpret_cast<TYPE *>(sipForceConvertToType(PyTuple_GET_ITEM(t, i), td, 0, SIP_NOT_NONE, &state, &iserr));
+        itm  = reinterpret_cast<TYPE *>(sipForceConvertToType(PyTuple_GetItem(t, i), td, 0, SIP_NOT_NONE, &state, &iserr));
 
         if (iserr)
         {
             sipReleaseType(itm, td, state);
 
-            PyErr_Format(PyExc_TypeError, "each argument must be an instance of %s", sipTypeAsPyTypeObject(td)->tp_name);
+            PyErr_Format(PyExc_TypeError, "each argument must be an instance of %s", sipPyTypeName(sipTypeAsPyTypeObject(td)));
 
             delete[] arr;
             return 0;
@@ -68,14 +68,11 @@ public:
         Antialiasing,
         TextAntialiasing,
         SmoothPixmapTransform,
-%If (Qt_4_3_0 -)
         HighQualityAntialiasing,
-%End
-%If (Qt_4_4_0 -)
         NonCosmeticDefaultPen,
-%End
-%If (Qt_5_0_0 -)
         Qt4CompatiblePainting,
+%If (Qt_5_13_0 -)
+        LosslessImageRendering,
 %End
     };
 
@@ -108,12 +105,6 @@ public:
     bool begin(QPaintDevice *);
     bool end();
     bool isActive() const;
-%If (Qt_5_0_0 -)
-    void initFrom(const QPaintDevice *device);
-%End
-%If (- Qt_5_0_0)
-    void initFrom(const QWidget *widget);
-%End
 
     enum CompositionMode
     {
@@ -129,84 +120,32 @@ public:
         CompositionMode_SourceAtop,
         CompositionMode_DestinationAtop,
         CompositionMode_Xor,
-%If (Qt_4_3_0 -)
         CompositionMode_Plus,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Multiply,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Screen,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Overlay,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Darken,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Lighten,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_ColorDodge,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_ColorBurn,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_HardLight,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_SoftLight,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Difference,
-%End
-%If (Qt_4_3_0 -)
         CompositionMode_Exclusion,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_SourceOrDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_SourceAndDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_SourceXorDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_NotSourceAndNotDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_NotSourceOrNotDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_NotSourceXorDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_NotSource,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_NotSourceAndDestination,
-%End
-%If (Qt_4_5_0 -)
         RasterOp_SourceAndNotDestination,
-%End
-%If (Qt_5_0_0 -)
         RasterOp_NotSourceOrDestination,
-%End
-%If (Qt_5_0_0 -)
         RasterOp_SourceOrNotDestination,
-%End
-%If (Qt_5_0_0 -)
         RasterOp_ClearDestination,
-%End
-%If (Qt_5_0_0 -)
         RasterOp_SetDestination,
-%End
-%If (Qt_5_0_0 -)
         RasterOp_NotDestination,
-%End
     };
 
     void setCompositionMode(QPainter::CompositionMode mode);
@@ -237,12 +176,6 @@ public:
     bool hasClipping() const;
     void save();
     void restore();
-    void setMatrix(const QMatrix &matrix, bool combine = false);
-    const QMatrix &matrix() const;
-    const QMatrix &deviceMatrix() const;
-    void resetMatrix();
-    void setMatrixEnabled(bool enabled);
-    bool matrixEnabled() const;
     void scale(qreal sx, qreal sy);
     void shear(qreal sh, qreal sv);
     void rotate(qreal a);
@@ -262,7 +195,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPoints(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPoints(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -276,7 +209,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPoints(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPoints(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -290,7 +223,7 @@ public:
         
         if (lines)
         {
-            sipCpp->drawLines(lines, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawLines(lines, 1 + PyTuple_Size(a1));
             delete[] lines;
         }
         else
@@ -304,7 +237,7 @@ public:
         
         if (pairs)
         {
-            sipCpp->drawLines(pairs, (1 + PyTuple_GET_SIZE(a1)) / 2);
+            sipCpp->drawLines(pairs, (1 + PyTuple_Size(a1)) / 2);
             delete[] pairs;
         }
         else
@@ -318,7 +251,7 @@ public:
         
         if (lines)
         {
-            sipCpp->drawLines(lines, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawLines(lines, 1 + PyTuple_Size(a1));
             delete[] lines;
         }
         else
@@ -332,7 +265,7 @@ public:
         
         if (pairs)
         {
-            sipCpp->drawLines(pairs, (1 + PyTuple_GET_SIZE(a1)) / 2);
+            sipCpp->drawLines(pairs, (1 + PyTuple_Size(a1)) / 2);
             delete[] pairs;
         }
         else
@@ -346,7 +279,7 @@ public:
         
         if (rects)
         {
-            sipCpp->drawRects(rects, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawRects(rects, 1 + PyTuple_Size(a1));
             delete[] rects;
         }
         else
@@ -360,7 +293,7 @@ public:
         
         if (rects)
         {
-            sipCpp->drawRects(rects, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawRects(rects, 1 + PyTuple_Size(a1));
             delete[] rects;
         }
         else
@@ -376,7 +309,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPolyline(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPolyline(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -390,7 +323,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPolyline(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPolyline(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -404,7 +337,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPolygon(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPolygon(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -418,7 +351,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawPolygon(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawPolygon(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -432,7 +365,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawConvexPolygon(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawConvexPolygon(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -446,7 +379,7 @@ public:
         
         if (points)
         {
-            sipCpp->drawConvexPolygon(points, 1 + PyTuple_GET_SIZE(a1));
+            sipCpp->drawConvexPolygon(points, 1 + PyTuple_Size(a1));
             delete[] points;
         }
         else
@@ -457,7 +390,6 @@ public:
     void drawArc(const QRectF &rect, int a, int alen);
     void drawPie(const QRectF &rect, int a, int alen);
     void drawChord(const QRectF &rect, int a, int alen);
-    void drawRoundRect(const QRectF &r, int xRound = 25, int yRound = 25);
     void drawTiledPixmap(const QRectF &rectangle, const QPixmap &pixmap, const QPointF &pos = QPointF());
     void drawPicture(const QPointF &p, const QPicture &picture);
     void drawPixmap(const QRectF &targetRect, const QPixmap &pixmap, const QRectF &sourceRect);
@@ -474,14 +406,9 @@ public:
     void fillRect(const QRect &, const QBrush &);
     void eraseRect(const QRectF &);
     void setRenderHint(QPainter::RenderHint hint, bool on = true);
-    QFlags<QPainter::RenderHint> renderHints() const;
-%If (Qt_4_2_0 -)
-    void setRenderHints(QFlags<QPainter::RenderHint> hints, bool on = true);
-%End
+    QPainter::RenderHints renderHints() const;
+    void setRenderHints(QPainter::RenderHints hints, bool on = true);
     QPaintEngine *paintEngine() const;
-    static void setRedirected(const QPaintDevice *device, QPaintDevice *replacement, const QPoint &offset = QPoint());
-    static QPaintDevice *redirected(const QPaintDevice *device, QPoint *offset = 0);
-    static void restoreRedirected(const QPaintDevice *device);
     void drawLine(const QLineF &l);
     void drawLine(const QLine &line);
     void drawLine(int x1, int y1, int x2, int y2);
@@ -493,8 +420,6 @@ public:
     void drawPoint(const QPointF &p);
     void drawPoint(int x, int y);
     void drawPoint(const QPoint &p);
-    void drawRoundRect(int x, int y, int w, int h, int xRound = 25, int yRound = 25);
-    void drawRoundRect(const QRect &r, int xRound = 25, int yRound = 25);
     void drawEllipse(int x, int y, int w, int h);
     void drawArc(const QRect &r, int a, int alen);
     void drawArc(int x, int y, int w, int h, int a, int alen);
@@ -521,119 +446,49 @@ public:
     void drawPixmap(int x, int y, const QPixmap &pm, int sx, int sy, int sw, int sh);
     void drawPixmap(const QPointF &p, const QPixmap &pm, const QRectF &sr);
     void drawPixmap(const QPoint &p, const QPixmap &pm, const QRect &sr);
-    void drawImage(const QRectF &targetRect, const QImage &image, const QRectF &sourceRect, Qt::ImageConversionFlags flags = Qt::AutoColor);
-    void drawImage(const QRect &targetRect, const QImage &image, const QRect &sourceRect, Qt::ImageConversionFlags flags = Qt::AutoColor);
-    void drawImage(const QPointF &p, const QImage &image, const QRectF &sr, Qt::ImageConversionFlags flags = Qt::AutoColor);
-    void drawImage(const QPoint &p, const QImage &image, const QRect &sr, Qt::ImageConversionFlags flags = Qt::AutoColor);
     void drawImage(const QRectF &r, const QImage &image);
     void drawImage(const QRect &r, const QImage &image);
     void drawImage(const QPointF &p, const QImage &image);
     void drawImage(const QPoint &p, const QImage &image);
-    void drawImage(int x, int y, const QImage &image, int sx = 0, int sy = 0, int sw = -1, int sh = -1, Qt::ImageConversionFlags flags = Qt::AutoColor);
+    void drawImage(int x, int y, const QImage &image, int sx = 0, int sy = 0, int sw = -1, int sh = -1, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
     void drawText(const QPoint &p, const QString &s);
     void drawText(int x, int y, int width, int height, int flags, const QString &text, QRect *boundingRect /Out/ = 0);
     void drawText(int x, int y, const QString &s);
     QRect boundingRect(int x, int y, int w, int h, int flags, const QString &text);
-%If (Qt_4_2_0 -)
-    QMatrix combinedMatrix() const;
-%End
-%If (Qt_4_2_0 -)
     qreal opacity() const;
-%End
-%If (Qt_4_2_0 -)
     void setOpacity(qreal opacity);
-%End
     void translate(qreal dx, qreal dy);
     void translate(const QPoint &offset);
     void setViewport(int x, int y, int w, int h);
     void setWindow(int x, int y, int w, int h);
-%If (Qt_4_2_0 -)
-    const QMatrix &worldMatrix() const;
-%End
-%If (Qt_4_2_0 -)
-    void setWorldMatrix(const QMatrix &matrix, bool combine = false);
-%End
-%If (Qt_4_2_0 -)
     bool worldMatrixEnabled() const;
-%End
-%If (Qt_4_2_0 -)
     void setWorldMatrixEnabled(bool enabled);
-%End
     void drawPicture(int x, int y, const QPicture &p);
     void drawPicture(const QPoint &pt, const QPicture &p);
-%If (Qt_4_3_0 -)
     void setTransform(const QTransform &transform, bool combine = false);
-%End
-%If (Qt_4_3_0 -)
     const QTransform &transform() const;
-%End
-%If (Qt_4_3_0 -)
     const QTransform &deviceTransform() const;
-%End
-%If (Qt_4_3_0 -)
     void resetTransform();
-%End
-%If (Qt_4_3_0 -)
     void setWorldTransform(const QTransform &matrix, bool combine = false);
-%End
-%If (Qt_4_3_0 -)
     const QTransform &worldTransform() const;
-%End
-%If (Qt_4_3_0 -)
     QTransform combinedTransform() const;
-%End
-%If (Qt_4_3_0 -)
     bool testRenderHint(QPainter::RenderHint hint) const;
-%End
-%If (Qt_4_4_0 -)
     void drawRoundedRect(const QRectF &rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize);
-%End
-%If (Qt_4_4_0 -)
     void drawRoundedRect(int x, int y, int w, int h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize);
-%End
-%If (Qt_4_4_0 -)
     void drawRoundedRect(const QRect &rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize);
-%End
-%If (Qt_4_4_0 -)
     void drawEllipse(const QPointF &center, qreal rx, qreal ry);
-%End
-%If (Qt_4_4_0 -)
     void drawEllipse(const QPoint &center, int rx, int ry);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRectF &, const QColor &color);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRect &, const QColor &color);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(int x, int y, int w, int h, const QColor &b);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(int x, int y, int w, int h, Qt::GlobalColor c);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRect &r, Qt::GlobalColor c);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRectF &r, Qt::GlobalColor c);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(int x, int y, int w, int h, Qt::BrushStyle style);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRect &r, Qt::BrushStyle style);
-%End
-%If (Qt_4_5_0 -)
     void fillRect(const QRectF &r, Qt::BrushStyle style);
-%End
-%If (Qt_4_6_0 -)
     void beginNativePainting();
-%End
-%If (Qt_4_6_0 -)
     void endNativePainting();
-%End
-%If (Qt_4_7_0 -)
 
     class PixmapFragment
     {
@@ -655,29 +510,22 @@ public:
         static QPainter::PixmapFragment create(const QPointF &pos, const QRectF &sourceRect, qreal scaleX = 1, qreal scaleY = 1, qreal rotation = 0, qreal opacity = 1) /Factory/;
     };
 
-%End
-%If (Qt_4_7_0 -)
-
     enum PixmapFragmentHint
     {
         OpaqueHint,
     };
 
-%End
-%If (Qt_4_7_0 -)
     typedef QFlags<QPainter::PixmapFragmentHint> PixmapFragmentHints;
-%End
-%If (Qt_4_7_0 -)
     void drawPixmapFragments(SIP_PYLIST fragments /TypeHint="List[QPainter.PixmapFragment]"/, const QPixmap &pixmap, QFlags<QPainter::PixmapFragmentHint> hints = 0);
 %MethodCode
         // Allocate temporary storage for the C++ conversions.
-        SIP_SSIZE_T numFragments = PyList_GET_SIZE(a0);
+        Py_ssize_t numFragments = PyList_Size(a0);
         QPainter::PixmapFragment *fragments = new QPainter::PixmapFragment[numFragments];
         
         // Convert the fragments.
-        for (SIP_SSIZE_T i = 0; i < numFragments; ++i)
+        for (Py_ssize_t i = 0; i < numFragments; ++i)
         {
-            void *cpp = sipForceConvertToType(PyList_GET_ITEM(a0, i), sipType_QPainter_PixmapFragment, NULL, SIP_NO_CONVERTORS, NULL, &sipIsErr);
+            void *cpp = sipForceConvertToType(PyList_GetItem(a0, i), sipType_QPainter_PixmapFragment, NULL, SIP_NO_CONVERTORS, NULL, &sipIsErr);
         
             fragments[i] = *reinterpret_cast<QPainter::PixmapFragment *>(cpp);
         }
@@ -692,81 +540,29 @@ public:
         delete[] fragments;
 %End
 
-%End
-%If (Qt_4_8_0 - Qt_5_0_0)
-    void drawPixmapFragments(SIP_PYLIST targetRects /TypeHint="List[QRectF]"/, SIP_PYLIST sourceRects /AllowNone, TypeHint="List[QRectF]"/, const QPixmap &pixmap, QFlags<QPainter::PixmapFragmentHint> hints = 0);
-%MethodCode
-        // Allocate temporary storage for the C++ conversions.
-        QRectF *target, *source;
-        SIP_SSIZE_T numFragments = PyList_GET_SIZE(a0);
-        
-        if (a1)
-        {
-            if (PyList_GET_SIZE(a1) < numFragments)
-                numFragments = PyList_GET_SIZE(a1);
-        
-            source = new QRectF[numFragments];
-        }
-        else
-        {
-            source = 0;
-        }
-        
-        target = new QRectF[numFragments];
-        
-        // Convert the target and source.
-        for (SIP_SSIZE_T i = 0; i < numFragments; ++i)
-        {
-            void *cpp;
-        
-            cpp = sipForceConvertToType(PyList_GET_ITEM(a0, i), sipType_QRectF, NULL, SIP_NO_CONVERTORS, NULL, &sipIsErr);
-                
-            target[i] = *reinterpret_cast<QRectF *>(cpp);
-        
-            if (source)
-            {
-                cpp = sipForceConvertToType(PyList_GET_ITEM(a1, i), sipType_QRectF, NULL, SIP_NO_CONVERTORS, NULL, &sipIsErr);
-                
-                source[i] = *reinterpret_cast<QRectF *>(cpp);
-            }
-        }
-                
-        if (!sipIsErr)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipCpp->drawPixmapFragments(target, source, numFragments, *a2, *a3);
-            Py_END_ALLOW_THREADS
-        }
-                
-        delete[] target;
-        
-        if (source)
-            delete[] source;
-%End
-
-%End
-%If (Qt_4_7_0 -)
     void drawStaticText(const QPointF &topLeftPosition, const QStaticText &staticText);
-%End
-%If (Qt_4_7_0 -)
     void drawStaticText(const QPoint &p, const QStaticText &staticText);
-%End
-%If (Qt_4_7_0 -)
     void drawStaticText(int x, int y, const QStaticText &staticText);
-%End
-%If (Qt_4_8_0 -)
     QRectF clipBoundingRect() const;
-%End
-%If (Qt_4_8_0 -)
 %If (PyQt_RawFont)
     void drawGlyphRun(const QPointF &position, const QGlyphRun &glyphRun);
 %End
+%If (Qt_5_12_0 -)
+    void fillRect(int x, int y, int w, int h, QGradient::Preset preset);
 %End
+%If (Qt_5_12_0 -)
+    void fillRect(const QRect &r, QGradient::Preset preset);
+%End
+%If (Qt_5_12_0 -)
+    void fillRect(const QRectF &r, QGradient::Preset preset);
+%End
+    void drawImage(const QRectF &targetRect, const QImage &image, const QRectF &sourceRect, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
+    void drawImage(const QRect &targetRect, const QImage &image, const QRect &sourceRect, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
+    void drawImage(const QPointF &p, const QImage &image, const QRectF &sr, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
+    void drawImage(const QPoint &p, const QImage &image, const QRect &sr, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
 
 private:
-%If (Qt_4_2_0 -)
     QPainter(const QPainter &);
-%End
 };
 
 QFlags<QPainter::RenderHint> operator|(QPainter::RenderHint f1, QFlags<QPainter::RenderHint> f2);

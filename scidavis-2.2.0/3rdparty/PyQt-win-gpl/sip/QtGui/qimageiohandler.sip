@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -43,6 +43,21 @@ public:
         Endianness,
         Animation,
         BackgroundColor,
+%If (Qt_5_4_0 -)
+        SupportedSubTypes,
+%End
+%If (Qt_5_5_0 -)
+        OptimizedWrite,
+%End
+%If (Qt_5_5_0 -)
+        ProgressiveScanWrite,
+%End
+%If (Qt_5_5_0 -)
+        ImageTransformation,
+%End
+%If (Qt_5_5_0 -)
+        TransformedByDefault,
+%End
     };
 
     QImageIOHandler();
@@ -51,7 +66,6 @@ public:
     QIODevice *device() const;
     void setFormat(const QByteArray &format);
     QByteArray format() const;
-    virtual QByteArray name() const;
     virtual bool canRead() const = 0;
     virtual bool read(QImage *image) = 0;
     virtual bool write(const QImage &image);
@@ -65,6 +79,24 @@ public:
     virtual int nextImageDelay() const;
     virtual int currentImageNumber() const;
     virtual QRect currentImageRect() const;
+%If (Qt_5_5_0 -)
+
+    enum Transformation
+    {
+        TransformationNone,
+        TransformationMirror,
+        TransformationFlip,
+        TransformationRotate180,
+        TransformationRotate90,
+        TransformationMirrorAndRotate90,
+        TransformationFlipAndRotate90,
+        TransformationRotate270,
+    };
+
+%End
+%If (Qt_5_5_0 -)
+    typedef QFlags<QImageIOHandler::Transformation> Transformations;
+%End
 
 private:
     QImageIOHandler(const QImageIOHandler &);

@@ -1,8 +1,9 @@
-// This implements the helper for QSettings.value().
+// This implements the conversion of a QVariant to a Python object and is part
+// of the public API.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,13 +24,12 @@
 #include <QVariant>
 
 #include "qpycore_chimera.h"
-#include "qpycore_sip.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Forward declarations.
-#if QT_VERSION >= 0x040500
 static PyObject *convert_hash(const Chimera *ct, const QVariantHash &value);
-#endif
 static PyObject *convert_list(const Chimera *ct, const QVariantList &value);
 static PyObject *convert_map(const Chimera *ct, const QVariantMap &value);
 static PyObject *convert(const Chimera *ct, const QVariant &value);
@@ -38,7 +38,7 @@ static int add_variant_to_dict(const Chimera *ct, PyObject *dict,
 
 
 // Convert a QVariant to a Python object according to an optional type.
-PyObject *pyqt4_from_qvariant_by_type(QVariant &value, PyObject *type)
+PyObject *pyqt5_from_qvariant_by_type(QVariant &value, PyObject *type)
 {
     PyObject *value_obj;
 
@@ -74,12 +74,10 @@ PyObject *pyqt4_from_qvariant_by_type(QVariant &value, PyObject *type)
             {
                 value_obj = convert_map(ct, value.toMap());
             }
-#if QT_VERSION >= 0x040500
             else if (wanted != QVariant::Hash && value.type() == QVariant::Hash)
             {
                 value_obj = convert_hash(ct, value.toHash());
             }
-#endif
             else
             {
                 value_obj = convert(ct, value);
@@ -133,7 +131,7 @@ static PyObject *convert_list(const Chimera *ct, const QVariantList &value)
             return 0;
         }
 
-        PyList_SET_ITEM(list, i, el);
+        PyList_SetItem(list, i, el);
     }
 
     return list;
@@ -161,7 +159,6 @@ static PyObject *convert_map(const Chimera *ct, const QVariantMap &value)
 }
 
 
-#if QT_VERSION >= 0x040500
 // Convert a QVariantHash to a dict of Python objects.
 static PyObject *convert_hash(const Chimera *ct, const QVariantHash &value)
 {
@@ -181,7 +178,6 @@ static PyObject *convert_hash(const Chimera *ct, const QVariantHash &value)
 
     return dict;
 }
-#endif
 
 
 // Convert a QVariant to a Python object.
@@ -206,7 +202,7 @@ static int add_variant_to_dict(const Chimera *ct, PyObject *dict,
     if (!key_obj)
     {
         delete key_heap;
-        return 0;
+        return -1;
     }
 
     PyObject *value_obj = convert(ct, value);
@@ -214,7 +210,7 @@ static int add_variant_to_dict(const Chimera *ct, PyObject *dict,
     if (!value_obj)
     {
         Py_DECREF(key_obj);
-        return 0;
+        return -1;
     }
 
     int rc = PyDict_SetItem(dict, key_obj, value_obj);

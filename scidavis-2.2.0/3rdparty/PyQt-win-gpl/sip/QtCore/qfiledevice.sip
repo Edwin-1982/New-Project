@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_5_0_0 -)
 
 class QFileDevice : QIODevice /NoDefaultCtors/
 {
@@ -86,12 +84,15 @@ public:
     bool flush() /ReleaseGIL/;
     virtual qint64 size() const;
     virtual bool resize(qint64 sz);
-    virtual QFlags<QFileDevice::Permission> permissions() const;
-    virtual bool setPermissions(QFlags<QFileDevice::Permission> permissionSpec);
+    virtual QFileDevice::Permissions permissions() const;
+    virtual bool setPermissions(QFileDevice::Permissions permissionSpec);
 
     enum MemoryMapFlags
     {
         NoOptions,
+%If (Qt_5_4_0 -)
+        MapPrivateOption,
+%End
     };
 
     void *map(qint64 offset, qint64 size /ResultSize/, QFileDevice::MemoryMapFlags flags = QFileDevice::NoOptions) [uchar * (qint64 offset, qint64 size, QFileDevice::MemoryMapFlags flags = QFileDevice::NoOptions)];
@@ -136,7 +137,7 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) /ReleaseGIL/;
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) /ReleaseGIL/;
     virtual SIP_PYOBJECT readLineData(qint64 maxlen) /TypeHint="Py_v3:bytes;str",ReleaseGIL/ [qint64 (char *data, qint64 maxlen)];
 %MethodCode
         // Return the data read or None if there was an error.
@@ -175,11 +176,24 @@ protected:
         }
 %End
 
-private:
-    QFileDevice(const QFileDevice &);
-};
+public:
+%If (Qt_5_10_0 -)
+
+    enum FileTime
+    {
+        FileAccessTime,
+        FileBirthTime,
+        FileMetadataChangeTime,
+        FileModificationTime,
+    };
 
 %End
-%If (Qt_5_0_0 -)
-QFlags<QFileDevice::Permission> operator|(QFileDevice::Permission f1, QFlags<QFileDevice::Permission> f2);
+%If (Qt_5_10_0 -)
+    QDateTime fileTime(QFileDevice::FileTime time) const;
 %End
+%If (Qt_5_10_0 -)
+    bool setFileTime(const QDateTime &newDate, QFileDevice::FileTime fileTime);
+%End
+};
+
+QFlags<QFileDevice::Permission> operator|(QFileDevice::Permission f1, QFlags<QFileDevice::Permission> f2);

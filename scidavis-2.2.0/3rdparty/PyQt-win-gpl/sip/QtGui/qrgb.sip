@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -34,3 +34,9 @@ QRgb qRgba(int r, int g, int b, int a);
 int qGray(int r, int g, int b);
 int qGray(QRgb rgb);
 bool qIsGray(QRgb rgb);
+%If (Qt_5_3_0 -)
+QRgb qPremultiply(QRgb x);
+%End
+%If (Qt_5_3_0 -)
+QRgb qUnpremultiply(QRgb p);
+%End

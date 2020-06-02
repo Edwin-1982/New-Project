@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -34,18 +34,8 @@ public:
     ~QTextDocumentFragment();
     bool isEmpty() const;
     QString toPlainText() const;
-%If (Qt_5_0_0 -)
     QString toHtml(const QByteArray &encoding = QByteArray()) const;
-%End
-%If (- Qt_5_0_0)
-    QString toHtml() const;
-%End
-%If (Qt_4_2_0 - Qt_5_0_0)
-    QString toHtml(const QByteArray &encoding) const;
-%End
     static QTextDocumentFragment fromPlainText(const QString &plainText);
     static QTextDocumentFragment fromHtml(const QString &html);
-%If (Qt_4_2_0 -)
     static QTextDocumentFragment fromHtml(const QString &html, const QTextDocument *resourceProvider);
-%End
 };

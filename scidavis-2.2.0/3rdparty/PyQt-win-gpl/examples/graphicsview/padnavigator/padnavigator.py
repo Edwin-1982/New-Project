@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2010 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -44,352 +44,355 @@
 
 import math
 
-from PyQt4 import QtCore, QtGui, QtOpenGL
+from PyQt5.QtCore import (pyqtProperty, QDirIterator, QEasingCurve, QEvent,
+        QEventTransition, QHistoryState, QParallelAnimationGroup, QPointF,
+        QPropertyAnimation, QRectF, QSequentialAnimationGroup, QSize, QState,
+        QStateMachine, Qt)
+from PyQt5.QtGui import (QBrush, QColor, QFont, QLinearGradient, QPainter,
+        QPalette, QPen, QPixmap, QTransform)
+from PyQt5.QtWidgets import (QApplication, QGraphicsItem, QGraphicsObject,
+        QGraphicsProxyWidget, QGraphicsRotation, QGraphicsScene, QGraphicsView,
+        QKeyEventTransition, QWidget)
+from PyQt5.QtOpenGL import QGL, QGLFormat, QGLWidget
 
-try:
-    import padnavigator_rc3
-except ImportError:
-    import padnavigator_rc2
-
-from ui_backside import Ui_BackSide
+import padnavigator_rc
+from ui_form import Ui_Form
 
 
-class Panel(QtGui.QGraphicsView):
-    def __init__(self, width, height):
-        super(Panel, self).__init__()
+class PadNavigator(QGraphicsView):
+    def __init__(self, size, parent=None):
+        super(PadNavigator, self).__init__(parent)
 
-        self.selectedX = 0
-        self.selectedY = 0
-        self.width = width
-        self.height = height
-        self.flipped = False
-        self.flipLeft = True
+        self.form = Ui_Form()
 
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
-        self.setViewportUpdateMode(QtGui.QGraphicsView.FullViewportUpdate)
-        self.setRenderHints(QtGui.QPainter.Antialiasing |
-                QtGui.QPainter.SmoothPixmapTransform |
-                QtGui.QPainter.TextAntialiasing)
+        splash = SplashItem()
+        splash.setZValue(1)
 
-        self.setBackgroundBrush(QtGui.QBrush(QtGui.QPixmap('./images/blue_angle_swirl.jpg')))
+        pad = FlippablePad(size)
+        flipRotation = QGraphicsRotation(pad)
+        xRotation = QGraphicsRotation(pad)
+        yRotation = QGraphicsRotation(pad)
+        flipRotation.setAxis(Qt.YAxis)
+        xRotation.setAxis(Qt.YAxis)
+        yRotation.setAxis(Qt.XAxis)
+        pad.setTransformations([flipRotation, xRotation, yRotation])
 
-        if QtOpenGL.QGLFormat.hasOpenGL():
-            self.setViewport(QtOpenGL.QGLWidget(QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)))
+        backItem = QGraphicsProxyWidget(pad)
+        widget = QWidget()
+        self.form.setupUi(widget)
+        self.form.hostName.setFocus()
+        backItem.setWidget(widget)
+        backItem.setVisible(False)
+        backItem.setFocus()
+        backItem.setCacheMode(QGraphicsItem.ItemCoordinateCache)
+        r = backItem.rect()
+        backItem.setTransform(QTransform().rotate(180, Qt.YAxis).translate(-r.width()/2, -r.height()/2))
 
+        selectionItem = RoundRectItem(QRectF(-60, -60, 120, 120),
+                QColor(Qt.gray), pad)
+        selectionItem.setZValue(0.5)
+
+        smoothSplashMove = QPropertyAnimation(splash, b'y')
+        smoothSplashOpacity = QPropertyAnimation(splash, b'opacity')
+        smoothSplashMove.setEasingCurve(QEasingCurve.InQuad)
+        smoothSplashMove.setDuration(250)
+        smoothSplashOpacity.setDuration(250)
+
+        smoothXSelection = QPropertyAnimation(selectionItem, b'x')
+        smoothYSelection = QPropertyAnimation(selectionItem, b'y')
+        smoothXRotation = QPropertyAnimation(xRotation, b'angle')
+        smoothYRotation = QPropertyAnimation(yRotation, b'angle')
+        smoothXSelection.setDuration(125)
+        smoothYSelection.setDuration(125)
+        smoothXRotation.setDuration(125)
+        smoothYRotation.setDuration(125)
+        smoothXSelection.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothYSelection.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothXRotation.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothYRotation.setEasingCurve(QEasingCurve.InOutQuad)
+
+        smoothFlipRotation = QPropertyAnimation(flipRotation, b'angle')
+        smoothFlipScale = QPropertyAnimation(pad, b'scale')
+        smoothFlipXRotation = QPropertyAnimation(xRotation, b'angle')
+        smoothFlipYRotation = QPropertyAnimation(yRotation, b'angle')
+        flipAnimation = QParallelAnimationGroup(self)
+        smoothFlipScale.setDuration(500)
+        smoothFlipRotation.setDuration(500)
+        smoothFlipXRotation.setDuration(500)
+        smoothFlipYRotation.setDuration(500)
+        smoothFlipScale.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothFlipRotation.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothFlipXRotation.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothFlipYRotation.setEasingCurve(QEasingCurve.InOutQuad)
+        smoothFlipScale.setKeyValueAt(0, 1.0)
+        smoothFlipScale.setKeyValueAt(0.5, 0.7)
+        smoothFlipScale.setKeyValueAt(1, 1.0)
+        flipAnimation.addAnimation(smoothFlipRotation)
+        flipAnimation.addAnimation(smoothFlipScale)
+        flipAnimation.addAnimation(smoothFlipXRotation)
+        flipAnimation.addAnimation(smoothFlipYRotation)
+
+        setVariablesSequence = QSequentialAnimationGroup()
+        setFillAnimation = QPropertyAnimation(pad, b'fill')
+        setBackItemVisibleAnimation = QPropertyAnimation(backItem, b'visible')
+        setSelectionItemVisibleAnimation = QPropertyAnimation(selectionItem, b'visible')
+        setFillAnimation.setDuration(0)
+        setBackItemVisibleAnimation.setDuration(0)
+        setSelectionItemVisibleAnimation.setDuration(0)
+        setVariablesSequence.addPause(250)
+        setVariablesSequence.addAnimation(setBackItemVisibleAnimation)
+        setVariablesSequence.addAnimation(setSelectionItemVisibleAnimation)
+        setVariablesSequence.addAnimation(setFillAnimation)
+        flipAnimation.addAnimation(setVariablesSequence)
+
+        stateMachine = QStateMachine(self)
+        splashState = QState(stateMachine)
+        frontState = QState(stateMachine)
+        historyState = QHistoryState(frontState)
+        backState = QState(stateMachine)
+
+        frontState.assignProperty(pad, "fill", False)
+        frontState.assignProperty(splash, "opacity", 0.0)
+        frontState.assignProperty(backItem, "visible", False)
+        frontState.assignProperty(flipRotation, "angle", 0.0)
+        frontState.assignProperty(selectionItem, "visible", True)
+
+        backState.assignProperty(pad, "fill", True)
+        backState.assignProperty(backItem, "visible", True)
+        backState.assignProperty(xRotation, "angle", 0.0)
+        backState.assignProperty(yRotation, "angle", 0.0)
+        backState.assignProperty(flipRotation, "angle", 180.0)
+        backState.assignProperty(selectionItem, "visible", False)
+
+        stateMachine.addDefaultAnimation(smoothXRotation)
+        stateMachine.addDefaultAnimation(smoothYRotation)
+        stateMachine.addDefaultAnimation(smoothXSelection)
+        stateMachine.addDefaultAnimation(smoothYSelection)
+        stateMachine.setInitialState(splashState)
+
+        anyKeyTransition = QEventTransition(self, QEvent.KeyPress, splashState)
+        anyKeyTransition.setTargetState(frontState)
+        anyKeyTransition.addAnimation(smoothSplashMove)
+        anyKeyTransition.addAnimation(smoothSplashOpacity)
+
+        enterTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                Qt.Key_Enter, backState)
+        returnTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                Qt.Key_Return, backState)
+        backEnterTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                Qt.Key_Enter, frontState)
+        backReturnTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                Qt.Key_Return, frontState)
+        enterTransition.setTargetState(historyState)
+        returnTransition.setTargetState(historyState)
+        backEnterTransition.setTargetState(backState)
+        backReturnTransition.setTargetState(backState)
+        enterTransition.addAnimation(flipAnimation)
+        returnTransition.addAnimation(flipAnimation)
+        backEnterTransition.addAnimation(flipAnimation)
+        backReturnTransition.addAnimation(flipAnimation)
+
+        columns = size.width()
+        rows = size.height()
+        stateGrid = []
+        for y in range(rows):
+            stateGrid.append([QState(frontState) for _ in range(columns)])
+
+        frontState.setInitialState(stateGrid[0][0])
+        selectionItem.setPos(pad.iconAt(0, 0).pos())
+
+        for y in range(rows):
+            for x in range(columns):
+                state = stateGrid[y][x]
+
+                rightTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                        Qt.Key_Right, state)
+                leftTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                        Qt.Key_Left, state)
+                downTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                        Qt.Key_Down, state)
+                upTransition = QKeyEventTransition(self, QEvent.KeyPress,
+                        Qt.Key_Up, state)
+
+                rightTransition.setTargetState(stateGrid[y][(x + 1) % columns])
+                leftTransition.setTargetState(stateGrid[y][((x - 1) + columns) % columns])
+                downTransition.setTargetState(stateGrid[(y + 1) % rows][x])
+                upTransition.setTargetState(stateGrid[((y - 1) + rows) % rows][x])
+
+                icon = pad.iconAt(x, y)
+                state.assignProperty(xRotation, "angle", -icon.x() / 6.0)
+                state.assignProperty(yRotation, "angle", icon.y() / 6.0)
+                state.assignProperty(selectionItem, "x", icon.x())
+                state.assignProperty(selectionItem, "y", icon.y())
+                frontState.assignProperty(icon, "visible", True)
+                backState.assignProperty(icon, "visible", False)
+
+                setIconVisibleAnimation = QPropertyAnimation(icon, b'visible')
+                setIconVisibleAnimation.setDuration(0)
+                setVariablesSequence.addAnimation(setIconVisibleAnimation)
+
+        scene = QGraphicsScene(self)
+        scene.setBackgroundBrush(QBrush(QPixmap(":/images/blue_angle_swirl.jpg")))
+        scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+        scene.addItem(pad)
+        scene.setSceneRect(scene.itemsBoundingRect())
+        self.setScene(scene)
+
+        sbr = splash.boundingRect()
+        splash.setPos(-sbr.width() / 2, scene.sceneRect().top() - 2)
+        frontState.assignProperty(splash, "y", splash.y() - 100.0)
+        scene.addItem(splash)
+
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setMinimumSize(50, 50)
+        self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
+        self.setCacheMode(QGraphicsView.CacheBackground)
+        self.setRenderHints(QPainter.Antialiasing |
+                QPainter.SmoothPixmapTransform | QPainter.TextAntialiasing)
 
-        self.selectionTimeLine = QtCore.QTimeLine(150, self)
-        self.flipTimeLine = QtCore.QTimeLine(500, self)
-        bounds = QtCore.QRectF((-width / 2.0) * 150, (-height / 2.0) * 150, width * 150, height * 150)
+        if QGLFormat.hasOpenGL():
+            self.setViewport(QGLWidget(QGLFormat(QGL.SampleBuffers)))
 
-        self.scene = QtGui.QGraphicsScene(bounds, self)
-        self.setScene(self.scene)
-
-        self.baseItem = RoundRectItem(bounds, QtGui.QColor(226, 255, 92, 64))
-        self.scene.addItem(self.baseItem)
-
-        embed = QtGui.QWidget()
-
-        self.ui = Ui_BackSide()
-        self.ui.setupUi(embed) 
-        self.ui.hostName.setFocus()
-
-        self.backItem = RoundRectItem(bounds, embed.palette().window(), embed)
-        self.backItem.setTransform(QtGui.QTransform().rotate(180, QtCore.Qt.YAxis))
-        self.backItem.setParentItem(self.baseItem)
-
-        self.selectionItem = RoundRectItem(QtCore.QRectF(-60, -60, 120, 120), QtCore.Qt.gray)
-        self.selectionItem.setParentItem(self.baseItem)
-        self.selectionItem.setZValue(-1)
-        self.selectionItem.setPos(self.posForLocation(0, 0))
-        self.startPos = self.selectionItem.pos()
-        self.endPos = QtCore.QPointF()
-
-        self.grid = []
-
-        for y in range(height):
-            self.grid.append([])
-            for x in range(width):
-                item = RoundRectItem(QtCore.QRectF(-54, -54, 108, 108), QtGui.QColor(214, 240, 110, 128))
-                item.setPos(self.posForLocation(x, y))
-
-                item.setParentItem(self.baseItem)
-                item.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
-                self.grid[y].append(item)
-
-                rand = QtCore.qrand() % 9
-                if rand == 0 :
-                    item.setPixmap(QtGui.QPixmap(':/images/kontact_contacts.png'))
-                elif rand == 1:
-                    item.setPixmap(QtGui.QPixmap(':/images/kontact_journal.png'))
-                elif rand == 2:
-                    item.setPixmap(QtGui.QPixmap(':/images/kontact_notes.png'))
-                elif rand == 3:
-                    item.setPixmap(QtGui.QPixmap(':/images/kopeteavailable.png'))
-                elif rand == 4:
-                    item.setPixmap(QtGui.QPixmap(':/images/metacontact_online.png'))
-                elif rand == 5:
-                    item.setPixmap(QtGui.QPixmap(':/images/minitools.png'))
-                elif rand == 6:
-                    item.setPixmap(QtGui.QPixmap(':/images/kontact_journal.png'))
-                elif rand == 7:
-                    item.setPixmap(QtGui.QPixmap(':/images/kontact_contacts.png'))
-                elif rand == 8:
-                    item.setPixmap(QtGui.QPixmap(':/images/kopeteavailable.png'))
-                else:
-                    pass
-
-                item.qobject.activated.connect(self.flip)
-
-        self.grid[0][0].setFocus()
-
-        self.backItem.qobject.activated.connect(self.flip)
-        self.selectionTimeLine.valueChanged.connect(self.updateSelectionStep)
-        self.flipTimeLine.valueChanged.connect(self.updateFlipStep)
-
-        self.splash = SplashItem()
-        self.splash.setZValue(5)
-        self.splash.setPos(-self.splash.rect().width()/2,
-                self.scene.sceneRect().top())
-        self.scene.addItem(self.splash)
-
-        self.splash.grabKeyboard()
-
-        self.updateSelectionStep(0)
-
-        self.setWindowTitle("Pad Navigator Example")
-
-    def keyPressEvent(self, event):
-        if self.splash.isVisible() or event.key() == QtCore.Qt.Key_Return or self.flipped :
-            super(Panel, self).keyPressEvent(event)
-            return
-
-        self.selectedX = (self.selectedX + self.width + (event.key() == QtCore.Qt.Key_Right) - (event.key() == QtCore.Qt.Key_Left)) % self.width
-        self.selectedY = (self.selectedY + self.height + (event.key() == QtCore.Qt.Key_Down) - (event.key() == QtCore.Qt.Key_Up)) % self.height
-        self.grid[self.selectedY][self.selectedX].setFocus()
-
-        self.selectionTimeLine.stop()
-        self.startPos = self.selectionItem.pos()
-        self.endPos = self.posForLocation(self.selectedX, self.selectedY)
-        self.selectionTimeLine.start()
+        stateMachine.start()
 
     def resizeEvent(self, event):
-        super(Panel, self).resizeEvent(event)
-        self.fitInView(self.scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        super(PadNavigator, self).resizeEvent(event)
+        self.fitInView(self.scene().sceneRect(), Qt.KeepAspectRatio)
 
-    def updateSelectionStep(self, val):
-        self.newPos = QtCore.QPointF(self.startPos.x() + (self.endPos - self.startPos).x() * val,
-                    self.startPos.y() + (self.endPos - self.startPos).y() * val)
-        self.selectionItem.setPos(self.newPos)
 
-        transform= QtGui.QTransform()
-        self.yrot = self.newPos.x() / 6.0
-        self.xrot = self.newPos.y() / 6.0
-        transform.rotate(self.newPos.x() / 6.0, QtCore.Qt.YAxis)
-        transform.rotate(self.newPos.y() / 6.0, QtCore.Qt.XAxis)
-        self.baseItem.setTransform(transform)
+class RoundRectItem(QGraphicsObject):
+    def __init__(self, bounds, color, parent=None):
+        super(RoundRectItem, self).__init__(parent)
 
-    def updateFlipStep(self, val):
-        finalxrot = self.xrot - self.xrot * val
-        if self.flipLeft:
-            finalyrot = self.yrot - self.yrot * val - 180 * val
+        self.fillRect = False
+        self.bounds = QRectF(bounds)
+        self.pix = QPixmap()
+
+        self.gradient = QLinearGradient()
+        self.gradient.setStart(self.bounds.topLeft())
+        self.gradient.setFinalStop(self.bounds.bottomRight())
+        self.gradient.setColorAt(0, color)
+        self.gradient.setColorAt(1, color.darker(200))
+
+        self.setCacheMode(QGraphicsItem.ItemCoordinateCache)
+
+    def setFill(self, fill):
+        self.fillRect = fill
+        self.update()
+
+    def fill(self):
+        return self.fillRect
+
+    fill = pyqtProperty(bool, fill, setFill)
+
+    def paint(self, painter, option, widget):
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QColor(0, 0, 0, 64))
+        painter.drawRoundedRect(self.bounds.translated(2, 2), 25.0, 25.0)
+
+        if self.fillRect:
+            painter.setBrush(QApplication.palette().brush(QPalette.Window))
         else:
-            finalyrot = self.yrot - self.yrot * val + 180 * val
-        transform = QtGui.QTransform()
-        transform.rotate(finalyrot, QtCore.Qt.YAxis)
-        transform.rotate(finalxrot, QtCore.Qt.XAxis)
-        scale = 1 - math.sin(3.14 * val) * 0.3
-        transform.scale(scale, scale)
-        self.baseItem.setTransform(transform)
-        if val == 0:
-            self.grid[self.selectedY][self.selectedX].setFocus()
+            painter.setBrush(self.gradient)
 
-    def flip(self):
-        if self.flipTimeLine.state() == QtCore.QTimeLine.Running:
-            return
-
-        if self.flipTimeLine.currentValue() == 0:
-            self.flipTimeLine.setDirection(QtCore.QTimeLine.Forward)
-            self.flipTimeLine.start()
-            self.flipped = True
-            self.flipLeft = self.selectionItem.pos().x() < 0
-        else:
-            self.flipTimeLine.setDirection(QtCore.QTimeLine.Backward)
-            self.flipTimeLine.start()
-            self.flipped = False
-
-    def posForLocation(self, x, y):
-        return QtCore.QPointF(x*150, y*150) - QtCore.QPointF((self.width - 1) * 75, (self.height - 1) * 75)
-
-
-class Activated(QtCore.QObject):
-
-    activated = QtCore.pyqtSignal()
-
-
-class RoundRectItem(QtGui.QGraphicsRectItem):
-    def __init__(self, rect, brush, embeddedWidget=None):
-        super(RoundRectItem, self).__init__(rect)
-
-        self.brush = QtGui.QBrush(brush)
-        self.timeLine = QtCore.QTimeLine(75)
-        self.lastVal = 0
-        self.opa = 1
-        self.proxyWidget = None
-        self.pix = QtGui.QPixmap()
-
-        # In the C++ version of this example, this class is also derived from
-        # QObject in order to emit the activated() signal.  PyQt does not
-        # support deriving from more than one wrapped class so we just create
-        # an explicit QObject sub-class.
-        self.qobject = Activated()
-
-        self.timeLine.valueChanged.connect(self.updateValue)
-
-        if embeddedWidget:
-            self.proxyWidget = QtGui.QGraphicsProxyWidget(self)
-            self.proxyWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
-            self.proxyWidget.setWidget(embeddedWidget)
-            self.proxyWidget.setGeometry(self.boundingRect().adjusted(25, 25, -25, -25))
-
-    def paint(self, painter, qstyleoptiongraphicsitem, qwidget):
-        x = painter.worldTransform()
-
-        unit = x.map(QtCore.QLineF(0, 0, 1, 1))
-        if unit.p1().x() > unit.p2().x() or unit.p1().y() > unit.p2().y():
-            if self.proxyWidget and self.proxyWidget.isVisible():
-                self.proxyWidget.hide()
-                self.proxyWidget.setGeometry(self.rect())
-            return
-
-        if self.proxyWidget and not self.proxyWidget.isVisible():
-            self.proxyWidget.show()
-            self.proxyWidget.setFocus()
-
-        if (self.proxyWidget and self.proxyWidget.pos() != QtCore.QPoint()):
-            self.proxyWidget.setGeometry(self.boundingRect().adjusted(25, 25, -25, -25))
-
-        painter.setOpacity(self.opacity())
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.setBrush(QtGui.QColor(0, 0, 0, 64))
-        painter.drawRoundRect(self.rect().translated(2, 2))
-
-        if not self.proxyWidget:
-            gradient= QtGui.QLinearGradient (self.rect().topLeft(), self.rect().bottomRight())
-            col = self.brush.color()
-            gradient.setColorAt(0, col)
-            gradient.setColorAt(1, col.darker(int(200 + self.lastVal * 50)))
-            painter.setBrush(gradient)
-        else:
-            painter.setBrush(self.brush)
-
-        painter.setPen(QtGui.QPen(QtCore.Qt.black, 1))
-        painter.drawRoundRect(self.rect())
+        painter.setPen(QPen(Qt.black, 1))
+        painter.drawRoundedRect(self.bounds, 25.0, 25.0)
         if not self.pix.isNull():
             painter.scale(1.95, 1.95)
             painter.drawPixmap(-self.pix.width() / 2, -self.pix.height() / 2, self.pix)
 
     def boundingRect(self):
-        penW = 0.5
-        shadowW = 2.0
-        return self.rect().adjusted(-penW, -penW, penW + shadowW, penW + shadowW)
+        return self.bounds.adjusted(0, 0, 2, 2)
+
+    def pixmap(self):
+        return QPixmap(self.pix)
 
     def setPixmap(self, pixmap):
-        self.pix = pixmap
-        if self.scene() and self.isVisible():
-            self.update()
-
-    def opacity(self):
-        parent = self.parentItem()
-
-        if parent:
-            op = parent.opacity()
-        else:
-            op = 0
-        return self.opa + op
-
-    def setOpacity(self, opacity):
-        self.opa = opacity
+        self.pix = QPixmap(pixmap)
         self.update()
 
-    def keyPressEvent(self, event):
-        if event.isAutoRepeat() or event.key() != QtCore.Qt.Key_Return \
-                or (self.timeLine.state() == QtCore.QTimeLine.Running and self.timeLine.direction() == QtCore.QTimeLine.Forward):
-            super(RoundRectItem, self).keyPressEvent(event)
-            return
 
-        self.timeLine.stop()
-        self.timeLine.setDirection(QtCore.QTimeLine.Forward)
-        self.timeLine.start()
-        self.qobject.activated.emit()
+class FlippablePad(RoundRectItem):
+    def __init__(self, size, parent=None):
+        super(FlippablePad, self).__init__(self.boundsFromSize(size),
+                QColor(226, 255, 92, 64), parent)
 
-    def keyReleaseEvent(self, event):
-        if event.key() != QtCore.Qt.Key_Return:
-            super(RoundRectItem, self).keyReleaseEvent(event)
-            return
+        numIcons = size.width() * size.height()
+        pixmaps = []
+        it = QDirIterator(":/images", ["*.png"])
+        while it.hasNext() and len(pixmaps) < numIcons:
+            pixmaps.append(it.next())
 
-        self.timeLine.stop()
-        self.timeLine.setDirection(QtCore.QTimeLine.Backward)
-        self.timeLine.start()
+        iconRect = QRectF(-54, -54, 108, 108)
+        iconColor = QColor(214, 240, 110, 128)
+        self.iconGrid = []
+        n = 0
 
-    def updateValue(self, value):
-        self.lastVal = value
-        if not self.proxyWidget:
-            self.setTransform(QtGui.QTransform().scale(1 - value / 10.0, 1 - value / 10.0))
+        for y in range(size.height()):
+            row = []
+
+            for x in range(size.width()):
+                rect = RoundRectItem(iconRect, iconColor, self)
+                rect.setZValue(1)
+                rect.setPos(self.posForLocation(x, y, size))
+                rect.setPixmap(pixmaps[n % len(pixmaps)])
+                n += 1
+
+                row.append(rect)
+
+            self.iconGrid.append(row)
+
+    def iconAt(self, column, row):
+        return self.iconGrid[row][column]
+
+    @staticmethod
+    def boundsFromSize(size):
+        return QRectF((-size.width() / 2.0) * 150,
+                (-size.height() / 2.0) * 150, size.width() * 150,
+                size.height() * 150)
+
+    @staticmethod
+    def posForLocation(column, row, size):
+        return QPointF(column * 150, row * 150) - QPointF((size.width() - 1) * 75, (size.height() - 1) * 75)
 
 
-class SplashItem(QtGui.QGraphicsWidget):
+class SplashItem(QGraphicsObject):
     def __init__(self, parent=None):
         super(SplashItem, self).__init__(parent)
 
-        self.opacity = 1.0
-
-        self.timeLine = QtCore.QTimeLine(350)
-        self.timeLine.setCurveShape(QtCore.QTimeLine.EaseInCurve)
-        self.timeLine.valueChanged.connect(self.setValue)
-
         self.text = "Welcome to the Pad Navigator Example. You can use the " \
                 "keyboard arrows to navigate the icons, and press enter to " \
-                "activate an item. Please " "press any key to continue."
-        self.resize(400, 175)
+                "activate an item. Press any key to begin."
 
-    def paint(self, painter, qstyleoptiongraphicsitem, qwidget):
-        painter.setOpacity(self.opacity)
-        painter.setPen(QtGui.QPen(QtCore.Qt.black, 2))
-        painter.setBrush(QtGui.QColor(245, 245, 255, 220))
-        painter.setClipRect(self.rect())
-        painter.drawRoundRect(3, -100 + 3, 400 - 6, 250 - 6)
+        self.setCacheMode(QGraphicsItem.DeviceCoordinateCache)
 
-        textRect = self.rect().adjusted(10, 10, -10, -10)
-        flags = int(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft) | QtCore.Qt.TextWordWrap
+    def boundingRect(self):
+        return QRectF(0, 0, 400, 175)
 
-        font = QtGui.QFont()
+    def paint(self, painter, option, widget):
+        painter.setPen(QPen(Qt.black, 2))
+        painter.setBrush(QColor(245, 245, 255, 220))
+        painter.setClipRect(self.boundingRect())
+        painter.drawRoundedRect(3, -100 + 3, 400 - 6, 250 - 6, 25.0, 25.0)
+
+        textRect = self.boundingRect().adjusted(10, 10, -10, -10)
+        flags = int(Qt.AlignTop | Qt.AlignLeft) | Qt.TextWordWrap
+
+        font = QFont()
         font.setPixelSize(18)
-        painter.setPen(QtCore.Qt.black)
+        painter.setPen(Qt.black)
         painter.setFont(font)
         painter.drawText(textRect, flags, self.text)
-
-    def keyPressEvent(self, event):
-        if self.timeLine.state() == QtCore.QTimeLine.NotRunning:
-            self.timeLine.start()
-
-    def setValue(self, value):
-        self.opacity = 1 - value
-        self.setPos(self.x(), self.scene().sceneRect().top() - self.rect().height() * value)
-        if value == 1:
-            self.hide()
 
 
 if __name__ == '__main__':
 
     import sys
 
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
-    panel = Panel(3, 3)
-    panel.setFocus()
-    panel.show()
+    navigator = PadNavigator(QSize(3, 3))
+    navigator.show()
 
     sys.exit(app.exec_())

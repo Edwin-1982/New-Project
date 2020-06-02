@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,8 +23,6 @@
 %ModuleCode
 #include <qbytearray.h>
 %End
-
-quint16 qChecksum(const char *s /Array, TypeHint="Py_v3:bytes;str"/, uint len /ArraySize/);
 
 class QByteArray /TypeHintIn="Union[QByteArray, bytes, bytearray]"/
 {
@@ -73,54 +71,26 @@ static PyObject *QByteArrayToPyStr(QByteArray *ba)
 // expected.  This means that a QString must not automatically convert a bytes
 // object.
 //
-// Qt uses QByteArray to represent binary data and also '\0' terminated C
-// strings.  If we only allowed a bytes object to be automatically converted to
-// a QByteArray then we would force such strings to be either explicitly
-// specified as bytes (ie. have a leading 'b') or wrapped in a call to the
-// QByteArray ctor - neither of which is very Pythonic.  We therefore allow a
-// Latin-1 encoded str object to be automatcially converted to a QByteArray.
-// For consistency we also allow a Python v2.x unicode object to be similarly
-// converted.
+// In PyQt v5.4 and earlier a QByteArray could be created from a Latin-1
+// encoded string.  This was a mistaken attempt to ease the porting of Python2
+// code to Python3.
 
 if (sipIsErr == NULL)
-    return (
-#if PY_VERSION_HEX >= 0x02060000
-            PyByteArray_Check(sipPy) ||
-#endif
-            PyUnicode_Check(sipPy) || SIPBytes_Check(sipPy) ||
+    return (PyByteArray_Check(sipPy) || SIPBytes_Check(sipPy) ||
             sipCanConvertToType(sipPy, sipType_QByteArray, SIP_NO_CONVERTORS));
 
-#if PY_VERSION_HEX >= 0x02060000
 if (PyByteArray_Check(sipPy))
 {
-    *sipCppPtr = new QByteArray(PyByteArray_AS_STRING(sipPy),
-            PyByteArray_GET_SIZE(sipPy));
-
-    return sipGetState(sipTransferObj);
-}
-#endif
-
-if (PyUnicode_Check(sipPy))
-{
-    const char *bytes = sipString_AsLatin1String(&sipPy);
-
-    if (!sipPy)
-    {
-        *sipIsErr = 1;
-        return 0;
-    }
-
-    *sipCppPtr = new QByteArray(bytes);
-
-    Py_DECREF(sipPy);
+    *sipCppPtr = new QByteArray(PyByteArray_AsString(sipPy),
+            PyByteArray_Size(sipPy));
 
     return sipGetState(sipTransferObj);
 }
 
 if (SIPBytes_Check(sipPy))
 {
-    *sipCppPtr = new QByteArray(SIPBytes_AS_STRING(sipPy),
-            SIPBytes_GET_SIZE(sipPy));
+    *sipCppPtr = new QByteArray(SIPBytes_AsString(sipPy),
+            SIPBytes_Size(sipPy));
 
     return sipGetState(sipTransferObj);
 }
@@ -132,7 +102,17 @@ return 0;
 %End
 
 %BIGetBufferCode
-    sipRes = PyBuffer_FillInfo(sipBuffer, sipSelf, sipCpp->data(), sipCpp->size(), 0, sipFlags);
+    #if defined(Py_LIMITED_API)
+        Q_UNUSED(sipSelf);
+    
+        sipBuffer->bd_buffer = sipCpp->data();
+        sipBuffer->bd_length = sipCpp->size();
+        sipBuffer->bd_readonly = 0;
+        sipRes = 0;
+    #else
+        sipRes = PyBuffer_FillInfo(sipBuffer, sipSelf, sipCpp->data(),
+                sipCpp->size(), 0, sipFlags);
+    #endif
 %End
 
 %BIGetReadBufferCode
@@ -231,27 +211,93 @@ public:
     float toFloat(bool *ok = 0) const;
     double toDouble(bool *ok = 0) const;
     QByteArray toBase64() const;
-    QByteArray &setNum(int n /Constrained/, int base = 10);
     QByteArray &setNum(double n /Constrained/, char format = 'g', int precision = 6);
-    QByteArray &setNum(qlonglong n, int base = 10);
-    QByteArray &setNum(qulonglong n, int base = 10);
-    static QByteArray number(int n /Constrained/, int base = 10);
-    static QByteArray number(double n /Constrained/, char format = 'g', int precision = 6);
-    static QByteArray number(qlonglong n, int base = 10);
-    static QByteArray number(qulonglong n, int base = 10);
-    static QByteArray fromBase64(const QByteArray &base64);
-    static QByteArray fromRawData(const char * /Array, TypeHint="Py_v3:bytes;str"/, int size /ArraySize/);
-%If (Qt_4_3_0 -)
-    static QByteArray fromHex(const QByteArray &hexEncoded);
+    QByteArray &setNum(SIP_PYOBJECT n /TypeHint="int"/, int base = 10);
+%MethodCode
+        #if PY_MAJOR_VERSION < 3
+        if (PyInt_Check(a0))
+        {
+            qlonglong val = PyInt_AsLong(a0);
+        
+            sipRes = &sipCpp->setNum(val, a1);
+        }
+        else
+        #endif
+        {
+            qlonglong val = sipLong_AsLongLong(a0);
+        
+            if (!PyErr_Occurred())
+            {
+                sipRes = &sipCpp->setNum(val, a1);
+            }
+            else
+            {
+                // If it is positive then it might fit an unsigned long long.
+        
+                qulonglong uval = sipLong_AsUnsignedLongLong(a0);
+        
+                if (!PyErr_Occurred())
+                {
+                    sipRes = &sipCpp->setNum(uval, a1);
+                }
+                else
+                {
+                    sipError = (PyErr_ExceptionMatches(PyExc_OverflowError)
+                            ? sipErrorFail : sipErrorContinue);
+                }
+            }
+        }
 %End
+
+    static QByteArray number(double n /Constrained/, char format = 'g', int precision = 6);
+    static QByteArray number(SIP_PYOBJECT n /TypeHint="int"/, int base = 10);
+%MethodCode
+        #if PY_MAJOR_VERSION < 3
+        if (PyInt_Check(a0))
+        {
+            qlonglong val = PyInt_AsLong(a0);
+        
+            sipRes = new QByteArray(QByteArray::number(val, a1));
+        }
+        else
+        #endif
+        {
+            qlonglong val = sipLong_AsLongLong(a0);
+        
+            if (!PyErr_Occurred())
+            {
+                sipRes = new QByteArray(QByteArray::number(val, a1));
+            }
+            else
+            {
+                // If it is positive then it might fit an unsigned long long.
+        
+                qulonglong uval = sipLong_AsUnsignedLongLong(a0);
+        
+                if (!PyErr_Occurred())
+                {
+                    sipRes = new QByteArray(QByteArray::number(uval, a1));
+                }
+                else
+                {
+                    sipError = (PyErr_ExceptionMatches(PyExc_OverflowError)
+                            ? sipErrorFail : sipErrorContinue);
+                }
+            }
+        }
+%End
+
+    static QByteArray fromBase64(const QByteArray &base64);
+    static QByteArray fromRawData(const char * /Array/, int size /ArraySize/);
+    static QByteArray fromHex(const QByteArray &hexEncoded);
     int count() const /__len__/;
     int length() const;
     bool isNull() const;
     int size() const;
-    char at(int i) const;
-    char operator[](int i) const;
+    char at(int i) const /Encoding="None"/;
+    char operator[](int i) const /Encoding="None"/;
 %MethodCode
-        SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+        Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
         
         if (idx < 0)
             sipIsErr = 1;
@@ -261,17 +307,17 @@ public:
 
     QByteArray operator[](SIP_PYSLICE slice) const;
 %MethodCode
-        SIP_SSIZE_T len, start, stop, step, slicelength, i;
+        Py_ssize_t start, stop, step, slicelength;
         
-        len = sipCpp->length();
-        
-        if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+        if (sipConvertFromSliceObject(a0, sipCpp->length(), &start, &stop, &step, &slicelength) < 0)
+        {
             sipIsErr = 1;
+        }
         else
         {
             sipRes = new QByteArray();
         
-            for (i = 0; i < slicelength; ++i)
+            for (Py_ssize_t i = 0; i < slicelength; ++i)
             {
                 sipRes -> append(sipCpp->at(start));
                 start += step;
@@ -310,9 +356,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QByteArray()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QByteArray()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QByteArray()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QByteArray()");
         #endif
         }
         else
@@ -322,9 +368,9 @@ public:
             if (str)
             {
         #if PY_MAJOR_VERSION >= 3
-                sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QByteArray(%R)", str);
+                sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QByteArray(%R)", str);
         #else
-                sipRes = PyString_FromString("PyQt4.QtCore.QByteArray(");
+                sipRes = PyString_FromString("PyQt5.QtCore.QByteArray(");
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(str));
                 PyString_ConcatAndDel(&sipRes, PyString_FromString(")"));
         #endif
@@ -377,26 +423,55 @@ public:
     void squeeze();
     void push_back(const QByteArray &a);
     void push_front(const QByteArray &a);
-%If (Qt_5_0_0 -)
     bool contains(const QByteArray &a) const;
-%End
-%If (- Qt_5_0_0)
-    QBool contains(const QByteArray &a) const;
-%End
-%If (Qt_4_3_0 -)
     QByteArray toHex() const;
-%End
-%If (Qt_4_4_0 -)
     QByteArray toPercentEncoding(const QByteArray &exclude = QByteArray(), const QByteArray &include = QByteArray(), char percent = '%') const;
-%End
-%If (Qt_4_4_0 -)
     static QByteArray fromPercentEncoding(const QByteArray &input, char percent = '%');
-%End
-%If (Qt_4_5_0 -)
     QByteArray repeated(int times) const;
+    void swap(QByteArray &other /Constrained/);
+%If (Qt_5_2_0 -)
+
+    enum Base64Option
+    {
+        Base64Encoding,
+        Base64UrlEncoding,
+        KeepTrailingEquals,
+        OmitTrailingEquals,
+    };
+
 %End
-%If (Qt_4_8_0 -)
-    void swap(QByteArray &other);
+%If (Qt_5_2_0 -)
+    typedef QFlags<QByteArray::Base64Option> Base64Options;
+%End
+%If (Qt_5_2_0 -)
+    QByteArray toBase64(QByteArray::Base64Options options) const;
+%End
+%If (Qt_5_2_0 -)
+    static QByteArray fromBase64(const QByteArray &base64, QByteArray::Base64Options options);
+%End
+%If (Qt_5_7_0 -)
+    QByteArray &prepend(int count, char c /Encoding="None"/);
+%End
+%If (Qt_5_7_0 -)
+    QByteArray &append(int count, char c /Encoding="None"/);
+%End
+%If (Qt_5_7_0 -)
+    QByteArray &insert(int i, int count, char c /Encoding="None"/);
+%End
+%If (Qt_5_9_0 -)
+    QByteArray toHex(char separator) const;
+%End
+%If (Qt_5_10_0 -)
+    QByteArray chopped(int len) const;
+%End
+%If (Qt_5_12_0 -)
+    int compare(const QByteArray &a, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+%End
+%If (Qt_5_12_0 -)
+    bool isUpper() const;
+%End
+%If (Qt_5_12_0 -)
+    bool isLower() const;
 %End
 };
 
@@ -407,7 +482,14 @@ bool operator<=(const QByteArray &a1, const QByteArray &a2);
 bool operator>(const QByteArray &a1, const QByteArray &a2);
 bool operator>=(const QByteArray &a1, const QByteArray &a2);
 const QByteArray operator+(const QByteArray &a1, const QByteArray &a2);
-QDataStream &operator<<(QDataStream &, const QByteArray & /Constrained/);
-QDataStream &operator>>(QDataStream &, QByteArray & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QByteArray & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QByteArray & /Constrained/) /ReleaseGIL/;
 QByteArray qCompress(const QByteArray &data, int compressionLevel = -1);
 QByteArray qUncompress(const QByteArray &data);
+%If (Qt_5_2_0 -)
+QFlags<QByteArray::Base64Option> operator|(QByteArray::Base64Option f1, QFlags<QByteArray::Base64Option> f2);
+%End
+quint16 qChecksum(const char *s /Array/, uint len /ArraySize/);
+%If (Qt_5_9_0 -)
+quint16 qChecksum(const char *s /Array/, uint len /ArraySize/, Qt::ChecksumType standard);
+%End

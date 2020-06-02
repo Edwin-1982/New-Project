@@ -1,9 +1,10 @@
 # A demonstration custom widget plugin for Qt Designer.
 # 
-# Copyright (c) 2007 Phil Thompson
+# Copyright (c) 2013 Riverbank Computing Limited
 
 
-from PyQt4 import QtGui, QtDesigner
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtDesigner import QPyDesignerCustomWidgetPlugin
 
 from pydemo import PyDemo
 
@@ -11,7 +12,7 @@ from pydemo import PyDemo
 # This class implements the interface expected by Qt Designer to access the
 # custom widget.  See the description of the QDesignerCustomWidgetInterface
 # class for full details.
-class PyDemoPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
+class PyDemoPlugin(QPyDesignerCustomWidgetPlugin):
 
     # Initialise the instance.
     def __init__(self, parent=None):
@@ -47,7 +48,7 @@ class PyDemoPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
     # Return the icon used to represent the custom widget in Designer's widget
     # box.
     def icon(self):
-        return QtGui.QIcon(_logo_pixmap)
+        return QIcon(_logo_pixmap)
 
     # Return a short description of the custom widget used by Designer in a
     # tool tip.
@@ -164,4 +165,4 @@ _logo_16x16_xpm = [
 "6666666666666666",
 "BBBBBBBBBBBBBBBB"]
 
-_logo_pixmap = QtGui.QPixmap(_logo_16x16_xpm)
+_logo_pixmap = QPixmap(_logo_16x16_xpm)

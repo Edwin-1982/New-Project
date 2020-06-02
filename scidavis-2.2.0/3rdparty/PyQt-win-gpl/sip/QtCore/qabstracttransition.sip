@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QAbstractTransition : QObject
 {
 %TypeHeaderCode
@@ -34,8 +32,8 @@ public:
     QState *sourceState() const;
     QAbstractState *targetState() const;
     void setTargetState(QAbstractState *target /KeepReference=0/);
-    QList<QAbstractState*> targetStates() const;
-    void setTargetStates(const QList<QAbstractState*> &targets /KeepReference=0/);
+    QList<QAbstractState *> targetStates() const;
+    void setTargetStates(const QList<QAbstractState *> &targets /KeepReference=0/);
     QStateMachine *machine() const;
     void addAnimation(QAbstractAnimation *animation /GetWrapper/);
 %MethodCode
@@ -44,10 +42,13 @@ public:
         sipCpp->addAnimation(a0);
         
         // Use the user object as a list of the references.
-        PyObject *user = ((sipSimpleWrapper *)sipSelf)->user;
+        PyObject *user = sipGetUserObject((sipSimpleWrapper *)sipSelf);
         
         if (!user)
-            user = ((sipSimpleWrapper *)sipSelf)->user = PyList_New(0);
+        {
+            user = PyList_New(0);
+            sipSetUserObject((sipSimpleWrapper *)sipSelf, user);
+        }
         
         if (user)
             PyList_Append(user, a0Wrapper);
@@ -59,33 +60,51 @@ public:
         sipCpp->removeAnimation(a0);
         
         // Use the user object as a list of the references.
-        PyObject *user = ((sipSimpleWrapper *)sipSelf)->user;
+        PyObject *user = sipGetUserObject((sipSimpleWrapper *)sipSelf);
         
         if (user)
         {
-            SIP_SSIZE_T i = 0;
+            Py_ssize_t i = 0;
             
             // Note that we deal with an object appearing in the list more than once.
-            while (i < PyList_GET_SIZE(user))
-                if (PyList_GET_ITEM(user, i) == a0Wrapper)
+            while (i < PyList_Size(user))
+                if (PyList_GetItem(user, i) == a0Wrapper)
                     PyList_SetSlice(user, i, i + 1, NULL);
                 else
                     ++i;
         }
 %End
 
-    QList<QAbstractAnimation*> animations() const;
+    QList<QAbstractAnimation *> animations() const;
 
 signals:
     void triggered();
+%If (Qt_5_4_0 -)
+    void targetStateChanged();
+%End
+%If (Qt_5_4_0 -)
+    void targetStatesChanged();
+%End
 
 protected:
     virtual bool eventTest(QEvent *event) = 0;
     virtual void onTransition(QEvent *event) = 0;
     virtual bool event(QEvent *e);
 
-private:
-    QAbstractTransition(const QAbstractTransition &);
-};
+public:
+%If (Qt_5_5_0 -)
+
+    enum TransitionType
+    {
+        ExternalTransition,
+        InternalTransition,
+    };
 
 %End
+%If (Qt_5_5_0 -)
+    QAbstractTransition::TransitionType transitionType() const;
+%End
+%If (Qt_5_5_0 -)
+    void setTransitionType(QAbstractTransition::TransitionType type);
+%End
+};

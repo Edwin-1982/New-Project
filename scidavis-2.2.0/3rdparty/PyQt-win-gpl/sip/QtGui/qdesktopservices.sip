@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_2_0 -)
-
 class QDesktopServices
 {
 %TypeHeaderCode
@@ -29,71 +27,41 @@ class QDesktopServices
 %End
 
 public:
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-
-    enum StandardLocation
-    {
-        DesktopLocation,
-        DocumentsLocation,
-        FontsLocation,
-        ApplicationsLocation,
-        MusicLocation,
-        MoviesLocation,
-        PicturesLocation,
-        TempLocation,
-        HomeLocation,
-        DataLocation,
-%If (Qt_4_5_0 -)
-        CacheLocation,
-%End
-    };
-
-%End
-%End
     static bool openUrl(const QUrl &url) /ReleaseGIL/;
     static void setUrlHandler(const QString &scheme, QObject *receiver, const char *method);
     static void setUrlHandler(const QString &scheme, SIP_PYCALLABLE method /TypeHint="Callable[[QUrl], None]"/);
 %MethodCode
         // Allow a callable that must be a slot of a QObject, although we never tell
         // the user if it isn't.
-        if (PyMethod_Check(a1))
-        {
-            PyObject *self = PyMethod_GET_SELF(a1);
-            PyObject *func = PyMethod_GET_FUNCTION(a1);
+        sipMethodDef pm;
         
+        if (sipGetMethod(a1, &pm))
+        {
             int iserr = 0;
             QObject *receiver = reinterpret_cast<QObject *>(sipForceConvertToType(
-                    self, sipType_QObject, NULL, SIP_NOT_NONE, NULL, &iserr));
+                    pm.pm_self, sipType_QObject, NULL, SIP_NOT_NONE, NULL, &iserr));
         
-            if (!iserr && PyFunction_Check(func))
+            if (!iserr)
             {
-                PyObject *ascii_obj = ((PyFunctionObject *)func)->func_name;
-                const char *ascii = sipString_AsASCIIString(&ascii_obj);
+                PyObject *f_name_obj = PyObject_GetAttrString(pm.pm_function, "__name__");
         
-                if (ascii)
+                if (f_name_obj)
                 {
-                    QDesktopServices::setUrlHandler(*a0, receiver, ascii);
+                    // We only want a borrowed reference.
+                    Py_DECREF(f_name_obj);
         
-                    Py_DECREF(ascii_obj);
+                    const char *f_name = sipString_AsASCIIString(&f_name_obj);
+        
+                    if (f_name)
+                    {
+                        QDesktopServices::setUrlHandler(*a0, receiver, f_name);
+        
+                        Py_DECREF(f_name_obj);
+                    }
                 }
             }
         }
 %End
 
     static void unsetUrlHandler(const QString &scheme);
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    static QString storageLocation(QDesktopServices::StandardLocation type);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-%If (PyQt_NotBootstrapped)
-    static QString displayName(QDesktopServices::StandardLocation type);
-%End
-%End
-%End
 };
-
-%End

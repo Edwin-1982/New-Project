@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,34 +27,8 @@ class QUdpSocket : QAbstractSocket
 %End
 
 public:
-%If (- Qt_5_0_0)
-
-    enum BindFlag
-    {
-        DefaultForPlatform,
-        ShareAddress,
-        DontShareAddress,
-        ReuseAddressHint,
-    };
-
-%End
-%If (- Qt_5_0_0)
-    typedef QFlags<QUdpSocket::BindFlag> BindMode;
-%End
     explicit QUdpSocket(QObject *parent /TransferThis/ = 0);
     virtual ~QUdpSocket();
-%If (- Qt_5_0_0)
-    bool bind(const QHostAddress &address, quint16 port);
-%End
-%If (- Qt_5_0_0)
-    bool bind(quint16 port = 0);
-%End
-%If (- Qt_5_0_0)
-    bool bind(const QHostAddress &address, quint16 port, QFlags<QUdpSocket::BindFlag> mode);
-%End
-%If (- Qt_5_0_0)
-    bool bind(quint16 port, QFlags<QUdpSocket::BindFlag> mode);
-%End
     bool hasPendingDatagrams() const;
     qint64 pendingDatagramSize() const;
     SIP_PYOBJECT readDatagram(qint64 maxlen, QHostAddress *host /Out/ = 0, quint16 *port = 0) /TypeHint="Py_v3:bytes;str",ReleaseGIL/;
@@ -91,31 +65,18 @@ public:
         }
 %End
 
-    qint64 writeDatagram(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/, const QHostAddress &host, quint16 port) /ReleaseGIL/;
+    qint64 writeDatagram(const char *data /Array/, qint64 len /ArraySize/, const QHostAddress &host, quint16 port) /ReleaseGIL/;
     qint64 writeDatagram(const QByteArray &datagram, const QHostAddress &host, quint16 port) /ReleaseGIL/;
-%If (Qt_4_8_0 -)
     bool joinMulticastGroup(const QHostAddress &groupAddress);
-%End
-%If (Qt_4_8_0 -)
     bool joinMulticastGroup(const QHostAddress &groupAddress, const QNetworkInterface &iface);
-%End
-%If (Qt_4_8_0 -)
     bool leaveMulticastGroup(const QHostAddress &groupAddress);
-%End
-%If (Qt_4_8_0 -)
     bool leaveMulticastGroup(const QHostAddress &groupAddress, const QNetworkInterface &iface);
-%End
-%If (Qt_4_8_0 -)
     QNetworkInterface multicastInterface() const;
-%End
-%If (Qt_4_8_0 -)
     void setMulticastInterface(const QNetworkInterface &iface);
+%If (Qt_5_8_0 -)
+    QNetworkDatagram receiveDatagram(qint64 maxSize = -1) /ReleaseGIL/;
 %End
-
-private:
-    QUdpSocket(const QUdpSocket &);
+%If (Qt_5_8_0 -)
+    qint64 writeDatagram(const QNetworkDatagram &datagram) /ReleaseGIL/;
+%End
 };
-
-%If (Qt_4_2_0 - Qt_5_0_0)
-QFlags<QUdpSocket::BindFlag> operator|(QUdpSocket::BindFlag f1, QFlags<QUdpSocket::BindFlag> f2);
-%End

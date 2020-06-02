@@ -1,8 +1,8 @@
 // This is the support for QString.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -22,10 +22,11 @@
 #include <string.h>
 
 #include <QString>
-#include <QTextCodec>
 #include <QVector>
 
-#include "qpycore_sip.h"
+#include "qpycore_api.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Work out if we should enable PEP 393 support.  This is complicated by the
@@ -33,11 +34,11 @@
 #if PY_VERSION_HEX >= 0x03030000
 #if defined(Q_OS_MAC)
 #if !defined(__llvm__) || defined(__clang__)
-// Python v3.3 on a Mac using either g++ or Clang, but not LLVM.
+// Python v3.3 or later on a Mac using either g++ or Clang, but not LLVM.
 #define PYQT_PEP_393
 #endif
 #else
-// Python v3.3 on a non-Mac.
+// Python v3.3 or later on a non-Mac.
 #define PYQT_PEP_393
 #endif
 #endif
@@ -54,12 +55,12 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
     // common case.  Note that we can't use PyUnicode_FromKindAndData() because
     // it doesn't handle surrogates in UCS2 strings.
     int qt_len = qstr.length();
+    int kind;
+    void *data;
 
-    if ((obj = PyUnicode_New(qt_len, 0x007f)) == NULL)
+    if ((obj = sipUnicodeNew(qt_len, 0x007f, &kind, &data)) == NULL)
         return NULL;
 
-    int kind = PyUnicode_KIND(obj);
-    void *data = PyUnicode_DATA(obj);
     const QChar *qch = qstr.constData();
 
     for (int qt_i = 0; qt_i < qt_len; ++qt_i)
@@ -73,7 +74,7 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
 
             // Work out what kind we really need and what the Python length
             // should be.
-            Py_UCS4 maxchar = 0x00ff;
+            uint maxchar = 0x00ff;
 
             int py_len = qt_len;
 
@@ -102,18 +103,16 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
             }
 
             // Create the correctly sized object.
-            if ((obj = PyUnicode_New(py_len, maxchar)) == NULL)
+            if ((obj = sipUnicodeNew(py_len, maxchar, &kind, &data)) == NULL)
                 return NULL;
 
-            kind = PyUnicode_KIND(obj);
-            data = PyUnicode_DATA(obj);
             qch = qstr.constData();
 
             int qt_i2 = 0;
 
             for (int py_i = 0; py_i < py_len; ++py_i)
             {
-                Py_UCS4 py_ch;
+                uint py_ch;
 
                 if (qch->isHighSurrogate() && qt_i2 + 1 < qt_len && (qch + 1)->isLowSurrogate())
                 {
@@ -129,7 +128,7 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
                 ++qt_i2;
                 ++qch;
 
-                PyUnicode_WRITE(kind, data, py_i, py_ch);
+                sipUnicodeWrite(kind, data, py_i, py_ch);
             }
 
             break;
@@ -137,10 +136,9 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
 
         ++qch;
 
-        PyUnicode_WRITE(kind, data, qt_i, uch);
+        sipUnicodeWrite(kind, data, qt_i, uch);
     }
 #elif defined(Py_UNICODE_WIDE)
-#if QT_VERSION >= 0x040200
     QVector<uint> ucs4 = qstr.toUcs4();
 
     if ((obj = PyUnicode_FromUnicode(NULL, ucs4.size())) == NULL)
@@ -148,18 +146,6 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
 
     memcpy(PyUnicode_AS_UNICODE(obj), ucs4.constData(),
             ucs4.size() * sizeof (Py_UNICODE));
-#else
-    // Note that this doesn't handle code points greater than 0xffff.  It could
-    // but it's only an issue for old versions of Qt.
-
-    if ((obj = PyUnicode_FromUnicode(NULL, qstr.length())) == NULL)
-        return NULL;
-
-    Py_UNICODE *pyu = PyUnicode_AS_UNICODE(obj);
-
-    for (int i = 0; i < qstr.length(); ++i)
-        *pyu++ = (qstr.at(i)).unicode();
-#endif
 #else
     if ((obj = PyUnicode_FromUnicode(NULL, qstr.length())) == NULL)
         return NULL;
@@ -172,148 +158,42 @@ PyObject *qpycore_PyObject_FromQString(const QString &qstr)
 }
 
 
-// Convert a Python Unicode object to a QString.
+// Convert a Python string object to a QString.
 QString qpycore_PyObject_AsQString(PyObject *obj)
 {
-#if defined(PYQT_PEP_393)
-    if (PyUnicode_READY(obj) < 0)
-        return QString();
-
-    SIP_SSIZE_T len = PyUnicode_GET_LENGTH(obj);
-
-    switch (PyUnicode_KIND(obj))
+#if PY_MAJOR_VERSION < 3
+    if (PyString_Check(obj))
     {
-    case PyUnicode_1BYTE_KIND:
-        return QString::fromLatin1((char *)PyUnicode_1BYTE_DATA(obj), len);
+        const char *obj_s = PyString_AsString(obj);
 
-    case PyUnicode_2BYTE_KIND:
-        // The (QChar *) cast should be safe.
-        return QString((QChar *)PyUnicode_2BYTE_DATA(obj), len);
+        if (!obj_s)
+            return QString();
 
-    case PyUnicode_4BYTE_KIND:
-#if QT_VERSION >= 0x040200
-        return QString::fromUcs4(PyUnicode_4BYTE_DATA(obj), len);
-#else
-        // Note that this doesn't handle code points greater than 0xffff.  It
-        // could but it's only an issue for old versions of Qt.
-
-        QString qstr;
-
-        Py_UCS4 *ucode = PyUnicode_4BYTE_DATA(obj);
-
-        for (SIP_SSIZE_T i = 0; i < len; ++i)
-            qstr.append((uint)ucode[i]);
-
-        return qstr;
-#endif
+        return QString::fromUtf8(obj_s);
     }
+#endif
+
+#if defined(PYQT_PEP_393)
+    int char_size;
+    Py_ssize_t len;
+    void *data = sipUnicodeData(obj, &char_size, &len);
+
+    if (char_size == 1)
+        return QString::fromLatin1(reinterpret_cast<char *>(data), len);
+
+    if (char_size == 2)
+        // The (QChar *) cast should be safe.
+        return QString(reinterpret_cast<QChar *>(data), len);
+
+    if (char_size == 4)
+        return QString::fromUcs4(reinterpret_cast<uint *>(data), len);
 
     return QString();
 #elif defined(Py_UNICODE_WIDE)
-#if QT_VERSION >= 0x040200
     return QString::fromUcs4((const uint *)PyUnicode_AS_UNICODE(obj),
             PyUnicode_GET_SIZE(obj));
-#else
-    // Note that this doesn't handle code points greater than 0xffff.  It could
-    // but it's only an issue for old versions of Qt.
-
-    QString qstr;
-
-    Py_UNICODE *ucode = PyUnicode_AS_UNICODE(obj);
-    SIP_SSIZE_T len = PyUnicode_GET_SIZE(obj);
-
-    for (SIP_SSIZE_T i = 0; i < len; ++i)
-        qstr.append((uint)ucode[i]);
-
-    return qstr;
-#endif
 #else
     return QString::fromUtf16((const ushort *)PyUnicode_AS_UNICODE(obj),
             PyUnicode_GET_SIZE(obj));
 #endif
 }
-
-
-#if !defined(QT_DEPRECATED_SINCE)
-#define QT_DEPRECATED_SINCE(m, n)   1
-#endif
-#if QT_DEPRECATED_SINCE(5, 0)
-// Convert a Python unicode/string/bytes object to a character string encoded
-// according to the given encoding.  Update the object with a new reference to
-// the object that owns the data.
-const char *qpycore_encode(PyObject **s, QCoreApplication::Encoding encoding)
-{
-    PyObject *obj = *s;
-    const char *es = 0;
-    SIP_SSIZE_T sz;
-
-    if (PyUnicode_Check(obj))
-    {
-        if (encoding == QCoreApplication::UnicodeUTF8)
-        {
-            obj = PyUnicode_AsUTF8String(obj);
-        }
-        else
-        {
-            QTextCodec *codec = QTextCodec::codecForTr();
-
-            if (codec)
-            {
-                // Use the Qt codec to get to a byte string, and then to a
-                // Python object.
-                QString qs = qpycore_PyObject_AsQString(obj);
-                QByteArray ba = codec->fromUnicode(qs);
-
-#if PY_MAJOR_VERSION >= 3
-                obj = PyBytes_FromStringAndSize(ba.constData(), ba.size());
-#else
-                obj = PyString_FromStringAndSize(ba.constData(), ba.size());
-#endif
-            }
-            else
-            {
-                obj = PyUnicode_AsLatin1String(obj);
-            }
-        }
-
-        if (obj)
-        {
-#if PY_MAJOR_VERSION >= 3
-            es = PyBytes_AS_STRING(obj);
-#else
-            es = PyString_AS_STRING(obj);
-#endif
-        }
-    }
-#if PY_MAJOR_VERSION >= 3
-    else if (PyBytes_Check(obj))
-    {
-        es = PyBytes_AS_STRING(obj);
-        Py_INCREF(obj);
-    }
-#else
-    else if (PyString_Check(obj))
-    {
-        es = PyString_AS_STRING(obj);
-        Py_INCREF(obj);
-    }
-#endif
-    else if (PyObject_AsCharBuffer(obj, &es, &sz) >= 0)
-    {
-        Py_INCREF(obj);
-    }
-
-    if (es)
-    {
-        *s = obj;
-    }
-    else
-    {
-        PyErr_Format(PyExc_UnicodeEncodeError,
-                "unable to convert '%s' to requested encoding",
-                Py_TYPE(*s)->tp_name);
-    }
-
-    return es;
-}
-#endif

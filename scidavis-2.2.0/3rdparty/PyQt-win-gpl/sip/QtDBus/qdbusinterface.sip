@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_7_0 -)
-
 class QDBusInterface : QDBusAbstractInterface
 {
 %TypeHeaderCode
@@ -29,8 +27,6 @@ class QDBusInterface : QDBusAbstractInterface
 %End
 
 public:
-    QDBusInterface(const QString &service, const QString &path, const QString &interface = QString(), const QDBusConnection &connection = QDBusConnection::sessionBus(), QObject *parent = 0);
+    QDBusInterface(const QString &service, const QString &path, const QString &interface = QString(), const QDBusConnection &connection = QDBusConnection::sessionBus(), QObject *parent /TransferThis/ = 0);
     virtual ~QDBusInterface();
 };
-
-%End

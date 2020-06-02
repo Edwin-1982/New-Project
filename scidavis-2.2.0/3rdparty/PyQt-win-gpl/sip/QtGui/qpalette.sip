@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -32,17 +32,11 @@ public:
     QPalette(Qt::GlobalColor button);
     QPalette(const QColor &button, const QColor &background);
     QPalette(const QBrush &foreground, const QBrush &button, const QBrush &light, const QBrush &dark, const QBrush &mid, const QBrush &text, const QBrush &bright_text, const QBrush &base, const QBrush &background);
-    QPalette(const QColor &foreground, const QColor &background, const QColor &light, const QColor &dark, const QColor &mid, const QColor &text, const QColor &base);
     QPalette(const QPalette &palette);
     QPalette(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QPalette>())
             sipCpp = new QPalette(a0->value<QPalette>());
-        #else
-        if (qVariantCanConvert<QPalette>(*a0))
-            sipCpp = new QPalette(qVariantValue<QPalette>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -81,14 +75,13 @@ public:
         Link,
         LinkVisited,
         AlternateBase,
-%If (Qt_4_4_0 -)
         ToolTipBase,
-%End
-%If (Qt_4_4_0 -)
         ToolTipText,
+%If (Qt_5_12_0 -)
+        PlaceholderText,
 %End
-        NColorRoles,
         NoRole,
+        NColorRoles,
     };
 
     QPalette::ColorGroup currentColorGroup() const;
@@ -100,7 +93,6 @@ public:
     bool isEqual(QPalette::ColorGroup cr1, QPalette::ColorGroup cr2) const;
     const QColor &color(QPalette::ColorRole cr) const;
     const QBrush &brush(QPalette::ColorRole cr) const;
-    const QBrush &foreground() const;
     const QBrush &windowText() const;
     const QBrush &button() const;
     const QBrush &light() const;
@@ -110,7 +102,6 @@ public:
     const QBrush &base() const;
     const QBrush &alternateBase() const;
     const QBrush &window() const;
-    const QBrush &background() const;
     const QBrush &midlight() const;
     const QBrush &brightText() const;
     const QBrush &buttonText() const;
@@ -119,34 +110,24 @@ public:
     const QBrush &highlightedText() const;
     const QBrush &link() const;
     const QBrush &linkVisited() const;
-%If (Qt_4_4_0 -)
     const QBrush &toolTipBase() const;
-%End
-%If (Qt_4_4_0 -)
     const QBrush &toolTipText() const;
+%If (Qt_5_12_0 -)
+    const QBrush &placeholderText() const;
 %End
     bool operator==(const QPalette &p) const;
     bool operator!=(const QPalette &p) const;
     bool isCopyOf(const QPalette &p) const;
-%If (PyQt_Deprecated_5_0)
-    int serialNumber() const;
-%End
     QPalette resolve(const QPalette &) const;
     uint resolve() const;
     void resolve(uint mask);
     void setColor(QPalette::ColorGroup acg, QPalette::ColorRole acr, const QColor &acolor);
     void setColor(QPalette::ColorRole acr, const QColor &acolor);
     void setBrush(QPalette::ColorRole acr, const QBrush &abrush);
-%If (Qt_4_2_0 -)
     bool isBrushSet(QPalette::ColorGroup cg, QPalette::ColorRole cr) const;
-%End
-%If (Qt_4_3_0 -)
     qint64 cacheKey() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QPalette &other);
-%End
+    void swap(QPalette &other /Constrained/);
 };
 
-QDataStream &operator<<(QDataStream &s, const QPalette &p /Constrained/);
-QDataStream &operator>>(QDataStream &ds, QPalette &p /Constrained/);
+QDataStream &operator<<(QDataStream &s, const QPalette &p /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &ds, QPalette &p /Constrained/) /ReleaseGIL/;

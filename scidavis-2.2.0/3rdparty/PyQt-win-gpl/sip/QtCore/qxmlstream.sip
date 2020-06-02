@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QXmlStreamAttribute
 {
@@ -44,9 +42,6 @@ public:
     bool operator!=(const QXmlStreamAttribute &other) const;
 };
 
-%End
-%If (Qt_4_4_0 -)
-
 class QXmlStreamAttributes
 {
 %TypeHeaderCode
@@ -54,20 +49,14 @@ class QXmlStreamAttributes
 %End
 
 public:
-%If (Qt_4_8_0 -)
     QXmlStreamAttributes();
-%End
     QStringRef value(const QString &namespaceUri, const QString &name) const;
     QStringRef value(const QString &qualifiedName) const;
     void append(const QString &namespaceUri, const QString &name, const QString &value);
     void append(const QString &qualifiedName, const QString &value);
     void append(const QXmlStreamAttribute &attribute);
-%If (Qt_4_5_0 -)
     bool hasAttribute(const QString &qualifiedName) const;
-%End
-%If (Qt_4_5_0 -)
     bool hasAttribute(const QString &namespaceUri, const QString &name) const;
-%End
 // Methods inherited from QVector<QXmlStreamAttribute> and Python special methods.
 // Keep in sync with QPolygon and QPolygonF.
 
@@ -123,7 +112,7 @@ bool operator==(const QXmlStreamAttributes &other) const;
 
 QXmlStreamAttribute &operator[](int i);
 %MethodCode
-SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
 
 if (idx < 0)
     sipIsErr = 1;
@@ -147,12 +136,12 @@ else
 
 void __setitem__(SIP_PYSLICE slice, const QXmlStreamAttributes &list);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     int vlen = a1->count();
@@ -166,7 +155,7 @@ else
     {
         QVector<QXmlStreamAttribute>::const_iterator it = a1->begin();
 
-        for (i = 0; i < slicelength; ++i)
+        for (Py_ssize_t i = 0; i < slicelength; ++i)
         {
             (*sipCpp)[start] = *it;
             start += step;
@@ -178,11 +167,7 @@ else
 
 void __delitem__(int i);
 %MethodCode
-int len;
-
-len = sipCpp->count();
-
-if ((a0 = (int)sipConvertFromSequenceIndex(a0, len)) < 0)
+if ((a0 = (int)sipConvertFromSequenceIndex(a0, sipCpp->count())) < 0)
     sipIsErr = 1;
 else
     sipCpp->remove(a0);
@@ -190,33 +175,35 @@ else
 
 void __delitem__(SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
-    for (i = 0; i < slicelength; ++i)
+{
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         sipCpp->remove(start);
         start += step - 1;
     }
+}
 %End
 
 QXmlStreamAttributes &operator[](SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     sipRes = new QXmlStreamAttributes();
 
-    for (i = 0; i < slicelength; ++i)
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         (*sipRes) += (*sipCpp)[start];
         start += step;
@@ -230,9 +217,6 @@ int __contains__(const QXmlStreamAttribute &value);
 sipRes = bool(sipCpp->contains(*a0));
 %End
 };
-
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamNamespaceDeclaration
 {
@@ -251,11 +235,7 @@ public:
     bool operator!=(const QXmlStreamNamespaceDeclaration &other) const;
 };
 
-%End
-%If (Qt_4_4_0 -)
 typedef QVector<QXmlStreamNamespaceDeclaration> QXmlStreamNamespaceDeclarations;
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamNotationDeclaration
 {
@@ -274,11 +254,7 @@ public:
     bool operator!=(const QXmlStreamNotationDeclaration &other) const;
 };
 
-%End
-%If (Qt_4_4_0 -)
 typedef QVector<QXmlStreamNotationDeclaration> QXmlStreamNotationDeclarations;
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamEntityDeclaration
 {
@@ -299,11 +275,7 @@ public:
     bool operator!=(const QXmlStreamEntityDeclaration &other) const;
 };
 
-%End
-%If (Qt_4_4_0 -)
 typedef QVector<QXmlStreamEntityDeclaration> QXmlStreamEntityDeclarations;
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamEntityResolver
 {
@@ -315,9 +287,6 @@ public:
     virtual ~QXmlStreamEntityResolver();
     virtual QString resolveUndeclaredEntity(const QString &name);
 };
-
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamReader
 {
@@ -342,24 +311,9 @@ public:
     };
 
     QXmlStreamReader();
-%If (Qt_5_0_0 -)
     explicit QXmlStreamReader(QIODevice *device);
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamReader(QIODevice *device);
-%End
-%If (Qt_5_0_0 -)
     explicit QXmlStreamReader(const QByteArray &data);
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamReader(const QByteArray &data);
-%End
-%If (Qt_5_0_0 -)
     explicit QXmlStreamReader(const QString &data);
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamReader(const QString &data);
-%End
     ~QXmlStreamReader();
     void setDevice(QIODevice *device);
     QIODevice *device() const;
@@ -390,7 +344,6 @@ public:
     qint64 columnNumber() const;
     qint64 characterOffset() const;
     QXmlStreamAttributes attributes() const;
-%If (Qt_4_6_0 -)
 
     enum ReadElementTextBehaviour
     {
@@ -399,16 +352,7 @@ public:
         SkipChildElements,
     };
 
-%End
-%If (Qt_5_0_0 -)
     QString readElementText(QXmlStreamReader::ReadElementTextBehaviour behaviour = QXmlStreamReader::ErrorOnUnexpectedElement);
-%End
-%If (- Qt_5_0_0)
-    QString readElementText();
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    QString readElementText(QXmlStreamReader::ReadElementTextBehaviour behaviour);
-%End
     QStringRef name() const;
     QStringRef namespaceUri() const;
     QStringRef qualifiedName() const;
@@ -440,19 +384,12 @@ public:
     bool hasError() const;
     void setEntityResolver(QXmlStreamEntityResolver *resolver /KeepReference/);
     QXmlStreamEntityResolver *entityResolver() const;
-%If (Qt_4_6_0 -)
     bool readNextStartElement();
-%End
-%If (Qt_4_6_0 -)
     void skipCurrentElement();
-%End
 
 private:
     QXmlStreamReader(const QXmlStreamReader &);
 };
-
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlStreamWriter
 {
@@ -462,24 +399,8 @@ class QXmlStreamWriter
 
 public:
     QXmlStreamWriter();
-%If (Qt_5_0_0 -)
     explicit QXmlStreamWriter(QIODevice *device);
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamWriter(QIODevice *device);
-%End
-%If (Qt_5_0_0 -)
     explicit QXmlStreamWriter(QByteArray *array);
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamWriter(QByteArray *array);
-%End
-%If (Qt_5_0_0 -)
-    explicit QXmlStreamWriter(QString *string /Constrained/) /API=QString: - 2/;
-%End
-%If (- Qt_5_0_0)
-    QXmlStreamWriter(QString *string /Constrained/) /API=QString: - 2/;
-%End
     ~QXmlStreamWriter();
     void setDevice(QIODevice *device);
     QIODevice *device() const;
@@ -510,18 +431,12 @@ public:
     void writeProcessingInstruction(const QString &target, const QString &data = QString());
     void writeStartDocument();
     void writeStartDocument(const QString &version);
-%If (Qt_4_5_0 -)
     void writeStartDocument(const QString &version, bool standalone);
-%End
     void writeStartElement(const QString &qualifiedName);
     void writeStartElement(const QString &namespaceUri, const QString &name);
     void writeCurrentToken(const QXmlStreamReader &reader);
-%If (Qt_4_8_0 -)
     bool hasError() const;
-%End
 
 private:
     QXmlStreamWriter(const QXmlStreamWriter &);
 };
-
-%End

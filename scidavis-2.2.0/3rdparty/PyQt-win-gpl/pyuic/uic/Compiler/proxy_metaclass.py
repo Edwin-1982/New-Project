@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2012 Riverbank Computing Limited.
+## Copyright (C) 2014 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -38,7 +38,7 @@
 #############################################################################
 
 
-from PyQt4.uic.Compiler.misc import Literal, moduleMember
+from .misc import Literal, moduleMember
 
 
 class ProxyMetaclass(type):
@@ -83,7 +83,7 @@ class ProxyMetaclass(type):
                 raise
 
             # Avoid a circular import.
-            from PyQt4.uic.Compiler.qtproxies import LiteralProxyClass
+            from .qtproxies import LiteralProxyClass
 
             return type(name, (LiteralProxyClass, ),
                         {"module": moduleMember(type.__getattribute__(cls, "module"),

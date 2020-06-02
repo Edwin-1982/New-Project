@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2010 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -45,20 +45,20 @@
 import sys
 import random
 
-from PyQt4 import QtCore
+from PyQt5.QtCore import QCoreApplication, QMutex, QThread, QWaitCondition
 
 
 DataSize = 100000
 BufferSize = 8192
 buffer = list(range(BufferSize))
 
-bufferNotEmpty = QtCore.QWaitCondition()
-bufferNotFull = QtCore.QWaitCondition()
-mutex = QtCore.QMutex()
+bufferNotEmpty = QWaitCondition()
+bufferNotFull = QWaitCondition()
+mutex = QMutex()
 numUsedBytes = 0
 
 
-class Producer(QtCore.QThread):
+class Producer(QThread):
     def run(self):
         global numUsedBytes
 
@@ -76,7 +76,7 @@ class Producer(QtCore.QThread):
             mutex.unlock()
 
 
-class Consumer(QtCore.QThread):
+class Consumer(QThread):
     def run(self):
         global numUsedBytes
 
@@ -97,7 +97,7 @@ class Consumer(QtCore.QThread):
 
 
 if __name__ == '__main__':
-    app = QtCore.QCoreApplication(sys.argv)
+    app = QCoreApplication(sys.argv)
     producer = Producer()
     consumer = Consumer()
     producer.start()

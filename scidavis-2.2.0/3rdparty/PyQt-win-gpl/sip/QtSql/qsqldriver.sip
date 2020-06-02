@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,34 +28,34 @@ class QSqlDriver : QObject
 
 %ConvertToSubClassCode
     static struct class_graph {
-            const char *name;
-            sipTypeDef **type;
-            int yes, no;
-        } graph[] = {
-            {sipName_QSqlQueryModel,	&sipType_QSqlQueryModel,	3, 1},
-            {sipName_QSqlRelationalDelegate,	&sipType_QSqlRelationalDelegate,	-1, 2},
-            {sipName_QSqlDriver,	&sipType_QSqlDriver,	-1, -1},
-            {sipName_QSqlTableModel,	&sipType_QSqlTableModel,	4, -1},
-            {sipName_QSqlRelationalTableModel,	&sipType_QSqlRelationalTableModel,	-1, -1},
-        };
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+        {sipName_QSqlQueryModel, &sipType_QSqlQueryModel, 3, 1},
+        {sipName_QSqlRelationalDelegate, &sipType_QSqlRelationalDelegate, -1, 2},
+        {sipName_QSqlDriver, &sipType_QSqlDriver, -1, -1},
+        {sipName_QSqlTableModel, &sipType_QSqlTableModel, 4, -1},
+        {sipName_QSqlRelationalTableModel, &sipType_QSqlRelationalTableModel, -1, -1},
+    };
     
-        int i = 0;
+    int i = 0;
     
-        sipType = 0;
+    sipType = NULL;
     
-        do
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
         {
-            struct class_graph *cg = &graph[i];
-    
-            if (cg->name != NULL && sipCpp->inherits(cg->name))
-            {
-                sipType = *cg->type;
-                i = cg->yes;
-            }
-            else
-                i = cg->no;
+            sipType = *cg->type;
+            i = cg->yes;
         }
-        while (i >= 0);
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
@@ -70,21 +70,11 @@ public:
         PositionalPlaceholders,
         LastInsertId,
         BatchOperations,
-%If (Qt_4_3_0 -)
         SimpleLocking,
-%End
-%If (Qt_4_3_0 -)
         LowPrecisionNumbers,
-%End
-%If (Qt_4_4_0 -)
         EventNotifications,
-%End
-%If (Qt_4_4_0 -)
         FinishQuery,
-%End
-%If (Qt_4_4_0 -)
         MultipleResultSets,
-%End
     };
 
     enum StatementType
@@ -128,25 +118,9 @@ protected:
     virtual void setLastError(const QSqlError &e);
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool subscribeToNotification(const QString &name);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    bool subscribeToNotification(const QString &name);
-%End
-%If (Qt_5_0_0 -)
     virtual bool unsubscribeFromNotification(const QString &name);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    bool unsubscribeFromNotification(const QString &name);
-%End
-%If (Qt_5_0_0 -)
     virtual QStringList subscribedToNotifications() const;
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    QStringList subscribedToNotifications() const;
-%End
-%If (Qt_5_0_0 -)
 
     enum NotificationSource
     {
@@ -155,53 +129,32 @@ public:
         OtherSource,
     };
 
-%End
-
 signals:
-%If (Qt_4_4_0 -)
     void notification(const QString &name);
-%End
-%If (Qt_5_0_0 -)
     void notification(const QString &name, QSqlDriver::NotificationSource source, const QVariant &payload);
-%End
-
-protected slots:
-%If (Qt_4_4_0 - Qt_5_0_0)
-    bool subscribeToNotificationImplementation(const QString &name);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    bool unsubscribeFromNotificationImplementation(const QString &name);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    QStringList subscribedToNotificationsImplementation() const;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    bool isIdentifierEscapedImplementation(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    QString stripDelimitersImplementation(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool isIdentifierEscaped(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    bool isIdentifierEscaped(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
-%If (Qt_5_0_0 -)
     virtual QString stripDelimiters(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    QString stripDelimiters(const QString &identifier, QSqlDriver::IdentifierType type) const;
-%End
-%If (Qt_4_6_0 -)
     void setNumericalPrecisionPolicy(QSql::NumericalPrecisionPolicy precisionPolicy);
-%End
-%If (Qt_4_6_0 -)
     QSql::NumericalPrecisionPolicy numericalPrecisionPolicy() const;
-%End
+%If (Qt_5_4_0 -)
 
-private:
-    QSqlDriver(const QSqlDriver &);
+    enum DbmsType
+    {
+        UnknownDbms,
+        MSSqlServer,
+        MySqlServer,
+        PostgreSQL,
+        Oracle,
+        Sybase,
+        SQLite,
+        Interbase,
+        DB2,
+    };
+
+%End
+%If (Qt_5_4_0 -)
+    QSqlDriver::DbmsType dbmsType() const;
+%End
 };

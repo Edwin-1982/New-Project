@@ -1,8 +1,8 @@
 // This implements the helpers for QMetaObject.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -25,9 +25,13 @@
 #include <QMetaObject>
 #include <QObject>
 
+#include "qpycore_api.h"
 #include "qpycore_chimera.h"
 #include "qpycore_misc.h"
-#include "qpycore_sip.h"
+#include "qpycore_objectified_strings.h"
+#include "qpycore_public_api.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Forward declarations.
@@ -46,9 +50,9 @@ void qpycore_qmetaobject_connectslotsbyname(QObject *qobj,
 
     PyObject *slot_obj = 0;
 
-    for (SIP_SSIZE_T li = 0; li < PyList_GET_SIZE(dir); ++li)
+    for (Py_ssize_t li = 0; li < PyList_Size(dir); ++li)
     {
-        PyObject *name_obj = PyList_GET_ITEM(dir, li);
+        PyObject *name_obj = PyList_GetItem(dir, li);
 
         // Get the slot object.
         Py_XDECREF(slot_obj);
@@ -63,13 +67,13 @@ void qpycore_qmetaobject_connectslotsbyname(QObject *qobj,
 
         // Use the signature attribute instead of the name if there is one.
         PyObject *sigattr = PyObject_GetAttr(slot_obj,
-                qpycore_signature_attr_name);
+                qpycore_dunder_pyqtsignature);
 
         if (sigattr)
         {
-            for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sigattr); ++i)
+            for (Py_ssize_t i = 0; i < PyList_Size(sigattr); ++i)
             {
-                PyObject *decoration = PyList_GET_ITEM(sigattr, i);
+                PyObject *decoration = PyList_GetItem(sigattr, i);
                 Chimera::Signature *sig = Chimera::Signature::fromPyObject(decoration);
                 QByteArray args = sig->arguments();
 
@@ -119,11 +123,7 @@ static void connect(QObject *qobj, PyObject *slot_obj,
     QByteArray sname = slot_nm.mid(i + 1);
 
     // Find the emitting object and get its meta-object.
-#if defined(QT_NO_MEMBER_TEMPLATES)
-    QObject *eobj = qFindChild<QObject *>(qobj, ename);
-#else
     QObject *eobj = qobj->findChild<QObject *>(ename);
-#endif
 
     if (!eobj)
         return;
@@ -138,11 +138,7 @@ static void connect(QObject *qobj, PyObject *slot_obj,
         if (mm.methodType() != QMetaMethod::Signal)
             continue;
 
-#if QT_VERSION >= 0x050000
         QByteArray sig(mm.methodSignature());
-#else
-        QByteArray sig(mm.signature());
-#endif
 
         if (Chimera::Signature::name(sig) != sname)
             continue;
@@ -154,7 +150,7 @@ static void connect(QObject *qobj, PyObject *slot_obj,
         QObject *receiver;
         QByteArray slot_sig;
 
-        if (pyqt4_get_connection_parts(slot_obj, eobj, sig.constData(), false, &receiver, slot_sig) != sipErrorNone)
+        if (pyqt5_get_connection_parts(slot_obj, eobj, sig.constData(), false, &receiver, slot_sig) != sipErrorNone)
             continue;
 
         // Add the type character.

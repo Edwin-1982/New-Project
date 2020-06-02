@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,32 +28,25 @@ class QBitmap : QPixmap
 
 public:
     QBitmap();
+%If (Qt_5_7_0 -)
+    QBitmap(const QBitmap &other);
+%End
     QBitmap(const QPixmap &);
     QBitmap(int w, int h);
     explicit QBitmap(const QSize &);
     QBitmap(const QString &fileName, const char *format = 0);
     QBitmap(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QBitmap>())
             sipCpp = new sipQBitmap(a0->value<QBitmap>());
-        #else
-        if (qVariantCanConvert<QBitmap>(*a0))
-            sipCpp = new sipQBitmap(qVariantValue<QBitmap>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
 
     virtual ~QBitmap();
     void clear();
-    static QBitmap fromImage(const QImage &image, Qt::ImageConversionFlags flags = Qt::AutoColor);
+    static QBitmap fromImage(const QImage &image, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
     static QBitmap fromData(const QSize &size, const uchar *bits, QImage::Format format = QImage::Format_MonoLSB);
-    QBitmap transformed(const QMatrix &) const;
-%If (Qt_4_3_0 -)
     QBitmap transformed(const QTransform &matrix) const;
-%End
-%If (Qt_4_8_0 -)
-    void swap(QBitmap &other);
-%End
+    void swap(QBitmap &other /Constrained/);
 };

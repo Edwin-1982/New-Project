@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -53,9 +53,7 @@ public:
         Broadcast,
         LocalHost,
         LocalHostIPv6,
-%If (Qt_5_0_0 -)
         AnyIPv4,
-%End
         AnyIPv6,
         Any,
     };
@@ -67,6 +65,9 @@ public:
     explicit QHostAddress(const Q_IPV6ADDR &ip6Addr);
     QHostAddress(const QHostAddress &copy);
     ~QHostAddress();
+%If (Qt_5_8_0 -)
+    void setAddress(QHostAddress::SpecialAddress address /Constrained/);
+%End
     void setAddress(quint32 ip4Addr);
     bool setAddress(const QString &address);
     void setAddress(const Q_IPV6ADDR &ip6Addr);
@@ -78,42 +79,67 @@ public:
     void setScopeId(const QString &id);
     bool operator==(const QHostAddress &address) const;
     bool operator==(QHostAddress::SpecialAddress address) const;
-%If (Qt_4_2_0 -)
     bool operator!=(const QHostAddress &address) const;
-%End
-%If (Qt_4_2_0 -)
     bool operator!=(QHostAddress::SpecialAddress address) const;
-%End
     bool isNull() const;
     void clear();
-%If (Qt_4_2_0 -)
     long __hash__() const;
 %MethodCode
         sipRes = qHash(*sipCpp);
 %End
 
-%End
-%If (Qt_4_5_0 -)
     bool isInSubnet(const QHostAddress &subnet, int netmask) const;
-%End
-%If (Qt_4_5_0 -)
     bool isInSubnet(const QPair<QHostAddress, int> &subnet) const;
-%End
-%If (Qt_5_0_0 -)
     bool isLoopback() const;
-%End
-%If (Qt_4_5_0 -)
     static QPair<QHostAddress, int> parseSubnet(const QString &subnet);
+%If (Qt_5_6_0 -)
+    void swap(QHostAddress &other /Constrained/);
+%End
+%If (Qt_5_6_0 -)
+    bool isMulticast() const;
+%End
+%If (Qt_5_8_0 -)
+
+    enum ConversionModeFlag
+    {
+        ConvertV4MappedToIPv4,
+        ConvertV4CompatToIPv4,
+        ConvertUnspecifiedAddress,
+        ConvertLocalHost,
+        TolerantConversion,
+        StrictConversion,
+    };
+
+%End
+%If (Qt_5_8_0 -)
+    typedef QFlags<QHostAddress::ConversionModeFlag> ConversionMode;
+%End
+%If (Qt_5_8_0 -)
+    bool isEqual(const QHostAddress &address, QHostAddress::ConversionMode mode = QHostAddress::TolerantConversion) const;
+%End
+%If (Qt_5_11_0 -)
+    bool isGlobal() const;
+%End
+%If (Qt_5_11_0 -)
+    bool isLinkLocal() const;
+%End
+%If (Qt_5_11_0 -)
+    bool isSiteLocal() const;
+%End
+%If (Qt_5_11_0 -)
+    bool isUniqueLocalUnicast() const;
+%End
+%If (Qt_5_11_0 -)
+    bool isBroadcast() const;
 %End
 };
 
 bool operator==(QHostAddress::SpecialAddress address1, const QHostAddress &address2);
-%If (Qt_4_2_0 -)
-QDataStream &operator<<(QDataStream &, const QHostAddress &);
+%If (Qt_5_9_0 -)
+bool operator!=(QHostAddress::SpecialAddress lhs, const QHostAddress &rhs);
 %End
-%If (Qt_4_2_0 -)
-QDataStream &operator>>(QDataStream &, QHostAddress &);
-%End
+QDataStream &operator<<(QDataStream &, const QHostAddress &) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QHostAddress &) /ReleaseGIL/;
 // Q_IPV6ADDR is implemented as a Python 16-tuple of ints.
 %MappedType Q_IPV6ADDR /TypeHint="Tuple[int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int]"/
 {
@@ -140,7 +166,7 @@ QDataStream &operator>>(QDataStream &, QHostAddress &);
             return NULL;
         }
 
-        PyTuple_SET_ITEM(t, i, pobj);
+        PyTuple_SetItem(t, i, pobj);
     }
 
     return t;
@@ -153,9 +179,9 @@ QDataStream &operator>>(QDataStream &, QHostAddress &);
 
     Q_IPV6ADDR *qa = new Q_IPV6ADDR;
  
-    for (SIP_SSIZE_T i = 0; i < 16; ++i)
+    for (Py_ssize_t i = 0; i < 16; ++i)
     {
-        PyObject *itm = PySequence_ITEM(sipPy, i);
+        PyObject *itm = PySequence_GetItem(sipPy, i);
 
         if (!itm)
         {
@@ -175,3 +201,6 @@ QDataStream &operator>>(QDataStream &, QHostAddress &);
     return sipGetState(sipTransferObj);
 %End
 };
+%If (Qt_5_8_0 -)
+QFlags<QHostAddress::ConversionModeFlag> operator|(QHostAddress::ConversionModeFlag f1, QFlags<QHostAddress::ConversionModeFlag> f2);
+%End

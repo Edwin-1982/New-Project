@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,37 +28,25 @@ class QDate /TypeHintIn="Union[QDate, datetime.date]"/
 
 %TypeCode
 #include <QHash>
-
-#if PY_VERSION_HEX >= 0x02040000
-#include <datetime.h>
-#endif
 %End
 
 %ConvertToTypeCode
-#if PY_VERSION_HEX >= 0x02040000
-    if (!PyDateTimeAPI)
-        PyDateTime_IMPORT;
-#endif
-
 // Allow a Python date object whenever a QDate is expected.
 
 if (sipIsErr == NULL)
-    return (
-#if PY_VERSION_HEX >= 0x02040000
-            PyDate_Check(sipPy) ||
-#endif
+    return (sipGetDate(sipPy, 0) ||
             sipCanConvertToType(sipPy, sipType_QDate, SIP_NO_CONVERTORS));
 
-#if PY_VERSION_HEX >= 0x02040000
-if (PyDate_Check(sipPy))
+sipDateDef py_date;
+
+if (sipGetDate(sipPy, &py_date))
 {
-    *sipCppPtr = new QDate(PyDateTime_GET_YEAR(sipPy),
-                           PyDateTime_GET_MONTH(sipPy),
-                           PyDateTime_GET_DAY(sipPy));
+    *sipCppPtr = new QDate(py_date.pd_year,
+                           py_date.pd_month,
+                           py_date.pd_day);
 
     return sipGetState(sipTransferObj);
 }
-#endif
 
 *sipCppPtr = reinterpret_cast<QDate *>(sipConvertToType(sipPy, sipType_QDate, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
 
@@ -77,9 +65,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QDate()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QDate()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QDate()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QDate()");
         #endif
         }
         else
@@ -90,35 +78,28 @@ public:
         #else
                 PyString_FromFormat
         #endif
-                    ("PyQt4.QtCore.QDate(%i, %i, %i)", sipCpp->year(),
+                    ("PyQt5.QtCore.QDate(%i, %i, %i)", sipCpp->year(),
                     sipCpp->month(), sipCpp->day());
         }
 %End
 
     long __hash__() const;
 %MethodCode
-        if (sipIsAPIEnabled("QDate", 2, 0))
-        {
-            sipRes = qHash(sipCpp->toString(Qt::ISODate));
-        }
-        else
-        {
-            // Mimic Python's default behavour.
-            sipRes = _Py_HashPointer(sipSelf);
-        }
+        sipRes = qHash(sipCpp->toString(Qt::ISODate));
 %End
 
-%If (Py_DateTime)
     SIP_PYOBJECT toPyDate() const /TypeHint="datetime.date"/;
 %MethodCode
-        if (!PyDateTimeAPI)
-            PyDateTime_IMPORT;
-        
         // Convert to a Python date object.
-        sipRes = PyDate_FromDate(sipCpp->year(), sipCpp->month(), sipCpp->day());
+        sipDateDef py_date;
+        
+        py_date.pd_year = sipCpp->year();
+        py_date.pd_month = sipCpp->month();
+        py_date.pd_day = sipCpp->day();
+        
+        sipRes = sipFromDate(&py_date);
 %End
 
-%End
     bool isNull() const;
     int __bool__() const;
 %MethodCode
@@ -134,61 +115,16 @@ public:
     int daysInMonth() const;
     int daysInYear() const;
     int weekNumber(int *yearNumber = 0) const;
-%If (Qt_5_0_0 -)
     static QString shortMonthName(int month, QDate::MonthNameType type = QDate::DateFormat);
-%End
-%If (- Qt_5_0_0)
-    static QString shortMonthName(int month);
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-    static QString shortMonthName(int month, QDate::MonthNameType type);
-%End
-%If (Qt_5_0_0 -)
     static QString shortDayName(int weekday, QDate::MonthNameType type = QDate::DateFormat);
-%End
-%If (- Qt_5_0_0)
-    static QString shortDayName(int weekday);
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-    static QString shortDayName(int weekday, QDate::MonthNameType type);
-%End
-%If (Qt_5_0_0 -)
     static QString longMonthName(int month, QDate::MonthNameType type = QDate::DateFormat);
-%End
-%If (- Qt_5_0_0)
-    static QString longMonthName(int month);
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-    static QString longMonthName(int month, QDate::MonthNameType type);
-%End
-%If (Qt_5_0_0 -)
     static QString longDayName(int weekday, QDate::MonthNameType type = QDate::DateFormat);
-%End
-%If (- Qt_5_0_0)
-    static QString longDayName(int weekday);
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-    static QString longDayName(int weekday, QDate::MonthNameType type);
-%End
     QString toString(Qt::DateFormat format = Qt::TextDate) const;
     QString toString(const QString &format) const;
-%If (PyQt_Deprecated_5_0)
-    bool setYMD(int y, int m, int d);
-%End
-%If (Qt_5_0_0 -)
     QDate addDays(qint64 days) const;
-%End
-%If (- Qt_5_0_0)
-    QDate addDays(int days) const;
-%End
     QDate addMonths(int months) const;
     QDate addYears(int years) const;
-%If (Qt_5_0_0 -)
     qint64 daysTo(const QDate &) const;
-%End
-%If (- Qt_5_0_0)
-    int daysTo(const QDate &) const;
-%End
     bool operator==(const QDate &other) const;
     bool operator!=(const QDate &other) const;
     bool operator<(const QDate &other) const;
@@ -200,39 +136,23 @@ public:
     static QDate fromString(const QString &s, const QString &format);
     static bool isValid(int y, int m, int d);
     static bool isLeapYear(int year);
-%If (- Qt_5_0_0)
-    static uint gregorianToJulian(int y, int m, int d);
-%End
-%If (- Qt_5_0_0)
-    static void julianToGregorian(uint jd, int &y, int &m, int &d);
-%End
-%If (Qt_5_0_0 -)
     static QDate fromJulianDay(qint64 jd);
-%End
-%If (- Qt_5_0_0)
-    static QDate fromJulianDay(int jd);
-%End
-%If (Qt_5_0_0 -)
     qint64 toJulianDay() const;
-%End
-%If (- Qt_5_0_0)
-    int toJulianDay() const;
-%End
-%If (Qt_4_2_0 -)
     bool setDate(int year, int month, int date);
-%End
-%If (Qt_4_5_0 -)
+%If (- Qt_5_7_0)
+%If (Qt_5_11_0 -)
     void getDate(int *year, int *month, int *day);
 %End
-%If (Qt_4_5_0 -)
+%End
+%If (Qt_5_7_0 -)
+    void getDate(int *year, int *month, int *day) const;
+%End
 
     enum MonthNameType
     {
         DateFormat,
         StandaloneFormat,
     };
-
-%End
 };
 
 class QTime /TypeHintIn="Union[QTime, datetime.time]"/
@@ -243,38 +163,26 @@ class QTime /TypeHintIn="Union[QTime, datetime.time]"/
 
 %TypeCode
 #include <QHash>
-
-#if PY_VERSION_HEX >= 0x02040000
-#include <datetime.h>
-#endif
 %End
 
 %ConvertToTypeCode
-#if PY_VERSION_HEX >= 0x02040000
-    if (!PyDateTimeAPI)
-        PyDateTime_IMPORT;
-#endif
-
 // Allow a Python time object whenever a QTime is expected.
 
 if (sipIsErr == NULL)
-    return (
-#if PY_VERSION_HEX >= 0x02040000
-            PyTime_Check(sipPy) ||
-#endif
+    return (sipGetTime(sipPy, 0) ||
             sipCanConvertToType(sipPy, sipType_QTime, SIP_NO_CONVERTORS));
 
-#if PY_VERSION_HEX >= 0x02040000
-if (PyTime_Check(sipPy))
+sipTimeDef py_time;
+
+if (sipGetTime(sipPy, &py_time))
 {
-    *sipCppPtr = new QTime(PyDateTime_TIME_GET_HOUR(sipPy),
-                           PyDateTime_TIME_GET_MINUTE(sipPy),
-                           PyDateTime_TIME_GET_SECOND(sipPy),
-                           PyDateTime_TIME_GET_MICROSECOND(sipPy) / 1000);
+    *sipCppPtr = new QTime(py_time.pt_hour,
+                           py_time.pt_minute,
+                           py_time.pt_second,
+                           py_time.pt_microsecond / 1000);
 
     return sipGetState(sipTransferObj);
 }
-#endif
 
 *sipCppPtr = reinterpret_cast<QTime *>(sipConvertToType(sipPy, sipType_QTime, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
 
@@ -293,15 +201,15 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QTime()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QTime()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QTime()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QTime()");
         #endif
         }
         else
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QTime(%i, %i", sipCpp->hour(),
+            sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QTime(%i, %i", sipCpp->hour(),
                     sipCpp->minute());
         
             if (sipCpp->second() || sipCpp->msec())
@@ -316,7 +224,7 @@ public:
         
             qpycore_Unicode_ConcatAndDel(&sipRes, PyUnicode_FromString(")"));
         #else
-            sipRes = PyString_FromFormat("PyQt4.QtCore.QTime(%i, %i", sipCpp->hour(),
+            sipRes = PyString_FromFormat("PyQt5.QtCore.QTime(%i, %i", sipCpp->hour(),
                     sipCpp->minute());
         
             if (sipCpp->second() || sipCpp->msec())
@@ -336,28 +244,22 @@ public:
 
     long __hash__() const;
 %MethodCode
-        if (sipIsAPIEnabled("QTime", 2, 0))
-        {
-            sipRes = qHash(sipCpp->toString(Qt::ISODate));
-        }
-        else
-        {
-            // Mimic Python's default behavour.
-            sipRes = _Py_HashPointer(sipSelf);
-        }
+        sipRes = qHash(sipCpp->toString(Qt::ISODate));
 %End
 
-%If (Py_DateTime)
     SIP_PYOBJECT toPyTime() const /TypeHint="datetime.time"/;
 %MethodCode
-        if (!PyDateTimeAPI)
-            PyDateTime_IMPORT;
-        
         // Convert to a Python time object.
-        sipRes = PyTime_FromTime(sipCpp->hour(), sipCpp->minute(), sipCpp->second(), sipCpp->msec() * 1000);
+        sipTimeDef py_time;
+        
+        py_time.pt_hour = sipCpp->hour();
+        py_time.pt_minute = sipCpp->minute();
+        py_time.pt_second = sipCpp->second();
+        py_time.pt_microsecond = sipCpp->msec() * 1000;
+        
+        sipRes = sipFromTime(&py_time);
 %End
 
-%End
     bool isNull() const;
     int __bool__() const;
 %MethodCode
@@ -389,6 +291,12 @@ public:
     void start();
     int restart();
     int elapsed() const;
+%If (Qt_5_2_0 -)
+    static QTime fromMSecsSinceStartOfDay(int msecs);
+%End
+%If (Qt_5_2_0 -)
+    int msecsSinceStartOfDay() const;
+%End
 };
 
 class QDateTime /TypeHintIn="Union[QDateTime, datetime.datetime]"/
@@ -399,38 +307,28 @@ class QDateTime /TypeHintIn="Union[QDateTime, datetime.datetime]"/
 
 %TypeCode
 #include <QHash>
-
-#if PY_VERSION_HEX >= 0x02040000
-#include <datetime.h>
-#endif
 %End
 
 %ConvertToTypeCode
-#if PY_VERSION_HEX >= 0x02040000
-    if (!PyDateTimeAPI)
-        PyDateTime_IMPORT;
-#endif
-
 // Allow a Python datetime object whenever a QDateTime is expected.
 
 if (sipIsErr == NULL)
-    return (
-#if PY_VERSION_HEX >= 0x02040000
-            PyDateTime_Check(sipPy) ||
-#endif
+    return (sipGetDateTime(sipPy, 0, 0) ||
             sipCanConvertToType(sipPy, sipType_QDateTime, SIP_NO_CONVERTORS));
 
-#if PY_VERSION_HEX >= 0x02040000
-if (PyDateTime_Check(sipPy))
-{
-    QDate qdate(PyDateTime_GET_YEAR(sipPy),
-                PyDateTime_GET_MONTH(sipPy),
-                PyDateTime_GET_DAY(sipPy));
+sipDateDef py_date;
+sipTimeDef py_time;
 
-    QTime qtime(PyDateTime_DATE_GET_HOUR(sipPy),
-                PyDateTime_DATE_GET_MINUTE(sipPy),
-                PyDateTime_DATE_GET_SECOND(sipPy),
-                PyDateTime_DATE_GET_MICROSECOND(sipPy) / 1000);
+if (sipGetDateTime(sipPy, &py_date, &py_time))
+{
+    QDate qdate(py_date.pd_year,
+                py_date.pd_month,
+                py_date.pd_day);
+
+    QTime qtime(py_time.pt_hour,
+                py_time.pt_minute,
+                py_time.pt_second,
+                py_time.pt_microsecond / 1000);
 
     QDateTime *qdt = new QDateTime(qdate, qtime);
 
@@ -438,7 +336,6 @@ if (PyDateTime_Check(sipPy))
 
     return sipGetState(sipTransferObj);
 }
-#endif
 
 *sipCppPtr = reinterpret_cast<QDateTime *>(sipConvertToType(sipPy, sipType_QDateTime, sipTransferObj, SIP_NO_CONVERTORS, 0, sipIsErr));
 
@@ -459,7 +356,7 @@ public:
     QDateTime(const QDateTime &other);
     explicit QDateTime(const QDate &);
     QDateTime(const QDate &date, const QTime &time, Qt::TimeSpec timeSpec = Qt::LocalTime);
-    QDateTime(int year, int month, int day, int hour, int min, int sec = 0, int msec = 0, int timeSpec = 0) /NoDerived/;
+    QDateTime(int year, int month, int day, int hour, int minute, int second = 0, int msec = 0, int timeSpec = 0) /NoDerived/;
 %MethodCode
         // This ctor is mainly supplied to allow pickling.
         QDate qd(a0, a1, a2);
@@ -474,9 +371,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QDateTime()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QDateTime()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QDateTime()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QDateTime()");
         #endif
         }
         else
@@ -485,7 +382,7 @@ public:
             QTime qt = sipCpp->time();
         
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QDateTime(%i, %i, %i, %i, %i",
+            sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QDateTime(%i, %i, %i, %i, %i",
                     qd.year(), qd.month(), qd.day(), qt.hour(), qt.minute());
         
             if (qt.second() || qt.msec() || sipCpp->timeSpec() != Qt::LocalTime)
@@ -500,14 +397,14 @@ public:
         
                     if (sipCpp->timeSpec() != Qt::LocalTime)
                         qpycore_Unicode_ConcatAndDel(&sipRes,
-                                PyUnicode_FromFormat(", PyQt4.QtCore.Qt.TimeSpec(%i)",
+                                PyUnicode_FromFormat(", PyQt5.QtCore.Qt.TimeSpec(%i)",
                                         (int)sipCpp->timeSpec()));
                 }
             }
         
             qpycore_Unicode_ConcatAndDel(&sipRes, PyUnicode_FromString(")"));
         #else
-            sipRes = PyString_FromFormat("PyQt4.QtCore.QDateTime(%i, %i, %i, %i, %i",
+            sipRes = PyString_FromFormat("PyQt5.QtCore.QDateTime(%i, %i, %i, %i, %i",
                     qd.year(), qd.month(), qd.day(), qt.hour(), qt.minute());
         
             if (qt.second() || qt.msec() || sipCpp->timeSpec() != Qt::LocalTime)
@@ -522,7 +419,7 @@ public:
         
                     if (sipCpp->timeSpec() != Qt::LocalTime)
                         PyString_ConcatAndDel(&sipRes,
-                                PyString_FromFormat(", PyQt4.QtCore.Qt.TimeSpec(%i)",
+                                PyString_FromFormat(", PyQt5.QtCore.Qt.TimeSpec(%i)",
                                         (int)sipCpp->timeSpec()));
                 }
             }
@@ -534,32 +431,30 @@ public:
 
     long __hash__() const;
 %MethodCode
-        if (sipIsAPIEnabled("QDateTime", 2, 0))
-        {
-            sipRes = qHash(sipCpp->toString(Qt::ISODate));
-        }
-        else
-        {
-            // Mimic Python's default behavour.
-            sipRes = _Py_HashPointer(sipSelf);
-        }
+        sipRes = qHash(sipCpp->toString(Qt::ISODate));
 %End
 
-%If (Py_DateTime)
     SIP_PYOBJECT toPyDateTime() const /TypeHint="datetime.datetime"/;
 %MethodCode
-        if (!PyDateTimeAPI)
-            PyDateTime_IMPORT;
-        
         // Convert to a Python datetime object.
+        sipDateDef py_date;
         QDate qd = sipCpp->date();
+        
+        py_date.pd_year = qd.year();
+        py_date.pd_month = qd.month();
+        py_date.pd_day = qd.day();
+        
+        sipTimeDef py_time;
         QTime qt = sipCpp->time();
         
-        sipRes = PyDateTime_FromDateAndTime(qd.year(), qd.month(), qd.day(),
-                                            qt.hour(), qt.minute(), qt.second(), qt.msec() * 1000);
+        py_time.pt_hour = qt.hour();
+        py_time.pt_minute = qt.minute();
+        py_time.pt_second = qt.second();
+        py_time.pt_microsecond = qt.msec() * 1000;
+        
+        sipRes = sipFromDateTime(&py_date, &py_time);
 %End
 
-%End
     bool isNull() const;
     int __bool__() const;
 %MethodCode
@@ -577,36 +472,16 @@ public:
     void setTime_t(uint secsSince1Jan1970UTC);
     QString toString(Qt::DateFormat format = Qt::TextDate) const;
     QString toString(const QString &format) const;
-%If (Qt_5_0_0 -)
     QDateTime addDays(qint64 days) const;
-%End
-%If (- Qt_5_0_0)
-    QDateTime addDays(int days) const;
-%End
     QDateTime addMonths(int months) const;
     QDateTime addYears(int years) const;
-%If (Qt_5_0_0 -)
     QDateTime addSecs(qint64 secs) const;
-%End
-%If (- Qt_5_0_0)
-    QDateTime addSecs(int secs) const;
-%End
     QDateTime addMSecs(qint64 msecs) const;
     QDateTime toTimeSpec(Qt::TimeSpec spec) const;
     QDateTime toLocalTime() const;
     QDateTime toUTC() const;
-%If (Qt_5_0_0 -)
     qint64 daysTo(const QDateTime &) const;
-%End
-%If (- Qt_5_0_0)
-    int daysTo(const QDateTime &) const;
-%End
-%If (Qt_5_0_0 -)
     qint64 secsTo(const QDateTime &) const;
-%End
-%If (- Qt_5_0_0)
-    int secsTo(const QDateTime &) const;
-%End
     bool operator==(const QDateTime &other) const;
     bool operator!=(const QDateTime &other) const;
     bool operator<(const QDateTime &other) const;
@@ -616,35 +491,76 @@ public:
     static QDateTime currentDateTime();
     static QDateTime fromString(const QString &string, Qt::DateFormat format = Qt::TextDate);
     static QDateTime fromString(const QString &s, const QString &format);
-%If (Qt_4_2_0 -)
     static QDateTime fromTime_t(uint secsSince1Jan1970UTC);
-%End
-%If (Qt_4_7_0 -)
     qint64 toMSecsSinceEpoch() const;
-%End
-%If (Qt_4_7_0 -)
     void setMSecsSinceEpoch(qint64 msecs);
-%End
-%If (Qt_4_7_0 -)
     qint64 msecsTo(const QDateTime &) const;
-%End
-%If (Qt_4_7_0 -)
     static QDateTime currentDateTimeUtc();
-%End
-%If (Qt_4_7_0 -)
     static QDateTime fromMSecsSinceEpoch(qint64 msecs);
-%End
-%If (Qt_4_7_0 -)
     static qint64 currentMSecsSinceEpoch();
+    void swap(QDateTime &other /Constrained/);
+%If (Qt_5_2_0 -)
+    QDateTime(const QDate &date, const QTime &time, Qt::TimeSpec spec, int offsetSeconds);
 %End
-%If (Qt_5_0_0 -)
-    void swap(QDateTime &other);
+%If (Qt_5_2_0 -)
+    QDateTime(const QDate &date, const QTime &time, const QTimeZone &timeZone);
+%End
+%If (Qt_5_2_0 -)
+    int offsetFromUtc() const;
+%End
+%If (Qt_5_2_0 -)
+    QTimeZone timeZone() const;
+%End
+%If (Qt_5_2_0 -)
+    QString timeZoneAbbreviation() const;
+%End
+%If (Qt_5_2_0 -)
+    bool isDaylightTime() const;
+%End
+%If (Qt_5_2_0 -)
+    void setOffsetFromUtc(int offsetSeconds);
+%End
+%If (Qt_5_2_0 -)
+    void setTimeZone(const QTimeZone &toZone);
+%End
+%If (Qt_5_2_0 -)
+    QDateTime toOffsetFromUtc(int offsetSeconds) const;
+%End
+%If (Qt_5_2_0 -)
+    QDateTime toTimeZone(const QTimeZone &toZone) const;
+%End
+%If (Qt_5_2_0 -)
+    static QDateTime fromTime_t(uint secsSince1Jan1970UTC, Qt::TimeSpec spec, int offsetSeconds = 0);
+%End
+%If (Qt_5_2_0 -)
+    static QDateTime fromTime_t(uint secsSince1Jan1970UTC, const QTimeZone &timeZone);
+%End
+%If (Qt_5_2_0 -)
+    static QDateTime fromMSecsSinceEpoch(qint64 msecs, Qt::TimeSpec spec, int offsetSeconds = 0);
+%End
+%If (Qt_5_2_0 -)
+    static QDateTime fromMSecsSinceEpoch(qint64 msecs, const QTimeZone &timeZone);
+%End
+%If (Qt_5_8_0 -)
+    qint64 toSecsSinceEpoch() const;
+%End
+%If (Qt_5_8_0 -)
+    void setSecsSinceEpoch(qint64 secs);
+%End
+%If (Qt_5_8_0 -)
+    static QDateTime fromSecsSinceEpoch(qint64 secs, Qt::TimeSpec spec = Qt::LocalTime, int offsetSeconds = 0);
+%End
+%If (Qt_5_8_0 -)
+    static QDateTime fromSecsSinceEpoch(qint64 secs, const QTimeZone &timeZone);
+%End
+%If (Qt_5_8_0 -)
+    static qint64 currentSecsSinceEpoch();
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QDate & /Constrained/);
-QDataStream &operator>>(QDataStream &, QDate & /Constrained/);
-QDataStream &operator<<(QDataStream &, const QTime & /Constrained/);
-QDataStream &operator>>(QDataStream &, QTime & /Constrained/);
-QDataStream &operator<<(QDataStream &, const QDateTime & /Constrained/);
-QDataStream &operator>>(QDataStream &, QDateTime & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QDate & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QDate & /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &, const QTime & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QTime & /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &, const QDateTime & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QDateTime & /Constrained/) /ReleaseGIL/;

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtMultimedia Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QAudioDeviceInfo
 {
@@ -38,30 +36,14 @@ public:
     QAudioFormat preferredFormat() const;
     QAudioFormat nearestFormat(const QAudioFormat &format) const;
     QStringList supportedCodecs() const;
-%If (- Qt_5_0_0)
-    QList<int> supportedFrequencies() const;
-%End
-%If (- Qt_5_0_0)
-    QList<int> supportedChannels() const;
-%End
     QList<int> supportedSampleSizes() const;
     QList<QAudioFormat::Endian> supportedByteOrders() const;
     QList<QAudioFormat::SampleType> supportedSampleTypes() const;
     static QAudioDeviceInfo defaultInputDevice();
     static QAudioDeviceInfo defaultOutputDevice();
     static QList<QAudioDeviceInfo> availableDevices(QAudio::Mode mode);
-%If (Qt_4_7_0 -)
     QList<int> supportedSampleRates() const;
-%End
-%If (Qt_4_7_0 -)
     QList<int> supportedChannelCounts() const;
-%End
-%If (Qt_5_0_0 -)
     bool operator==(const QAudioDeviceInfo &other) const;
-%End
-%If (Qt_5_0_0 -)
     bool operator!=(const QAudioDeviceInfo &other) const;
-%End
 };
-
-%End

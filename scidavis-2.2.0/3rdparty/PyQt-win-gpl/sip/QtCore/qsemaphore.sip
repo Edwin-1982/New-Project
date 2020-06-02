@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -31,12 +31,29 @@ public:
     ~QSemaphore();
     void acquire(int n = 1) /ReleaseGIL/;
     bool tryAcquire(int n = 1);
-%If (Qt_4_3_0 -)
     bool tryAcquire(int n, int timeout) /ReleaseGIL/;
-%End
     void release(int n = 1);
     int available() const;
 
 private:
     QSemaphore(const QSemaphore &);
 };
+
+%If (Qt_5_10_0 -)
+
+class QSemaphoreReleaser /NoDefaultCtors/
+{
+%TypeHeaderCode
+#include <qsemaphore.h>
+%End
+
+public:
+    QSemaphoreReleaser();
+    QSemaphoreReleaser(QSemaphore *sem, int n = 1);
+    ~QSemaphoreReleaser();
+    void swap(QSemaphoreReleaser &other);
+    QSemaphore *semaphore() const;
+    QSemaphore *cancel();
+};
+
+%End

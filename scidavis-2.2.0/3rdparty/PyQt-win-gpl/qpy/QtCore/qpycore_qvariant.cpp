@@ -1,8 +1,8 @@
 // This is the support for QVariant.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -22,6 +22,7 @@
 
 #include <QVariant>
 
+#include "qpycore_api.h"
 #include "qpycore_chimera.h"
 
 

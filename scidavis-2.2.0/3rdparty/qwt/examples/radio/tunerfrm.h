@@ -8,21 +8,21 @@ class TunerFrame : public QFrame
 {
     Q_OBJECT
 public:
-    TunerFrame( QWidget *p );
+    TunerFrame(QWidget *p);
 
-Q_SIGNALS:
-    void fieldChanged( double f );
+signals:
+    void fieldChanged(double f);
 
-public Q_SLOTS:
-    void setFreq( double frq );
+public slots:
+    void setFreq(double frq);
 
-private Q_SLOTS:
-    void adjustFreq( double frq );
+private slots:
+    void adjustFreq(double frq);
 
 private:
-    QwtWheel *d_wheelFrequency;
-    TuningThermo *d_thermoTune;
-    QwtSlider *d_sliderFrequency;
+    QwtWheel *d_whlFreq;
+    TuningThermo *d_thmTune;
+    QwtSlider *d_sldFreq;
 };
 
 

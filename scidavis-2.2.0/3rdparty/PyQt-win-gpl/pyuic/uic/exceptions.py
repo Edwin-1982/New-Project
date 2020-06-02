@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2011 Riverbank Computing Limited.
+## Copyright (C) 2017 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -38,9 +38,13 @@
 #############################################################################
 
 
+class NoSuchClassError(Exception):
+    def __str__(self):
+        return "Unknown C++ class: %s" % self.args[0]
+
 class NoSuchWidgetError(Exception):
     def __str__(self):
-        return "Unknown Qt widget: %s" % (self.args[0],)
+        return "Unknown Qt widget: %s" % self.args[0]
 
 class UnsupportedPropertyError(Exception):
     pass

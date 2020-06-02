@@ -1,19 +1,18 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Installation &#8212; SIP v4.19.22 Reference Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Installation &#8212; SIP v4.19.19 Reference Guide</title>
     <link rel="stylesheet" href="_static/riverbank.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +34,7 @@
         <li class="right" >
           <a href="incompatibilities.html" title="Potential Incompatibilities with Earlier Versions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -73,19 +72,19 @@ interpreter for which you wish SIP to generate bindings for.</p>
 <p>The full set of command line options is:</p>
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-version">
-<code class="sig-name descname">--version</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-version" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--version</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the SIP version number.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-h">
-<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-h" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-h</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--help</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a help message.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-arch">
-<code class="sig-name descname">--arch</code><code class="sig-prename descclassname"> &lt;ARCH&gt;</code><a class="headerlink" href="#cmdoption-configure-py-arch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--arch</code><code class="descclassname"> &lt;ARCH&gt;</code><a class="headerlink" href="#cmdoption-configure-py-arch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Binaries for the MacOS/X architecture <code class="docutils literal notranslate"><span class="pre">&lt;ARCH&gt;</span></code> will be built.  This
 option should be given once for each architecture to be built.  Specifying
 more than one architecture will cause a universal binary to be created.</p>
@@ -93,15 +92,15 @@ more than one architecture will cause a universal binary to be created.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-b">
-<code class="sig-name descname">-b</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--bindir</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-b" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-b</code><code class="descclassname"> &lt;DIR&gt;</code><code class="descclassname">, </code><code class="descname">--bindir</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-b" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP code generator will be installed in the directory <code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-configuration">
-<code class="sig-name descname">--configuration</code><code class="sig-prename descclassname"> &lt;FILE&gt;</code><a class="headerlink" href="#cmdoption-configure-py-configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--configuration</code><code class="descclassname"> &lt;FILE&gt;</code><a class="headerlink" href="#cmdoption-configure-py-configuration" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.</span></p>
+<p><span class="versionmodified">New in version 4.16.</span></p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;FILE&gt;</span></code> contains the configuration of the SIP build to be used instead
 of dynamically introspecting the system and is typically used when
@@ -110,15 +109,15 @@ cross-compiling.  See <a class="reference internal" href="#ref-configuration-fil
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-d">
-<code class="sig-name descname">-d</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--destdir</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-d" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-d</code><code class="descclassname"> &lt;DIR&gt;</code><code class="descclassname">, </code><code class="descname">--destdir</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-d" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be installed in the directory <code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-deployment-target">
-<code class="sig-name descname">--deployment-target</code><code class="sig-prename descclassname"> &lt;VERSION&gt;</code><a class="headerlink" href="#cmdoption-configure-py-deployment-target" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--deployment-target</code><code class="descclassname"> &lt;VERSION&gt;</code><a class="headerlink" href="#cmdoption-configure-py-deployment-target" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.1.</span></p>
+<p><span class="versionmodified">New in version 4.12.1.</span></p>
 </div>
 <p>Each generated Makefile will set the <span class="target" id="index-0"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">MACOSX_DEPLOYMENT_TARGET</span></code>
 environment variable to <code class="docutils literal notranslate"><span class="pre">&lt;VERSION&gt;</span></code>.  In order to work around bugs in
@@ -128,20 +127,20 @@ environment variable in the shell.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-e">
-<code class="sig-name descname">-e</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--incdir</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-e" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-e</code><code class="descclassname"> &lt;DIR&gt;</code><code class="descclassname">, </code><code class="descname">--incdir</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-e" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP header file will be installed in the directory <code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-k">
-<code class="sig-name descname">-k</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--static</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-k" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-k</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--static</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-k" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be built as a static library.  This is useful
 when building the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module as a Python builtin.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-n">
-<code class="sig-name descname">-n</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--universal</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-n" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-n</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--universal</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-n" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP code generator and module will be built as universal binaries
 under MacOS/X.  If the <a class="reference internal" href="#cmdoption-configure-py-arch"><code class="xref std std-option docutils literal notranslate"><span class="pre">--arch</span></code></a> option has
 not been specified then the universal binary will include the <code class="docutils literal notranslate"><span class="pre">i386</span></code> and
@@ -150,9 +149,9 @@ not been specified then the universal binary will include the <code class="docut
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-no-dist-info">
-<code class="sig-name descname">--no-dist-info</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-dist-info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--no-dist-info</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-dist-info" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.9.</span></p>
+<p><span class="versionmodified">New in version 4.19.9.</span></p>
 </div>
 <p>This disables the creation of the PEP 376 <code class="docutils literal notranslate"><span class="pre">.dist-info</span></code> directory.
 Starting with this version a <code class="docutils literal notranslate"><span class="pre">.dist-info</span></code> is created.  This contains
@@ -163,27 +162,27 @@ the package.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-no-module">
-<code class="sig-name descname">--no-module</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-module" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--no-module</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-module" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.12.</span></p>
+<p><span class="versionmodified">New in version 4.19.12.</span></p>
 </div>
 <p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will not be installed.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-no-stubs">
-<code class="sig-name descname">--no-stubs</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-stubs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--no-stubs</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-stubs" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.</span></p>
+<p><span class="versionmodified">New in version 4.19.</span></p>
 </div>
 <p>This disables the installation of the <code class="docutils literal notranslate"><span class="pre">sip.pyi</span></code> type hints stub file.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-no-tools">
-<code class="sig-name descname">--no-tools</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-tools" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--no-tools</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-no-tools" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.</span></p>
+<p><span class="versionmodified">New in version 4.16.</span></p>
 </div>
 <p>The SIP code generator, <code class="docutils literal notranslate"><span class="pre">sip.h</span></code> header file and <a class="reference internal" href="build_system.html#module-sipconfig" title="sipconfig"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sipconfig</span></code></a> module
 will not be installed.</p>
@@ -191,7 +190,7 @@ will not be installed.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-p">
-<code class="sig-name descname">-p</code><code class="sig-prename descclassname"> &lt;PLATFORM&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--platform</code><code class="sig-prename descclassname"> &lt;PLATFORM&gt;</code><a class="headerlink" href="#cmdoption-configure-py-p" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-p</code><code class="descclassname"> &lt;PLATFORM&gt;</code><code class="descclassname">, </code><code class="descname">--platform</code><code class="descclassname"> &lt;PLATFORM&gt;</code><a class="headerlink" href="#cmdoption-configure-py-p" title="Permalink to this definition">¶</a></dt>
 <dd><p>Explicitly specify the platform/compiler to be used by the build system,
 otherwise a platform specific default will be used.  The
 <a class="reference internal" href="#cmdoption-configure-py-show-platforms"><code class="xref std std-option docutils literal notranslate"><span class="pre">--show-platforms</span></code></a> option will
@@ -200,7 +199,7 @@ display all the supported platform/compilers.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-s">
-<code class="sig-name descname">-s</code><code class="sig-prename descclassname"> &lt;SDK&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--sdk</code><code class="sig-prename descclassname"> &lt;SDK&gt;</code><a class="headerlink" href="#cmdoption-configure-py-s" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-s</code><code class="descclassname"> &lt;SDK&gt;</code><code class="descclassname">, </code><code class="descname">--sdk</code><code class="descclassname"> &lt;SDK&gt;</code><a class="headerlink" href="#cmdoption-configure-py-s" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the <a class="reference internal" href="#cmdoption-configure-py-n"><code class="xref std std-option docutils literal notranslate"><span class="pre">--universal</span></code></a> option was given then this
 specifies the name of the SDK directory.  If a path is not given then it is
 assumed to be a sub-directory of
@@ -210,9 +209,9 @@ or <code class="docutils literal notranslate"><span class="pre">/Developer/SDKs<
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-stubsdir">
-<code class="sig-name descname">--stubsdir</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-stubsdir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--stubsdir</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-stubsdir" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.</span></p>
+<p><span class="versionmodified">New in version 4.19.</span></p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code> is the name of the directory where the <code class="docutils literal notranslate"><span class="pre">sip.pyi</span></code> type hints
 stub file is installed.  By default this is the directory where the
@@ -221,31 +220,31 @@ stub file is installed.  By default this is the directory where the
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-u">
-<code class="sig-name descname">-u</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--debug</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-u" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-u</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--debug</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-u" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be built with debugging symbols.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-v">
-<code class="sig-name descname">-v</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--sipdir</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-v" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-v</code><code class="descclassname"> &lt;DIR&gt;</code><code class="descclassname">, </code><code class="descname">--sipdir</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-v" title="Permalink to this definition">¶</a></dt>
 <dd><p>By default <code class="docutils literal notranslate"><span class="pre">.sip</span></code> files will be installed in the directory <code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-show-platforms">
-<code class="sig-name descname">--show-platforms</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-show-platforms" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--show-platforms</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-show-platforms" title="Permalink to this definition">¶</a></dt>
 <dd><p>The list of all supported platform/compilers will be displayed.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-show-build-macros">
-<code class="sig-name descname">--show-build-macros</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-show-build-macros" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--show-build-macros</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-show-build-macros" title="Permalink to this definition">¶</a></dt>
 <dd><p>The list of all available build macros will be displayed.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-sip-module">
-<code class="sig-name descname">--sip-module</code><code class="sig-prename descclassname"> &lt;NAME&gt;</code><a class="headerlink" href="#cmdoption-configure-py-sip-module" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--sip-module</code><code class="descclassname"> &lt;NAME&gt;</code><a class="headerlink" href="#cmdoption-configure-py-sip-module" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be created with the fully qualified name
 <code class="docutils literal notranslate"><span class="pre">&lt;NAME&gt;</span></code> rather than the default <code class="docutils literal notranslate"><span class="pre">sip</span></code>.  See <a class="reference internal" href="#ref-private-sip"><span class="std std-ref">Configuring a Private Copy of the sip Module</span></a> for
 how to use this to create a private copy of the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module.  Also
@@ -254,9 +253,9 @@ see the <a class="reference internal" href="command_line.html#cmdoption-sip-n"><
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-sysroot">
-<code class="sig-name descname">--sysroot</code><code class="sig-prename descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-sysroot" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--sysroot</code><code class="descclassname"> &lt;DIR&gt;</code><a class="headerlink" href="#cmdoption-configure-py-sysroot" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.</span></p>
+<p><span class="versionmodified">New in version 4.16.</span></p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;DIR&gt;</span></code> is the name of an optional directory that replaces <code class="docutils literal notranslate"><span class="pre">sys.prefix</span></code>
 in the names of other directories (specifically those specifying where the
@@ -267,9 +266,9 @@ when building a static version of SIP.  See <a class="reference internal" href="
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-target-py-version">
-<code class="sig-name descname">--target-py-version</code><code class="sig-prename descclassname"> &lt;VERSION&gt;</code><a class="headerlink" href="#cmdoption-configure-py-target-py-version" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--target-py-version</code><code class="descclassname"> &lt;VERSION&gt;</code><a class="headerlink" href="#cmdoption-configure-py-target-py-version" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.</span></p>
+<p><span class="versionmodified">New in version 4.16.</span></p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;VERSION&gt;</span></code> is the major and minor version (e.g. <code class="docutils literal notranslate"><span class="pre">3.4</span></code>) of the version
 of Python being targetted.  By default the version of Python being used to
@@ -279,9 +278,9 @@ cross-compiling.  See <a class="reference internal" href="#ref-configuration-fil
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure-py-use-qmake">
-<code class="sig-name descname">--use-qmake</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-use-qmake" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--use-qmake</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-configure-py-use-qmake" title="Permalink to this definition">¶</a></dt>
 <dd><div class="versionadded">
-<p><span class="versionmodified added">New in version 4.16.</span></p>
+<p><span class="versionmodified">New in version 4.16.</span></p>
 </div>
 <p>Normally the <strong class="program">configure.py</strong> script uses SIP’s own build system to
 create the Makefiles for the code generator and module.  This option causes
@@ -336,7 +335,7 @@ For example:</p>
 <div class="section" id="configuring-a-private-copy-of-the-sip-module">
 <span id="ref-private-sip"></span><h3>Configuring a Private Copy of the <code class="docutils literal notranslate"><span class="pre">sip</span></code> Module<a class="headerlink" href="#configuring-a-private-copy-of-the-sip-module" title="Permalink to this headline">¶</a></h3>
 <div class="versionadded">
-<p><span class="versionmodified added">New in version 4.12.</span></p>
+<p><span class="versionmodified">New in version 4.12.</span></p>
 </div>
 <p>The <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module is intended to be be used by all the SIP generated
 modules of a particular Python installation.  For example PyQt4 and PyQt5 are
@@ -353,12 +352,12 @@ qualified name of your private copy.  You can also use the
 else but the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module is installed.</p>
 <p>Note that SIP v5 will only support private copies of the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module.</p>
 <div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.9.</span></p>
+<p><span class="versionmodified">New in version 4.19.9.</span></p>
 </div>
 <p>In order use the private copy of the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module you must use the
 <a class="reference internal" href="command_line.html#cmdoption-sip-n"><code class="xref std std-option docutils literal notranslate"><span class="pre">-n</span></code></a> option when generating the bindings code.</p>
 <div class="versionadded">
-<p><span class="versionmodified added">New in version 4.19.12.</span></p>
+<p><span class="versionmodified">New in version 4.19.12.</span></p>
 </div>
 <p>If you always use private copies of the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module and do not want the
 legacy shared copy to be installed then specify the
@@ -390,23 +389,23 @@ a configuration file, specified using the
 definitions of all the required values.</p>
 <p>The format of a configuration file is as follows:</p>
 <ul class="simple">
-<li><p>a configuration item is a single line containing a name/value pair separated
-by <code class="docutils literal notranslate"><span class="pre">=</span></code></p></li>
-<li><p>a value may include another value by embedding the name of that value
-surrounded by <code class="docutils literal notranslate"><span class="pre">%(</span></code> and <code class="docutils literal notranslate"><span class="pre">)</span></code></p></li>
-<li><p>comments begin with <code class="docutils literal notranslate"><span class="pre">#</span></code> and continue to the end of the line</p></li>
-<li><p>blank lines are ignored.</p></li>
+<li>a configuration item is a single line containing a name/value pair separated
+by <code class="docutils literal notranslate"><span class="pre">=</span></code></li>
+<li>a value may include another value by embedding the name of that value
+surrounded by <code class="docutils literal notranslate"><span class="pre">%(</span></code> and <code class="docutils literal notranslate"><span class="pre">)</span></code></li>
+<li>comments begin with <code class="docutils literal notranslate"><span class="pre">#</span></code> and continue to the end of the line</li>
+<li>blank lines are ignored.</li>
 </ul>
 <p><strong class="program">configure.py</strong> provides the following preset values for a
 configuration:</p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">py_major</span></code></dt><dd><p>is the major version number of the target Python installation.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">py_minor</span></code></dt><dd><p>is the minor version number of the target Python installation.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sysroot</span></code></dt><dd><p>is the name of the system root directory.  This is specified with the
-<a class="reference internal" href="#cmdoption-configure-py-sysroot"><code class="xref std std-option docutils literal notranslate"><span class="pre">--sysroot</span></code></a> option.</p>
-</dd>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">py_major</span></code></dt>
+<dd>is the major version number of the target Python installation.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">py_minor</span></code></dt>
+<dd>is the minor version number of the target Python installation.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sysroot</span></code></dt>
+<dd>is the name of the system root directory.  This is specified with the
+<a class="reference internal" href="#cmdoption-configure-py-sysroot"><code class="xref std std-option docutils literal notranslate"><span class="pre">--sysroot</span></code></a> option.</dd>
 </dl>
 <p>The following is an example configuration file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The target Python installation.</span>
@@ -419,33 +418,33 @@ configuration:</p>
 </pre></div>
 </div>
 <p>The following values can be specified in the configuration file:</p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">py_platform</span></code></dt><dd><p>is the target Python platform.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">py_inc_dir</span></code></dt><dd><p>is the target Python include directory containing the <code class="docutils literal notranslate"><span class="pre">Python.h</span></code> file.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">py_conf_inc_dir</span></code></dt><dd><p>is the target Python include directory containing the <code class="docutils literal notranslate"><span class="pre">pyconfig.h</span></code> file.
-If this isn’t specified then it defaults to the value of <code class="docutils literal notranslate"><span class="pre">py_inc_dir</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">py_pylib_dir</span></code></dt><dd><p>is the target Python library directory.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sip_bin_dir</span></code></dt><dd><p>is the name of the target directory where the SIP code generator will be
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">py_platform</span></code></dt>
+<dd>is the target Python platform.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">py_inc_dir</span></code></dt>
+<dd>is the target Python include directory containing the <code class="docutils literal notranslate"><span class="pre">Python.h</span></code> file.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">py_conf_inc_dir</span></code></dt>
+<dd>is the target Python include directory containing the <code class="docutils literal notranslate"><span class="pre">pyconfig.h</span></code> file.
+If this isn’t specified then it defaults to the value of <code class="docutils literal notranslate"><span class="pre">py_inc_dir</span></code>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">py_pylib_dir</span></code></dt>
+<dd>is the target Python library directory.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sip_bin_dir</span></code></dt>
+<dd>is the name of the target directory where the SIP code generator will be
 installed.  It can be overridden by the
-<a class="reference internal" href="#cmdoption-configure-py-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">--bindir</span></code></a> option.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sip_inc_dir</span></code></dt><dd><p>is the name of the target directory where the <code class="docutils literal notranslate"><span class="pre">sip.h</span></code> file will be
+<a class="reference internal" href="#cmdoption-configure-py-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">--bindir</span></code></a> option.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sip_inc_dir</span></code></dt>
+<dd>is the name of the target directory where the <code class="docutils literal notranslate"><span class="pre">sip.h</span></code> file will be
 installed.  If this isn’t specified then it defaults to the value of
 <code class="docutils literal notranslate"><span class="pre">py_inc_dir</span></code>.  It can be overridden by the
-<a class="reference internal" href="#cmdoption-configure-py-e"><code class="xref std std-option docutils literal notranslate"><span class="pre">--incdir</span></code></a> option.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sip_module_dir</span></code></dt><dd><p>is the target directory where the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be installed.  It
-can be overridden by the <a class="reference internal" href="#cmdoption-configure-py-d"><code class="xref std std-option docutils literal notranslate"><span class="pre">--destdir</span></code></a> option.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sip_sip_dir</span></code></dt><dd><p>is the name of the target directory where generated <code class="docutils literal notranslate"><span class="pre">.sip</span></code> files will be
+<a class="reference internal" href="#cmdoption-configure-py-e"><code class="xref std std-option docutils literal notranslate"><span class="pre">--incdir</span></code></a> option.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sip_module_dir</span></code></dt>
+<dd>is the target directory where the <a class="reference internal" href="python_api.html#module-sip" title="sip"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sip</span></code></a> module will be installed.  It
+can be overridden by the <a class="reference internal" href="#cmdoption-configure-py-d"><code class="xref std std-option docutils literal notranslate"><span class="pre">--destdir</span></code></a> option.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sip_sip_dir</span></code></dt>
+<dd>is the name of the target directory where generated <code class="docutils literal notranslate"><span class="pre">.sip</span></code> files will be
 installed by default.  It is only used when creating the <a class="reference internal" href="build_system.html#module-sipconfig" title="sipconfig"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sipconfig</span></code></a>
 module.  It can be overridden by the <a class="reference internal" href="#cmdoption-configure-py-v"><code class="xref std std-option docutils literal notranslate"><span class="pre">--sipdir</span></code></a>
-option.</p>
-</dd>
+option.</dd>
 </dl>
 </div>
 </div>
@@ -459,7 +458,7 @@ option.</p>
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#downloading">Downloading</a></li>
@@ -482,15 +481,17 @@ option.</p>
   <p class="topless"><a href="using.html"
                         title="next chapter">Using SIP</a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -510,12 +511,12 @@ option.</p>
         <li class="right" >
           <a href="incompatibilities.html" title="Potential Incompatibilities with Earlier Versions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020 Riverbank Computing Limited.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+        &#169; Copyright 2019 Riverbank Computing Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
     </div>
   </body>
 </html>

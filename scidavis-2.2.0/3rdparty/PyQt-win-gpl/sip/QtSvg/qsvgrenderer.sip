@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSvg Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,66 +28,49 @@ class QSvgRenderer : QObject
 
 %ConvertToSubClassCode
     static struct class_graph {
-            const char *name;
-            sipTypeDef **type;
-            int yes, no;
-        } graph[] = {
-            {sipName_QSvgWidget,	&sipType_QSvgWidget,	-1, 1},
-    #if QT_VERSION >= 0x040200
-            {sipName_QGraphicsSvgItem,	&sipType_QGraphicsSvgItem,	-1, 2},
-    #else
-            {0,	0, -1, 2},
-    #endif
-            {sipName_QSvgRenderer,	&sipType_QSvgRenderer,	-1, -1},
-        };
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+        {sipName_QSvgRenderer, &sipType_QSvgRenderer, -1, 1},
+        {sipName_QSvgWidget, &sipType_QSvgWidget, -1, 2},
+        {sipName_QGraphicsSvgItem, &sipType_QGraphicsSvgItem, -1, -1},
+    };
     
-        int i = 0;
+    int i = 0;
     
-        sipType = 0;
+    sipType = NULL;
     
-        do
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
         {
-            struct class_graph *cg = &graph[i];
-    
-            if (cg->name != NULL && sipCpp->inherits(cg->name))
-            {
-                sipType = *cg->type;
-                i = cg->yes;
-            }
-            else
-                i = cg->no;
+            sipType = *cg->type;
+            i = cg->yes;
         }
-        while (i >= 0);
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
     QSvgRenderer(QObject *parent /TransferThis/ = 0);
-    QSvgRenderer(const QString &filename, QObject *parent /TransferThis/ = 0);
-    QSvgRenderer(const QByteArray &contents, QObject *parent /TransferThis/ = 0);
-%If (Qt_4_5_0 -)
-    QSvgRenderer(QXmlStreamReader *contents, QObject *parent /TransferThis/ = 0);
-%End
+    QSvgRenderer(const QString &filename, QObject *parent /TransferThis/ = 0) /ReleaseGIL/;
+    QSvgRenderer(const QByteArray &contents, QObject *parent /TransferThis/ = 0) /ReleaseGIL/;
+    QSvgRenderer(QXmlStreamReader *contents, QObject *parent /TransferThis/ = 0) /ReleaseGIL/;
     virtual ~QSvgRenderer();
     bool isValid() const;
-%If (Qt_4_2_0 -)
-    QMatrix matrixForElement(const QString &id) const;
-%End
     QSize defaultSize() const;
-%If (Qt_4_2_0 -)
     bool elementExists(const QString &id) const;
-%End
     QRect viewBox() const;
-%If (Qt_4_2_0 -)
     QRectF viewBoxF() const;
-%End
     void setViewBox(const QRect &viewbox);
-%If (Qt_4_2_0 -)
     void setViewBox(const QRectF &viewbox);
-%End
     bool animated() const;
-%If (Qt_4_2_0 -)
     QRectF boundsOnElement(const QString &id) const;
-%End
     int framesPerSecond() const;
     void setFramesPerSecond(int num);
     int currentFrame() const;
@@ -95,18 +78,12 @@ public:
     int animationDuration() const;
 
 public slots:
-    bool load(const QString &filename);
-    bool load(const QByteArray &contents);
-%If (Qt_4_5_0 -)
-    bool load(QXmlStreamReader *contents);
-%End
-    void render(QPainter *p);
-%If (Qt_4_2_0 -)
-    void render(QPainter *p, const QRectF &bounds);
-%End
-%If (Qt_4_2_0 -)
-    void render(QPainter *painter, const QString &elementId, const QRectF &bounds = QRectF());
-%End
+    bool load(const QString &filename) /ReleaseGIL/;
+    bool load(const QByteArray &contents) /ReleaseGIL/;
+    bool load(QXmlStreamReader *contents) /ReleaseGIL/;
+    void render(QPainter *p) /ReleaseGIL/;
+    void render(QPainter *p, const QRectF &bounds) /ReleaseGIL/;
+    void render(QPainter *painter, const QString &elementId, const QRectF &bounds = QRectF()) /ReleaseGIL/;
 
 signals:
     void repaintNeeded();

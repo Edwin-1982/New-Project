@@ -1,17 +1,10 @@
 CONFIG      += plugin @QTCONFIG@ warn_on
+QT          += designer
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += designer
+# Work around QTBUG-39300.
+CONFIG -= android_install
 
-    # Work around QTBUG-39300.
-    CONFIG -= android_install
-}
-
-lessThan(QT_MAJOR_VERSION, 5) {
-    CONFIG += designer
-}
-
-TARGET      = pyqt4
+TARGET      = pyqt5
 TEMPLATE    = lib
 
 INCLUDEPATH += @PYINCDIR@

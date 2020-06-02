@@ -1,4 +1,4 @@
-################################################################
+# -*- mode: sh -*- ################################################
 # Qwt Widget Library
 # Copyright (C) 1997   Josef Wilgen
 # Copyright (C) 2002   Uwe Rathmann
@@ -7,63 +7,59 @@
 # modify it under the terms of the Qwt License, Version 1.0
 ###################################################################
 
-QWT_ROOT = $${PWD}/..
-include( $${QWT_ROOT}/qwtconfig.pri )
-include( $${QWT_ROOT}/qwtbuild.pri )
-include( $${QWT_ROOT}/qwtfunctions.pri )
+QWT_ROOT = ../..
 
-QWT_OUT_ROOT = $${OUT_PWD}/../..
+include( ../qwtconfig.pri )
 
-TEMPLATE     = app
+SUFFIX_STR =
+VVERSION = $$[QT_VERSION]
+isEmpty(VVERSION) {
 
-INCLUDEPATH += $${QWT_ROOT}/src
-DEPENDPATH  += $${QWT_ROOT}/src
-
-!debug_and_release {
-
-    DESTDIR      = $${QWT_OUT_ROOT}/examples/bin
+    # Qt 3
+    debug {
+        SUFFIX_STR = $${DEBUG_SUFFIX}
+    }
+    else {
+        SUFFIX_STR = $${RELEASE_SUFFIX}
+    }
 }
 else {
     CONFIG(debug, debug|release) {
-
-        DESTDIR      = $${QWT_OUT_ROOT}/examples/bin_debug
+        SUFFIX_STR = $${DEBUG_SUFFIX}
     }
     else {
-
-        DESTDIR      = $${QWT_OUT_ROOT}/examples/bin
+        SUFFIX_STR = $${RELEASE_SUFFIX}
     }
 }
 
-QMAKE_RPATHDIR *= $${QWT_OUT_ROOT}/lib
-qwtAddLibrary($${QWT_OUT_ROOT}/lib, qwt)
+TEMPLATE     = app
 
-greaterThan(QT_MAJOR_VERSION, 4) {
+MOC_DIR      = moc
+INCLUDEPATH += $${QWT_ROOT}/src
+DEPENDPATH  += $${QWT_ROOT}/src
+OBJECTS_DIR  = obj$${SUFFIX_STR}
+DESTDIR      = $${QWT_ROOT}/examples/bin$${SUFFIX_STR}
 
-    QT += printsupport
-    QT += concurrent
+equals(QT_MAJOR_VERSION, 5) {
+    QWTLIB       = qwt5-qt5$${SUFFIX_STR}
+} else {
+    QWTLIB       = qwt$${SUFFIX_STR}
 }
-
-contains(QWT_CONFIG, QwtOpenGL ) {
-
-    QT += opengl
-}
-else {
-
-    DEFINES += QWT_NO_OPENGL
-}
-
-contains(QWT_CONFIG, QwtSvg) {
-
-    QT += svg
-}
-else {
-
-    DEFINES += QWT_NO_SVG
-}
-
 
 win32 {
-    contains(QWT_CONFIG, QwtDll) {
+    contains(CONFIG, QwtDll) {
         DEFINES    += QT_DLL QWT_DLL
+        QWTLIB = $${QWTLIB}$${VER_MAJ}
     }
+
+    win32-msvc:LIBS  += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-msvc.net:LIBS  += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-msvc2002:LIBS += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-msvc2003:LIBS += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-msvc2005:LIBS += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-msvc2008:LIBS += $${QWT_ROOT}/lib/$${QWTLIB}.lib
+    win32-g++:LIBS   += -L$${QWT_ROOT}/lib -l$${QWTLIB}
+}
+else {
+    LIBS        += -L$${QWT_ROOT}/lib -l$${QWTLIB}
 }

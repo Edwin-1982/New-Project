@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -32,72 +32,23 @@ class QAbstractSocket : QIODevice
         sipTypeDef **type;
         int yes, no;
     } graph[] = {
-    #if QT_VERSION < 0x050000
-        {sipName_QFtp, &sipType_QFtp, -1, 1},
-    #else
-        {0, 0, -1, 1},
-    #endif
-    #if QT_VERSION >= 0x040400
-        {sipName_QNetworkCookieJar, &sipType_QNetworkCookieJar, -1, 2},
-    #else
-        {0, 0, -1, 2},
-    #endif
-    #if QT_VERSION >= 0x040700
-        {sipName_QNetworkSession, &sipType_QNetworkSession, -1, 3},
-    #else
-        {0, 0, -1, 3},
-    #endif
-        {sipName_QTcpServer, &sipType_QTcpServer, -1, 4},
-    #if QT_VERSION >= 0x040700
-        {sipName_QNetworkConfigurationManager, &sipType_QNetworkConfigurationManager, -1, 5},
-    #else
-        {0, 0, -1, 5},
-    #endif
-    #if QT_VERSION >= 0x040800
-        {sipName_QHttpMultiPart, &sipType_QHttpMultiPart, -1, 6},
-    #else
-        {0, 0, -1, 6},
-    #endif
-        {sipName_QAbstractSocket, &sipType_QAbstractSocket, 13, 7},
-    #if QT_VERSION < 0x050000
-        {sipName_QHttp, &sipType_QHttp, -1, 8},
-    #else
-        {0, 0, -1, 8},
-    #endif
-    #if QT_VERSION >= 0x040400
-        {sipName_QLocalServer, &sipType_QLocalServer, -1, 9},
-    #else
-        {0, 0, -1, 9},
-    #endif
-    #if QT_VERSION >= 0x040500
-        {sipName_QAbstractNetworkCache, &sipType_QAbstractNetworkCache, 16, 10},
-    #else
-        {0, 0, 16, 10},
-    #endif
-    #if QT_VERSION >= 0x040400
+        {sipName_QNetworkReply, &sipType_QNetworkReply, -1, 1},
+        {sipName_QHttpMultiPart, &sipType_QHttpMultiPart, -1, 2},
+        {sipName_QAbstractNetworkCache, &sipType_QAbstractNetworkCache, 12, 3},
+        {sipName_QNetworkConfigurationManager, &sipType_QNetworkConfigurationManager, -1, 4},
+        {sipName_QNetworkCookieJar, &sipType_QNetworkCookieJar, -1, 5},
+        {sipName_QAbstractSocket, &sipType_QAbstractSocket, 13, 6},
+        {sipName_QLocalSocket, &sipType_QLocalSocket, -1, 7},
+        {sipName_QDnsLookup, &sipType_QDnsLookup, -1, 8},
+        {sipName_QNetworkSession, &sipType_QNetworkSession, -1, 9},
+        {sipName_QTcpServer, &sipType_QTcpServer, -1, 10},
         {sipName_QNetworkAccessManager, &sipType_QNetworkAccessManager, -1, 11},
-    #else
-        {0, 0, -1, 11},
-    #endif
-    #if QT_VERSION >= 0x040400
-        {sipName_QNetworkReply, &sipType_QNetworkReply, -1, 12},
-    #else
-        {0, 0, -1, 12},
-    #endif
-    #if QT_VERSION >= 0x040400
-        {sipName_QLocalSocket, &sipType_QLocalSocket, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
+        {sipName_QLocalServer, &sipType_QLocalServer, -1, -1},
+        {sipName_QNetworkDiskCache, &sipType_QNetworkDiskCache, -1, -1},
         {sipName_QUdpSocket, &sipType_QUdpSocket, -1, 14},
         {sipName_QTcpSocket, &sipType_QTcpSocket, 15, -1},
-    #if QT_VERSION >= 0x040300 && (defined(SIP_FEATURE_PyQt_OpenSSL) || defined(SIP_FEATURE_PyQt_SSL))
+    #if defined(SIP_FEATURE_PyQt_SSL)
         {sipName_QSslSocket, &sipType_QSslSocket, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
-    #if QT_VERSION >= 0x040500
-        {sipName_QNetworkDiskCache, &sipType_QNetworkDiskCache, -1, -1},
     #else
         {0, 0, -1, -1},
     #endif
@@ -127,6 +78,9 @@ public:
     {
         TcpSocket,
         UdpSocket,
+%If (Qt_5_8_0 -)
+        SctpSocket,
+%End
         UnknownSocketType,
     };
 
@@ -134,9 +88,7 @@ public:
     {
         IPv4Protocol,
         IPv6Protocol,
-%If (Qt_5_0_0 -)
         AnyIPProtocol,
-%End
         UnknownNetworkLayerProtocol,
     };
 
@@ -153,42 +105,18 @@ public:
         AddressInUseError,
         SocketAddressNotAvailableError,
         UnsupportedSocketOperationError,
-%If (Qt_4_3_0 -)
         UnfinishedSocketOperationError,
-%End
-%If (Qt_4_3_0 -)
         ProxyAuthenticationRequiredError,
-%End
-%If (Qt_4_4_0 -)
         SslHandshakeFailedError,
-%End
-%If (Qt_4_5_0 -)
         ProxyConnectionRefusedError,
-%End
-%If (Qt_4_5_0 -)
         ProxyConnectionClosedError,
-%End
-%If (Qt_4_5_0 -)
         ProxyConnectionTimeoutError,
-%End
-%If (Qt_4_5_0 -)
         ProxyNotFoundError,
-%End
-%If (Qt_4_5_0 -)
         ProxyProtocolError,
-%End
-%If (Qt_5_0_0 -)
         OperationError,
-%End
-%If (Qt_5_0_0 -)
         SslInternalError,
-%End
-%If (Qt_5_0_0 -)
         SslInvalidUserDataError,
-%End
-%If (Qt_5_0_0 -)
         TemporaryError,
-%End
         UnknownSocketError,
     };
 
@@ -205,24 +133,9 @@ public:
 
     QAbstractSocket(QAbstractSocket::SocketType socketType, QObject *parent /TransferThis/);
     virtual ~QAbstractSocket();
-%If (Qt_5_0_0 -)
-    virtual void connectToHost(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    void connectToHost(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    virtual void connectToHost(const QHostAddress &address, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    void connectToHost(const QHostAddress &address, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
+    virtual void connectToHost(const QString &hostName, quint16 port, QIODevice::OpenMode mode = QIODevice::ReadWrite, QAbstractSocket::NetworkLayerProtocol protocol = QAbstractSocket::AnyIPProtocol) /ReleaseGIL/;
+    virtual void connectToHost(const QHostAddress &address, quint16 port, QIODevice::OpenMode mode = QIODevice::ReadWrite) /ReleaseGIL/;
     virtual void disconnectFromHost() /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    void disconnectFromHost() /ReleaseGIL/;
-%End
     bool isValid() const;
     virtual qint64 bytesAvailable() const;
     virtual qint64 bytesToWrite() const;
@@ -233,25 +146,10 @@ public:
     QHostAddress peerAddress() const;
     QString peerName() const;
     qint64 readBufferSize() const;
-%If (Qt_5_0_0 -)
     virtual void setReadBufferSize(qint64 size);
-%End
-%If (- Qt_5_0_0)
-    void setReadBufferSize(qint64 size);
-%End
     void abort();
-%If (Qt_5_0_0 -)
-    virtual bool setSocketDescriptor(qintptr socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite);
-%End
-%If (Qt_5_0_0 -)
+    virtual bool setSocketDescriptor(qintptr socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
     virtual qintptr socketDescriptor() const;
-%End
-%If (- Qt_5_0_0)
-    int socketDescriptor() const;
-%End
-%If (- Qt_5_0_0)
-    bool setSocketDescriptor(int socketDescriptor, QAbstractSocket::SocketState state = QAbstractSocket::ConnectedState, QIODevice::OpenMode mode = QIODevice::ReadWrite);
-%End
     QAbstractSocket::SocketType socketType() const;
     QAbstractSocket::SocketState state() const;
     QAbstractSocket::SocketError error() const;
@@ -259,20 +157,10 @@ public:
     virtual bool isSequential() const;
     virtual bool atEnd() const;
     bool flush() /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     virtual bool waitForConnected(int msecs = 30000) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    bool waitForConnected(int msecs = 30000) /ReleaseGIL/;
-%End
     virtual bool waitForReadyRead(int msecs = 30000) /ReleaseGIL/;
     virtual bool waitForBytesWritten(int msecs = 30000) /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     virtual bool waitForDisconnected(int msecs = 30000) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    bool waitForDisconnected(int msecs = 30000) /ReleaseGIL/;
-%End
     void setProxy(const QNetworkProxy &networkProxy);
     QNetworkProxy proxy() const;
 
@@ -282,17 +170,7 @@ signals:
     void disconnected();
     void stateChanged(QAbstractSocket::SocketState);
     void error(QAbstractSocket::SocketError);
-%If (Qt_4_3_0 -)
     void proxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *authenticator);
-%End
-
-protected slots:
-%If (- Qt_5_0_0)
-    void connectToHostImplementation(const QString &hostName, quint16 port, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite);
-%End
-%If (- Qt_5_0_0)
-    void disconnectFromHostImplementation();
-%End
 
 protected:
     virtual SIP_PYOBJECT readData(qint64 maxlen) /TypeHint="Py_v3:bytes;str",ReleaseGIL/ [qint64 (char *data, qint64 maxlen)];
@@ -371,7 +249,7 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) /ReleaseGIL/;
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) /ReleaseGIL/;
     void setSocketState(QAbstractSocket::SocketState state);
     void setSocketError(QAbstractSocket::SocketError socketError);
     void setLocalPort(quint16 port);
@@ -381,37 +259,26 @@ protected:
     void setPeerName(const QString &name);
 
 public:
-%If (Qt_4_6_0 -)
-
     enum SocketOption
     {
         LowDelayOption,
         KeepAliveOption,
-%If (Qt_4_8_0 -)
         MulticastTtlOption,
-%End
-%If (Qt_4_8_0 -)
         MulticastLoopbackOption,
-%End
-%If (Qt_5_0_0 -)
         TypeOfServiceOption,
+%If (Qt_5_3_0 -)
+        SendBufferSizeSocketOption,
+%End
+%If (Qt_5_3_0 -)
+        ReceiveBufferSizeSocketOption,
+%End
+%If (Qt_5_11_0 -)
+        PathMtuSocketOption,
 %End
     };
 
-%End
-%If (Qt_5_0_0 -)
     virtual void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &value);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    void setSocketOption(QAbstractSocket::SocketOption option, const QVariant &value);
-%End
-%If (Qt_5_0_0 -)
     virtual QVariant socketOption(QAbstractSocket::SocketOption option);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    QVariant socketOption(QAbstractSocket::SocketOption option);
-%End
-%If (Qt_5_0_0 -)
 
     enum BindFlag
     {
@@ -421,11 +288,7 @@ public:
         ReuseAddressHint,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QAbstractSocket::BindFlag> BindMode;
-%End
-%If (Qt_5_0_0 -)
 
     enum PauseMode
     {
@@ -433,33 +296,19 @@ public:
         PauseOnSslErrors,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QAbstractSocket::PauseMode> PauseModes;
-%End
-%If (Qt_5_0_0 -)
     virtual void resume() /ReleaseGIL/;
+    QAbstractSocket::PauseModes pauseMode() const;
+    void setPauseMode(QAbstractSocket::PauseModes pauseMode);
+    bool bind(const QHostAddress &address, quint16 port = 0, QAbstractSocket::BindMode mode = QAbstractSocket::DefaultForPlatform);
+    bool bind(quint16 port = 0, QAbstractSocket::BindMode mode = QAbstractSocket::DefaultForPlatform);
+%If (Qt_5_13_0 -)
+    QString protocolTag() const;
 %End
-%If (Qt_5_0_0 -)
-    QFlags<QAbstractSocket::PauseMode> pauseMode() const;
+%If (Qt_5_13_0 -)
+    void setProtocolTag(const QString &tag);
 %End
-%If (Qt_5_0_0 -)
-    void setPauseMode(QFlags<QAbstractSocket::PauseMode> pauseMode);
-%End
-%If (Qt_5_0_0 -)
-    bool bind(const QHostAddress &address, quint16 port = 0, QFlags<QAbstractSocket::BindFlag> mode = QAbstractSocket::DefaultForPlatform);
-%End
-%If (Qt_5_0_0 -)
-    bool bind(quint16 port = 0, QFlags<QAbstractSocket::BindFlag> mode = QAbstractSocket::DefaultForPlatform);
-%End
-
-private:
-    QAbstractSocket(const QAbstractSocket &);
 };
 
-%If (Qt_5_0_0 -)
 QFlags<QAbstractSocket::BindFlag> operator|(QAbstractSocket::BindFlag f1, QFlags<QAbstractSocket::BindFlag> f2);
-%End
-%If (Qt_5_0_0 -)
 QFlags<QAbstractSocket::PauseMode> operator|(QAbstractSocket::PauseMode f1, QFlags<QAbstractSocket::PauseMode> f2);
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_7_0 -)
-
 class QElapsedTimer
 {
 %TypeHeaderCode
@@ -29,15 +27,17 @@ class QElapsedTimer
 %End
 
 public:
+%If (Qt_5_4_0 -)
+    QElapsedTimer();
+%End
+
     enum ClockType
     {
         SystemTime,
         MonotonicClock,
         TickCounter,
         MachAbsoluteTime,
-%If (Qt_4_8_0 -)
         PerformanceCounter,
-%End
     };
 
     static QElapsedTimer::ClockType clockType();
@@ -53,12 +53,7 @@ public:
     qint64 secsTo(const QElapsedTimer &other) const;
     bool operator==(const QElapsedTimer &other) const;
     bool operator!=(const QElapsedTimer &other) const;
-%If (Qt_4_8_0 -)
     qint64 nsecsElapsed() const;
-%End
 };
 
-%End
-%If (Qt_4_7_0 -)
 bool operator<(const QElapsedTimer &v1, const QElapsedTimer &v2);
-%End

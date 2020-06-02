@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,32 +27,15 @@ class QSyntaxHighlighter : QObject
 %End
 
 public:
-%If (- Qt_5_0_0)
-    QSyntaxHighlighter(QTextEdit *parent /TransferThis/);
-%End
-%If (Qt_5_0_0 -)
     explicit QSyntaxHighlighter(QTextDocument *parent /TransferThis/);
-%End
-%If (- Qt_5_0_0)
-    QSyntaxHighlighter(QTextDocument *parent /TransferThis/);
-%End
-%If (Qt_5_0_0 -)
     explicit QSyntaxHighlighter(QObject *parent /TransferThis/);
-%End
-%If (- Qt_5_0_0)
-    QSyntaxHighlighter(QObject *parent /TransferThis/);
-%End
     virtual ~QSyntaxHighlighter();
     void setDocument(QTextDocument *doc /KeepReference/);
     QTextDocument *document() const;
 
 public slots:
-%If (Qt_4_2_0 -)
     void rehighlight();
-%End
-%If (Qt_4_6_0 -)
     void rehighlightBlock(const QTextBlock &block);
-%End
 
 protected:
     virtual void highlightBlock(const QString &text) = 0;
@@ -102,9 +85,7 @@ protected:
 %End
 
     QTextBlockUserData *currentBlockUserData() const;
-%If (Qt_4_4_0 -)
     QTextBlock currentBlock() const;
-%End
 
 private:
     QSyntaxHighlighter(const QSyntaxHighlighter &);

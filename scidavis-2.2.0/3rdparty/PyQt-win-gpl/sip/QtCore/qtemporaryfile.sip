@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -35,33 +35,15 @@ public:
     bool autoRemove() const;
     void setAutoRemove(bool b);
     bool open() /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     virtual QString fileName() const;
-%End
-%If (- Qt_5_0_0)
-    QString fileName() const;
-%End
     QString fileTemplate() const;
     void setFileTemplate(const QString &name);
-%If (PyQt_Deprecated_5_0)
-    static QTemporaryFile *createLocalFile(const QString &fileName) /Factory,ReleaseGIL/;
-%End
-%If (PyQt_Deprecated_5_0)
-    static QTemporaryFile *createLocalFile(QFile &file) /Factory,ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static QTemporaryFile *createNativeFile(const QString &fileName) /Factory,ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static QTemporaryFile *createNativeFile(QFile &file) /Factory,ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    virtual QAbstractFileEngine *fileEngine() const;
+%If (Qt_5_10_0 -)
+    bool rename(const QString &newName);
 %End
 
 protected:
-    virtual bool open(QFlags<QIODevice::OpenModeFlag> flags) /ReleaseGIL/;
-
-private:
-    QTemporaryFile(const QTemporaryFile &);
+    virtual bool open(QIODevice::OpenMode flags) /ReleaseGIL/;
 };

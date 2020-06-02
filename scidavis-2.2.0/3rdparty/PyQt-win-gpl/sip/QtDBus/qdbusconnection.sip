@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_7_0 -)
-
 namespace QDBus
 {
 %TypeHeaderCode
@@ -36,9 +34,6 @@ namespace QDBus
         AutoDetect,
     };
 };
-
-%End
-%If (Qt_4_7_0 -)
 
 class QDBusConnection
 {
@@ -83,75 +78,37 @@ public:
     };
 
     typedef QFlags<QDBusConnection::RegisterOption> RegisterOptions;
-%If (Qt_4_8_0 -)
 
     enum ConnectionCapability
     {
         UnixFileDescriptorPassing,
     };
 
-%End
-%If (Qt_4_8_0 -)
     typedef QFlags<QDBusConnection::ConnectionCapability> ConnectionCapabilities;
-%End
-%If (Qt_5_0_0 -)
     explicit QDBusConnection(const QString &name);
-%End
-%If (- Qt_5_0_0)
-    QDBusConnection(const QString &name);
-%End
     QDBusConnection(const QDBusConnection &other);
     ~QDBusConnection();
     bool isConnected() const;
     QString baseService() const;
     QDBusError lastError() const;
     QString name() const;
-%If (Qt_4_8_0 -)
-    QFlags<QDBusConnection::ConnectionCapability> connectionCapabilities() const;
-%End
+    QDBusConnection::ConnectionCapabilities connectionCapabilities() const;
     bool send(const QDBusMessage &message) const;
-    bool callWithCallback(const QDBusMessage &message, QObject *receiver, SIP_PYOBJECT returnMethod /TypeHint="QT_SLOT"/, SIP_PYOBJECT errorMethod /TypeHint="QT_SLOT"/, int timeout = -1) const;
-%MethodCode
-        const char *ret_slot = pyqt4_qtdbus_get_slot(a2);
-        
-        if (ret_slot)
-        {
-            const char *err_slot = pyqt4_qtdbus_get_slot(a3);
-        
-            if (err_slot)
-            {
-                Py_BEGIN_ALLOW_THREADS
-                sipRes = sipCpp->callWithCallback(*a0, a1, ret_slot, err_slot, a4);
-                Py_END_ALLOW_THREADS
-            }
-            else
-            {
-                sipError = sipBadCallableArg(3, a3);
-            }
-        }
-        else
-        {
-            sipError = sipBadCallableArg(2, a2);
-        }
-%End
-
-    bool callWithCallback(const QDBusMessage &message, SIP_PYCALLABLE returnMethod, SIP_PYCALLABLE errorMethod, int timeout = -1);
+    bool callWithCallback(const QDBusMessage &message, SIP_PYOBJECT returnMethod /TypeHint="PYQT_SLOT"/, SIP_PYOBJECT errorMethod /TypeHint="PYQT_SLOT"/, int timeout = -1) const;
 %MethodCode
         QObject *receiver;
-        QByteArray retslot_signature;
+        QByteArray return_slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a1, &receiver, retslot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a1, &receiver, return_slot)) == sipErrorNone)
         {
             QObject *error_receiver;
-            QByteArray errslot_signature;
+            QByteArray error_slot;
         
-            if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a2, &error_receiver, errslot_signature)) == sipErrorNone)
+            if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a2, &error_receiver, error_slot)) == sipErrorNone)
             {
                 if (receiver == error_receiver)
                 {
-                    Py_BEGIN_ALLOW_THREADS
-                    sipRes = sipCpp->callWithCallback(*a0, receiver, retslot_signature.constData(), errslot_signature.constData(), a3);
-                    Py_END_ALLOW_THREADS
+                    sipRes = sipCpp->callWithCallback(*a0, receiver, return_slot.constData(), error_slot.constData(), a3);
                 }
                 else
                 {
@@ -171,66 +128,17 @@ public:
         }
 %End
 
-    bool callWithCallback(const QDBusMessage &message, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/, int timeout = -1) const;
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a2);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->callWithCallback(*a0, a1, slot, a3);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(2, a2);
-        }
-%End
-
-    bool callWithCallback(const QDBusMessage &message, SIP_PYCALLABLE callable, int timeout = -1);
-%MethodCode
-        QObject *receiver;
-        QByteArray slot_signature;
-        
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a1, &receiver, slot_signature)) == sipErrorNone)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->callWithCallback(*a0, receiver, slot_signature.constData(), a2);
-            Py_END_ALLOW_THREADS
-        }
-        else if (sipError == sipErrorContinue)
-        {
-            sipError = sipBadCallableArg(1, a1);
-        }
-%End
-
     QDBusMessage call(const QDBusMessage &message, QDBus::CallMode mode = QDBus::Block, int timeout = -1) const /ReleaseGIL/;
     QDBusPendingCall asyncCall(const QDBusMessage &message, int timeout = -1) const;
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a5);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, a4, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(5, a5);
-        }
-%End
-
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, SIP_PYCALLABLE callable);
+    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a4, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a4, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, receiver, slot_signature.constData());
+            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -239,31 +147,15 @@ public:
         }
 %End
 
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a6);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, a5, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(6, a6);
-        }
-%End
-
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, SIP_PYCALLABLE callable);
+    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a5, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a5, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, receiver, slot_signature.constData());
+            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -272,31 +164,15 @@ public:
         }
 %End
 
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a7);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, *a5, a6, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(7, a7);
-        }
-%End
-
-    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, SIP_PYCALLABLE callable);
+    bool connect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a6, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a6, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, *a5, receiver, slot_signature.constData());
+            sipRes = sipCpp->connect(*a0, *a1, *a2, *a3, *a4, *a5, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -305,31 +181,15 @@ public:
         }
 %End
 
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a5);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, a4, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(5, a5);
-        }
-%End
-
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, SIP_PYCALLABLE callable);
+    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a4, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a4, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, receiver, slot_signature.constData());
+            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -338,31 +198,15 @@ public:
         }
 %End
 
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a6);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, a5, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(6, a6);
-        }
-%End
-
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, SIP_PYCALLABLE callable);
+    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QString &signature, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a5, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a5, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, receiver, slot_signature.constData());
+            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -371,31 +215,15 @@ public:
         }
 %End
 
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, QObject *receiver, SIP_PYOBJECT slot /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_qtdbus_get_slot(a7);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, *a5, a6, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(7, a7);
-        }
-%End
-
-    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, SIP_PYCALLABLE callable);
+    bool disconnect(const QString &service, const QString &path, const QString &interface, const QString &name, const QStringList &argumentMatch, const QString &signature, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/) /ReleaseGIL/;
 %MethodCode
         QObject *receiver;
-        QByteArray slot_signature;
+        QByteArray slot;
         
-        if ((sipError = pyqt4_qtdbus_get_pyqtslot_parts(a6, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_qtdbus_get_pyqtslot_parts(a6, &receiver, slot)) == sipErrorNone)
         {
             Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, *a5, receiver, slot_signature.constData());
+            sipRes = sipCpp->disconnect(*a0, *a1, *a2, *a3, *a4, *a5, receiver, slot.constData());
             Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
@@ -405,6 +233,9 @@ public:
 %End
 
     bool registerObject(const QString &path, QObject *object, QDBusConnection::RegisterOptions options = QDBusConnection::ExportAdaptors);
+%If (Qt_5_5_0 -)
+    bool registerObject(const QString &path, const QString &interface, QObject *object, QDBusConnection::RegisterOptions options = QDBusConnection::ExportAdaptors);
+%End
     void unregisterObject(const QString &path, QDBusConnection::UnregisterMode mode = QDBusConnection::UnregisterNode);
     QObject *objectRegisteredAt(const QString &path) const;
     bool registerService(const QString &serviceName);
@@ -412,25 +243,20 @@ public:
     QDBusConnectionInterface *interface() const;
     static QDBusConnection connectToBus(QDBusConnection::BusType type, const QString &name) /ReleaseGIL/;
     static QDBusConnection connectToBus(const QString &address, const QString &name) /ReleaseGIL/;
-%If (Qt_4_8_0 -)
     static QDBusConnection connectToPeer(const QString &address, const QString &name) /ReleaseGIL/;
-%End
     static void disconnectFromBus(const QString &name) /ReleaseGIL/;
-%If (Qt_4_8_0 -)
     static void disconnectFromPeer(const QString &name) /ReleaseGIL/;
-%End
-%If (Qt_4_8_0 -)
     static QByteArray localMachineId();
-%End
     static QDBusConnection sessionBus();
     static QDBusConnection systemBus();
     static QDBusConnection sender();
+%If (Qt_5_6_0 -)
+    void swap(QDBusConnection &other /Constrained/);
+%End
 };
 
-%End
-%If (Qt_4_7_0 -)
 QFlags<QDBusConnection::RegisterOption> operator|(QDBusConnection::RegisterOption f1, QFlags<QDBusConnection::RegisterOption> f2);
-%End
-%If (Qt_4_7_0 -)
 QFlags<QDBusConnection::RegisterOption> operator|(QDBusConnection::RegisterOption f1, QDBusConnection::RegisterOption f2);
+%If (Qt_5_6_0 -)
+QFlags<QDBusConnection::ConnectionCapability> operator|(QDBusConnection::ConnectionCapability f1, QFlags<QDBusConnection::ConnectionCapability> f2);
 %End

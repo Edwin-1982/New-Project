@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,12 +20,129 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_5_0_0 -)
-
 class QGuiApplication : QCoreApplication
 {
 %TypeHeaderCode
 #include <qguiapplication.h>
+%End
+
+%ConvertToSubClassCode
+    static struct class_graph {
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+    #if QT_VERSION >= 0x050100 && defined(SIP_FEATURE_PyQt_Desktop_OpenGL)
+        {sipName_QOpenGLTimeMonitor, &sipType_QOpenGLTimeMonitor, -1, 1},
+    #else
+        {0, 0, -1, 1},
+    #endif
+        {sipName_QSyntaxHighlighter, &sipType_QSyntaxHighlighter, -1, 2},
+        {sipName_QWindow, &sipType_QWindow, 25, 3},
+        {sipName_QPdfWriter, &sipType_QPdfWriter, -1, 4},
+        {sipName_QMovie, &sipType_QMovie, -1, 5},
+    #if defined(SIP_FEATURE_PyQt_SessionManager)
+        {sipName_QSessionManager, &sipType_QSessionManager, -1, 6},
+    #else
+        {0, 0, -1, 6},
+    #endif
+        {sipName_QAbstractTextDocumentLayout, &sipType_QAbstractTextDocumentLayout, -1, 7},
+        {sipName_QScreen, &sipType_QScreen, -1, 8},
+        {sipName_QTextObject, &sipType_QTextObject, 28, 9},
+        {sipName_QStandardItemModel, &sipType_QStandardItemModel, -1, 10},
+        {sipName_QDrag, &sipType_QDrag, -1, 11},
+    #if defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLContextGroup, &sipType_QOpenGLContextGroup, -1, 12},
+    #else
+        {0, 0, -1, 12},
+    #endif
+        {sipName_QValidator, &sipType_QValidator, 32, 13},
+        {sipName_QTextDocument, &sipType_QTextDocument, -1, 14},
+    #if QT_VERSION >= 0x050100 && defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLVertexArrayObject, &sipType_QOpenGLVertexArrayObject, -1, 15},
+    #else
+        {0, 0, -1, 15},
+    #endif
+    #if QT_VERSION >= 0x050100 && defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLDebugLogger, &sipType_QOpenGLDebugLogger, -1, 16},
+    #else
+        {0, 0, -1, 16},
+    #endif
+        {sipName_QGuiApplication, &sipType_QGuiApplication, -1, 17},
+    #if QT_VERSION >= 0x050100 && defined(SIP_FEATURE_PyQt_Desktop_OpenGL)
+        {sipName_QOpenGLTimerQuery, &sipType_QOpenGLTimerQuery, -1, 18},
+    #else
+        {0, 0, -1, 18},
+    #endif
+    #if QT_VERSION >= 0x050100
+        {sipName_QOffscreenSurface, &sipType_QOffscreenSurface, -1, 19},
+    #else
+        {0, 0, -1, 19},
+    #endif
+    #if defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLShaderProgram, &sipType_QOpenGLShaderProgram, -1, 20},
+    #else
+        {0, 0, -1, 20},
+    #endif
+        {sipName_QStyleHints, &sipType_QStyleHints, -1, 21},
+        {sipName_QClipboard, &sipType_QClipboard, -1, 22},
+    #if defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLShader, &sipType_QOpenGLShader, -1, 23},
+    #else
+        {0, 0, -1, 23},
+    #endif
+    #if defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLContext, &sipType_QOpenGLContext, -1, 24},
+    #else
+        {0, 0, -1, 24},
+    #endif
+        {sipName_QInputMethod, &sipType_QInputMethod, -1, -1},
+    #if QT_VERSION >= 0x050400
+        {sipName_QPaintDeviceWindow, &sipType_QPaintDeviceWindow, 26, -1},
+    #else
+        {0, 0, 26, -1},
+    #endif
+    #if QT_VERSION >= 0x050400 && defined(SIP_FEATURE_PyQt_OpenGL)
+        {sipName_QOpenGLWindow, &sipType_QOpenGLWindow, -1, 27},
+    #else
+        {0, 0, -1, 27},
+    #endif
+    #if QT_VERSION >= 0x050400
+        {sipName_QRasterWindow, &sipType_QRasterWindow, -1, -1},
+    #else
+        {0, 0, -1, -1},
+    #endif
+        {sipName_QTextBlockGroup, &sipType_QTextBlockGroup, 30, 29},
+        {sipName_QTextFrame, &sipType_QTextFrame, 31, -1},
+        {sipName_QTextList, &sipType_QTextList, -1, -1},
+        {sipName_QTextTable, &sipType_QTextTable, -1, -1},
+    #if QT_VERSION >= 0x050100
+        {sipName_QRegularExpressionValidator, &sipType_QRegularExpressionValidator, -1, 33},
+    #else
+        {0, 0, -1, 33},
+    #endif
+        {sipName_QIntValidator, &sipType_QIntValidator, -1, 34},
+        {sipName_QDoubleValidator, &sipType_QDoubleValidator, -1, 35},
+        {sipName_QRegExpValidator, &sipType_QRegExpValidator, -1, -1},
+    };
+    
+    int i = 0;
+    
+    sipType = NULL;
+    
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
+        {
+            sipType = *cg->type;
+            i = cg->yes;
+        }
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
@@ -37,10 +154,8 @@ public:
         char **argv;
         
         // Convert the list.
-        if ((argv = pyqt4_qtgui_from_argv_list(a0, argc)) == NULL)
-        {
+        if ((argv = pyqt5_qtgui_from_argv_list(a0, argc)) == NULL)
             sipIsErr = 1;
-        }
         else
         {
             // Create it now the arguments are right.
@@ -52,15 +167,23 @@ public:
             Py_END_ALLOW_THREADS
         
             // Now modify the original list.
-            pyqt4_qtgui_update_argv_list(a0, argc, argv);
+            pyqt5_qtgui_update_argv_list(a0, argc, argv);
         }
 %End
 
-    virtual ~QGuiApplication();
+    virtual ~QGuiApplication() /ReleaseGIL/;
+%MethodCode
+        pyqt5_qtgui_cleanup_qobjects();
+%End
+
+    static QWindowList allWindows();
+    static QWindowList topLevelWindows();
+    static QWindow *topLevelAt(const QPoint &pos);
     static QString platformName();
+    static QWindow *focusWindow();
     static QObject *focusObject();
     static QScreen *primaryScreen();
-    static QList<QScreen*> screens();
+    static QList<QScreen *> screens();
     static QCursor *overrideCursor();
     static void setOverrideCursor(const QCursor &);
     static void changeOverrideCursor(const QCursor &);
@@ -92,23 +215,136 @@ signals:
     void screenAdded(QScreen *screen);
     void lastWindowClosed();
     void focusObjectChanged(QObject *focusObject);
+%If (PyQt_SessionManager)
     void commitDataRequest(QSessionManager &sessionManager);
+%End
+%If (PyQt_SessionManager)
     void saveStateRequest(QSessionManager &sessionManager);
+%End
+    void focusWindowChanged(QWindow *focusWindow);
+%If (Qt_5_2_0 -)
+    void applicationStateChanged(Qt::ApplicationState state);
+%End
+%If (Qt_5_8_0 -)
+    void applicationDisplayNameChanged();
+%End
 
 public:
     static void setApplicationDisplayName(const QString &name);
     static QString applicationDisplayName();
+    static QWindow *modalWindow();
+    static QStyleHints *styleHints();
+    static QInputMethod *inputMethod();
     qreal devicePixelRatio() const;
+%If (PyQt_SessionManager)
     bool isSessionRestored() const;
+%End
+%If (PyQt_SessionManager)
     QString sessionId() const;
+%End
+%If (PyQt_SessionManager)
     QString sessionKey() const;
+%End
+%If (PyQt_SessionManager)
     bool isSavingSession() const;
+%End
+%If (Qt_5_2_0 -)
+    static Qt::ApplicationState applicationState();
+%End
+%If (Qt_5_2_0 -)
+    static void sync();
+%End
+%If (Qt_5_3_0 -)
+    static void setWindowIcon(const QIcon &icon);
+%End
+%If (Qt_5_3_0 -)
+    static QIcon windowIcon();
+%End
 
 protected:
     virtual bool event(QEvent *);
 
-private:
-    QGuiApplication(const QGuiApplication &);
+signals:
+%If (Qt_5_4_0 -)
+    void screenRemoved(QScreen *screen);
+%End
+%If (Qt_5_4_0 -)
+    void layoutDirectionChanged(Qt::LayoutDirection direction);
+%End
+%If (Qt_5_4_0 -)
+    void paletteChanged(const QPalette &pal);
+%End
+
+public:
+%If (Qt_5_6_0 -)
+%If (PyQt_SessionManager)
+    static bool isFallbackSessionManagementEnabled();
+%End
+%End
+%If (Qt_5_6_0 -)
+%If (PyQt_SessionManager)
+    static void setFallbackSessionManagementEnabled(bool);
+%End
+%End
+
+signals:
+%If (Qt_5_6_0 -)
+    void primaryScreenChanged(QScreen *screen);
+%End
+
+public:
+%If (Qt_5_7_0 -)
+    static void setDesktopFileName(const QString &name);
+%End
+%If (Qt_5_7_0 -)
+    static QString desktopFileName();
+%End
+%If (Qt_5_10_0 -)
+    static QScreen *screenAt(const QPoint &point);
+%End
+
+signals:
+%If (Qt_5_11_0 -)
+    void fontChanged(const QFont &font);
+%End
 };
 
+%ModuleHeaderCode
+// Imports from QtCore.
+//typedef void (*pyqt5_qtgui_cleanup_qobjects_t)();
+typedef bool (*pyqt5_qtgui_cleanup_qobjects_t)();
+extern pyqt5_qtgui_cleanup_qobjects_t pyqt5_qtgui_cleanup_qobjects;
+
+typedef char **(*pyqt5_qtgui_from_argv_list_t)(PyObject *, int &);
+extern pyqt5_qtgui_from_argv_list_t pyqt5_qtgui_from_argv_list;
+
+typedef void (*pyqt5_qtgui_update_argv_list_t)(PyObject *, int, char **);
+extern pyqt5_qtgui_update_argv_list_t pyqt5_qtgui_update_argv_list;
+%End
+
+%ModuleCode
+// Imports from QtCore.
+pyqt5_qtgui_cleanup_qobjects_t pyqt5_qtgui_cleanup_qobjects;
+pyqt5_qtgui_from_argv_list_t pyqt5_qtgui_from_argv_list;
+pyqt5_qtgui_update_argv_list_t pyqt5_qtgui_update_argv_list;
+
+// Forward declarations not in any header files but are part of the API.
+void qt_set_sequence_auto_mnemonic(bool enable);
+%End
+
+%InitialisationCode
+// Export our own helpers.
+sipExportSymbol("qtgui_wrap_ancestors", (void *)qtgui_wrap_ancestors);
+%End
+
+%PostInitialisationCode
+// Imports from QtCore.
+pyqt5_qtgui_cleanup_qobjects = (pyqt5_qtgui_cleanup_qobjects_t)sipImportSymbol("pyqt5_cleanup_qobjects");
+Q_ASSERT(pyqt5_qtgui_cleanup_qobjects);
+
+pyqt5_qtgui_from_argv_list = (pyqt5_qtgui_from_argv_list_t)sipImportSymbol("pyqt5_from_argv_list");
+Q_ASSERT(pyqt5_qtgui_from_argv_list);
+
+pyqt5_qtgui_update_argv_list = (pyqt5_qtgui_update_argv_list_t)sipImportSymbol("pyqt5_update_argv_list");
+Q_ASSERT(pyqt5_qtgui_update_argv_list);
 %End

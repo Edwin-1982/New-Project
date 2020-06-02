@@ -6,8 +6,10 @@
 
 CpuPieMarker::CpuPieMarker()
 {
-    setZ( 1000 );
-    setRenderHint( QwtPlotItem::RenderAntialiased, true );
+    setZ(1000);
+#if QT_VERSION >= 0x040000
+    setRenderHint(QwtPlotItem::RenderAntialiased, true);
+#endif
 }
 
 int CpuPieMarker::rtti() const
@@ -15,40 +17,41 @@ int CpuPieMarker::rtti() const
     return QwtPlotItem::Rtti_PlotUserItem;
 }
 
-void CpuPieMarker::draw( QPainter *painter,
+void CpuPieMarker::draw(QPainter *p, 
     const QwtScaleMap &, const QwtScaleMap &,
-    const QRectF &rect ) const
+    const QRect &rect) const
 {
-    const CpuPlot *cpuPlot = static_cast<CpuPlot *> ( plot() );
+    const CpuPlot *cpuPlot = (CpuPlot *)plot();
 
-    const QwtScaleMap yMap = cpuPlot->canvasMap( QwtPlot::yLeft );
+    const QwtScaleMap yMap = cpuPlot->canvasMap(QwtPlot::yLeft);
 
     const int margin = 5;
-
-    QRectF pieRect;
-    pieRect.setX( rect.x() + margin );
-    pieRect.setY( rect.y() + margin );
-    pieRect.setHeight( yMap.transform( 80.0 ) );
-    pieRect.setWidth( pieRect.height() );
-
+    
+    QRect pieRect;
+    pieRect.setX(rect.x() + margin);
+    pieRect.setY(rect.y() + margin);
+    pieRect.setHeight(yMap.transform(80.0));
+    pieRect.setWidth(pieRect.height());
+    
     const int dataType[] = { CpuPlot::User, CpuPlot::System, CpuPlot::Idle };
 
-    int angle = static_cast<int>( 5760 * 0.75 );
-    for ( unsigned int i = 0;
-        i < sizeof( dataType ) / sizeof( dataType[0] ); i++ )
+    int angle = (int)(5760 * 0.75);
+    for ( unsigned int i = 0; 
+        i < sizeof(dataType) / sizeof(dataType[0]); i++ )
     {
-        const QwtPlotCurve *curve = cpuPlot->cpuCurve( dataType[i] );
+        const QwtPlotCurve *curve = cpuPlot->cpuCurve(dataType[i]);
         if ( curve->dataSize() > 0 )
         {
-            const int value = static_cast<int>( 5760 * curve->sample( 0 ).y() / 100.0 );
+            const int value = (int)(5760 * curve->y(0) / 100.0);
 
-            painter->save();
-            painter->setBrush( QBrush( curve->brush().color(), Qt::SolidPattern ) );
+            p->save();
+            p->setBrush(QBrush(curve->pen().color(), Qt::SolidPattern));
             if ( value != 0 )
-                painter->drawPie( pieRect, -angle, -value );
-            painter->restore();
+                p->drawPie(pieRect, -angle, -value);
+            p->restore();
 
             angle += value;
         }
     }
 }
+

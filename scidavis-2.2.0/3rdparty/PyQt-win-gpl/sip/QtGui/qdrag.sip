@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,68 +27,35 @@ class QDrag : QObject
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QDrag(QObject *dragSource /TransferThis/);
-%End
-%If (- Qt_5_0_0)
-    explicit QDrag(QWidget *dragSource /TransferThis/);
-%End
     virtual ~QDrag();
-%If (Qt_4_3_0 -)
     Qt::DropAction exec(Qt::DropActions supportedActions = Qt::MoveAction) /PyName=exec_,ReleaseGIL/;
-%End
-%If (Qt_4_3_0 -)
 %If (Py_v3)
     Qt::DropAction exec(Qt::DropActions supportedActions = Qt::MoveAction) /ReleaseGIL/;
 %End
-%End
-%If (Qt_4_3_0 -)
     Qt::DropAction exec(Qt::DropActions supportedActions, Qt::DropAction defaultDropAction) /PyName=exec_,ReleaseGIL/;
-%End
-%If (Qt_4_3_0 -)
     Qt::DropAction exec(Qt::DropActions supportedActions, Qt::DropAction defaultDropAction) /ReleaseGIL/;
-%End
     void setMimeData(QMimeData *data /Transfer/);
     QMimeData *mimeData() const;
     void setPixmap(const QPixmap &);
     QPixmap pixmap() const;
     void setHotSpot(const QPoint &hotspot);
     QPoint hotSpot() const;
-%If (Qt_5_0_0 -)
     QObject *source() const;
-%End
-%If (- Qt_5_0_0)
-    QWidget *source() const;
-%End
-%If (Qt_5_0_0 -)
     QObject *target() const;
-%End
-%If (- Qt_5_0_0)
-    QWidget *target() const;
-%End
-    Qt::DropAction start(Qt::DropActions supportedActions = Qt::CopyAction) /ReleaseGIL/;
     void setDragCursor(const QPixmap &cursor, Qt::DropAction action);
 
 signals:
     void actionChanged(Qt::DropAction action);
-%If (Qt_5_0_0 -)
     void targetChanged(QObject *newTarget);
-%End
-%If (- Qt_5_0_0)
-    void targetChanged(QWidget *newTarget);
-%End
 
 public:
-%If (Qt_5_0_0 -)
     QPixmap dragCursor(Qt::DropAction action) const;
-%End
-%If (Qt_5_0_0 -)
     Qt::DropActions supportedActions() const;
-%End
-%If (Qt_5_0_0 -)
     Qt::DropAction defaultAction() const;
+%If (Qt_5_7_0 -)
+%If (WS_X11 || WS_WIN)
+    static void cancel();
 %End
-
-private:
-    QDrag(const QDrag &);
+%End
 };

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -41,6 +41,11 @@ public:
     bool exists() const;
     void refresh();
     QString filePath() const;
+    SIP_PYOBJECT __fspath__();
+%MethodCode
+        sipRes = qpycore_PyObject_FromQString(QDir::toNativeSeparators(sipCpp->filePath()));
+%End
+
     QString absoluteFilePath() const;
     QString canonicalFilePath() const;
     QString fileName() const;
@@ -64,43 +69,34 @@ public:
     bool isDir() const;
     bool isSymLink() const;
     bool isRoot() const;
-    QString readLink() const;
     QString owner() const;
     uint ownerId() const;
     QString group() const;
     uint groupId() const;
-%If (Qt_5_0_0 -)
-    bool permission(QFlags<QFileDevice::Permission> permissions) const;
-%End
-%If (- Qt_5_0_0)
-    bool permission(QFlags<QFile::Permission> permissions) const;
-%End
-%If (Qt_5_0_0 -)
-    QFlags<QFileDevice::Permission> permissions() const;
-%End
-%If (- Qt_5_0_0)
-    QFlags<QFile::Permission> permissions() const;
-%End
+    bool permission(QFileDevice::Permissions permissions) const;
+    QFileDevice::Permissions permissions() const;
     qint64 size() const;
     QDateTime created() const;
     QDateTime lastModified() const;
     QDateTime lastRead() const;
     bool caching() const;
     void setCaching(bool on);
-%If (Qt_4_2_0 -)
     QString symLinkTarget() const;
-%End
-%If (Qt_4_3_0 -)
     QString bundleName() const;
-%End
-%If (Qt_4_3_0 -)
     bool isBundle() const;
-%End
-%If (Qt_5_0_0 -)
     bool isNativePath() const;
+    void swap(QFileInfo &other /Constrained/);
+%If (Qt_5_2_0 -)
+    static bool exists(const QString &file);
 %End
-%If (Qt_5_0_0 -)
-    void swap(QFileInfo &other);
+%If (Qt_5_10_0 -)
+    QDateTime birthTime() const;
+%End
+%If (Qt_5_10_0 -)
+    QDateTime metadataChangeTime() const;
+%End
+%If (Qt_5_10_0 -)
+    QDateTime fileTime(QFileDevice::FileTime time) const;
 %End
 };
 

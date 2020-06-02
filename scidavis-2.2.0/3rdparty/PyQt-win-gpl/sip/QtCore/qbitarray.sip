@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,6 +37,7 @@ public:
     QBitArray(const QBitArray &other);
     int size() const;
     int count() const /__len__/;
+    int count(bool on) const;
     bool isEmpty() const;
     bool isNull() const;
     void resize(int size);
@@ -59,7 +60,7 @@ public:
     bool toggleBit(int i);
     bool operator[](int i) const;
 %MethodCode
-        SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+        Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
         
         if (idx < 0)
             sipIsErr = 1;
@@ -68,21 +69,26 @@ public:
 %End
 
     bool at(int i) const;
-    int count(bool on) const;
-%If (Qt_4_3_0 -)
     long __hash__() const;
 %MethodCode
         sipRes = qHash(*sipCpp);
 %End
 
+    void swap(QBitArray &other /Constrained/);
+%If (Qt_5_11_0 -)
+    SIP_PYOBJECT bits() const /TypeHint="bytes"/;
+%MethodCode
+        return PyBytes_FromStringAndSize(sipCpp->bits(), (sipCpp->size() + 7) / 8);
 %End
-%If (Qt_4_8_0 -)
-    void swap(QBitArray &other);
+
+%End
+%If (Qt_5_11_0 -)
+    static QBitArray fromBits(const char *data /Encoding="None"/, SIP_SSIZE_T len) [QBitArray (const char *data, qsizetype len)];
 %End
 };
 
 QBitArray operator&(const QBitArray &, const QBitArray &);
 QBitArray operator|(const QBitArray &, const QBitArray &);
 QBitArray operator^(const QBitArray &, const QBitArray &);
-QDataStream &operator<<(QDataStream &, const QBitArray & /Constrained/);
-QDataStream &operator>>(QDataStream &, QBitArray & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QBitArray & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QBitArray & /Constrained/) /ReleaseGIL/;

@@ -1,8 +1,8 @@
 // This defines the interfaces for the pyqtBoundSignal type.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -51,15 +51,16 @@ typedef struct {
     QObject *bound_qobject;
 } qpycore_pyqtBoundSignal;
 
-
-extern PyTypeObject qpycore_pyqtBoundSignal_Type;
-
 }
 
 
+// The type object.
+extern PyTypeObject *qpycore_pyqtBoundSignal_TypeObject;
+
+
+bool qpycore_pyqtBoundSignal_init_type();
 PyObject *qpycore_pyqtBoundSignal_New(qpycore_pyqtSignal *unbound_signal,
         PyObject *bound_pyobject, QObject *bound_qobject);
-
 sipErrorState qpycore_get_receiver_slot_signature(PyObject *slot,
         QObject *transmitter, const Chimera::Signature *signal_signature,
         bool single_shot, QObject **receiver, QByteArray &slot_signature);

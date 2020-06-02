@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,9 +29,6 @@ class QLibraryInfo
 public:
     static QString licensee();
     static QString licensedProducts();
-%If (- Qt_5_0_0)
-    static QString buildKey();
-%End
 
     enum LibraryLocation
     {
@@ -44,33 +41,19 @@ public:
         DataPath,
         TranslationsPath,
         SettingsPath,
-%If (- Qt_5_0_0)
-        DemosPath,
-%End
         ExamplesPath,
-%If (Qt_4_7_0 -)
         ImportsPath,
-%End
-%If (Qt_5_0_0 -)
         TestsPath,
-%End
-%If (Qt_5_0_0 -)
         LibraryExecutablesPath,
-%End
-%If (Qt_5_0_0 -)
         Qml2ImportsPath,
-%End
-%If (Qt_5_0_0 -)
         ArchDataPath,
-%End
     };
 
     static QString location(QLibraryInfo::LibraryLocation);
-%If (Qt_4_6_0 -)
     static QDate buildDate();
-%End
-%If (Qt_5_0_0 -)
     static bool isDebugBuild();
+%If (Qt_5_8_0 -)
+    static QVersionNumber version();
 %End
 
 private:

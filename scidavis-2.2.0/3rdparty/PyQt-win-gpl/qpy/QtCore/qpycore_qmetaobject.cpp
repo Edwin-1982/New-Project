@@ -1,8 +1,8 @@
 // This is the support code for QMetaObject.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,9 +23,11 @@
 #include <QGenericArgument>
 #include <QGenericReturnArgument>
 
+#include "qpycore_api.h"
 #include "qpycore_chimera.h"
 #include "qpycore_misc.h"
-#include "qpycore_sip.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Forward declarations.
@@ -35,29 +37,6 @@ extern "C" {static void ArgumentStorage_delete(PyObject *cap);}
 #else
 extern "C" {static void ArgumentStorage_delete(void *stv);}
 #endif
-
-
-// Register a number of named types and integer types for Q_FLAGS and Q_ENUMS.
-// Note that this support is half-baked but provided for backwards
-// compatibility until something better is done.
-PyObject *qpycore_register_int_types(PyObject *type_names)
-{
-    for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(type_names); ++i)
-    {
-        PyObject *name = PyTuple_GET_ITEM(type_names, i);
-        const char *ascii = sipString_AsASCIIString(&name);
-
-        if (!ascii)
-            return 0;
-
-        Chimera::registerIntType(ascii);
-
-        Py_DECREF(name);
-    }
-
-    Py_INCREF(Py_None);
-    return Py_None;
-}
 
 
 // Return a wrapped QGenericArgument for the given type and Python object.
@@ -88,7 +67,7 @@ PyObject *qpycore_ArgumentFactory(PyObject *type, PyObject *data)
     {
         // Stash the storage in the user field so that everything will be
         // properly garbage collected.
-        ((sipSimpleWrapper *)ga_obj)->user = as_obj;
+        sipSetUserObject((sipSimpleWrapper *)ga_obj, as_obj);
     }
     else
     {
@@ -129,7 +108,7 @@ PyObject *qpycore_ReturnFactory(PyObject *type)
     {
         // Stash the storage in the user field so that everything will be
         // properly garbage collected.
-        ((sipSimpleWrapper *)gra_obj)->user = as_obj;
+        sipSetUserObject((sipSimpleWrapper *)gra_obj, as_obj);
     }
     else
     {
@@ -144,7 +123,7 @@ PyObject *qpycore_ReturnFactory(PyObject *type)
 // Return the Python result from a QGenericReturnArgument.
 PyObject *qpycore_ReturnValue(PyObject *gra_obj)
 {
-    PyObject *as_obj = ((sipSimpleWrapper *)gra_obj)->user;
+    PyObject *as_obj = sipGetUserObject((sipSimpleWrapper *)gra_obj);
 
 #if defined(SIP_USE_PYCAPSULE)
     Chimera::Storage *st = reinterpret_cast<Chimera::Storage *>(

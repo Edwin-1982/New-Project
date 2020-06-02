@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -30,33 +30,29 @@ class QEvent /Supertype=sip.wrapper/
     switch (sipCpp->type())
     {
     case QEvent::Timer:
-            sipType = sipType_QTimerEvent;
-            break;
+        sipType = sipType_QTimerEvent;
+        break;
     
     case QEvent::ChildAdded:
     case QEvent::ChildPolished:
     case QEvent::ChildRemoved:
-            sipType = sipType_QChildEvent;
-            break;
+        sipType = sipType_QChildEvent;
+        break;
     
-    #if QT_VERSION >= 0x040200
     case QEvent::DynamicPropertyChange:
-            sipType = sipType_QDynamicPropertyChangeEvent;
-            break;
-    #endif
+        sipType = sipType_QDynamicPropertyChangeEvent;
+        break;
     
-    #if QT_VERSION >= 0x040600
     case QEvent::StateMachineSignal:
-            sipType = sipType_QStateMachine_SignalEvent;
-            break;
+        sipType = sipType_QStateMachine_SignalEvent;
+        break;
     
     case QEvent::StateMachineWrapped:
-            sipType = sipType_QStateMachine_WrappedEvent;
-            break;
-    #endif
+        sipType = sipType_QStateMachine_WrappedEvent;
+        break;
     
     default:
-            sipType = 0;
+        sipType = 0;
     }
 %End
 
@@ -83,6 +79,7 @@ public:
         Close,
         ParentChange,
         ParentAboutToChange,
+        ThreadChange,
         WindowActivate,
         WindowDeactivate,
         ShowToParent,
@@ -114,9 +111,6 @@ public:
         UpdateLater,
         ContextMenu,
         InputMethod,
-%If (- Qt_5_0_0)
-        AccessibilityPrepare,
-%End
         TabletMove,
         LocaleChange,
         LanguageChange,
@@ -146,13 +140,9 @@ public:
         ShortcutOverride,
         WhatsThisClicked,
         ToolBarChange,
-%If (Qt_4_3_0 -)
         ApplicationActivate,
-%End
         ApplicationActivated,
-%If (Qt_4_3_0 -)
         ApplicationDeactivate,
-%End
         ApplicationDeactivated,
         QueryWhatsThis,
         EnterWhatsThisMode,
@@ -161,178 +151,74 @@ public:
         HoverEnter,
         HoverLeave,
         HoverMove,
-%If (- Qt_5_0_0)
-        AccessibilityHelp,
-%End
-%If (- Qt_5_0_0)
-        AccessibilityDescription,
-%End
-%If (- Qt_5_0_0)
-        MenubarUpdated,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneMouseMove,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneMousePress,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneMouseRelease,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneMouseDoubleClick,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneContextMenu,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneHoverEnter,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneHoverMove,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneHoverLeave,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneHelp,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneDragEnter,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneDragMove,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneDragLeave,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneDrop,
-%End
-%If (Qt_4_2_0 -)
         GraphicsSceneWheel,
-%End
-%If (Qt_4_4_0 -)
         GraphicsSceneResize,
-%End
-%If (Qt_4_4_0 -)
         GraphicsSceneMove,
-%End
-%If (Qt_4_2_0 -)
         KeyboardLayoutChange,
-%End
-%If (Qt_4_2_0 -)
         DynamicPropertyChange,
-%End
-%If (Qt_4_2_0 -)
         TabletEnterProximity,
-%End
-%If (Qt_4_2_0 -)
         TabletLeaveProximity,
-%End
-%If (Qt_4_3_0 -)
         NonClientAreaMouseMove,
-%End
-%If (Qt_4_3_0 -)
         NonClientAreaMouseButtonPress,
-%End
-%If (Qt_4_3_0 -)
         NonClientAreaMouseButtonRelease,
-%End
-%If (Qt_4_3_0 -)
         NonClientAreaMouseButtonDblClick,
-%End
-%If (Qt_4_3_0 -)
         MacSizeChange,
-%End
-%If (Qt_4_3_0 -)
         ContentsRectChange,
-%End
-%If (Qt_4_4_0 -)
         CursorChange,
-%End
-%If (Qt_4_4_0 -)
         ToolTipChange,
-%End
-%If (Qt_4_4_0 -)
         GrabMouse,
-%End
-%If (Qt_4_4_0 -)
         UngrabMouse,
-%End
-%If (Qt_4_4_0 -)
         GrabKeyboard,
-%End
-%If (Qt_4_4_0 -)
         UngrabKeyboard,
-%End
-%If (Qt_4_6_0 -)
         StateMachineSignal,
-%End
-%If (Qt_4_6_0 -)
         StateMachineWrapped,
-%End
-%If (Qt_4_6_0 -)
         TouchBegin,
-%End
-%If (Qt_4_6_0 -)
         TouchUpdate,
-%End
-%If (Qt_4_6_0 -)
         TouchEnd,
-%End
-%If (Qt_4_6_0 -)
         RequestSoftwareInputPanel,
-%End
-%If (Qt_4_6_0 -)
         CloseSoftwareInputPanel,
-%End
-%If (Qt_4_6_0 -)
         WinIdChange,
-%End
-%If (Qt_4_6_0 -)
         Gesture,
-%End
-%If (Qt_4_6_0 -)
         GestureOverride,
-%End
-%If (Qt_5_0_0 -)
         FocusAboutToChange,
-%End
-%If (Qt_5_0_0 -)
         ScrollPrepare,
-%End
-%If (Qt_5_0_0 -)
         Scroll,
-%End
-%If (Qt_5_0_0 -)
         Expose,
-%End
-%If (Qt_5_0_0 -)
         InputMethodQuery,
-%End
-%If (Qt_5_0_0 -)
         OrientationChange,
-%End
-%If (Qt_5_0_0 -)
         TouchCancel,
-%End
-%If (Qt_4_8_4 -)
         PlatformPanel,
+%If (Qt_5_1_0 -)
+        ApplicationStateChange,
+%End
+%If (Qt_5_4_0 -)
+        ReadOnlyChange,
+%End
+%If (Qt_5_5_0 -)
+        PlatformSurface,
+%End
+%If (Qt_5_9_0 -)
+        TabletTrackingChange,
 %End
         User,
         MaxUser,
     };
 
-%If (Qt_5_0_0 -)
     explicit QEvent(QEvent::Type type);
-%End
-%If (- Qt_5_0_0)
-    QEvent(QEvent::Type type);
-%End
-%If (Qt_5_0_0 -)
     QEvent(const QEvent &other);
-%End
     virtual ~QEvent();
     QEvent::Type type() const;
     bool spontaneous() const;
@@ -340,9 +226,7 @@ public:
     bool isAccepted() const;
     void accept();
     void ignore();
-%If (Qt_4_4_0 -)
     static int registerEventType(int hint = -1);
-%End
 };
 
 class QTimerEvent : QEvent
@@ -352,12 +236,7 @@ class QTimerEvent : QEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QTimerEvent(int timerId);
-%End
-%If (- Qt_5_0_0)
-    QTimerEvent(int timerId);
-%End
     virtual ~QTimerEvent();
     int timerId() const;
 };
@@ -377,8 +256,6 @@ public:
     bool removed() const;
 };
 
-%If (Qt_4_2_0 -)
-
 class QDynamicPropertyChangeEvent : QEvent
 {
 %TypeHeaderCode
@@ -386,14 +263,7 @@ class QDynamicPropertyChangeEvent : QEvent
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QDynamicPropertyChangeEvent(const QByteArray &name);
-%End
-%If (- Qt_5_0_0)
-    QDynamicPropertyChangeEvent(const QByteArray &name);
-%End
     virtual ~QDynamicPropertyChangeEvent();
     QByteArray propertyName() const;
 };
-
-%End

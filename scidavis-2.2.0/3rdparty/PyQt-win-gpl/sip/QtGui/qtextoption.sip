@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -50,36 +50,25 @@ public:
     enum Flag
     {
         IncludeTrailingSpaces,
-%If (Qt_4_5_0 -)
         ShowTabsAndSpaces,
-%End
-%If (Qt_4_5_0 -)
         ShowLineAndParagraphSeparators,
-%End
-%If (Qt_4_5_0 -)
         AddSpaceForLineAndParagraphSeparators,
-%End
-%If (Qt_4_5_0 -)
         SuppressColors,
+%If (Qt_5_7_0 -)
+        ShowDocumentTerminator,
 %End
     };
 
     typedef QFlags<QTextOption::Flag> Flags;
-    QFlags<QTextOption::Flag> flags() const;
+    QTextOption::Flags flags() const;
     qreal tabStop() const;
-%If (Qt_5_0_0 -)
     void setTabArray(const QList<qreal> &tabStops);
-%End
-%If (- Qt_5_0_0)
-    void setTabArray(QList<qreal> tabStops);
-%End
     QList<qreal> tabArray() const;
     void setUseDesignMetrics(bool b);
     bool useDesignMetrics() const;
     void setAlignment(Qt::Alignment aalignment);
-    void setFlags(QFlags<QTextOption::Flag> aflags);
+    void setFlags(QTextOption::Flags flags);
     void setTabStop(qreal atabStop);
-%If (Qt_4_4_0 -)
 
     enum TabType
     {
@@ -89,9 +78,6 @@ public:
         DelimiterTab,
     };
 
-%End
-%If (Qt_4_4_0 -)
-
     struct Tab
     {
 %TypeHeaderCode
@@ -99,9 +85,7 @@ public:
 %End
 
         Tab();
-%If (Qt_4_7_0 -)
         Tab(qreal pos, QTextOption::TabType tabType, QChar delim = QChar());
-%End
         bool operator==(const QTextOption::Tab &other) const;
         bool operator!=(const QTextOption::Tab &other) const;
         qreal position;
@@ -109,15 +93,13 @@ public:
         QChar delimiter;
     };
 
-%End
-%If (Qt_5_0_0 -)
     void setTabs(const QList<QTextOption::Tab> &tabStops);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    void setTabs(QList<QTextOption::Tab> tabStops);
-%End
-%If (Qt_4_4_0 -)
     QList<QTextOption::Tab> tabs() const;
+%If (Qt_5_10_0 -)
+    void setTabStopDistance(qreal tabStopDistance);
+%End
+%If (Qt_5_10_0 -)
+    qreal tabStopDistance() const;
 %End
 };
 

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,26 +27,24 @@ class QPolygon
 %End
 
 %TypeCode
-// Set the points of a polygon from a Python list.
-static bool setPointsFromList(QPolygon *poly, PyObject *l)
+// Get a set of coordinate pairs of a polygon from a Python list.
+static int *coordsFromList(PyObject *l, int &nr_points)
 {
-    int *coords = new int[PyList_GET_SIZE(l)];
+    int *coords = new int[PyList_Size(l)];
+    nr_points = PyList_Size(l) >> 1;
 
-    for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(l); ++i)
+    for (Py_ssize_t i = 0; i < PyList_Size(l); ++i)
     {
-        coords[i] = SIPLong_AsLong(PyList_GET_ITEM(l, i));
+        coords[i] = SIPLong_AsLong(PyList_GetItem(l, i));
 
         if (PyErr_Occurred() != NULL)
         {
             delete[] coords;
-            return false;
+            return 0;
         }
     }
 
-    poly->setPoints(PyList_GET_SIZE(l) >> 1, coords);
-
-    delete[] coords;
-    return true;
+    return coords;
 }
 %End
 
@@ -59,8 +57,8 @@ static bool setPointsFromList(QPolygon *poly, PyObject *l)
     
         sipCpp->point(i, &x, &y);
     
-        PyList_SET_ITEM(pl, p, SIPLong_FromLong(x));
-        PyList_SET_ITEM(pl, p + 1, SIPLong_FromLong(y));
+        PyList_SetItem(pl, p, SIPLong_FromLong(x));
+        PyList_SetItem(pl, p + 1, SIPLong_FromLong(y));
     }
     
     sipRes = Py_BuildValue((char *)"(N)", pl);
@@ -70,35 +68,31 @@ public:
     QPolygon();
     ~QPolygon();
     QPolygon(const QPolygon &a);
-    QPolygon(const QVector<QPoint> &v);
-    QPolygon(const QRect &rectangle, bool closed = false);
-%If (Qt_5_0_0 -)
-    explicit QPolygon(int asize);
-%End
-%If (- Qt_5_0_0)
-    QPolygon(int asize);
-%End
     QPolygon(SIP_PYLIST points /TypeHint="List[int]"/) /NoDerived/;
 %MethodCode
-        sipCpp = new QPolygon();
+        int nr_points;
+        int *coords = coordsFromList(a0, nr_points);
         
-        if (!setPointsFromList(sipCpp, a0))
+        if (coords)
         {
-            delete sipCpp;
-            sipCpp = 0;
-            sipIsErr = 1;
+            sipCpp = new QPolygon();
+            sipCpp->setPoints(nr_points, coords);
+            delete[] coords;
+        }
+        else
+        {
+            // Invoke the subsequent QVector<QPoint> overload.
+            sipError = sipErrorContinue;
         }
 %End
 
+    QPolygon(const QVector<QPoint> &v);
+    QPolygon(const QRect &rectangle, bool closed = false);
+    explicit QPolygon(int asize);
     QPolygon(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QPolygon>())
             sipCpp = new QPolygon(a0->value<QPolygon>());
-        #else
-        if (qVariantCanConvert<QPolygon>(*a0))
-            sipCpp = new QPolygon(qVariantValue<QPolygon>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -108,22 +102,32 @@ public:
     QPoint point(int index) const;
     void setPoints(SIP_PYLIST points /TypeHint="List[int]"/);
 %MethodCode
-        if (!setPointsFromList(sipCpp, a0))
+        int nr_points;
+        int *coords = coordsFromList(a0, nr_points);
+        
+        if (coords)
+        {
+            sipCpp->setPoints(nr_points, coords);
+            delete[] coords;
+        }
+        else
+        {
             sipIsErr = 1;
+        }
 %End
 
     void setPoints(int firstx, int firsty, ...);
 %MethodCode
         // Accept at least one pair of integer coordinates.
-        int nPoints = 1 + ((PyTuple_GET_SIZE(a2) + 1) >> 1);
+        int nPoints = 1 + ((PyTuple_Size(a2) + 1) >> 1);
         
         int *points = new int[nPoints * 2];
         
         points[0] = a0;
         points[1] = a1;
         
-        for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(a2); ++i)
-            points[2 + i] = SIPLong_AsLong(PyTuple_GET_ITEM(a2, i));
+        for (Py_ssize_t i = 0; i < PyTuple_Size(a2); ++i)
+            points[2 + i] = SIPLong_AsLong(PyTuple_GetItem(a2, i));
         
         sipCpp->setPoints(nPoints, points);
         
@@ -133,15 +137,15 @@ public:
     void putPoints(int index, int firstx, int firsty, ...);
 %MethodCode
         // Accept at least one pair of integer coordinates.
-        int nPoints = 1 + ((PyTuple_GET_SIZE(a3) + 1) >> 1);
+        int nPoints = 1 + ((PyTuple_Size(a3) + 1) >> 1);
         
         int *points = new int[nPoints * 2];
         
         points[0] = a1;
         points[1] = a2;
         
-        for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(a3); ++i)
-            points[2 + i] = SIPLong_AsLong(PyTuple_GET_ITEM(a3, i));
+        for (Py_ssize_t i = 0; i < PyTuple_Size(a3); ++i)
+            points[2 + i] = SIPLong_AsLong(PyTuple_GetItem(a3, i));
         
         sipCpp->putPoints(a0, nPoints, points);
         
@@ -152,24 +156,12 @@ public:
     void setPoint(int index, const QPoint &pt);
     void setPoint(int index, int x, int y);
     void translate(const QPoint &offset);
-%If (Qt_4_3_0 -)
     bool containsPoint(const QPoint &pt, Qt::FillRule fillRule) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygon united(const QPolygon &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygon intersected(const QPolygon &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygon subtracted(const QPolygon &r) const;
-%End
-%If (Qt_4_6_0 -)
     QPolygon translated(int dx, int dy) const;
-%End
-%If (Qt_4_6_0 -)
     QPolygon translated(const QPoint &offset) const;
-%End
 // Methods inherited from QVector<QPoint> and Python special methods.
 // Keep in sync with QPolygonF and QXmlStreamAttributes.
 
@@ -221,7 +213,7 @@ SIP_PYOBJECT operator<<(const QPoint &value);
 
 QPoint &operator[](int i);
 %MethodCode
-SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
 
 if (idx < 0)
     sipIsErr = 1;
@@ -245,12 +237,12 @@ else
 
 void __setitem__(SIP_PYSLICE slice, const QPolygon &list);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     int vlen = a1->count();
@@ -264,7 +256,7 @@ else
     {
         QVector<QPoint>::const_iterator it = a1->begin();
 
-        for (i = 0; i < slicelength; ++i)
+        for (Py_ssize_t i = 0; i < slicelength; ++i)
         {
             (*sipCpp)[start] = *it;
             start += step;
@@ -276,11 +268,7 @@ else
 
 void __delitem__(int i);
 %MethodCode
-int len;
-
-len = sipCpp->count();
-
-if ((a0 = (int)sipConvertFromSequenceIndex(a0, len)) < 0)
+if ((a0 = (int)sipConvertFromSequenceIndex(a0, sipCpp->count())) < 0)
     sipIsErr = 1;
 else
     sipCpp->remove(a0);
@@ -288,33 +276,35 @@ else
 
 void __delitem__(SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
-    for (i = 0; i < slicelength; ++i)
+{
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         sipCpp->remove(start);
         start += step - 1;
     }
+}
 %End
 
 QPolygon &operator[](SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     sipRes = new QPolygon();
 
-    for (i = 0; i < slicelength; ++i)
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         (*sipRes) += (*sipCpp)[start];
         start += step;
@@ -327,8 +317,9 @@ int __contains__(const QPoint &value);
 // It looks like you can't assign QBool to int.
 sipRes = bool(sipCpp->contains(*a0));
 %End
-%If (Qt_4_8_0 -)
-    void swap(QPolygon &other);
+    void swap(QPolygon &other /Constrained/);
+%If (Qt_5_10_0 -)
+    bool intersects(const QPolygon &r) const;
 %End
 };
 
@@ -345,35 +336,18 @@ public:
     QPolygonF(const QVector<QPointF> &v);
     QPolygonF(const QRectF &r);
     QPolygonF(const QPolygon &a);
-%If (Qt_5_0_0 -)
     explicit QPolygonF(int asize);
-%End
-%If (- Qt_5_0_0)
-    QPolygonF(int asize);
-%End
     void translate(const QPointF &offset);
     QPolygon toPolygon() const;
     bool isClosed() const;
     QRectF boundingRect() const;
     void translate(qreal dx, qreal dy);
-%If (Qt_4_3_0 -)
     bool containsPoint(const QPointF &pt, Qt::FillRule fillRule) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygonF united(const QPolygonF &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygonF intersected(const QPolygonF &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygonF subtracted(const QPolygonF &r) const;
-%End
-%If (Qt_4_6_0 -)
     QPolygonF translated(const QPointF &offset) const;
-%End
-%If (Qt_4_6_0 -)
     QPolygonF translated(qreal dx, qreal dy) const;
-%End
 // Methods inherited from QVector<QPointF> and Python special methods.
 // Keep in sync with QPolygon and QXmlStreamAttributes.
 
@@ -425,7 +399,7 @@ SIP_PYOBJECT operator<<(const QPointF &value);
 
 QPointF &operator[](int i);
 %MethodCode
-SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
 
 if (idx < 0)
     sipIsErr = 1;
@@ -449,12 +423,12 @@ else
 
 void __setitem__(SIP_PYSLICE slice, const QPolygonF &list);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     int vlen = a1->count();
@@ -468,7 +442,7 @@ else
     {
         QVector<QPointF>::const_iterator it = a1->begin();
 
-        for (i = 0; i < slicelength; ++i)
+        for (Py_ssize_t i = 0; i < slicelength; ++i)
         {
             (*sipCpp)[start] = *it;
             start += step;
@@ -480,11 +454,7 @@ else
 
 void __delitem__(int i);
 %MethodCode
-int len;
-
-len = sipCpp->count();
-
-if ((a0 = (int)sipConvertFromSequenceIndex(a0, len)) < 0)
+if ((a0 = (int)sipConvertFromSequenceIndex(a0, sipCpp->count())) < 0)
     sipIsErr = 1;
 else
     sipCpp->remove(a0);
@@ -492,33 +462,35 @@ else
 
 void __delitem__(SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
-    for (i = 0; i < slicelength; ++i)
+{
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         sipCpp->remove(start);
         start += step - 1;
     }
+}
 %End
 
 QPolygonF &operator[](SIP_PYSLICE slice);
 %MethodCode
-SIP_SSIZE_T len, start, stop, step, slicelength, i;
+Py_ssize_t start, stop, step, slicelength;
 
-len = sipCpp->count();
-
-if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+{
     sipIsErr = 1;
+}
 else
 {
     sipRes = new QPolygonF();
 
-    for (i = 0; i < slicelength; ++i)
+    for (Py_ssize_t i = 0; i < slicelength; ++i)
     {
         (*sipRes) += (*sipCpp)[start];
         start += step;
@@ -531,16 +503,13 @@ int __contains__(const QPointF &value);
 // It looks like you can't assign QBool to int.
 sipRes = bool(sipCpp->contains(*a0));
 %End
-%If (Qt_4_8_0 -)
-    void swap(QPolygonF &other);
+    void swap(QPolygonF &other /Constrained/);
+%If (Qt_5_10_0 -)
+    bool intersects(const QPolygonF &r) const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &stream, const QPolygonF &array /Constrained/);
-QDataStream &operator>>(QDataStream &stream, QPolygonF &array /Constrained/);
-%If (Qt_4_4_0 -)
-QDataStream &operator<<(QDataStream &stream, const QPolygon &polygon /Constrained/);
-%End
-%If (Qt_4_4_0 -)
-QDataStream &operator>>(QDataStream &stream, QPolygon &polygon /Constrained/);
-%End
+QDataStream &operator<<(QDataStream &stream, const QPolygonF &array /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &stream, QPolygonF &array /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &stream, const QPolygon &polygon /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &stream, QPolygon &polygon /Constrained/) /ReleaseGIL/;

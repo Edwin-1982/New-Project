@@ -1,8 +1,8 @@
 // This defines the interfaces for the pyqtMethodProxy type.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -51,10 +51,14 @@ typedef struct _qpycore_pyqtMethodProxy {
     const QByteArray *py_name;
 } qpycore_pyqtMethodProxy;
 
-extern PyTypeObject qpycore_pyqtMethodProxy_Type;
-
 }
 
+
+// The type object.
+extern PyTypeObject *qpycore_pyqtMethodProxy_TypeObject;
+
+
+bool qpycore_pyqtMethodProxy_init_type();
 
 PyObject *qpycore_pyqtMethodProxy_New(QObject *qobject, int method_index,
         const QByteArray &py_name);

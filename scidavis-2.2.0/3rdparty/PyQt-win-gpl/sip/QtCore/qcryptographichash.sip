@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-
 class QCryptographicHash
 {
 %TypeHeaderCode
@@ -34,38 +32,48 @@ public:
         Md4,
         Md5,
         Sha1,
-%If (Qt_5_0_0 -)
         Sha224,
-%End
-%If (Qt_5_0_0 -)
         Sha256,
-%End
-%If (Qt_5_0_0 -)
         Sha384,
-%End
-%If (Qt_5_0_0 -)
         Sha512,
+%If (Qt_5_1_0 -)
+        Sha3_224,
+%End
+%If (Qt_5_1_0 -)
+        Sha3_256,
+%End
+%If (Qt_5_1_0 -)
+        Sha3_384,
+%End
+%If (Qt_5_1_0 -)
+        Sha3_512,
+%End
+%If (Qt_5_9_2 -)
+        Keccak_224,
+%End
+%If (Qt_5_9_2 -)
+        Keccak_256,
+%End
+%If (Qt_5_9_2 -)
+        Keccak_384,
+%End
+%If (Qt_5_9_2 -)
+        Keccak_512,
 %End
     };
 
-%If (Qt_5_0_0 -)
     explicit QCryptographicHash(QCryptographicHash::Algorithm method);
-%End
-%If (- Qt_5_0_0)
-    QCryptographicHash(QCryptographicHash::Algorithm method);
-%End
     ~QCryptographicHash();
     void reset();
-    void addData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, int length /ArraySize/);
+    void addData(const char *data /Array/, int length /ArraySize/);
     void addData(const QByteArray &data);
-%If (Qt_5_0_0 -)
     bool addData(QIODevice *device);
-%End
     QByteArray result() const;
     static QByteArray hash(const QByteArray &data, QCryptographicHash::Algorithm method);
+%If (Qt_5_12_0 -)
+    static int hashLength(QCryptographicHash::Algorithm method);
+%End
 
 private:
     QCryptographicHash(const QCryptographicHash &);
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,12 +27,7 @@ class QFontMetrics
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QFontMetrics(const QFont &);
-%End
-%If (- Qt_5_0_0)
-    QFontMetrics(const QFont &);
-%End
     QFontMetrics(const QFont &, QPaintDevice *pd);
     QFontMetrics(const QFontMetrics &);
     ~QFontMetrics();
@@ -48,12 +43,9 @@ public:
     bool inFont(QChar) const;
     int leftBearing(QChar) const;
     int rightBearing(QChar) const;
-    int width(QChar) const /API=QString:2 - , PyName=widthChar/;
-    int width(QChar) const /API=QString: - 2/;
+    int width(QChar) const /PyName=widthChar/;
     int width(const QString &text, int length = -1) const;
-    int charWidth(const QString &str, int pos) const;
-    QRect boundingRect(QChar) const /API=QString:2 - , PyName=boundingRectChar/;
-    QRect boundingRect(QChar) const /API=QString: - 2/;
+    QRect boundingRect(QChar) const /PyName=boundingRectChar/;
     QRect boundingRect(const QString &text) const;
     QRect boundingRect(const QRect &rect, int flags, const QString &text, int tabStops = 0, SIP_PYLIST tabArray /AllowNone,TypeHint="Optional[List[int]]"/ = 0) const;
 %MethodCode
@@ -89,27 +81,18 @@ public:
     int overlinePos() const;
     int strikeOutPos() const;
     int lineWidth() const;
-%If (Qt_4_2_0 -)
     int averageCharWidth() const;
-%End
-%If (Qt_4_2_0 -)
     QString elidedText(const QString &text, Qt::TextElideMode mode, int width, int flags = 0) const;
-%End
     bool operator==(const QFontMetrics &other) const;
-%If (Qt_4_2_0 -)
     bool operator!=(const QFontMetrics &other) const;
-%End
-%If (- Qt_4_2_0)
-    bool operator!=(const QFontMetrics &other);
-%End
-%If (Qt_4_3_0 -)
     QRect tightBoundingRect(const QString &text) const;
-%End
-%If (Qt_4_8_0 -)
     bool inFontUcs4(uint character) const;
+    void swap(QFontMetrics &other /Constrained/);
+%If (Qt_5_8_0 -)
+    int capHeight() const;
 %End
-%If (Qt_5_0_0 -)
-    void swap(QFontMetrics &other);
+%If (Qt_5_11_0 -)
+    int horizontalAdvance(const QString &, int length = -1) const;
 %End
 };
 
@@ -120,16 +103,9 @@ class QFontMetricsF
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QFontMetricsF(const QFont &);
-%End
-%If (- Qt_5_0_0)
-    QFontMetricsF(const QFont &);
-%End
     QFontMetricsF(const QFont &, QPaintDevice *pd);
-%If (Qt_4_2_0 -)
     QFontMetricsF(const QFontMetrics &);
-%End
     QFontMetricsF(const QFontMetricsF &);
     ~QFontMetricsF();
     qreal ascent() const;
@@ -144,11 +120,9 @@ public:
     bool inFont(QChar) const;
     qreal leftBearing(QChar) const;
     qreal rightBearing(QChar) const;
-    qreal width(QChar) const /API=QString:2 - , PyName=widthChar/;
-    qreal width(QChar) const /API=QString: - 2/;
+    qreal width(QChar) const /PyName=widthChar/;
     qreal width(const QString &string) const;
-    QRectF boundingRect(QChar) const /API=QString:2 - , PyName=boundingRectChar/;
-    QRectF boundingRect(QChar) const /API=QString: - 2/;
+    QRectF boundingRect(QChar) const /PyName=boundingRectChar/;
     QRectF boundingRect(const QString &string) const;
     QRectF boundingRect(const QRectF &rect, int flags, const QString &text, int tabStops = 0, SIP_PYLIST tabArray /AllowNone,TypeHint="Optional[List[int]]"/ = 0) const;
 %MethodCode
@@ -174,22 +148,18 @@ public:
     qreal overlinePos() const;
     qreal strikeOutPos() const;
     qreal lineWidth() const;
-%If (Qt_4_2_0 -)
     qreal averageCharWidth() const;
-%End
-%If (Qt_4_2_0 -)
     QString elidedText(const QString &text, Qt::TextElideMode mode, qreal width, int flags = 0) const;
-%End
     bool operator==(const QFontMetricsF &other) const;
     bool operator!=(const QFontMetricsF &other) const;
-%If (Qt_4_3_0 -)
     QRectF tightBoundingRect(const QString &text) const;
-%End
-%If (Qt_4_8_0 -)
     bool inFontUcs4(uint character) const;
+    void swap(QFontMetricsF &other /Constrained/);
+%If (Qt_5_8_0 -)
+    qreal capHeight() const;
 %End
-%If (Qt_5_0_0 -)
-    void swap(QFontMetricsF &other);
+%If (Qt_5_11_0 -)
+    qreal horizontalAdvance(const QString &string, int length = -1) const;
 %End
 };
 
@@ -206,11 +176,11 @@ int *qtgui_tabarray(PyObject *l)
     if (!l || l == Py_None)
         return 0;
 
-    int *arr = new int[PyList_GET_SIZE(l) + 1];
-    SIP_SSIZE_T i;
+    int *arr = new int[PyList_Size(l) + 1];
+    Py_ssize_t i;
 
-    for (i = 0; i < PyList_GET_SIZE(l); ++i)
-        arr[i] = SIPLong_AsLong(PyList_GET_ITEM(l, i));
+    for (i = 0; i < PyList_Size(l); ++i)
+        arr[i] = SIPLong_AsLong(PyList_GetItem(l, i));
 
     arr[i] = 0;
 

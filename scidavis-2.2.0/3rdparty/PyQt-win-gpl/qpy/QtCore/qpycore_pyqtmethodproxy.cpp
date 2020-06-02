@@ -1,8 +1,8 @@
 // This contains the implementation of the pyqtMethodProxy type.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,6 +20,8 @@
 
 #include <Python.h>
 
+#include <sip.h>
+
 #include <QGenericArgument>
 #include <QGenericReturnArgument>
 #include <QMetaMethod>
@@ -27,6 +29,10 @@
 
 #include "qpycore_chimera.h"
 #include "qpycore_pyqtmethodproxy.h"
+
+
+// The type object.
+PyTypeObject *qpycore_pyqtMethodProxy_TypeObject;
 
 
 // Forward declarations.
@@ -41,13 +47,32 @@ static void parse_arg(PyObject *args, int arg_nr,
         Chimera::Storage **storage, bool &failed, const char *py_name);
 
 
-// The pyqtMethodProxy type object.
-PyTypeObject qpycore_pyqtMethodProxy_Type = {
+#if PY_VERSION_HEX >= 0x03040000
+// Define the slots.
+static PyType_Slot qpycore_pyqtMethodProxy_Slots[] = {
+    {Py_tp_new,         (void *)PyType_GenericNew},
+    {Py_tp_dealloc,     (void *)pyqtMethodProxy_dealloc},
+    {Py_tp_call,        (void *)pyqtMethodProxy_call},
+    {0,                 0}
+};
+
+
+// Define the type.
+static PyType_Spec qpycore_pyqtMethodProxy_Spec = {
+    "PyQt5.QtCore.pyqtMethodProxy",
+    sizeof (qpycore_pyqtMethodProxy),
+    0,
+    Py_TPFLAGS_DEFAULT,
+    qpycore_pyqtMethodProxy_Slots
+};
+#else
+// Define the type.
+static PyTypeObject qpycore_pyqtMethodProxy_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
 #if PY_VERSION_HEX >= 0x02050000
-    "PyQt4.QtCore.pyqtMethodProxy", /* tp_name */
+    "PyQt5.QtCore.pyqtMethodProxy", /* tp_name */
 #else
-    const_cast<char *>("PyQt4.QtCore.pyqtMethodProxy"), /* tp_name */
+    const_cast<char *>("PyQt5.QtCore.pyqtMethodProxy"), /* tp_name */
 #endif
     sizeof (qpycore_pyqtMethodProxy),   /* tp_basicsize */
     0,                      /* tp_itemsize */
@@ -93,13 +118,12 @@ PyTypeObject qpycore_pyqtMethodProxy_Type = {
     0,                      /* tp_subclasses */
     0,                      /* tp_weaklist */
     0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02060000
     0,                      /* tp_version_tag */
-#endif
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
 #endif
 };
+#endif
 
 
 // The type dealloc slot.
@@ -109,7 +133,7 @@ static void pyqtMethodProxy_dealloc(PyObject *self)
 
     delete mp->py_name;
 
-    Py_TYPE(self)->tp_free(self);
+    PyObject_Del(self);
 }
 
 
@@ -135,11 +159,7 @@ static PyObject *pyqtMethodProxy_call(PyObject *self, PyObject *args,
     if (PyTuple_Size(args) != arg_types.size())
     {
         PyErr_Format(PyExc_TypeError,
-#if PY_VERSION_HEX >= 0x02050000
                 "%s() called with %zd arguments but %d expected",
-#else
-                "%s() called with %d arguments but %d expected",
-#endif
                 py_name, PyTuple_Size(args), arg_types.size());
         return 0;
     }
@@ -187,17 +207,8 @@ static PyObject *pyqtMethodProxy_call(PyObject *self, PyObject *args,
 
     if (!failed)
     {
-#if QT_VERSION >= 0x040500
         failed = !method.invoke(mp->qobject, ret, a0, a1, a2, a3, a4, a5, a6,
                 a7, a8, a9);
-#else
-        // Get the method name.
-        QByteArray mname(method.signature());
-        mname.truncate(mname.indexOf('('));
-
-        failed = !QMetaObject::invokeMethod(mp->qobject, mname.constData(),
-                ret, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
-#endif
 
         if (failed)
         {
@@ -252,7 +263,7 @@ static void parse_arg(PyObject *args, int arg_nr,
     if (arg_nr >= types.size())
         return;
 
-    PyObject *py_arg = PyTuple_GET_ITEM(args, arg_nr);
+    PyObject *py_arg = PyTuple_GetItem(args, arg_nr);
     const QByteArray &cpp_type = types.at(arg_nr);
 
     const Chimera *ct = Chimera::parse(cpp_type);
@@ -270,7 +281,7 @@ static void parse_arg(PyObject *args, int arg_nr,
 
         PyErr_Format(PyExc_TypeError,
                 "unable to convert argument %d of %s from '%s' to '%s'",
-                arg_nr, py_name, Py_TYPE(py_arg)->tp_name,
+                arg_nr, py_name, sipPyTypeName(Py_TYPE(py_arg)),
                 cpp_type.constData());
 
         failed = true;
@@ -283,6 +294,25 @@ static void parse_arg(PyObject *args, int arg_nr,
 }
 
 
+// Initialise the type and return true if there was no error.
+bool qpycore_pyqtMethodProxy_init_type()
+{
+#if PY_VERSION_HEX >= 0x03040000
+    qpycore_pyqtMethodProxy_TypeObject = (PyTypeObject *)PyType_FromSpec(
+            &qpycore_pyqtMethodProxy_Spec);
+
+    return qpycore_pyqtMethodProxy_TypeObject;
+#else
+    if (PyType_Ready(&qpycore_pyqtMethodProxy_Type) < 0)
+        return false;
+
+    qpycore_pyqtMethodProxy_TypeObject = &qpycore_pyqtMethodProxy_Type;
+
+    return true;
+#endif
+}
+
+
 // Create a proxy for a bound introspected method.
 PyObject *qpycore_pyqtMethodProxy_New(QObject *qobject, int method_index,
         const QByteArray &py_name)
@@ -290,7 +320,7 @@ PyObject *qpycore_pyqtMethodProxy_New(QObject *qobject, int method_index,
     qpycore_pyqtMethodProxy *mp;
 
     mp = (qpycore_pyqtMethodProxy *)PyType_GenericAlloc(
-            &qpycore_pyqtMethodProxy_Type, 0);
+            qpycore_pyqtMethodProxy_TypeObject, 0);
 
     if (!mp)
         return 0;

@@ -1,8 +1,8 @@
 // This defines the interfaces of the helpers for QObject.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -26,23 +26,15 @@
 
 #include <QMetaObject>
 
-#include "qpycore_namespace.h"
-#include "qpycore_sip.h"
-
-
-QT_BEGIN_NAMESPACE
-class QObject;
-QT_END_NAMESPACE
+#include "sipAPIQtCore.h"
 
 
 const QMetaObject *qpycore_qobject_metaobject(sipSimpleWrapper *pySelf,
         sipTypeDef *base);
 int qpycore_qobject_qt_metacall(sipSimpleWrapper *pySelf, sipTypeDef *base,
         QMetaObject::Call _c, int _id, void **_a);
-int qpycore_qobject_qt_metacast(sipSimpleWrapper *pySelf, sipTypeDef *base,
-        const char *_clname);
-QObject *qpycore_qobject_sender(QObject *obj);
-int qpycore_qobject_receivers(QObject *obj, const char *signal, int nr);
+bool qpycore_qobject_qt_metacast(sipSimpleWrapper *pySelf,
+        const sipTypeDef *base, const char *_clname, void **);
 
 
 #endif

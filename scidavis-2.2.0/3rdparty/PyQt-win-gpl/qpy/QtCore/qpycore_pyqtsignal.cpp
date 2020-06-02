@@ -1,8 +1,8 @@
 // This contains the implementation of the pyqtSignal type.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -30,6 +30,10 @@
 #include "qpycore_pyqtsignal.h"
 
 
+// The type object.
+PyTypeObject *qpycore_pyqtSignal_TypeObject;
+
+
 // Forward declarations.
 extern "C" {
 static PyObject *pyqtSignal_call(PyObject *self, PyObject *args, PyObject *kw);
@@ -40,14 +44,68 @@ static int pyqtSignal_init(PyObject *self, PyObject *args, PyObject *kwd_args);
 static PyObject *pyqtSignal_repr(PyObject *self);
 static PyObject *pyqtSignal_mp_subscript(PyObject *self, PyObject *subscript);
 static PyObject *pyqtSignal_get_doc(PyObject *self, void *);
+static PyObject *pyqtSignal_get_signatures(PyObject *self, void *);
 }
 
 static int init_signal_from_types(qpycore_pyqtSignal *ps, const char *name,
+        const QList<QByteArray> *parameter_names, int revision,
         PyObject *types);
 static void append_overload(qpycore_pyqtSignal *ps);
-static bool is_signal_name(const char *sig, const char *name, uint name_len);
+static bool is_signal_name(const char *sig, const QByteArray &name);
 
 
+// Doc-strings.
+PyDoc_STRVAR(pyqtSignal_doc,
+"pyqtSignal(*types, name: str = ..., revision: int = ..., arguments: Sequence = ...) -> PYQT_SIGNAL\n"
+"\n"
+"types is normally a sequence of individual types.  Each type is either a\n"
+"type object or a string that is the name of a C++ type.  Alternatively\n"
+"each type could itself be a sequence of types each describing a different\n"
+"overloaded signal.\n"
+"name is the optional C++ name of the signal.  If it is not specified then\n"
+"the name of the class attribute that is bound to the signal is used.\n"
+"revision is the optional revision of the signal that is exported to QML.\n"
+"If it is not specified then 0 is used.\n"
+"arguments is the optional sequence of the names of the signal's arguments.\n");
+
+PyDoc_STRVAR(pyqtSignal_signatures_doc,
+"The signatures of each of the overloaded signals");
+
+
+// The getters/setters.
+static PyGetSetDef pyqtSignal_getset[] = {
+    {const_cast<char *>("__doc__"), pyqtSignal_get_doc, NULL, NULL, NULL},
+    {const_cast<char *>("signatures"), pyqtSignal_get_signatures, NULL,
+            const_cast<char *>(pyqtSignal_signatures_doc), NULL},
+    {NULL, NULL, NULL, NULL, NULL}
+};
+
+
+#if PY_VERSION_HEX >= 0x03040000
+// Define the slots.
+static PyType_Slot qpycore_pyqtSignal_Slots[] = {
+    {Py_tp_new,         (void *)PyType_GenericNew},
+    {Py_tp_init,        (void *)pyqtSignal_init},
+    {Py_tp_dealloc,     (void *)pyqtSignal_dealloc},
+    {Py_tp_doc,         (void *)pyqtSignal_doc},
+    {Py_tp_repr,        (void *)pyqtSignal_repr},
+    {Py_tp_call,        (void *)pyqtSignal_call},
+    {Py_tp_descr_get,   (void *)pyqtSignal_descr_get},
+    {Py_mp_subscript,   (void *)pyqtSignal_mp_subscript},
+    {Py_tp_getset,      pyqtSignal_getset},
+    {0,                 0}
+};
+
+
+// Define the type.
+static PyType_Spec qpycore_pyqtSignal_Spec = {
+    "PyQt5.QtCore.pyqtSignal",
+    sizeof (qpycore_pyqtSignal),
+    0,
+    Py_TPFLAGS_DEFAULT,
+    qpycore_pyqtSignal_Slots
+};
+#else
 // Define the mapping methods.
 static PyMappingMethods pyqtSignal_as_mapping = {
     0,                      /* mp_length */
@@ -56,31 +114,13 @@ static PyMappingMethods pyqtSignal_as_mapping = {
 };
 
 
-// The getters/setters.
-static PyGetSetDef pyqtSignal_getsets[] = {
-    {(char *)"__doc__", pyqtSignal_get_doc, NULL, NULL, NULL},
-    {NULL, NULL, NULL, NULL, NULL}
-};
-
-
-PyDoc_STRVAR(pyqtSignal_doc,
-"pyqtSignal(*types, name: str = ...) -> PYQT_SIGNAL\n"
-"\n"
-"types is normally a sequence of individual types.  Each type is either a\n"
-"type object or a string that is the name of a C++ type.  Alternatively\n"
-"each type could itself be a sequence of types each describing a different\n"
-"overloaded signal.\n"
-"name is the optional C++ name of the signal.  If it is not specified then\n"
-"the name of the class attribute that is bound to the signal is used.");
-
-
-// The pyqtSignal type object.
-PyTypeObject qpycore_pyqtSignal_Type = {
+// Define the type.
+static PyTypeObject qpycore_pyqtSignal_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
 #if PY_VERSION_HEX >= 0x02050000
-    "PyQt4.QtCore.pyqtSignal",  /* tp_name */
+    "PyQt5.QtCore.pyqtSignal",  /* tp_name */
 #else
-    const_cast<char *>("PyQt4.QtCore.pyqtSignal"),  /* tp_name */
+    const_cast<char *>("PyQt5.QtCore.pyqtSignal"),  /* tp_name */
 #endif
     sizeof (qpycore_pyqtSignal),    /* tp_basicsize */
     0,                      /* tp_itemsize */
@@ -109,7 +149,7 @@ PyTypeObject qpycore_pyqtSignal_Type = {
     0,                      /* tp_iternext */
     0,                      /* tp_methods */
     0,                      /* tp_members */
-    pyqtSignal_getsets,     /* tp_getset */
+    pyqtSignal_getset,      /* tp_getset */
     0,                      /* tp_base */
     0,                      /* tp_dict */
     pyqtSignal_descr_get,   /* tp_descr_get */
@@ -126,13 +166,12 @@ PyTypeObject qpycore_pyqtSignal_Type = {
     0,                      /* tp_subclasses */
     0,                      /* tp_weaklist */
     0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02060000
     0,                      /* tp_version_tag */
-#endif
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
 #endif
 };
+#endif
 
 
 // The __doc__ getter.
@@ -187,6 +226,43 @@ static PyObject *pyqtSignal_get_doc(PyObject *self, void *)
 }
 
 
+// The 'signatures' getter.
+static PyObject *pyqtSignal_get_signatures(PyObject *self, void *)
+{
+    qpycore_pyqtSignal *head = ((qpycore_pyqtSignal *)self)->default_signal;
+    qpycore_pyqtSignal *ps;
+    PyObject *sigs;
+    Py_ssize_t sig_nr;
+
+    // Count the number of overloads.
+    for (sig_nr = 0, ps = head; ps; ps = ps->next, ++sig_nr)
+        ;
+
+    sigs = PyTuple_New(sig_nr);
+    if (!sigs)
+        return 0;
+
+    for (sig_nr = 0, ps = head; ps; ps = ps->next, ++sig_nr)
+    {
+        PyObject *sig =
+#if PY_MAJOR_VERSION >= 3
+            PyUnicode_FromString
+#else
+            PyString_FromString
+#endif
+                (ps->parsed_signature->signature.constData() + 1);
+
+        if (!sig || PyTuple_SetItem(sigs, sig_nr, sig))
+        {
+            Py_DECREF(sigs);
+            return 0;
+        }
+    }
+
+    return sigs;
+}
+
+
 // The type repr slot.
 static PyObject *pyqtSignal_repr(PyObject *self)
 {
@@ -198,7 +274,7 @@ static PyObject *pyqtSignal_repr(PyObject *self)
 #else
         PyString_FromFormat
 #endif
-            ("<unbound PYQT_SIGNAL %s>", ps->signature->py_signature.constData());
+            ("<unbound PYQT_SIGNAL %s>", ps->parsed_signature->signature.constData() + 1);
 }
 
 
@@ -215,7 +291,10 @@ static void pyqtSignal_dealloc(PyObject *self)
 {
     qpycore_pyqtSignal *ps = (qpycore_pyqtSignal *)self;
 
-    delete ps->signature;
+    delete ps->parsed_signature;
+
+    if (ps->parameter_names)
+        delete ps->parameter_names;
 
     // If we are the default then we own the overloads references.
     if (ps == ps->default_signal)
@@ -231,7 +310,7 @@ static void pyqtSignal_dealloc(PyObject *self)
         }
     }
 
-    Py_TYPE(self)->tp_free(self);
+    PyObject_Del(self);
 }
 
 
@@ -270,54 +349,140 @@ static int pyqtSignal_init(PyObject *self, PyObject *args, PyObject *kwd_args)
     // Get the keyword arguments.
     PyObject *name_obj = 0;
     const char *name = 0;
+    int revision = 0;
+    QList<QByteArray> *parameter_names = 0;
 
     if (kwd_args)
     {
-        SIP_SSIZE_T pos = 0;
+        Py_ssize_t pos = 0;
         PyObject *key, *value;
 
         while (PyDict_Next(kwd_args, &pos, &key, &value))
         {
 #if PY_MAJOR_VERSION >= 3
-            if (PyUnicode_CompareWithASCIIString(key, "name") != 0)
-            {
-                PyErr_Format(PyExc_TypeError,
-                        "pyqtSignal() got an unexpected keyword argument '%U'",
-                        key);
-
-                Py_XDECREF(name_obj);
-                return -1;
-            }
+            if (PyUnicode_CompareWithASCIIString(key, "name") == 0)
 #else
             Q_ASSERT(PyString_Check(key));
 
-            if (qstrcmp(PyString_AS_STRING(key), "name") != 0)
+            if (qstrcmp(PyString_AsString(key), "name") == 0)
+#endif
             {
+                name_obj = value;
+                name = sipString_AsASCIIString(&name_obj);
+
+                if (!name)
+                {
+                    PyErr_Format(PyExc_TypeError,
+                            "signal 'name' must be a str, not %s",
+                            sipPyTypeName(Py_TYPE(value)));
+
+                    return -1;
+                }
+            }
+#if PY_MAJOR_VERSION >= 3
+            else if (PyUnicode_CompareWithASCIIString(key, "revision") == 0)
+#else
+            else if (qstrcmp(PyString_AsString(key), "revision") == 0)
+#endif
+            {
+                revision = sipLong_AsInt(value);
+
+                if (PyErr_Occurred())
+                {
+                    if (PyErr_ExceptionMatches(PyExc_TypeError))
+                        PyErr_Format(PyExc_TypeError,
+                                "signal 'revision' must be an int, not %s",
+                                sipPyTypeName(Py_TYPE(value)));
+
+                    Py_XDECREF(name_obj);
+                    return -1;
+                }
+            }
+#if PY_MAJOR_VERSION >= 3
+            else if (PyUnicode_CompareWithASCIIString(key, "arguments") == 0)
+#else
+            else if (qstrcmp(PyString_AsString(key), "arguments") == 0)
+#endif
+            {
+                bool ok = true;
+
+                if (PySequence_Check(value))
+                {
+                    Py_ssize_t len = PySequence_Size(value);
+
+                    parameter_names = new QList<QByteArray>;
+
+                    for (Py_ssize_t i = 0; i < len; ++i)
+                    {
+                        PyObject *py_attr = PySequence_GetItem(value, i);
+
+                        if (!py_attr)
+                        {
+                            ok = false;
+                            break;
+                        }
+
+                        PyObject *py_ascii_attr = py_attr;
+                        const char *attr = sipString_AsASCIIString(
+                                &py_ascii_attr);
+
+                        Py_DECREF(py_attr);
+
+                        if (!attr)
+                        {
+                            ok = false;
+                            break;
+                        }
+
+                        parameter_names->append(QByteArray(attr));
+
+                        Py_DECREF(py_ascii_attr);
+                    }
+                }
+                else
+                {
+                    ok = false;
+                }
+
+                if (!ok)
+                {
+                    PyErr_Format(PyExc_TypeError,
+                            "signal 'attribute_names' must be a sequence of str, not %s",
+                            sipPyTypeName(Py_TYPE(value)));
+
+                    if (parameter_names)
+                        delete parameter_names;
+
+                    Py_XDECREF(name_obj);
+                    return -1;
+                }
+            }
+            else
+            {
+#if PY_MAJOR_VERSION >= 3
+                PyErr_Format(PyExc_TypeError,
+                        "pyqtSignal() got an unexpected keyword argument '%U'",
+                        key);
+#else
                 PyErr_Format(PyExc_TypeError,
                         "pyqtSignal() got an unexpected keyword argument '%s'",
-                        PyString_AS_STRING(key));
+                        PyString_AsString(key));
+#endif
 
                 Py_XDECREF(name_obj);
                 return -1;
             }
-#endif
-
-            name_obj = value;
-            name = sipString_AsASCIIString(&name_obj);
-
-            if (!name)
-                return -1;
         }
     }
 
     // If there is at least one argument and it is a sequence then assume all
     // arguments are sequences.  Unfortunately a string is also a sequence so
     // check for tuples and lists explicitly.
-    if (PyTuple_GET_SIZE(args) > 0 && (PyTuple_Check(PyTuple_GET_ITEM(args, 0)) || PyList_Check(PyTuple_GET_ITEM(args, 0))))
+    if (PyTuple_Size(args) > 0 && (PyTuple_Check(PyTuple_GetItem(args, 0)) || PyList_Check(PyTuple_GetItem(args, 0))))
     {
-        for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(args); ++i)
+        for (Py_ssize_t i = 0; i < PyTuple_Size(args); ++i)
         {
-            PyObject *types = PySequence_Tuple(PyTuple_GET_ITEM(args, i));
+            PyObject *types = PySequence_Tuple(PyTuple_GetItem(args, i));
 
             if (!types)
             {
@@ -337,17 +502,18 @@ static int pyqtSignal_init(PyObject *self, PyObject *args, PyObject *kwd_args)
             if (i == 0)
             {
                 // The first is the default.
-                rc = init_signal_from_types(ps, name, types);
+                rc = init_signal_from_types(ps, name, parameter_names,
+                        revision, types);
             }
             else
             {
-                qpycore_pyqtSignal *overload = (qpycore_pyqtSignal *)PyType_GenericNew(&qpycore_pyqtSignal_Type, 0, 0);
+                qpycore_pyqtSignal *overload = (qpycore_pyqtSignal *)PyType_GenericNew(qpycore_pyqtSignal_TypeObject, 0, 0);
 
                 if (!overload)
                 {
                     rc = -1;
                 }
-                else if ((rc = init_signal_from_types(overload, name, types)) < 0)
+                else if ((rc = init_signal_from_types(overload, name, 0, revision, types)) < 0)
                 {
                     Py_DECREF((PyObject *)overload);
                 }
@@ -371,7 +537,7 @@ static int pyqtSignal_init(PyObject *self, PyObject *args, PyObject *kwd_args)
             }
         }
     }
-    else if (init_signal_from_types(ps, name, args) < 0)
+    else if (init_signal_from_types(ps, name, parameter_names, revision, args) < 0)
     {
         if (name)
         {
@@ -404,22 +570,45 @@ static PyObject *pyqtSignal_mp_subscript(PyObject *self, PyObject *subscript)
 }
 
 
+// Initialise the type and return true if there was no error.
+bool qpycore_pyqtSignal_init_type()
+{
+#if PY_VERSION_HEX >= 0x03040000
+    qpycore_pyqtSignal_TypeObject = (PyTypeObject *)PyType_FromSpec(
+            &qpycore_pyqtSignal_Spec);
+
+    return qpycore_pyqtSignal_TypeObject;
+#else
+    if (PyType_Ready(&qpycore_pyqtSignal_Type) < 0)
+        return false;
+
+    qpycore_pyqtSignal_TypeObject = &qpycore_pyqtSignal_Type;
+
+    return true;
+#endif
+}
+
+
 // Create a new signal instance.
-qpycore_pyqtSignal *qpycore_pyqtSignal_New(const char *signature_str, bool *fatal)
+qpycore_pyqtSignal *qpycore_pyqtSignal_New(const char *signature, bool *fatal)
 {
     // Assume any error is fatal.
     if (fatal)
         *fatal = true;
 
-    QByteArray norm = QMetaObject::normalizedSignature(signature_str);
-    Chimera::Signature *signature = Chimera::parse(norm, "a signal argument");
+    // See if we have two variants of the signature, ie. one with namespaces
+    // stripped that we can use with connect() and another that we can parse.
+    const char *full_sig = strchr(signature, '|');
+
+    Chimera::Signature *parsed_signature = Chimera::parse(
+            (full_sig ? full_sig + 1 : signature), "a signal argument");
 
     // At first glance the parse should never fail because the signature
     // originates from the .sip file.  However it might if it includes a type
     // that has been forward declared, but not yet defined.  The only example
     // in PyQt is the declaration of QWidget by QSignalMapper.  Therefore we
     // assume the error isn't fatal.
-    if (!signature)
+    if (!parsed_signature)
     {
         if (fatal)
             *fatal = false;
@@ -427,23 +616,31 @@ qpycore_pyqtSignal *qpycore_pyqtSignal_New(const char *signature_str, bool *fata
         return 0;
     }
 
-    signature->signature.prepend('2');
+    if (full_sig)
+        // Use the variant with namespaces stripped.
+        parsed_signature->signature = QByteArray(signature,
+                full_sig - signature);
 
+    parsed_signature->signature.prepend('2');
+
+    // Create and initialise the signal.
     qpycore_pyqtSignal *ps = (qpycore_pyqtSignal *)PyType_GenericNew(
-            &qpycore_pyqtSignal_Type, 0, 0);
+            qpycore_pyqtSignal_TypeObject, 0, 0);
 
     if (!ps)
     {
-        delete signature;
+        delete parsed_signature;
         return 0;
     }
 
     ps->default_signal = ps;
     ps->next = 0;
     ps->docstring = 0;
-    ps->signature = signature;
+    ps->parameter_names = 0;
+    ps->revision = 0;
+    ps->parsed_signature = parsed_signature;
+    ps->emitter = 0;
     ps->non_signals = 0;
-    ps->hack = 0;
 
     return ps;
 }
@@ -467,7 +664,7 @@ qpycore_pyqtSignal *qpycore_find_signal(qpycore_pyqtSignal *ps,
         if (!args)
             return 0;
 
-        PyTuple_SET_ITEM(args, 0, subscript);
+        PyTuple_SetItem(args, 0, subscript);
     }
 
     Py_INCREF(subscript);
@@ -485,7 +682,7 @@ qpycore_pyqtSignal *qpycore_find_signal(qpycore_pyqtSignal *ps,
 
     do
     {
-        if (overload->signature->arguments() == ss_signature->signature)
+        if (overload->parsed_signature->arguments() == ss_signature->signature)
             break;
 
         overload = overload->next;
@@ -504,23 +701,26 @@ qpycore_pyqtSignal *qpycore_find_signal(qpycore_pyqtSignal *ps,
 
 // Initialise a signal when given a tuple of types.
 static int init_signal_from_types(qpycore_pyqtSignal *ps, const char *name,
+        const QList<QByteArray> *parameter_names, int revision,
         PyObject *types)
 {
-    Chimera::Signature *signature = Chimera::parse(types, name,
+    Chimera::Signature *parsed_signature = Chimera::parse(types, name,
             "a pyqtSignal() type argument");
 
-    if (!signature)
+    if (!parsed_signature)
         return -1;
 
     if (name)
-        signature->signature.prepend('2');
+        parsed_signature->signature.prepend('2');
 
     ps->default_signal = ps;
     ps->next = 0;
     ps->docstring = 0;
-    ps->signature = signature;
+    ps->parameter_names = parameter_names;
+    ps->revision = revision;
+    ps->parsed_signature = parsed_signature;
+    ps->emitter = 0;
     ps->non_signals = 0;
-    ps->hack = 0;
 
     return 0;
 }
@@ -547,17 +747,17 @@ void qpycore_set_signal_name(qpycore_pyqtSignal *ps, const char *type_name,
 
     // If the signature already has a name then they all have and there is
     // nothing more to do.
-    if (!ps->signature->signature.startsWith('('))
+    if (!ps->parsed_signature->signature.startsWith('('))
         return;
 
     do
     {
-        QByteArray &sig = ps->signature->signature;
+        QByteArray &sig = ps->parsed_signature->signature;
 
         sig.prepend(name);
         sig.prepend('2');
 
-        QByteArray &py_sig = ps->signature->py_signature;
+        QByteArray &py_sig = ps->parsed_signature->py_signature;
 
         py_sig.prepend(name);
         py_sig.prepend('.');
@@ -572,7 +772,7 @@ void qpycore_set_signal_name(qpycore_pyqtSignal *ps, const char *type_name,
 // Handle the getting of a lazy attribute, ie. a native Qt signal.
 int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict)
 {
-    const pyqt4QtSignal *sigs = reinterpret_cast<const pyqt4ClassPluginDef *>(
+    const pyqt5QtSignal *sigs = reinterpret_cast<const pyqt5ClassPluginDef *>(
             sipTypePluginData(td))->qt_signals;
 
     // Handle the trvial case.
@@ -585,7 +785,7 @@ int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict)
     do
     {
         // See if we have come to the end of the current signal.
-        if (default_signal && !is_signal_name(sigs->signature, default_name.constData(), default_name.size()))
+        if (default_signal && !is_signal_name(sigs->signature, default_name))
         {
             if (PyDict_SetItemString(dict, default_name.constData(), (PyObject *)default_signal) < 0)
                 return -1;
@@ -608,7 +808,7 @@ int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict)
         }
 
         sig->docstring = sigs->docstring;
-        sig->hack = sigs->hack;
+        sig->emitter = sigs->emitter;
 
         // See if this is a new default.
         if (default_signal)
@@ -622,8 +822,8 @@ int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict)
 
             default_signal = sig->default_signal = sig;
 
-            // Get the name.
-            default_name = sig->signature->name().mid(1);
+            default_name = sigs->signature;
+            default_name.truncate(default_name.indexOf('('));
         }
     }
     while ((++sigs)->signature);
@@ -632,14 +832,15 @@ int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict)
     if (!default_signal)
         return 0;
 
-    return PyDict_SetItemString(dict, default_name.constData(), (PyObject *)default_signal);
+    return PyDict_SetItemString(dict, default_name.constData(),
+            (PyObject *)default_signal);
 }
 
 
-// Return true if the signal has the given name.
-static bool is_signal_name(const char *sig, const char *name, uint name_len)
+// Return true if a signal signatures has a particular name.
+static bool is_signal_name(const char *sig, const QByteArray &name)
 {
-    return (qstrncmp(sig, name, name_len) == 0 && sig[name_len] == '(');
+    return (qstrncmp(sig, name.constData(), name.size()) == 0 && sig[name.size()] == '(');
 }
 
 

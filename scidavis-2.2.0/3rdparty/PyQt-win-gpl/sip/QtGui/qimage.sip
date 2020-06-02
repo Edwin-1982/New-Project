@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -42,53 +42,63 @@ public:
         Format_RGB32,
         Format_ARGB32,
         Format_ARGB32_Premultiplied,
-%If (Qt_4_2_0 -)
         Format_RGB16,
-%End
-%If (Qt_4_4_0 -)
         Format_ARGB8565_Premultiplied,
-%End
-%If (Qt_4_4_0 -)
         Format_RGB666,
-%End
-%If (Qt_4_4_0 -)
         Format_ARGB6666_Premultiplied,
-%End
-%If (Qt_4_4_0 -)
         Format_RGB555,
-%End
-%If (Qt_4_4_0 -)
         Format_ARGB8555_Premultiplied,
-%End
-%If (Qt_4_4_0 -)
         Format_RGB888,
-%End
-%If (Qt_4_4_0 -)
         Format_RGB444,
-%End
-%If (Qt_4_4_0 -)
         Format_ARGB4444_Premultiplied,
+%If (Qt_5_2_0 -)
+        Format_RGBX8888,
+%End
+%If (Qt_5_2_0 -)
+        Format_RGBA8888,
+%End
+%If (Qt_5_2_0 -)
+        Format_RGBA8888_Premultiplied,
+%End
+%If (Qt_5_4_0 -)
+        Format_BGR30,
+%End
+%If (Qt_5_4_0 -)
+        Format_A2BGR30_Premultiplied,
+%End
+%If (Qt_5_4_0 -)
+        Format_RGB30,
+%End
+%If (Qt_5_4_0 -)
+        Format_A2RGB30_Premultiplied,
+%End
+%If (Qt_5_5_0 -)
+        Format_Alpha8,
+%End
+%If (Qt_5_5_0 -)
+        Format_Grayscale8,
+%End
+%If (Qt_5_12_0 -)
+        Format_RGBX64,
+%End
+%If (Qt_5_12_0 -)
+        Format_RGBA64,
+%End
+%If (Qt_5_12_0 -)
+        Format_RGBA64_Premultiplied,
+%End
+%If (Qt_5_13_0 -)
+        Format_Grayscale16,
 %End
     };
 
     QImage();
     QImage(const QSize &size, QImage::Format format);
     QImage(int width, int height, QImage::Format format);
-%If (Qt_4_2_0 -)
     QImage(const uchar *data /KeepReference/, int width, int height, QImage::Format format);
-%End
-%If (- Qt_4_2_0)
-    QImage(uchar *data /KeepReference/, int width, int height, QImage::Format format);
-%End
-%If (Qt_4_3_0 -)
     QImage(void *data, int width, int height, QImage::Format format) [(uchar *data, int width, int height, QImage::Format format)];
-%End
-%If (Qt_4_3_0 -)
     QImage(const uchar *data /KeepReference/, int width, int height, int bytesPerLine, QImage::Format format);
-%End
-%If (Qt_4_3_0 -)
     QImage(void *data, int width, int height, int bytesPerLine, QImage::Format format) [(uchar *data, int width, int height, int bytesPerLine, QImage::Format format)];
-%End
     explicit QImage(SIP_PYLIST xpm /TypeHint="List[str]"/) [(const char **xpm)];
 %MethodCode
         // The Python interface is a list of strings that make up the image.
@@ -104,17 +114,12 @@ public:
             sipIsErr = 1;
 %End
 
-    QImage(const QString &fileName, const char *format = 0);
+    QImage(const QString &fileName, const char *format = 0) /ReleaseGIL/;
     QImage(const QImage &);
     QImage(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QImage>())
             sipCpp = new sipQImage(a0->value<QImage>());
-        #else
-        if (qVariantCanConvert<QImage>(*a0))
-            sipCpp = new sipQImage(qVariantValue<QImage>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -129,95 +134,53 @@ public:
     QImage copy(const QRect &rect = QRect()) const;
     QImage copy(int x, int y, int w, int h) const;
     QImage::Format format() const;
-    QImage convertToFormat(QImage::Format format, Qt::ImageConversionFlags flags = Qt::AutoColor) const;
-    QImage convertToFormat(QImage::Format format, const QVector<unsigned int> &colorTable, Qt::ImageConversionFlags flags = Qt::AutoColor) const;
+    QImage convertToFormat(QImage::Format f, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor) const;
+    QImage convertToFormat(QImage::Format f, const QVector<unsigned int> &colorTable, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor) const;
     int width() const;
     int height() const;
     QSize size() const;
     QRect rect() const;
     int depth() const;
-%If (PyQt_Deprecated_5_0)
-    int numColors() const;
-%End
     QRgb color(int i) const;
     void setColor(int i, QRgb c);
-%If (PyQt_Deprecated_5_0)
-    void setNumColors(int);
-%End
     bool allGray() const;
     bool isGrayscale() const;
     void *bits() [uchar * ()];
-%If (Qt_4_7_0 -)
     const void *constBits() const [const uchar * ()];
-%End
-%If (PyQt_Deprecated_5_0)
-    int numBytes() const;
-%End
     void *scanLine(int) [uchar * (int)];
-%If (Qt_4_7_0 -)
     const void *constScanLine(int) const [const uchar * (int)];
-%End
     int bytesPerLine() const;
-%If (Qt_4_2_0 -)
     bool valid(const QPoint &pt) const;
-%End
     bool valid(int x, int y) const;
-%If (Qt_4_2_0 -)
     int pixelIndex(const QPoint &pt) const;
-%End
     int pixelIndex(int x, int y) const;
-%If (Qt_4_2_0 -)
     QRgb pixel(const QPoint &pt) const;
-%End
     QRgb pixel(int x, int y) const;
-%If (Qt_4_2_0 -)
     void setPixel(const QPoint &pt, uint index_or_rgb);
-%End
     void setPixel(int x, int y, uint index_or_rgb);
     QVector<unsigned int> colorTable() const;
     void setColorTable(const QVector<unsigned int> colors);
-%If (Qt_4_8_0 -)
     void fill(Qt::GlobalColor color /Constrained/);
-%End
-%If (Qt_4_8_0 -)
     void fill(const QColor &color);
-%End
     void fill(uint pixel);
     bool hasAlphaChannel() const;
-    void setAlphaChannel(const QImage &alphaChannel);
-    QImage alphaChannel() const;
-    QImage createAlphaMask(Qt::ImageConversionFlags flags = Qt::AutoColor) const;
+    QImage createAlphaMask(Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor) const;
     QImage createHeuristicMask(bool clipTight = true) const;
     QImage scaled(int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation) const;
     QImage scaled(const QSize &size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation) const;
     QImage scaledToWidth(int width, Qt::TransformationMode mode = Qt::FastTransformation) const;
     QImage scaledToHeight(int height, Qt::TransformationMode mode = Qt::FastTransformation) const;
-    QImage transformed(const QMatrix &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const;
-    static QMatrix trueMatrix(const QMatrix &, int w, int h);
     QImage mirrored(bool horizontal = false, bool vertical = true) const;
     QImage rgbSwapped() const;
     void invertPixels(QImage::InvertMode mode = QImage::InvertRgb);
-    bool load(QIODevice *device, const char *format);
-    bool load(const QString &fileName, const char *format = 0);
-    bool loadFromData(const uchar *data /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/, const char *format = 0);
+    bool load(QIODevice *device, const char *format) /ReleaseGIL/;
+    bool load(const QString &fileName, const char *format = 0) /ReleaseGIL/;
+    bool loadFromData(const uchar *data /Array/, int len /ArraySize/, const char *format = 0);
     bool loadFromData(const QByteArray &data, const char *format = 0);
-%If (Qt_4_2_0 -)
-    bool save(const QString &fileName, const char *format = 0, int quality = -1) const;
-%End
-%If (- Qt_4_2_0)
-    bool save(const QString &fileName, const char *format, int quality = -1) const;
-%End
-%If (Qt_4_2_0 -)
-    bool save(QIODevice *device, const char *format = 0, int quality = -1) const;
-%End
-%If (- Qt_4_2_0)
-    bool save(QIODevice *device, const char *format, int quality = -1) const;
-%End
-    static QImage fromData(const uchar *data /Array, TypeHint="Py_v3:bytes;str"/, int size /ArraySize/, const char *format = 0);
+    bool save(const QString &fileName, const char *format = 0, int quality = -1) const /ReleaseGIL/;
+    bool save(QIODevice *device, const char *format = 0, int quality = -1) const /ReleaseGIL/;
+    static QImage fromData(const uchar *data /Array/, int size /ArraySize/, const char *format = 0);
     static QImage fromData(const QByteArray &data, const char *format = 0);
-%If (PyQt_Deprecated_5_0)
-    int serialNumber() const;
-%End
     virtual QPaintEngine *paintEngine() const;
     int dotsPerMeterX() const;
     int dotsPerMeterY() const;
@@ -231,45 +194,56 @@ public:
 
 protected:
     virtual int metric(QPaintDevice::PaintDeviceMetric metric) const;
+%If (Qt_5_5_0 -)
+    QImage smoothScaled(int w, int h) const;
+%End
 
 public:
-%If (Qt_4_3_0 -)
     QImage createMaskFromColor(QRgb color, Qt::MaskMode mode = Qt::MaskInColor) const;
-%End
-%If (Qt_4_3_0 -)
     QImage transformed(const QTransform &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const;
-%End
-%If (Qt_4_3_0 -)
     static QTransform trueMatrix(const QTransform &, int w, int h);
-%End
-%If (Qt_4_3_0 -)
     qint64 cacheKey() const;
-%End
-%If (Qt_4_6_0 -)
     int colorCount() const;
-%End
-%If (Qt_4_6_0 -)
     void setColorCount(int);
-%End
-%If (Qt_4_6_0 -)
     int byteCount() const;
-%End
-%If (Qt_4_7_0 -)
     int bitPlaneCount() const;
-%End
-%If (Qt_4_8_0 -)
-    void swap(QImage &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QImage &other /Constrained/);
     qreal devicePixelRatio() const;
-%End
-%If (Qt_5_0_0 -)
     void setDevicePixelRatio(qreal scaleFactor);
+%If (Qt_5_4_0 -)
+    QPixelFormat pixelFormat() const;
+%End
+%If (Qt_5_4_0 -)
+    static QPixelFormat toPixelFormat(QImage::Format format);
+%End
+%If (Qt_5_4_0 -)
+    static QImage::Format toImageFormat(QPixelFormat format);
+%End
+%If (Qt_5_6_0 -)
+    QColor pixelColor(int x, int y) const;
+%End
+%If (Qt_5_6_0 -)
+    QColor pixelColor(const QPoint &pt) const;
+%End
+%If (Qt_5_6_0 -)
+    void setPixelColor(int x, int y, const QColor &c);
+%End
+%If (Qt_5_6_0 -)
+    void setPixelColor(const QPoint &pt, const QColor &c);
+%End
+%If (Qt_5_9_0 -)
+    bool reinterpretAsFormat(QImage::Format f);
+%End
+%If (Qt_5_10_0 -)
+    SIP_SSIZE_T sizeInBytes() const [qsizetype ()];
+%End
+%If (Qt_5_13_0 -)
+    void convertTo(QImage::Format f, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QImage & /Constrained/);
-QDataStream &operator>>(QDataStream &, QImage & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QImage & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QImage & /Constrained/) /ReleaseGIL/;
 
 %ModuleHeaderCode
 const char **QtGui_ListToArray(PyObject *lst);
@@ -281,10 +255,10 @@ void QtGui_DeleteArray(const char **arr);
 // QImage and QPixmap.
 const char **QtGui_ListToArray(PyObject *lst)
 {
-    SIP_SSIZE_T nstr = PyList_Size(lst);
+    Py_ssize_t nstr = PyList_Size(lst);
     const char **arr = new const char *[nstr + 1];
 
-    for (SIP_SSIZE_T i = 0; i < nstr; ++i)
+    for (Py_ssize_t i = 0; i < nstr; ++i)
     {
         PyObject *ascii_obj = PyList_GetItem(lst, i);
         const char *ascii = sipString_AsASCIIString(&ascii_obj);
@@ -315,7 +289,7 @@ const char **QtGui_ListToArray(PyObject *lst)
 // Return a string array created by QtGui_ListToArray() to the heap.
 void QtGui_DeleteArray(const char **arr)
 {
-    for (SIP_SSIZE_T i = 0; arr[i]; ++i)
+    for (Py_ssize_t i = 0; arr[i]; ++i)
         delete[] arr[i];
 
     delete[] arr;

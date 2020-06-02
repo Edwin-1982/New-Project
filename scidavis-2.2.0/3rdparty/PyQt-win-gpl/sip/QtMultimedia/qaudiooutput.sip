@@ -2,9 +2,9 @@
 //
 // This file is part of the QtMultimedia Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QAudioOutput : QObject
 {
@@ -55,21 +53,8 @@ signals:
     void notify();
 
 public:
-%If (Qt_5_0_0 -)
     void setVolume(qreal);
-%End
-%If (Qt_5_0_0 -)
     qreal volume() const;
-%End
-%If (Qt_5_0_0 -)
     QString category() const;
-%End
-%If (Qt_5_0_0 -)
     void setCategory(const QString &category);
-%End
-
-private:
-    QAudioOutput(const QAudioOutput &);
 };
-
-%End

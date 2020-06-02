@@ -40,13 +40,21 @@
 
 import sys
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 
-class _QtGuiWrapper(object):
-    def search(cls):
-        return getattr(QtGui, cls, None)
-    search = staticmethod(search)
+class _QtWrapper(object):
+    @classmethod
+    def search(cls, name):
+        return getattr(cls.module, name, None)
+
+
+class _QtGuiWrapper(_QtWrapper):
+    module = QtGui
+
+
+class _QtWidgetsWrapper(_QtWrapper):
+    module = QtWidgets
 
 
 class _ModuleWrapper(object):
@@ -59,14 +67,12 @@ class _ModuleWrapper(object):
         if cls in self._classes:
             if self._module is None:
                 self._module = __import__(self._moduleName, {}, {}, self._classes)
-            # Allow for namespaces.
-            obj = self._module
-            for attr in cls.split('.'):
-                obj = getattr(obj, attr)
+            # Remove any C++ scope.
+            cls = cls.split('.')[-1]
 
-            return obj
-        else:
-            return None
+            return getattr(self._module, cls)
+
+        return None
 
 
 class _CustomWidgetLoader(object):
@@ -118,8 +124,8 @@ class LoaderCreatorPolicy(object):
     def __init__(self, package):
         self._package = package
 
-    def createQtGuiWrapper(self):
-        return _QtGuiWrapper
+    def createQtGuiWidgetsWrappers(self):
+        return [_QtGuiWrapper, _QtWidgetsWrapper]
     
     def createModuleWrapper(self, moduleName, classes):
         return _ModuleWrapper(moduleName, classes)

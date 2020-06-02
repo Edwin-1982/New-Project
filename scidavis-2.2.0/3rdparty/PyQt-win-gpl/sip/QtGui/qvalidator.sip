@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,12 +27,7 @@ class QValidator : QObject
 %End
 
 public:
-%If (- Qt_4_6_0)
-    explicit QValidator(QObject *parent /TransferThis/);
-%End
-%If (Qt_4_6_0 -)
     explicit QValidator(QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QValidator();
 
     enum State
@@ -42,24 +37,13 @@ public:
         Acceptable,
     };
 
-    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const = 0 /API=QString:2 - /;
-    virtual QValidator::State validate(QString & /Constrained/, int & /In,Out/) const = 0 /API=QString: - 2/;
-    virtual void fixup(QString &input /In,Out/) const /API=QString:2 - /;
-    virtual void fixup(QString & /Constrained/) const /API=QString: - 2/;
-%If (Qt_4_3_0 -)
+    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const = 0;
+    virtual void fixup(QString & /In,Out/) const;
     void setLocale(const QLocale &locale);
-%End
-%If (Qt_4_3_0 -)
     QLocale locale() const;
-%End
 
 signals:
-%If (Qt_5_0_0 -)
     void changed();
-%End
-
-private:
-    QValidator(const QValidator &);
 };
 
 class QIntValidator : QValidator
@@ -69,41 +53,16 @@ class QIntValidator : QValidator
 %End
 
 public:
-%If (- Qt_4_6_0)
-    explicit QIntValidator(QObject *parent /TransferThis/);
-%End
-%If (Qt_4_6_0 -)
     explicit QIntValidator(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_4_8_0)
-    QIntValidator(int bottom, int top, QObject *parent /TransferThis/);
-%End
-%If (Qt_4_8_0 -)
     QIntValidator(int bottom, int top, QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QIntValidator();
-    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const /API=QString:2 - /;
-    virtual QValidator::State validate(QString & /Constrained/, int & /In,Out/) const /API=QString: - 2/;
-%If (Qt_4_7_0 -)
-    virtual void fixup(QString &input /In,Out/) const /API=QString:2 - /;
-%End
-%If (Qt_4_7_0 -)
-    virtual void fixup(QString &input /Constrained/) const /API=QString: - 2/;
-%End
+    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const;
+    virtual void fixup(QString &input /In,Out/) const;
     void setBottom(int);
     void setTop(int);
     virtual void setRange(int bottom, int top);
     int bottom() const;
     int top() const;
-%If (Qt_5_0_0 -)
-    void bottomChanged(int bottom);
-%End
-%If (Qt_5_0_0 -)
-    void topChanged(int top);
-%End
-
-private:
-    QIntValidator(const QIntValidator &);
 };
 
 class QDoubleValidator : QValidator
@@ -113,21 +72,10 @@ class QDoubleValidator : QValidator
 %End
 
 public:
-%If (- Qt_4_7_0)
-    explicit QDoubleValidator(QObject *parent /TransferThis/);
-%End
-%If (Qt_4_7_0 -)
     explicit QDoubleValidator(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_4_8_0)
-    QDoubleValidator(double bottom, double top, int decimals, QObject *parent /TransferThis/);
-%End
-%If (Qt_4_8_0 -)
     QDoubleValidator(double bottom, double top, int decimals, QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QDoubleValidator();
-    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const /API=QString:2 - /;
-    virtual QValidator::State validate(QString & /Constrained/, int & /In,Out/) const /API=QString: - 2/;
+    virtual QValidator::State validate(QString & /In,Out/, int & /In,Out/) const;
     virtual void setRange(double minimum, double maximum, int decimals = 0);
     void setBottom(double);
     void setTop(double);
@@ -135,7 +83,6 @@ public:
     double bottom() const;
     double top() const;
     int decimals() const;
-%If (Qt_4_3_0 -)
 
     enum Notation
     {
@@ -143,28 +90,8 @@ public:
         ScientificNotation,
     };
 
-%End
-%If (Qt_4_3_0 -)
     void setNotation(QDoubleValidator::Notation);
-%End
-%If (Qt_4_3_0 -)
     QDoubleValidator::Notation notation() const;
-%End
-%If (Qt_5_0_0 -)
-    void bottomChanged(double bottom);
-%End
-%If (Qt_5_0_0 -)
-    void topChanged(double top);
-%End
-%If (Qt_5_0_0 -)
-    void decimalsChanged(int decimals);
-%End
-%If (Qt_5_0_0 -)
-    void notationChanged(QDoubleValidator::Notation notation);
-%End
-
-private:
-    QDoubleValidator(const QDoubleValidator &);
 };
 
 class QRegExpValidator : QValidator
@@ -174,27 +101,29 @@ class QRegExpValidator : QValidator
 %End
 
 public:
-%If (- Qt_4_7_0)
-    explicit QRegExpValidator(QObject *parent /TransferThis/);
-%End
-%If (Qt_4_7_0 -)
     explicit QRegExpValidator(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_4_8_0)
-    QRegExpValidator(const QRegExp &rx, QObject *parent /TransferThis/);
-%End
-%If (Qt_4_8_0 -)
     QRegExpValidator(const QRegExp &rx, QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QRegExpValidator();
-    virtual QValidator::State validate(QString &input /In,Out/, int &pos /In,Out/) const /API=QString:2 - /;
-    virtual QValidator::State validate(QString &input /Constrained/, int &pos /In,Out/) const /API=QString: - 2/;
+    virtual QValidator::State validate(QString &input /In,Out/, int &pos /In,Out/) const;
     void setRegExp(const QRegExp &rx);
     const QRegExp &regExp() const;
-%If (Qt_5_0_0 -)
-    void regExpChanged(const QRegExp &regExp);
+};
+
+%If (Qt_5_1_0 -)
+
+class QRegularExpressionValidator : QValidator
+{
+%TypeHeaderCode
+#include <qvalidator.h>
 %End
 
-private:
-    QRegExpValidator(const QRegExpValidator &);
+public:
+    explicit QRegularExpressionValidator(QObject *parent /TransferThis/ = 0);
+    QRegularExpressionValidator(const QRegularExpression &re, QObject *parent /TransferThis/ = 0);
+    virtual ~QRegularExpressionValidator();
+    virtual QValidator::State validate(QString &input /In,Out/, int &pos /In,Out/) const;
+    QRegularExpression regularExpression() const;
+    void setRegularExpression(const QRegularExpression &re);
 };
+
+%End

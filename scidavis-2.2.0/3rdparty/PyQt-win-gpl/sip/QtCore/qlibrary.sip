@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,74 +27,38 @@ class QLibrary : QObject
 %End
 
 public:
-%If (Qt_4_2_0 -)
-
     enum LoadHint
     {
         ResolveAllSymbolsHint,
         ExportExternalSymbolsHint,
         LoadArchiveMemberHint,
-%If (Qt_5_0_0 -)
         PreventUnloadHint,
+%If (Qt_5_5_0 -)
+        DeepBindHint,
 %End
     };
 
-%End
-%If (Qt_4_2_0 -)
     typedef QFlags<QLibrary::LoadHint> LoadHints;
-%End
     explicit QLibrary(QObject *parent /TransferThis/ = 0);
     QLibrary(const QString &fileName, QObject *parent /TransferThis/ = 0);
     QLibrary(const QString &fileName, int verNum, QObject *parent /TransferThis/ = 0);
-%If (Qt_4_4_0 -)
     QLibrary(const QString &fileName, const QString &version, QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QLibrary();
-%If (Qt_4_2_0 -)
     QString errorString() const;
-%End
     QString fileName() const;
     bool isLoaded() const;
     bool load();
-%If (Qt_4_2_0 -)
-    QFlags<QLibrary::LoadHint> loadHints() const;
-%End
-%If (Qt_5_0_0 -)
+    QLibrary::LoadHints loadHints() const;
     QFunctionPointer resolve(const char *symbol);
-%End
-%If (- Qt_5_0_0)
-    void *resolve(const char *symbol);
-%End
-%If (Qt_5_0_0 -)
     static QFunctionPointer resolve(const QString &fileName, const char *symbol);
-%End
-%If (- Qt_5_0_0)
-    static void *resolve(const QString &fileName, const char *symbol);
-%End
-%If (Qt_5_0_0 -)
     static QFunctionPointer resolve(const QString &fileName, int verNum, const char *symbol);
-%End
-%If (- Qt_5_0_0)
-    static void *resolve(const QString &fileName, int verNum, const char *symbol);
-%End
-%If (Qt_5_0_0 -)
     static QFunctionPointer resolve(const QString &fileName, const QString &version, const char *symbol);
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    static void *resolve(const QString &fileName, const QString &version, const char *symbol);
-%End
     bool unload();
     static bool isLibrary(const QString &fileName);
     void setFileName(const QString &fileName);
     void setFileNameAndVersion(const QString &fileName, int verNum);
-%If (Qt_4_4_0 -)
     void setFileNameAndVersion(const QString &fileName, const QString &version);
-%End
-%If (Qt_4_2_0 -)
-    void setLoadHints(QFlags<QLibrary::LoadHint> hints);
-%End
+    void setLoadHints(QLibrary::LoadHints hints);
 };
 
-%If (Qt_4_2_0 -)
 QFlags<QLibrary::LoadHint> operator|(QLibrary::LoadHint f1, QFlags<QLibrary::LoadHint> f2);
-%End

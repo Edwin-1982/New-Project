@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -64,13 +64,8 @@ public:
     QPen(const QPen &pen);
     QPen(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QPen>())
             sipCpp = new QPen(a0->value<QPen>());
-        #else
-        if (qVariantCanConvert<QPen>(*a0))
-            sipCpp = new QPen(qVariantValue<QPen>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -97,22 +92,12 @@ public:
     void setMiterLimit(qreal limit);
     bool operator==(const QPen &p) const;
     bool operator!=(const QPen &p) const;
-%If (Qt_4_3_0 -)
     qreal dashOffset() const;
-%End
-%If (Qt_4_3_0 -)
     void setDashOffset(qreal doffset);
-%End
-%If (Qt_4_3_0 -)
     bool isCosmetic() const;
-%End
-%If (Qt_4_3_0 -)
     void setCosmetic(bool cosmetic);
-%End
-%If (Qt_4_8_0 -)
-    void swap(QPen &other);
-%End
+    void swap(QPen &other /Constrained/);
 };
 
-QDataStream &operator<<(QDataStream &, const QPen & /Constrained/);
-QDataStream &operator>>(QDataStream &, QPen & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QPen & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QPen & /Constrained/) /ReleaseGIL/;

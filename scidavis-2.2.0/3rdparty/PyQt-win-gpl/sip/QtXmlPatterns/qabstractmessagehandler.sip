@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QAbstractMessageHandler : QObject
 {
 %TypeHeaderCode
@@ -30,31 +28,31 @@ class QAbstractMessageHandler : QObject
 
 %ConvertToSubClassCode
     static struct class_graph {
-            const char *name;
-            sipTypeDef **type;
-            int yes, no;
-        } graph[] = {
-            {sipName_QAbstractUriResolver,	&sipType_QAbstractUriResolver,	-1, 1},
-            {sipName_QAbstractMessageHandler,	&sipType_QAbstractMessageHandler,	-1, -1},
-        };
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+        {sipName_QAbstractUriResolver, &sipType_QAbstractUriResolver, -1, 1},
+        {sipName_QAbstractMessageHandler, &sipType_QAbstractMessageHandler, -1, -1},
+    };
     
-        int i = 0;
+    int i = 0;
     
-        sipType = 0;
+    sipType = NULL;
     
-        do
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
         {
-            struct class_graph *cg = &graph[i];
-    
-            if (cg->name != NULL && sipCpp->inherits(cg->name))
-            {
-                sipType = *cg->type;
-                i = cg->yes;
-            }
-            else
-                i = cg->no;
+            sipType = *cg->type;
+            i = cg->yes;
         }
-        while (i >= 0);
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
@@ -64,9 +62,4 @@ public:
 
 protected:
     virtual void handleMessage(QtMsgType type, const QString &description, const QUrl &identifier, const QSourceLocation &sourceLocation) = 0;
-
-private:
-    QAbstractMessageHandler(const QAbstractMessageHandler &);
 };
-
-%End

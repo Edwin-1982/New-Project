@@ -1,8 +1,8 @@
 // This is the SIP interface definition for QAxBase.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -17,8 +17,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (WS_WIN)
 
 class QAxBase /Abstract, PyQtNoQMetaObject/
 {
@@ -42,7 +40,7 @@ public:
         Py_END_ALLOW_THREADS
 
         // Update the input list with the (possibly) new values.
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(a1Wrapper); ++i)
+        for (SIP_SSIZE_T i = 0; i < PyList_Size(a1Wrapper); ++i)
         {
             QVariant *v = new QVariant(a1->at(i));
             PyObject *v_obj = sipConvertFromNewType(v, sipType_QVariant, NULL);
@@ -81,7 +79,7 @@ public:
         Py_END_ALLOW_THREADS
 
         // Update the input list with the (possibly) new values.
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(a1Wrapper); ++i)
+        for (SIP_SSIZE_T i = 0; i < PyList_Size(a1Wrapper); ++i)
         {
             QVariant *v = new QVariant(a1->at(i));
             PyObject *v_obj = sipConvertFromNewType(v, sipType_QVariant, NULL);
@@ -146,6 +144,11 @@ public:
     void disableClassInfo();
     void disableEventSink();
 
+%If (Qt_5_13_0 -)
+    unsigned long classContext() const;
+    void setClassContext(unsigned long classContext);
+%End
+
 protected:
     //virtual bool initialize(IUnknown** ptr);
     //bool initializeRemote(IUnknown** ptr);
@@ -153,5 +156,3 @@ protected:
     //bool initializeActive(IUnknown** ptr);
     //bool initializeFromFile(IUnknown** ptr);
 };
-
-%End

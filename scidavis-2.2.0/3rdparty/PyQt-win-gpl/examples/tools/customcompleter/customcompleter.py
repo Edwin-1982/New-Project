@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2012 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2012 Digia Plc
 ## All rights reserved.
 ##
@@ -42,19 +42,15 @@
 #############################################################################
 
 
-# This is only needed for Python v2 but is harmless for Python v3.
-import sip
-sip.setapi('QString', 2)
+from PyQt5.QtCore import QFile, QStringListModel, Qt
+from PyQt5.QtGui import QCursor, QKeySequence, QTextCursor
+from PyQt5.QtWidgets import (QAction, QApplication, QCompleter, QMainWindow,
+        QMessageBox, QTextEdit)
 
-from PyQt4 import QtCore, QtGui
-
-try:
-    import customcompleter_rc3
-except ImportError:
-    import customcompleter_rc2
+import customcompleter_rc
 
 
-class TextEdit(QtGui.QTextEdit):
+class TextEdit(QTextEdit):
     def __init__(self, parent=None):
         super(TextEdit, self).__init__(parent)
 
@@ -63,8 +59,8 @@ class TextEdit(QtGui.QTextEdit):
         self.setPlainText(
                 "This TextEdit provides autocompletions for words that have "
                 "more than 3 characters. You can trigger autocompletion "
-                "using %s" % QtGui.QKeySequence("Ctrl+E").toString(
-                        QtGui.QKeySequence.NativeText))
+                "using %s" % QKeySequence("Ctrl+E").toString(
+                        QKeySequence.NativeText))
 
     def setCompleter(self, c):
         if self._completer is not None:
@@ -73,8 +69,8 @@ class TextEdit(QtGui.QTextEdit):
         self._completer = c
 
         c.setWidget(self)
-        c.setCompletionMode(QtGui.QCompleter.PopupCompletion)
-        c.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        c.setCompletionMode(QCompleter.PopupCompletion)
+        c.setCaseSensitivity(Qt.CaseInsensitive)
         c.activated.connect(self.insertCompletion)
 
     def completer(self):
@@ -86,14 +82,14 @@ class TextEdit(QtGui.QTextEdit):
 
         tc = self.textCursor()
         extra = len(completion) - len(self._completer.completionPrefix())
-        tc.movePosition(QtGui.QTextCursor.Left)
-        tc.movePosition(QtGui.QTextCursor.EndOfWord)
+        tc.movePosition(QTextCursor.Left)
+        tc.movePosition(QTextCursor.EndOfWord)
         tc.insertText(completion[-extra:])
         self.setTextCursor(tc)
 
     def textUnderCursor(self):
         tc = self.textCursor()
-        tc.select(QtGui.QTextCursor.WordUnderCursor)
+        tc.select(QTextCursor.WordUnderCursor)
 
         return tc.selectedText()
 
@@ -106,22 +102,22 @@ class TextEdit(QtGui.QTextEdit):
     def keyPressEvent(self, e):
         if self._completer is not None and self._completer.popup().isVisible():
             # The following keys are forwarded by the completer to the widget.
-            if e.key() in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return, QtCore.Qt.Key_Escape, QtCore.Qt.Key_Tab, QtCore.Qt.Key_Backtab):
+            if e.key() in (Qt.Key_Enter, Qt.Key_Return, Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Backtab):
                 e.ignore()
                 # Let the completer do default behavior.
                 return
 
-        isShortcut = ((e.modifiers() & QtCore.Qt.ControlModifier) != 0 and e.key() == QtCore.Qt.Key_E)
+        isShortcut = ((e.modifiers() & Qt.ControlModifier) != 0 and e.key() == Qt.Key_E)
         if self._completer is None or not isShortcut:
             # Do not process the shortcut when we have a completer.
             super(TextEdit, self).keyPressEvent(e)
 
-        ctrlOrShift = e.modifiers() & (QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier)
+        ctrlOrShift = e.modifiers() & (Qt.ControlModifier | Qt.ShiftModifier)
         if self._completer is None or (ctrlOrShift and len(e.text()) == 0):
             return
 
         eow = "~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-="
-        hasModifier = (e.modifiers() != QtCore.Qt.NoModifier) and not ctrlOrShift
+        hasModifier = (e.modifiers() != Qt.NoModifier) and not ctrlOrShift
         completionPrefix = self.textUnderCursor()
 
         if not isShortcut and (hasModifier or len(e.text()) == 0 or len(completionPrefix) < 3 or e.text()[-1] in eow):
@@ -138,18 +134,17 @@ class TextEdit(QtGui.QTextEdit):
         self._completer.complete(cr)
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
         self.createMenu()
 
         self.completingTextEdit = TextEdit()
-        self.completer = QtGui.QCompleter(self)
+        self.completer = QCompleter(self)
         self.completer.setModel(self.modelFromFile(':/resources/wordlist.txt'))
-        self.completer.setModelSorting(
-                QtGui.QCompleter.CaseInsensitivelySortedModel)
-        self.completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        self.completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
         self.completer.setWrapAround(False)
         self.completingTextEdit.setCompleter(self.completer)
 
@@ -158,13 +153,13 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowTitle("Completer")
 
     def createMenu(self):
-        exitAction = QtGui.QAction("Exit", self)
-        aboutAct = QtGui.QAction("About", self)
-        aboutQtAct = QtGui.QAction("About Qt", self)
+        exitAction = QAction("Exit", self)
+        aboutAct = QAction("About", self)
+        aboutQtAct = QAction("About Qt", self)
 
-        exitAction.triggered.connect(QtGui.qApp.quit)
+        exitAction.triggered.connect(QApplication.instance().quit)
         aboutAct.triggered.connect(self.about)
-        aboutQtAct.triggered.connect(QtGui.qApp.aboutQt)
+        aboutQtAct.triggered.connect(QApplication.instance().aboutQt)
 
         fileMenu = self.menuBar().addMenu("File")
         fileMenu.addAction(exitAction)
@@ -174,12 +169,11 @@ class MainWindow(QtGui.QMainWindow):
         helpMenu.addAction(aboutQtAct)
 
     def modelFromFile(self, fileName):
-        f = QtCore.QFile(fileName)
-        if not f.open(QtCore.QFile.ReadOnly):
-            return QtGui.QStringListModel(self.completer)
+        f = QFile(fileName)
+        if not f.open(QFile.ReadOnly):
+            return QStringListModel(self.completer)
 
-        QtGui.QApplication.setOverrideCursor(
-                QtGui.QCursor(QtCore.Qt.WaitCursor))
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
         words = []
         while not f.atEnd():
@@ -192,12 +186,12 @@ class MainWindow(QtGui.QMainWindow):
 
                 words.append(line)
 
-        QtGui.QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
 
-        return QtGui.QStringListModel(words, self.completer)
+        return QStringListModel(words, self.completer)
 
     def about(self):
-        QtGui.QMessageBox.about(self, "About",
+        QMessageBox.about(self, "About",
                 "This example demonstrates the different features of the "
                 "QCompleter class.")
 
@@ -206,7 +200,7 @@ if __name__ == '__main__':
 
     import sys
 
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())

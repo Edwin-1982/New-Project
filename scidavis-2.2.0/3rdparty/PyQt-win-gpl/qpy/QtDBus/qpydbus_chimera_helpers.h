@@ -1,8 +1,8 @@
 // This is the definition of the various Chimera helpers.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -18,8 +18,8 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-#ifndef _QPYDBUSCHIMERAHELPERS_H
-#define _QPYDBUSCHIMERAHELPERS_H
+#ifndef _QPYDBUS_CHIMERAHELPERS_H
+#define _QPYDBUS_CHIMERAHELPERS_H
 
 
 #include <Python.h>
@@ -27,11 +27,11 @@
 #include <QVariant>
 
 
-// Keep this in sync. with that defined in the Chimera class.
-typedef bool (*FromQVariantFn)(const QVariant *, PyObject **);
+// Keep this in sync. with that defined in the public API.
+typedef bool (*FromQVariantConvertorFn)(const QVariant &, PyObject **);
 
 
-bool qpydbus_from_qvariant(const QVariant *varp, PyObject **objp);
+bool qpydbus_from_qvariant_convertor(const QVariant &var, PyObject **objp);
 
 
 #endif

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,7 +29,4 @@ class QTcpSocket : QAbstractSocket
 public:
     explicit QTcpSocket(QObject *parent /TransferThis/ = 0);
     virtual ~QTcpSocket();
-
-private:
-    QTcpSocket(const QTcpSocket &);
 };

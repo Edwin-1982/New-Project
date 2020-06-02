@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_7_0 -)
-
 class QStaticText
 {
 %TypeHeaderCode
@@ -36,7 +34,12 @@ public:
     };
 
     QStaticText();
+%If (Qt_5_10_0 -)
+    explicit QStaticText(const QString &text);
+%End
+%If (- Qt_5_10_0)
     QStaticText(const QString &text);
+%End
     QStaticText(const QStaticText &other);
     ~QStaticText();
     void setText(const QString &text);
@@ -53,9 +56,5 @@ public:
     QStaticText::PerformanceHint performanceHint() const;
     bool operator==(const QStaticText &) const;
     bool operator!=(const QStaticText &) const;
-%If (Qt_5_0_0 -)
-    void swap(QStaticText &other);
-%End
+    void swap(QStaticText &other /Constrained/);
 };
-
-%End

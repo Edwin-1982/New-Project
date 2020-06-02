@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QDBusMessage
 {
@@ -67,6 +65,16 @@ public:
     void setArguments(const QList<QVariant> &arguments);
     QList<QVariant> arguments() const;
     QDBusMessage &operator<<(const QVariant &arg);
-};
-
+%If (Qt_5_6_0 -)
+    void swap(QDBusMessage &other /Constrained/);
 %End
+%If (Qt_5_6_0 -)
+    static QDBusMessage createTargetedSignal(const QString &service, const QString &path, const QString &interface, const QString &name);
+%End
+%If (Qt_5_12_0 -)
+    void setInteractiveAuthorizationAllowed(bool enable);
+%End
+%If (Qt_5_12_0 -)
+    bool isInteractiveAuthorizationAllowed() const;
+%End
+};

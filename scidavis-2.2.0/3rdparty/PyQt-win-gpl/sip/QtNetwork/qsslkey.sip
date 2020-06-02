@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 class QSslKey
 {
@@ -33,9 +32,7 @@ public:
     QSslKey();
     QSslKey(const QByteArray &encoded, QSsl::KeyAlgorithm algorithm, QSsl::EncodingFormat encoding = QSsl::Pem, QSsl::KeyType type = QSsl::PrivateKey, const QByteArray &passPhrase = QByteArray());
     QSslKey(QIODevice *device, QSsl::KeyAlgorithm algorithm, QSsl::EncodingFormat encoding = QSsl::Pem, QSsl::KeyType type = QSsl::PrivateKey, const QByteArray &passPhrase = QByteArray());
-%If (Qt_5_0_0 -)
     QSslKey(Qt::HANDLE handle, QSsl::KeyType type = QSsl::PrivateKey);
-%End
     QSslKey(const QSslKey &other);
     ~QSslKey();
     bool isNull() const;
@@ -48,10 +45,7 @@ public:
     Qt::HANDLE handle() const;
     bool operator==(const QSslKey &key) const;
     bool operator!=(const QSslKey &key) const;
-%If (Qt_5_0_0 -)
-    void swap(QSslKey &other);
-%End
+    void swap(QSslKey &other /Constrained/);
 };
 
-%End
 %End

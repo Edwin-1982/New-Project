@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QThreadPool : QObject
 {
@@ -54,22 +52,37 @@ public:
         Py_END_ALLOW_THREADS
 %End
 
+%If (Qt_5_9_0 -)
+    bool tryTake(QRunnable *runnable /GetWrapper/) /ReleaseGIL/;
+%MethodCode
+        Py_BEGIN_ALLOW_THREADS
+        sipRes = sipCpp->tryTake(a0);
+        Py_END_ALLOW_THREADS
+        
+        // We have to handle the object ownership manually.
+        if (sipRes)
+            sipTransferBack(a0Wrapper);
+%End
+
+%End
     int expiryTimeout() const;
     void setExpiryTimeout(int expiryTimeout);
     int maxThreadCount() const;
-    void setMaxThreadCount(int maxThreadCount);
-    int activeThreadCount() const;
-    void reserveThread();
-    void releaseThread();
-%If (Qt_5_0_0 -)
+    void setMaxThreadCount(int maxThreadCount) /ReleaseGIL/;
+    int activeThreadCount() const /ReleaseGIL/;
+    void reserveThread() /ReleaseGIL/;
+    void releaseThread() /ReleaseGIL/;
     bool waitForDone(int msecs = -1) /ReleaseGIL/;
+%If (Qt_5_2_0 -)
+    void clear() /ReleaseGIL/;
 %End
-%If (- Qt_5_0_0)
-    void waitForDone() /ReleaseGIL/;
+%If (Qt_5_5_0 -)
+    void cancel(QRunnable *runnable) /ReleaseGIL/;
 %End
-%If (Qt_4_8_0 - Qt_5_0_0)
-    bool waitForDone(int msecs) /ReleaseGIL/;
+%If (Qt_5_10_0 -)
+    void setStackSize(uint stackSize);
+%End
+%If (Qt_5_10_0 -)
+    uint stackSize() const;
 %End
 };
-
-%End

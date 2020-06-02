@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QLocalServer : QObject
 {
 %TypeHeaderCode
@@ -29,21 +27,14 @@ class QLocalServer : QObject
 %End
 
 public:
-%If (Qt_5_0_0 -)
     explicit QLocalServer(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QLocalServer(QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QLocalServer();
     void close();
     QString errorString() const;
     virtual bool hasPendingConnections() const;
     bool isListening() const;
     bool listen(const QString &name);
-%If (Qt_5_0_0 -)
     bool listen(qintptr socketDescriptor);
-%End
     int maxPendingConnections() const;
     virtual QLocalSocket *nextPendingConnection();
     QString serverName() const;
@@ -51,9 +42,7 @@ public:
     QAbstractSocket::SocketError serverError() const;
     void setMaxPendingConnections(int numConnections);
     bool waitForNewConnection(int msecs = 0, bool *timedOut = 0) /ReleaseGIL/;
-%If (Qt_4_5_0 -)
     static bool removeServer(const QString &name);
-%End
 
 signals:
     void newConnection();
@@ -62,8 +51,6 @@ protected:
     virtual void incomingConnection(quintptr socketDescriptor);
 
 public:
-%If (Qt_5_0_0 -)
-
     enum SocketOption
     {
         UserAccessOption,
@@ -72,22 +59,12 @@ public:
         WorldAccessOption,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QLocalServer::SocketOption> SocketOptions;
+    void setSocketOptions(QLocalServer::SocketOptions options);
+    QLocalServer::SocketOptions socketOptions() const;
+%If (Qt_5_10_0 -)
+    qintptr socketDescriptor() const;
 %End
-%If (Qt_5_0_0 -)
-    void setSocketOptions(QFlags<QLocalServer::SocketOption> options);
-%End
-%If (Qt_5_0_0 -)
-    QFlags<QLocalServer::SocketOption> socketOptions() const;
-%End
-
-private:
-    QLocalServer(const QLocalServer &);
 };
 
-%End
-%If (Qt_5_0_0 -)
 QFlags<QLocalServer::SocketOption> operator|(QLocalServer::SocketOption f1, QFlags<QLocalServer::SocketOption> f2);
-%End

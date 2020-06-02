@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -28,19 +28,11 @@ class QModelIndex
 
 public:
     QModelIndex();
-%If (- Qt_5_0_0)
-    QModelIndex(const QModelIndex &other);
-%End
-%If (- Qt_5_0_0)
-    ~QModelIndex();
-%End
     QModelIndex child(int arow, int acolumn) const;
     int row() const;
     int column() const;
     QVariant data(int role = Qt::DisplayRole) const;
-%If (Qt_4_2_0 -)
     Qt::ItemFlags flags() const;
-%End
     SIP_PYOBJECT internalPointer() const;
 %MethodCode
         sipRes = reinterpret_cast<PyObject *>(sipCpp->internalPointer());
@@ -63,6 +55,12 @@ public:
     bool isValid() const;
     QModelIndex parent() const;
     QModelIndex sibling(int arow, int acolumn) const;
+%If (Qt_5_11_0 -)
+    QModelIndex siblingAtColumn(int column) const;
+%End
+%If (Qt_5_11_0 -)
+    QModelIndex siblingAtRow(int row) const;
+%End
     bool operator==(const QModelIndex &other) const;
     bool operator<(const QModelIndex &other) const;
     bool operator!=(const QModelIndex &other) const;
@@ -86,31 +84,22 @@ public:
     int row() const;
     int column() const;
     QVariant data(int role = Qt::DisplayRole) const;
-%If (Qt_4_2_0 -)
     Qt::ItemFlags flags() const;
-%End
     QModelIndex parent() const;
     QModelIndex sibling(int row, int column) const;
     QModelIndex child(int row, int column) const;
     const QAbstractItemModel *model() const;
     bool isValid() const;
-%If (Qt_5_0_0 -)
-    void swap(QPersistentModelIndex &other);
-%End
+    void swap(QPersistentModelIndex &other /Constrained/);
     operator const QModelIndex &() const;
     bool operator<(const QPersistentModelIndex &other) const;
     bool operator==(const QPersistentModelIndex &other) const;
     bool operator==(const QModelIndex &other) const;
-%If (Qt_4_2_0 -)
     bool operator!=(const QPersistentModelIndex &other) const;
-%End
     bool operator!=(const QModelIndex &other) const;
-%If (Qt_4_5_0 -)
     long __hash__() const;
 %MethodCode
         sipRes = qHash(*sipCpp);
-%End
-
 %End
 };
 
@@ -123,18 +112,20 @@ class QAbstractItemModel : QObject
 %End
 
 public:
+    enum LayoutChangeHint
+    {
+        NoLayoutChangeHint,
+        VerticalSortHint,
+        HorizontalSortHint,
+    };
+
     explicit QAbstractItemModel(QObject *parent /TransferThis/ = 0);
     virtual ~QAbstractItemModel();
     bool hasIndex(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const = 0;
     virtual QModelIndex parent(const QModelIndex &child) const = 0;
     QObject *parent() const;
-%If (Qt_5_0_0 -)
     virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
-%End
-%If (- Qt_5_0_0)
-    QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
-%End
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const = 0;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const = 0;
     virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
@@ -161,17 +152,10 @@ public:
     virtual QSize span(const QModelIndex &index) const;
 
 signals:
-%If (Qt_5_0_0 -)
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>()) /PyQtSignalHack=2/;
-%End
-%If (- Qt_5_0_0)
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-%End
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
     void headerDataChanged(Qt::Orientation orientation, int first, int last);
-%If (Qt_4_2_0 -)
-    void layoutAboutToBeChanged();
-%End
-    void layoutChanged();
+    void layoutAboutToBeChanged(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint);
+    void layoutChanged(const QList<QPersistentModelIndex> &parents = QList<QPersistentModelIndex>(), QAbstractItemModel::LayoutChangeHint hint = QAbstractItemModel::NoLayoutChangeHint);
     void rowsAboutToBeInserted(const QModelIndex &parent, int first, int last);
     void rowsInserted(const QModelIndex &parent, int first, int last);
     void rowsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
@@ -180,19 +164,12 @@ signals:
     void columnsInserted(const QModelIndex &parent, int first, int last);
     void columnsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
     void columnsRemoved(const QModelIndex &parent, int first, int last);
-%If (Qt_4_2_0 -)
     void modelAboutToBeReset();
-%End
     void modelReset();
 
 public slots:
     virtual bool submit();
     virtual void revert();
-
-protected slots:
-%If (Qt_4_8_0 - Qt_5_0_0)
-    void resetInternalData();
-%End
 
 protected:
     void encodeData(const QModelIndexList &indexes, QDataStream &stream) const;
@@ -205,12 +182,7 @@ protected:
     void endInsertColumns();
     void beginRemoveColumns(const QModelIndex &parent, int first, int last);
     void endRemoveColumns();
-%If (Qt_4_2_0 -)
     QModelIndexList persistentIndexList() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void reset();
-%End
     void changePersistentIndex(const QModelIndex &from, const QModelIndex &to);
     void changePersistentIndexList(const QModelIndexList &from, const QModelIndexList &to);
 
@@ -219,23 +191,8 @@ public:
     bool insertColumn(int column, const QModelIndex &parent = QModelIndex());
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeColumn(int column, const QModelIndex &parent = QModelIndex());
-%If (Qt_4_2_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setSupportedDragActions(Qt::DropActions);
-%End
-%End
-%If (Qt_5_0_0 -)
     virtual Qt::DropActions supportedDragActions() const;
-%End
-%If (Qt_4_2_0 - Qt_5_0_0)
-    Qt::DropActions supportedDragActions() const;
-%End
-%If (Qt_5_0_0 -)
     virtual QHash<int, QByteArray> roleNames() const;
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-    const QHash<int, QByteArray> &roleNames() const;
-%End
 
 protected:
     QModelIndex createIndex(int row, int column, SIP_PYOBJECT object = 0) const [QModelIndex (int row, int column, void *object = 0)];
@@ -274,63 +231,47 @@ protected:
 %End
 
 signals:
-%If (Qt_4_6_0 -)
     void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);
-%End
-%If (Qt_4_6_0 -)
     void rowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row);
-%End
-%If (Qt_4_6_0 -)
     void columnsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationColumn);
-%End
-%If (Qt_4_6_0 -)
     void columnsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int column);
-%End
 
 protected:
-%If (Qt_4_6_0 -)
     bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
-%End
-%If (Qt_4_6_0 -)
     void endMoveRows();
-%End
-%If (Qt_4_6_0 -)
     bool beginMoveColumns(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationColumn);
-%End
-%If (Qt_4_6_0 -)
     void endMoveColumns();
-%End
-%If (Qt_4_6_0 -)
-    void beginResetModel();
-%End
-%If (Qt_4_6_0 -)
-    void endResetModel();
-%End
-%If (Qt_4_6_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setRoleNames(const QHash<int, QByteArray> &roleNames);
-%End
+    void beginResetModel() /ReleaseGIL/;
+    void endResetModel() /ReleaseGIL/;
+
+protected slots:
+%If (Qt_5_1_0 -)
+    void resetInternalData();
 %End
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const;
-%End
-%If (Qt_5_0_0 -)
     virtual bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
-%End
-%If (Qt_5_0_0 -)
     virtual bool moveColumns(const QModelIndex &sourceParent, int sourceColumn, int count, const QModelIndex &destinationParent, int destinationChild);
-%End
-%If (Qt_5_0_0 -)
     bool moveRow(const QModelIndex &sourceParent, int sourceRow, const QModelIndex &destinationParent, int destinationChild);
-%End
-%If (Qt_5_0_0 -)
     bool moveColumn(const QModelIndex &sourceParent, int sourceColumn, const QModelIndex &destinationParent, int destinationChild);
-%End
+%If (Qt_5_11_0 -)
 
-private:
-    QAbstractItemModel(const QAbstractItemModel &);
+    enum class CheckIndexOption
+    {
+        NoOption,
+        IndexIsValid,
+        DoNotUseParent,
+        ParentIsInvalid,
+    };
+
+%End
+%If (Qt_5_11_0 -)
+    typedef QFlags<QAbstractItemModel::CheckIndexOption> CheckIndexOptions;
+%End
+%If (Qt_5_11_0 -)
+    bool checkIndex(const QModelIndex &index, QAbstractItemModel::CheckIndexOptions options = QAbstractItemModel::CheckIndexOption::NoOption) const;
+%End
 };
 
 class QAbstractTableModel : QAbstractItemModel
@@ -344,9 +285,17 @@ public:
     virtual ~QAbstractTableModel();
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+%If (Qt_5_1_0 -)
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+%End
+%If (Qt_5_2_0 -)
+    QObject *parent() const;
+%End
+%If (Qt_5_5_0 -)
+    virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
+%End
 
 private:
-    QAbstractTableModel(const QAbstractTableModel &);
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual bool hasChildren(const QModelIndex &parent) const;
 };
@@ -362,10 +311,22 @@ public:
     virtual ~QAbstractListModel();
     virtual QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+%If (Qt_5_1_0 -)
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+%End
+%If (Qt_5_2_0 -)
+    QObject *parent() const;
+%End
+%If (Qt_5_5_0 -)
+    virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
+%End
 
 private:
-    QAbstractListModel(const QAbstractListModel &);
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual int columnCount(const QModelIndex &parent) const;
     virtual bool hasChildren(const QModelIndex &parent) const;
 };
+
+%If (Qt_5_11_0 -)
+QFlags<QAbstractItemModel::CheckIndexOption> operator|(QAbstractItemModel::CheckIndexOption f1, QFlags<QAbstractItemModel::CheckIndexOption> f2);
+%End

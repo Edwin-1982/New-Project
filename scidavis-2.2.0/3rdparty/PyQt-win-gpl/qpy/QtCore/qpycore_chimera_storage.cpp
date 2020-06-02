@@ -1,8 +1,8 @@
 // This is the implementation of the Chimera::Storage class.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -24,7 +24,8 @@
 
 #include "qpycore_chimera.h"
 #include "qpycore_pyqtpyobject.h"
-#include "qpycore_sip.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Create a new storage instance containing a converted Python object.
@@ -58,7 +59,11 @@ Chimera::Storage::Storage(const Chimera *ct)
     if (!isPointerType())
     {
         // Create a default fundamental or value type.
-        _value_storage = QVariant(_parsed_type->metatype(), (const void *)0);
+        if (_parsed_type->metatype() == QMetaType::Void)
+            _value_storage = QVariant();
+        else
+            _value_storage = QVariant(_parsed_type->metatype(),
+                    (const void *)0);
     }
 }
 
@@ -113,7 +118,7 @@ PyObject *Chimera::Storage::toPyObject() const
     }
 
     if (_parsed_type->typeDef() == sipType_QVariant)
-            return Chimera::toAnyPyObject(_value_storage);
+        return Chimera::toAnyPyObject(_value_storage);
 
     return _parsed_type->toPyObject(_value_storage);
 }

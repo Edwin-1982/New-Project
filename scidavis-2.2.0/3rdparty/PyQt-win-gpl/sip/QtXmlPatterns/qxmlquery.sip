@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,30 +20,28 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QXmlQuery
 {
 %TypeHeaderCode
 #include <qxmlquery.h>
 %End
 
-public:
-%If (Qt_4_5_0 -)
+%TypeCode
+// Needed by the evaluateToStringList() %MethodCode.
+#include <qstringlist.h>
+%End
 
+public:
     enum QueryLanguage
     {
         XQuery10,
         XSLT20,
     };
 
-%End
     QXmlQuery();
     QXmlQuery(const QXmlQuery &other);
     QXmlQuery(const QXmlNamePool &np);
-%If (Qt_4_5_0 -)
     QXmlQuery(QXmlQuery::QueryLanguage queryLanguage, const QXmlNamePool &pool = QXmlNamePool());
-%End
     ~QXmlQuery();
     void setMessageHandler(QAbstractMessageHandler *messageHandler /KeepReference/);
     QAbstractMessageHandler *messageHandler() const;
@@ -53,20 +51,20 @@ public:
     QXmlNamePool namePool() const;
     void bindVariable(const QXmlName &name, const QXmlItem &value);
     void bindVariable(const QXmlName &name, QIODevice *);
-%If (Qt_4_5_0 -)
     void bindVariable(const QXmlName &name, const QXmlQuery &query);
-%End
     void bindVariable(const QString &localName, const QXmlItem &value);
     void bindVariable(const QString &localName, QIODevice *);
-%If (Qt_4_5_0 -)
     void bindVariable(const QString &localName, const QXmlQuery &query);
-%End
     bool isValid() const;
     void evaluateTo(QXmlResultItems *result) const;
     bool evaluateTo(QAbstractXmlReceiver *callback) const;
-    bool evaluateTo(QStringList *target) const /API=QString: - 2/;
     SIP_PYOBJECT evaluateToStringList() const /TypeHint="QStringList"/;
 %MethodCode
+        static const sipTypeDef *sipType_QStringList = 0;
+        
+        if (!sipType_QStringList)
+            sipType_QStringList = sipFindType("QStringList");
+        
         bool ok;
         QStringList *result = new QStringList;
         
@@ -86,15 +84,14 @@ public:
         }
 %End
 
-%If (Qt_4_5_0 -)
     bool evaluateTo(QIODevice *target) const;
-%End
-%If (Qt_4_5_0 -)
-    bool evaluateTo(QString *output) const /API=QString: - 2/;
-%End
-%If (Qt_4_5_0 -)
     SIP_PYOBJECT evaluateToString() const /TypeHint="QString"/;
 %MethodCode
+        static const sipTypeDef *sipType_QStringList = 0;
+        
+        if (!sipType_QStringList)
+            sipType_QStringList = sipFindType("QStringList");
+        
         bool ok;
         QString *result = new QString;
         
@@ -114,37 +111,16 @@ public:
         }
 %End
 
-%End
     void setUriResolver(const QAbstractUriResolver *resolver /KeepReference/);
     const QAbstractUriResolver *uriResolver() const;
     void setFocus(const QXmlItem &item);
-%If (Qt_4_5_0 -)
     bool setFocus(const QUrl &documentURI);
-%End
-%If (Qt_4_5_0 -)
     bool setFocus(QIODevice *document);
-%End
-%If (Qt_4_6_0 -)
     bool setFocus(const QString &focus);
-%End
-%If (Qt_4_5_0 -)
     void setInitialTemplateName(const QXmlName &name);
-%End
-%If (Qt_4_5_0 -)
     void setInitialTemplateName(const QString &name);
-%End
-%If (Qt_4_5_0 -)
     QXmlName initialTemplateName() const;
-%End
-%If (Qt_4_5_0 -)
     void setNetworkAccessManager(QNetworkAccessManager *newManager /KeepReference/);
-%End
-%If (Qt_4_5_0 -)
     QNetworkAccessManager *networkAccessManager() const;
-%End
-%If (Qt_4_5_0 -)
     QXmlQuery::QueryLanguage queryLanguage() const;
-%End
 };
-
-%End

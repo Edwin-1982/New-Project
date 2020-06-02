@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,13 +29,8 @@ class QPixmap : QPaintDevice
 public:
     QPixmap();
     QPixmap(int w, int h);
-%If (Qt_5_0_0 -)
     explicit QPixmap(const QSize &);
-%End
-%If (- Qt_5_0_0)
-    QPixmap(const QSize &);
-%End
-    QPixmap(const QString &fileName, const char *format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor);
+    QPixmap(const QString &fileName, const char *format = 0, Qt::ImageConversionFlags flags = Qt::ImageConversionFlag::AutoColor);
     QPixmap(SIP_PYLIST xpm /TypeHint="List[str]"/) [(const char **xpm)];
 %MethodCode
         // The Python interface is a list of strings that make up the image.
@@ -54,13 +49,8 @@ public:
     QPixmap(const QPixmap &);
     QPixmap(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QPixmap>())
             sipCpp = new sipQPixmap(a0->value<QPixmap>());
-        #else
-        if (qVariantCanConvert<QPixmap>(*a0))
-            sipCpp = new sipQPixmap(qVariantValue<QPixmap>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -74,123 +64,29 @@ public:
     QRect rect() const;
     int depth() const;
     static int defaultDepth();
-    void fill(const QColor &color = Qt::white);
-%If (Qt_5_0_0 -)
-    void fill(const QPaintDevice *device, const QPoint &ofs);
-%End
-%If (- Qt_5_0_0)
-    void fill(const QWidget *widget, const QPoint &ofs);
-%End
-%If (Qt_5_0_0 -)
-    void fill(const QPaintDevice *device, int xofs, int yofs);
-%End
-%If (- Qt_5_0_0)
-    void fill(const QWidget *widget, int xofs, int yofs);
-%End
+    void fill(const QColor &color = Qt::GlobalColor::white);
     QBitmap mask() const;
     void setMask(const QBitmap &);
-%If (PyQt_Deprecated_5_0)
-    QPixmap alphaChannel() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void setAlphaChannel(const QPixmap &);
-%End
     bool hasAlpha() const;
     bool hasAlphaChannel() const;
     QBitmap createHeuristicMask(bool clipTight = true) const;
-%If (Qt_5_0_0 -)
     QBitmap createMaskFromColor(const QColor &maskColor, Qt::MaskMode mode = Qt::MaskInColor) const;
-%End
-%If (Qt_4_3_0 - Qt_5_0_0)
-    QBitmap createMaskFromColor(const QColor &maskColor, Qt::MaskMode mode) const;
-%End
-%If (- Qt_5_0_0)
-    QBitmap createMaskFromColor(const QColor &maskColor) const;
-%End
-    static QPixmap grabWindow(WId window, int x = 0, int y = 0, int width = -1, int height = -1);
-%If (Qt_5_0_0 -)
-    static QPixmap grabWidget(QObject *widget, const QRect &rect);
-%End
-%If (- Qt_5_0_0)
-    static QPixmap grabWidget(QWidget *widget, const QRect &rect);
-%End
-%If (Qt_5_0_0 -)
-    static QPixmap grabWidget(QObject *widget, int x = 0, int y = 0, int width = -1, int height = -1);
-%End
-%If (- Qt_5_0_0)
-    static QPixmap grabWidget(QWidget *widget, int x = 0, int y = 0, int width = -1, int height = -1);
-%End
     QPixmap scaled(int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation) const;
     QPixmap scaled(const QSize &size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation) const;
     QPixmap scaledToWidth(int width, Qt::TransformationMode mode = Qt::FastTransformation) const;
     QPixmap scaledToHeight(int height, Qt::TransformationMode mode = Qt::FastTransformation) const;
-    QPixmap transformed(const QMatrix &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const;
-    static QMatrix trueMatrix(const QMatrix &m, int w, int h);
     QImage toImage() const;
     static QPixmap fromImage(const QImage &image, Qt::ImageConversionFlags flags = Qt::AutoColor);
-%If (Qt_4_7_0 -)
     static QPixmap fromImageReader(QImageReader *imageReader, Qt::ImageConversionFlags flags = Qt::AutoColor);
-%End
-%If (Qt_4_7_0 -)
     bool convertFromImage(const QImage &img, Qt::ImageConversionFlags flags = Qt::AutoColor);
-%End
     bool load(const QString &fileName, const char *format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor);
-    bool loadFromData(const uchar *buf /Array, TypeHint="Py_v3:bytes;str"/, uint len /ArraySize/, const char *format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor);
+    bool loadFromData(const uchar *buf /Array/, uint len /ArraySize/, const char *format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor);
     bool loadFromData(const QByteArray &buf, const char *format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor);
-%If (Qt_4_2_0 -)
     bool save(const QString &fileName, const char *format = 0, int quality = -1) const;
-%End
-%If (- Qt_4_2_0)
-    bool save(const QString &fileName, const char *format, int quality = -1) const;
-%End
-%If (Qt_4_2_0 -)
     bool save(QIODevice *device, const char *format = 0, int quality = -1) const;
-%End
-%If (- Qt_4_2_0)
-    bool save(QIODevice *device, const char *format, int quality = -1) const;
-%End
-%If (WS_WIN)
-// Windows specific conversion functions.
-%If (- Qt_5_0_0)
-enum HBitmapFormat
-{
-    NoAlpha,
-    PremultipliedAlpha,
-%If (Qt_4_5_0 -)
-    Alpha,
-%End
-};
-
-HBITMAP toWinHBITMAP(QPixmap::HBitmapFormat format = QPixmap::NoAlpha) const;
-static QPixmap fromWinHBITMAP(HBITMAP bitmap, QPixmap::HBitmapFormat format = QPixmap::NoAlpha);
-
-%If (Qt_4_6_0 -)
-HICON toWinHICON() const;
-static QPixmap fromWinHICON(HICON icon);
-%End
-%End
-%End
     QPixmap copy(const QRect &rect = QRect()) const;
-%If (PyQt_Deprecated_5_0)
-    int serialNumber() const;
-%End
     void detach();
-%If (- Qt_5_0_0)
-%If (WS_X11)
-    Qt::HANDLE x11PictureHandle() const;
-%End
-%End
     bool isQBitmap() const;
-%If (- Qt_5_0_0)
-%If (WS_X11)
-    const QX11Info &x11Info() const;
-%End
-%End
-%If (- Qt_5_0_0)
-%If (WS_X11)
-    Qt::HANDLE handle() const;
-%End
-%End
     virtual QPaintEngine *paintEngine() const;
 
 protected:
@@ -198,47 +94,15 @@ protected:
 
 public:
     QPixmap copy(int ax, int ay, int awidth, int aheight) const;
-%If (Qt_4_3_0 -)
     QPixmap transformed(const QTransform &transform, Qt::TransformationMode mode = Qt::FastTransformation) const;
-%End
-%If (Qt_4_3_0 -)
     static QTransform trueMatrix(const QTransform &m, int w, int h);
-%End
-%If (Qt_4_3_0 -)
     qint64 cacheKey() const;
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-%If (WS_X11)
-
-    enum ShareMode
-    {
-        ImplicitlyShared,
-        ExplicitlyShared,
-    };
-
-%End
-%End
-%If (Qt_4_5_0 - Qt_5_0_0)
-%If (WS_X11)
-    static QPixmap fromX11Pixmap(Qt::HANDLE pixmap, QPixmap::ShareMode mode = QPixmap::ImplicitlyShared);
-%End
-%End
-%If (Qt_4_6_0 -)
     void scroll(int dx, int dy, const QRect &rect, QRegion *exposed /Out/ = 0);
-%End
-%If (Qt_4_6_0 -)
     void scroll(int dx, int dy, int x, int y, int width, int height, QRegion *exposed /Out/ = 0);
-%End
-%If (Qt_4_8_0 -)
-    void swap(QPixmap &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QPixmap &other /Constrained/);
     qreal devicePixelRatio() const;
-%End
-%If (Qt_5_0_0 -)
     void setDevicePixelRatio(qreal scaleFactor);
-%End
 };
 
-QDataStream &operator<<(QDataStream &, const QPixmap & /Constrained/);
-QDataStream &operator>>(QDataStream &, QPixmap & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QPixmap & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QPixmap & /Constrained/) /ReleaseGIL/;

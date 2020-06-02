@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QState : QAbstractState
 {
 %TypeHeaderCode
@@ -35,67 +33,26 @@ public:
         ParallelStates,
     };
 
-%If (Qt_5_0_0 -)
-
     enum RestorePolicy
     {
         DontRestoreProperties,
         RestoreProperties,
     };
 
-%End
     QState(QState *parent /TransferThis/ = 0);
     QState(QState::ChildMode childMode, QState *parent /TransferThis/ = 0);
     virtual ~QState();
     QAbstractState *errorState() const;
     void setErrorState(QAbstractState *state /KeepReference/);
     void addTransition(QAbstractTransition *transition /Transfer/);
-%If (Qt_5_0_0 -)
-    QSignalTransition *addTransition(const QObject *sender, SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/, QAbstractState *target);
-%MethodCode
-        const char *signal = pyqt4_get_signal(a1);
-        
-        if (signal)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->addTransition(a0, signal, a2);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(1, a1);
-        }
-%End
-
-%End
-%If (- Qt_5_0_0)
-    QSignalTransition *addTransition(QObject *sender, SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/, QAbstractState *target);
-%MethodCode
-        const char *signal = pyqt4_get_signal(a1);
-        
-        if (signal)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->addTransition(a0, signal, a2);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(1, a1);
-        }
-%End
-
-%End
-    QSignalTransition *addTransition(SIP_PYOBJECT signal /TypeHint="PYQT_SIGNAL"/, QAbstractState *target);
+    QSignalTransition *addTransition(SIP_PYOBJECT signal /TypeHint="pyqtBoundSignal"/, QAbstractState *target);
 %MethodCode
         QObject *sender;
-        const char *signal = pyqt4_get_pyqtsignal_parts(a0, &sender);
+        QByteArray signal_signature;
         
-        if (signal)
+        if ((sipError = pyqt5_get_pyqtsignal_parts(a0, &sender, signal_signature)) == sipErrorNone)
         {
-            Py_BEGIN_ALLOW_THREADS
-            sipRes = sipCpp->addTransition(sender, signal, a1);
-            Py_END_ALLOW_THREADS
+            sipRes = sipCpp->addTransition(sender, signal_signature.constData(), a1);
         }
         else
         {
@@ -105,9 +62,7 @@ public:
 
     QAbstractTransition *addTransition(QAbstractState *target /Transfer/);
     void removeTransition(QAbstractTransition *transition /TransferBack/);
-%If (Qt_4_7_0 -)
-    QList<QAbstractTransition*> transitions() const;
-%End
+    QList<QAbstractTransition *> transitions() const;
     QAbstractState *initialState() const;
     void setInitialState(QAbstractState *state /KeepReference/);
     QState::ChildMode childMode() const;
@@ -123,8 +78,14 @@ protected:
     virtual void onExit(QEvent *event);
     virtual bool event(QEvent *e);
 
-private:
-    QState(const QState &);
-};
-
+signals:
+%If (Qt_5_4_0 -)
+    void childModeChanged();
 %End
+%If (Qt_5_4_0 -)
+    void initialStateChanged();
+%End
+%If (Qt_5_4_0 -)
+    void errorStateChanged();
+%End
+};

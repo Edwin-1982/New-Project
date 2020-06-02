@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 class QSslConfiguration
 {
@@ -55,16 +54,100 @@ public:
     static void setDefaultConfiguration(const QSslConfiguration &configuration);
     bool operator==(const QSslConfiguration &other) const;
     bool operator!=(const QSslConfiguration &other) const;
-%If (Qt_4_8_0 -)
     void setSslOption(QSsl::SslOption option, bool on);
-%End
-%If (Qt_4_8_0 -)
     bool testSslOption(QSsl::SslOption option) const;
+    void swap(QSslConfiguration &other /Constrained/);
+%If (Qt_5_1_0 -)
+    QList<QSslCertificate> localCertificateChain() const;
 %End
-%If (Qt_5_0_0 -)
-    void swap(QSslConfiguration &other);
+%If (Qt_5_1_0 -)
+    void setLocalCertificateChain(const QList<QSslCertificate> &localChain);
+%End
+%If (Qt_5_2_0 -)
+    QByteArray sessionTicket() const;
+%End
+%If (Qt_5_2_0 -)
+    void setSessionTicket(const QByteArray &sessionTicket);
+%End
+%If (Qt_5_2_0 -)
+    int sessionTicketLifeTimeHint() const;
+%End
+%If (Qt_5_3_0 -)
+
+    enum NextProtocolNegotiationStatus
+    {
+        NextProtocolNegotiationNone,
+        NextProtocolNegotiationNegotiated,
+        NextProtocolNegotiationUnsupported,
+    };
+
+%End
+%If (Qt_5_3_0 -)
+    void setAllowedNextProtocols(QList<QByteArray> protocols);
+%End
+%If (Qt_5_3_0 -)
+    QList<QByteArray> allowedNextProtocols() const;
+%End
+%If (Qt_5_3_0 -)
+    QByteArray nextNegotiatedProtocol() const;
+%End
+%If (Qt_5_3_0 -)
+    QSslConfiguration::NextProtocolNegotiationStatus nextProtocolNegotiationStatus() const;
+%End
+%If (Qt_5_3_0 -)
+    static const char *NextProtocolSpdy3_0 /Encoding="None",NoSetter/;
+%End
+%If (Qt_5_3_0 -)
+    static const char *NextProtocolHttp1_1 /Encoding="None",NoSetter/;
+%End
+%If (Qt_5_4_0 -)
+    QSsl::SslProtocol sessionProtocol() const;
+%End
+%If (Qt_5_5_0 -)
+    static QList<QSslCipher> supportedCiphers();
+%End
+%If (Qt_5_5_0 -)
+    static QList<QSslCertificate> systemCaCertificates();
+%End
+%If (Qt_5_5_0 -)
+    QVector<QSslEllipticCurve> ellipticCurves() const;
+%End
+%If (Qt_5_5_0 -)
+    void setEllipticCurves(const QVector<QSslEllipticCurve> &curves);
+%End
+%If (Qt_5_5_0 -)
+    static QVector<QSslEllipticCurve> supportedEllipticCurves();
+%End
+%If (Qt_5_7_0 -)
+    QSslKey ephemeralServerKey() const;
+%End
+%If (Qt_5_8_0 -)
+    QByteArray preSharedKeyIdentityHint() const;
+%End
+%If (Qt_5_8_0 -)
+    void setPreSharedKeyIdentityHint(const QByteArray &hint);
+%End
+%If (Qt_5_8_0 -)
+    QSslDiffieHellmanParameters diffieHellmanParameters() const;
+%End
+%If (Qt_5_8_0 -)
+    void setDiffieHellmanParameters(const QSslDiffieHellmanParameters &dhparams);
+%End
+%If (Qt_5_11_0 -)
+    QMap<QByteArray, QVariant> backendConfiguration() const;
+%End
+%If (Qt_5_11_0 -)
+    void setBackendConfigurationOption(const QByteArray &name, const QVariant &value);
+%End
+%If (Qt_5_11_0 -)
+    void setBackendConfiguration(const QMap<QByteArray, QVariant> &backendConfiguration = QMap<QByteArray, QVariant>());
+%End
+%If (Qt_5_13_0 -)
+    void setOcspStaplingEnabled(bool enable);
+%End
+%If (Qt_5_13_0 -)
+    bool ocspStaplingEnabled() const;
 %End
 };
 
-%End
 %End

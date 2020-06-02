@@ -1,0 +1,6 @@
+D:\Program Files\Python\Python38\Lib\site-packages\sipconfig.py
+D:\Program Files\Python\Python38\Lib\site-packages\sipdistutils.py
+D:\Program Files\Python\Python38\include\sip.h
+D:\Program Files\Python\Python38\sip.exe
+D:\Program Files\Python\Python38\Lib\site-packages\sip.pyi
+D:\Program Files\Python\Python38\Lib\site-packages\sip.pyd

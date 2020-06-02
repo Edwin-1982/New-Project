@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,27 +37,21 @@ public:
     QTextLength();
     QTextLength::Type type() const;
     QTextLength(QTextLength::Type atype, qreal avalue);
-    QTextLength(const QVariant &variant /GetWrapper/) /NoDerived/;
-%MethodCode
-        #if QT_VERSION >= 0x050000
-        if (a0->canConvert<QTextLength>())
-            sipCpp = new QTextLength(a0->value<QTextLength>());
-        #else
-        if (qVariantCanConvert<QTextLength>(*a0))
-            sipCpp = new QTextLength(qVariantValue<QTextLength>(*a0));
-        #endif
-        else
-            sipError = sipBadCallableArg(0, a0Wrapper);
-%End
-
     qreal value(qreal maximumLength) const;
     qreal rawValue() const;
     bool operator==(const QTextLength &other) const;
     bool operator!=(const QTextLength &other) const;
+    QTextLength(const QVariant &variant /GetWrapper/) /NoDerived/;
+%MethodCode
+        if (a0->canConvert<QTextLength>())
+            sipCpp = new QTextLength(a0->value<QTextLength>());
+        else
+            sipError = sipBadCallableArg(0, a0Wrapper);
+%End
 };
 
-QDataStream &operator<<(QDataStream &, const QTextLength & /Constrained/);
-QDataStream &operator>>(QDataStream &, QTextLength & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QTextLength & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QTextLength & /Constrained/) /ReleaseGIL/;
 
 class QTextFormat
 {
@@ -82,13 +76,9 @@ public:
         NoObject,
         ImageObject,
         TableObject,
-%If (Qt_4_4_0 -)
         TableCellObject,
-%End
         UserObject,
     };
-
-%If (Qt_4_2_0 -)
 
     enum PageBreakFlag
     {
@@ -97,10 +87,7 @@ public:
         PageBreak_AlwaysAfter,
     };
 
-%End
-%If (Qt_4_2_0 -)
     typedef QFlags<QTextFormat::PageBreakFlag> PageBreakFlags;
-%End
 
     enum Property
     {
@@ -153,101 +140,49 @@ public:
         ImageName,
         ImageWidth,
         ImageHeight,
-%If (Qt_4_2_0 -)
         TextUnderlineStyle,
-%End
-%If (Qt_4_2_0 -)
         TableHeaderRowCount,
-%End
-%If (Qt_4_2_0 -)
         FullWidthSelection,
-%End
-%If (Qt_4_2_0 -)
         PageBreakPolicy,
-%End
-%If (Qt_4_3_0 -)
         TextToolTip,
-%End
-%If (Qt_4_3_0 -)
         FrameTopMargin,
-%End
-%If (Qt_4_3_0 -)
         FrameBottomMargin,
-%End
-%If (Qt_4_3_0 -)
         FrameLeftMargin,
-%End
-%If (Qt_4_3_0 -)
         FrameRightMargin,
-%End
-%If (Qt_4_3_0 -)
         FrameBorderBrush,
-%End
-%If (Qt_4_3_0 -)
         FrameBorderStyle,
-%End
-%If (Qt_4_4_0 -)
         BackgroundImageUrl,
-%End
-%If (Qt_4_4_0 -)
         TabPositions,
-%End
-%If (Qt_4_4_0 -)
         FirstFontProperty,
-%End
-%If (Qt_4_4_0 -)
         FontCapitalization,
-%End
-%If (Qt_4_4_0 -)
         FontLetterSpacing,
-%End
-%If (Qt_4_4_0 -)
         FontWordSpacing,
-%End
-%If (Qt_4_4_0 -)
         LastFontProperty,
-%End
-%If (Qt_4_4_0 -)
         TableCellTopPadding,
-%End
-%If (Qt_4_4_0 -)
         TableCellBottomPadding,
-%End
-%If (Qt_4_4_0 -)
         TableCellLeftPadding,
-%End
-%If (Qt_4_4_0 -)
         TableCellRightPadding,
-%End
-%If (Qt_4_5_0 -)
         FontStyleHint,
-%End
-%If (Qt_4_5_0 -)
         FontStyleStrategy,
-%End
-%If (Qt_4_5_0 -)
         FontKerning,
-%End
-%If (Qt_4_8_0 -)
         LineHeight,
-%End
-%If (Qt_4_8_0 -)
         LineHeightType,
-%End
-%If (Qt_4_8_0 -)
         FontHintingPreference,
-%End
-%If (Qt_4_8_0 -)
         ListNumberPrefix,
-%End
-%If (Qt_4_8_0 -)
         ListNumberSuffix,
-%End
-%If (Qt_5_0_0 -)
         FontStretch,
-%End
-%If (Qt_5_0_0 -)
         FontLetterSpacingType,
+%If (Qt_5_12_0 -)
+        HeadingLevel,
+%End
+%If (Qt_5_12_0 -)
+        ImageQuality,
+%End
+%If (Qt_5_13_0 -)
+        FontFamilies,
+%End
+%If (Qt_5_13_0 -)
+        FontStyleName,
 %End
         UserProperty,
     };
@@ -257,13 +192,8 @@ public:
     QTextFormat(const QTextFormat &rhs);
     QTextFormat(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QTextFormat>())
             sipCpp = new QTextFormat(a0->value<QTextFormat>());
-        #else
-        if (qVariantCanConvert<QTextFormat>(*a0))
-            sipCpp = new QTextFormat(qVariantValue<QTextFormat>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -313,22 +243,17 @@ public:
     QBrush foreground() const;
     void clearForeground();
     void setObjectType(int atype);
-%If (Qt_4_3_0 -)
     int propertyCount() const;
-%End
-%If (Qt_4_4_0 -)
     bool isTableCellFormat() const;
-%End
-%If (Qt_4_4_0 -)
     QTextTableCellFormat toTableCellFormat() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QTextFormat &other);
+    void swap(QTextFormat &other /Constrained/);
+%If (Qt_5_3_0 -)
+    bool isEmpty() const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QTextFormat & /Constrained/);
-QDataStream &operator>>(QDataStream &, QTextFormat & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QTextFormat & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QTextFormat & /Constrained/) /ReleaseGIL/;
 
 class QTextCharFormat : QTextFormat
 {
@@ -342,18 +267,10 @@ public:
         AlignNormal,
         AlignSuperScript,
         AlignSubScript,
-%If (Qt_4_3_0 -)
         AlignMiddle,
-%End
-%If (Qt_4_3_0 -)
         AlignTop,
-%End
-%If (Qt_4_3_0 -)
         AlignBottom,
-%End
-%If (Qt_4_8_0 -)
         AlignBaseline,
-%End
     };
 
     QTextCharFormat();
@@ -384,15 +301,12 @@ public:
     bool isAnchor() const;
     void setAnchorHref(const QString &value);
     QString anchorHref() const;
-    void setAnchorName(const QString &name);
-    QString anchorName() const;
     int tableCellRowSpan() const;
     int tableCellColumnSpan() const;
     void setTableCellRowSpan(int atableCellRowSpan);
     void setTableCellColumnSpan(int atableCellColumnSpan);
     void setTextOutline(const QPen &pen);
     QPen textOutline() const;
-%If (Qt_4_2_0 -)
 
     enum UnderlineStyle
     {
@@ -406,78 +320,53 @@ public:
         SpellCheckUnderline,
     };
 
-%End
-%If (Qt_4_2_0 -)
     void setUnderlineStyle(QTextCharFormat::UnderlineStyle style);
-%End
-%If (Qt_4_2_0 -)
     QTextCharFormat::UnderlineStyle underlineStyle() const;
-%End
-%If (Qt_4_3_0 -)
     void setToolTip(const QString &tip);
-%End
-%If (Qt_4_3_0 -)
     QString toolTip() const;
-%End
-%If (Qt_4_3_0 -)
     void setAnchorNames(const QStringList &names);
-%End
-%If (Qt_4_3_0 -)
     QStringList anchorNames() const;
-%End
-%If (Qt_4_4_0 -)
     void setFontCapitalization(QFont::Capitalization capitalization);
-%End
-%If (Qt_4_4_0 -)
     QFont::Capitalization fontCapitalization() const;
-%End
-%If (Qt_4_4_0 -)
     void setFontLetterSpacing(qreal spacing);
-%End
-%If (Qt_4_4_0 -)
     qreal fontLetterSpacing() const;
-%End
-%If (Qt_4_4_0 -)
     void setFontWordSpacing(qreal spacing);
-%End
-%If (Qt_4_4_0 -)
     qreal fontWordSpacing() const;
-%End
-%If (Qt_4_5_0 -)
     void setFontStyleHint(QFont::StyleHint hint, QFont::StyleStrategy strategy = QFont::PreferDefault);
-%End
-%If (Qt_4_5_0 -)
     void setFontStyleStrategy(QFont::StyleStrategy strategy);
-%End
-%If (Qt_4_5_0 -)
     QFont::StyleHint fontStyleHint() const;
-%End
-%If (Qt_4_5_0 -)
     QFont::StyleStrategy fontStyleStrategy() const;
-%End
-%If (Qt_4_5_0 -)
     void setFontKerning(bool enable);
-%End
-%If (Qt_4_5_0 -)
     bool fontKerning() const;
-%End
-%If (Qt_4_8_0 -)
     void setFontHintingPreference(QFont::HintingPreference hintingPreference);
-%End
-%If (Qt_4_8_0 -)
     QFont::HintingPreference fontHintingPreference() const;
-%End
-%If (Qt_5_0_0 -)
     int fontStretch() const;
-%End
-%If (Qt_5_0_0 -)
     void setFontStretch(int factor);
-%End
-%If (Qt_5_0_0 -)
     void setFontLetterSpacingType(QFont::SpacingType letterSpacingType);
-%End
-%If (Qt_5_0_0 -)
     QFont::SpacingType fontLetterSpacingType() const;
+%If (Qt_5_3_0 -)
+
+    enum FontPropertiesInheritanceBehavior
+    {
+        FontPropertiesSpecifiedOnly,
+        FontPropertiesAll,
+    };
+
+%End
+%If (Qt_5_3_0 -)
+    void setFont(const QFont &font, QTextCharFormat::FontPropertiesInheritanceBehavior behavior);
+%End
+%If (Qt_5_13_0 -)
+    void setFontFamilies(const QStringList &families);
+%End
+%If (Qt_5_13_0 -)
+    QVariant fontFamilies() const;
+%End
+%If (Qt_5_13_0 -)
+    void setFontStyleName(const QString &styleName);
+%End
+%If (Qt_5_13_0 -)
+    QVariant fontStyleName() const;
 %End
 };
 
@@ -506,19 +395,10 @@ public:
     bool nonBreakableLines() const;
     void setAlignment(Qt::Alignment aalignment);
     void setIndent(int aindent);
-%If (Qt_4_2_0 -)
-    void setPageBreakPolicy(QFlags<QTextFormat::PageBreakFlag> flags);
-%End
-%If (Qt_4_2_0 -)
-    QFlags<QTextFormat::PageBreakFlag> pageBreakPolicy() const;
-%End
-%If (Qt_4_4_0 -)
+    void setPageBreakPolicy(QTextFormat::PageBreakFlags flags);
+    QTextFormat::PageBreakFlags pageBreakPolicy() const;
     void setTabPositions(const QList<QTextOption::Tab> &tabs);
-%End
-%If (Qt_4_4_0 -)
     QList<QTextOption::Tab> tabPositions() const;
-%End
-%If (Qt_4_8_0 -)
 
     enum LineHeightTypes
     {
@@ -529,18 +409,15 @@ public:
         LineDistanceHeight,
     };
 
-%End
-%If (Qt_4_8_0 -)
     void setLineHeight(qreal height, int heightType);
-%End
-%If (Qt_4_8_0 -)
-    qreal lineHeight(qreal scriptLineHeight, qreal scaling) const [qreal (qreal scriptLineHeight, qreal scaling = 1.0e+0)];
-%End
-%If (Qt_4_8_0 -)
     qreal lineHeight() const;
-%End
-%If (Qt_4_8_0 -)
+    qreal lineHeight(qreal scriptLineHeight, qreal scaling = 1.) const;
     int lineHeightType() const;
+%If (Qt_5_12_0 -)
+    void setHeadingLevel(int alevel);
+%End
+%If (Qt_5_12_0 -)
+    int headingLevel() const;
 %End
 };
 
@@ -562,30 +439,18 @@ public:
         ListDecimal,
         ListLowerAlpha,
         ListUpperAlpha,
-%If (Qt_4_6_0 -)
         ListLowerRoman,
-%End
-%If (Qt_4_6_0 -)
         ListUpperRoman,
-%End
     };
 
     QTextListFormat::Style style() const;
     int indent() const;
     void setStyle(QTextListFormat::Style astyle);
     void setIndent(int aindent);
-%If (Qt_4_8_0 -)
     QString numberPrefix() const;
-%End
-%If (Qt_4_8_0 -)
     QString numberSuffix() const;
-%End
-%If (Qt_4_8_0 -)
     void setNumberPrefix(const QString &np);
-%End
-%If (Qt_4_8_0 -)
     void setNumberSuffix(const QString &ns);
-%End
 };
 
 class QTextImageFormat : QTextCharFormat
@@ -600,9 +465,15 @@ public:
     QString name() const;
     qreal width() const;
     qreal height() const;
+%If (Qt_5_12_0 -)
+    int quality() const;
+%End
     void setName(const QString &aname);
     void setWidth(qreal awidth);
     void setHeight(qreal aheight);
+%If (Qt_5_12_0 -)
+    void setQuality(int quality = 100);
+%End
 };
 
 class QTextFrameFormat : QTextFormat
@@ -636,13 +507,8 @@ public:
     void setWidth(qreal awidth);
     void setHeight(qreal aheight);
     void setHeight(const QTextLength &aheight);
-%If (Qt_4_2_0 -)
-    void setPageBreakPolicy(QFlags<QTextFormat::PageBreakFlag> flags);
-%End
-%If (Qt_4_2_0 -)
-    QFlags<QTextFormat::PageBreakFlag> pageBreakPolicy() const;
-%End
-%If (Qt_4_3_0 -)
+    void setPageBreakPolicy(QTextFormat::PageBreakFlags flags);
+    QTextFormat::PageBreakFlags pageBreakPolicy() const;
 
     enum BorderStyle
     {
@@ -659,43 +525,18 @@ public:
         BorderStyle_Outset,
     };
 
-%End
-%If (Qt_4_3_0 -)
     void setBorderBrush(const QBrush &brush);
-%End
-%If (Qt_4_3_0 -)
     QBrush borderBrush() const;
-%End
-%If (Qt_4_3_0 -)
     void setBorderStyle(QTextFrameFormat::BorderStyle style);
-%End
-%If (Qt_4_3_0 -)
     QTextFrameFormat::BorderStyle borderStyle() const;
-%End
-%If (Qt_4_3_0 -)
     qreal topMargin() const;
-%End
-%If (Qt_4_3_0 -)
     qreal bottomMargin() const;
-%End
-%If (Qt_4_3_0 -)
     qreal leftMargin() const;
-%End
-%If (Qt_4_3_0 -)
     qreal rightMargin() const;
-%End
-%If (Qt_4_3_0 -)
     void setTopMargin(qreal amargin);
-%End
-%If (Qt_4_3_0 -)
     void setBottomMargin(qreal amargin);
-%End
-%If (Qt_4_3_0 -)
     void setLeftMargin(qreal amargin);
-%End
-%If (Qt_4_3_0 -)
     void setRightMargin(qreal amargin);
-%End
 };
 
 class QTextTableFormat : QTextFrameFormat
@@ -718,18 +559,11 @@ public:
     void setColumns(int acolumns);
     void setCellPadding(qreal apadding);
     void setAlignment(Qt::Alignment aalignment);
-%If (Qt_4_2_0 -)
     void setHeaderRowCount(int count);
-%End
-%If (Qt_4_2_0 -)
     int headerRowCount() const;
-%End
 };
 
-%If (Qt_4_2_0 -)
 QFlags<QTextFormat::PageBreakFlag> operator|(QTextFormat::PageBreakFlag f1, QFlags<QTextFormat::PageBreakFlag> f2);
-%End
-%If (Qt_4_4_0 -)
 
 class QTextTableCellFormat : QTextCharFormat
 {
@@ -750,5 +584,3 @@ public:
     qreal rightPadding() const;
     void setPadding(qreal padding);
 };
-
-%End

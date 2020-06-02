@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,34 +27,34 @@ class QIconEngine /Supertype=sip.wrapper/
 %End
 
 public:
+%If (Qt_5_6_0 -)
+    QIconEngine();
+%End
+%If (Qt_5_8_0 -)
+    QIconEngine(const QIconEngine &other);
+%End
     virtual ~QIconEngine();
     virtual void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) = 0;
     virtual QSize actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state);
     virtual QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state);
     virtual void addPixmap(const QPixmap &pixmap, QIcon::Mode mode, QIcon::State state);
     virtual void addFile(const QString &fileName, const QSize &size, QIcon::Mode mode, QIcon::State state);
-%If (Qt_5_0_0 -)
     virtual QString key() const;
-%End
-%If (Qt_5_0_0 -)
     virtual QIconEngine *clone() const = 0 /Factory/;
-%End
-%If (Qt_5_0_0 -)
     virtual bool read(QDataStream &in);
-%End
-%If (Qt_5_0_0 -)
     virtual bool write(QDataStream &out) const;
-%End
-%If (Qt_5_0_0 -)
 
     enum IconEngineHook
     {
         AvailableSizesHook,
         IconNameHook,
-    };
-
+%If (Qt_5_7_0 -)
+        IsNullHook,
 %End
-%If (Qt_5_0_0 -)
+%If (Qt_5_9_0 -)
+        ScaledPixmapHook,
+%End
+    };
 
     struct AvailableSizesArgument
     {
@@ -67,59 +67,28 @@ public:
         QList<QSize> sizes;
     };
 
-%End
-%If (Qt_5_0_0 -)
     virtual QList<QSize> availableSizes(QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off) const;
-%End
-%If (Qt_5_0_0 -)
     virtual QString iconName() const;
+%If (Qt_5_7_0 -)
+    bool isNull() const;
 %End
-};
-
-%If (Qt_4_3_0 - Qt_5_0_0)
-
-class QIconEngineV2 : QIconEngine
-{
-%TypeHeaderCode
-#include <qiconengine.h>
+%If (Qt_5_9_0 -)
+    QPixmap scaledPixmap(const QSize &size, QIcon::Mode mode, QIcon::State state, qreal scale);
 %End
+%If (Qt_5_9_0 -)
 
-public:
-    virtual QString key() const;
-    virtual QIconEngineV2 *clone() const /Factory/;
-    virtual bool read(QDataStream &in);
-    virtual bool write(QDataStream &out) const;
-%If (Qt_4_5_0 -)
-
-    enum IconEngineHook
-    {
-        AvailableSizesHook,
-%If (Qt_4_7_0 -)
-        IconNameHook,
-%End
-    };
-
-%End
-%If (Qt_4_5_0 -)
-
-    struct AvailableSizesArgument
+    struct ScaledPixmapArgument
     {
 %TypeHeaderCode
 #include <qiconengine.h>
 %End
 
+        QSize size;
         QIcon::Mode mode;
         QIcon::State state;
-        QList<QSize> sizes;
+        qreal scale;
+        QPixmap pixmap;
     };
 
 %End
-%If (Qt_4_5_0 -)
-    QList<QSize> availableSizes(QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);
-%End
-%If (Qt_4_7_0 -)
-    QString iconName();
-%End
 };
-
-%End

@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2011 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -42,30 +42,27 @@
 #############################################################################
 
 
-# This is only needed for Python v2 but is harmless for Python v3.
-import sip
-sip.setapi('QString', 2)
-sip.setapi('QVariant', 2)
-
 import sys
-from PyQt4 import QtCore, QtDBus
+
+from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtDBus import QDBusConnection, QDBusInterface, QDBusReply
 
 
 if __name__ == '__main__':
-    app = QtCore.QCoreApplication(sys.argv)
+    app = QCoreApplication(sys.argv)
 
-    if not QtDBus.QDBusConnection.sessionBus().isConnected():
+    if not QDBusConnection.sessionBus().isConnected():
         sys.stderr.write("Cannot connect to the D-Bus session bus.\n"
                 "To start it, run:\n"
                 "\teval `dbus-launch --auto-syntax`\n");
         sys.exit(1)
 
-    iface = QtDBus.QDBusInterface('com.trolltech.QtDBus.PingExample', '/', '',
-            QtDBus.QDBusConnection.sessionBus())
+    iface = QDBusInterface('org.example.QtDBus.PingExample', '/', '',
+            QDBusConnection.sessionBus())
 
     if iface.isValid():
         msg = iface.call('ping', sys.argv[1] if len(sys.argv) > 1 else "")
-        reply = QtDBus.QDBusReply(msg)
+        reply = QDBusReply(msg)
 
         if reply.isValid():
             sys.stdout.write("Reply was: %s\n" % reply.value())
@@ -74,5 +71,5 @@ if __name__ == '__main__':
         sys.stderr.write("Call failed: %s\n" % reply.error().message())
         sys.exit(1)
 
-    sys.stderr.write("%s\n" % QtDBus.QDBusConnection.sessionBus().lastError().message())
+    sys.stderr.write("%s\n" % QDBusConnection.sessionBus().lastError().message())
     sys.exit(1)

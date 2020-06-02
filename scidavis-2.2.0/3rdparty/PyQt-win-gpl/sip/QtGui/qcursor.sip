@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -53,13 +53,8 @@ public:
     QCursor(const QCursor &cursor);
     QCursor(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QCursor>())
             sipCpp = new QCursor(a0->value<QCursor>());
-        #else
-        if (qVariantCanConvert<QCursor>(*a0))
-            sipCpp = new QCursor(qVariantValue<QCursor>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -74,7 +69,19 @@ public:
     static QPoint pos();
     static void setPos(int x, int y);
     static void setPos(const QPoint &p);
+    static QPoint pos(const QScreen *screen);
+    static void setPos(QScreen *screen, int x, int y);
+    static void setPos(QScreen *screen, const QPoint &p);
+%If (Qt_5_7_0 -)
+    void swap(QCursor &other);
+%End
 };
 
-QDataStream &operator<<(QDataStream &outS, const QCursor &cursor /Constrained/);
-QDataStream &operator>>(QDataStream &inS, QCursor &cursor /Constrained/);
+QDataStream &operator<<(QDataStream &outS, const QCursor &cursor /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &inS, QCursor &cursor /Constrained/) /ReleaseGIL/;
+%If (Qt_5_10_0 -)
+bool operator==(const QCursor &lhs, const QCursor &rhs);
+%End
+%If (Qt_5_10_0 -)
+bool operator!=(const QCursor &lhs, const QCursor &rhs);
+%End

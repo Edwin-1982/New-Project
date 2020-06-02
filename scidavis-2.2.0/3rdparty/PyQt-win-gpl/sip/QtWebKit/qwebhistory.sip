@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QWebHistoryItem
 {
 %TypeHeaderCode
@@ -36,19 +34,10 @@ public:
     QString title() const;
     QDateTime lastVisited() const;
     QIcon icon() const;
-%If (Qt_4_5_0 -)
     QVariant userData() const;
-%End
-%If (Qt_4_5_0 -)
     void setUserData(const QVariant &userData);
-%End
-%If (Qt_4_5_0 -)
     bool isValid() const;
-%End
 };
-
-%End
-%If (Qt_4_4_0 -)
 
 class QWebHistory
 {
@@ -78,21 +67,10 @@ private:
     ~QWebHistory();
 
 public:
-%If (Qt_4_5_0 -)
     int currentItemIndex() const;
-%End
-%If (Qt_4_5_0 -)
     int maximumItemCount() const;
-%End
-%If (Qt_4_5_0 -)
     void setMaximumItemCount(int count);
-%End
 };
 
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator<<(QDataStream &, const QWebHistory & /Constrained/);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator>>(QDataStream &, QWebHistory & /Constrained/);
-%End
+QDataStream &operator<<(QDataStream &, const QWebHistory & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QWebHistory & /Constrained/) /ReleaseGIL/;

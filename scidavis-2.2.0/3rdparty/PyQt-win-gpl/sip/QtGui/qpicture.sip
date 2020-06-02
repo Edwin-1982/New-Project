@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -34,7 +34,7 @@ public:
     virtual int devType() const;
     uint size() const;
     const char *data() const /Encoding="None"/;
-    virtual void setData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, uint size /ArraySize/);
+    virtual void setData(const char *data /Array/, uint size /ArraySize/);
     bool play(QPainter *p);
     bool load(QIODevice *dev, const char *format = 0) /ReleaseGIL/;
     bool load(const QString &fileName, const char *format = 0) /ReleaseGIL/;
@@ -44,20 +44,13 @@ public:
     void setBoundingRect(const QRect &r);
     void detach();
     bool isDetached() const;
-    static const char *pictureFormat(const QString &fileName);
-    static QList<QByteArray> inputFormats();
-    static QList<QByteArray> outputFormats();
-    static QStringList inputFormatList();
-    static QStringList outputFormatList();
     virtual QPaintEngine *paintEngine() const;
 
 protected:
     virtual int metric(QPaintDevice::PaintDeviceMetric m) const;
 
 public:
-%If (Qt_4_8_0 -)
-    void swap(QPicture &other);
-%End
+    void swap(QPicture &other /Constrained/);
 };
 
 class QPictureIO
@@ -190,5 +183,5 @@ private:
     QPictureIO(const QPictureIO &);
 };
 
-QDataStream &operator<<(QDataStream &in, const QPicture &p /Constrained/);
-QDataStream &operator>>(QDataStream &in, QPicture &p /Constrained/);
+QDataStream &operator<<(QDataStream &in, const QPicture &p /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &in, QPicture &p /Constrained/) /ReleaseGIL/;

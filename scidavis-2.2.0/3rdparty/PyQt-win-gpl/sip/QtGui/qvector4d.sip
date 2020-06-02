@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,13 +20,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
 %ModuleCode
 #include <qvector4d.h>
 %End
-%End
-
-%If (Qt_4_6_0 -)
 
 class QVector4D
 {
@@ -41,28 +37,13 @@ class QVector4D
 
 public:
     QVector4D();
-%If (Qt_5_0_0 -)
     QVector4D(float xpos, float ypos, float zpos, float wpos);
-%End
-%If (- Qt_5_0_0)
-    QVector4D(qreal xpos, qreal ypos, qreal zpos, qreal wpos);
-%End
     explicit QVector4D(const QPoint &point);
     explicit QVector4D(const QPointF &point);
     QVector4D(const QVector2D &vector);
-%If (Qt_5_0_0 -)
     QVector4D(const QVector2D &vector, float zpos, float wpos);
-%End
-%If (- Qt_5_0_0)
-    QVector4D(const QVector2D &vector, qreal zpos, qreal wpos);
-%End
     QVector4D(const QVector3D &vector);
-%If (Qt_5_0_0 -)
     QVector4D(const QVector3D &vector, float wpos);
-%End
-%If (- Qt_5_0_0)
-    QVector4D(const QVector3D &vector, qreal wpos);
-%End
     SIP_PYOBJECT __repr__() const /TypeHint="str"/;
 %MethodCode
         PyObject *x = PyFloat_FromDouble(sipCpp->x());
@@ -73,10 +54,10 @@ public:
         if (x && y && z && w)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QVector4D(%R, %R, %R, %R)", x,
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QVector4D(%R, %R, %R, %R)", x,
                     y, z, w);
         #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QVector4D(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QVector4D(");
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(x));
             PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(y));
@@ -94,141 +75,51 @@ public:
         Py_XDECREF(w);
 %End
 
-%If (Qt_5_0_0 -)
     float length() const;
-%End
-%If (- Qt_5_0_0)
-    qreal length() const;
-%End
-%If (Qt_5_0_0 -)
     float lengthSquared() const;
-%End
-%If (- Qt_5_0_0)
-    qreal lengthSquared() const;
-%End
     QVector4D normalized() const;
     void normalize();
-%If (Qt_5_0_0 -)
     static float dotProduct(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (- Qt_5_0_0)
-    static qreal dotProduct(const QVector4D &v1, const QVector4D &v2);
-%End
     QVector2D toVector2D() const;
     QVector2D toVector2DAffine() const;
     QVector3D toVector3D() const;
     QVector3D toVector3DAffine() const;
     bool isNull() const;
-%If (Qt_5_0_0 -)
     float x() const;
-%End
-%If (- Qt_5_0_0)
-    qreal x() const;
-%End
-%If (Qt_5_0_0 -)
     float y() const;
-%End
-%If (- Qt_5_0_0)
-    qreal y() const;
-%End
-%If (Qt_5_0_0 -)
     float z() const;
-%End
-%If (- Qt_5_0_0)
-    qreal z() const;
-%End
-%If (Qt_5_0_0 -)
     float w() const;
-%End
-%If (- Qt_5_0_0)
-    qreal w() const;
-%End
-%If (Qt_5_0_0 -)
     void setX(float aX);
-%End
-%If (- Qt_5_0_0)
-    void setX(qreal aX);
-%End
-%If (Qt_5_0_0 -)
     void setY(float aY);
-%End
-%If (- Qt_5_0_0)
-    void setY(qreal aY);
-%End
-%If (Qt_5_0_0 -)
     void setZ(float aZ);
-%End
-%If (- Qt_5_0_0)
-    void setZ(qreal aZ);
-%End
-%If (Qt_5_0_0 -)
     void setW(float aW);
-%End
-%If (- Qt_5_0_0)
-    void setW(qreal aW);
-%End
     QVector4D &operator+=(const QVector4D &vector);
     QVector4D &operator-=(const QVector4D &vector);
-%If (Qt_5_0_0 -)
     QVector4D &operator*=(float factor);
-%End
-%If (- Qt_5_0_0)
-    QVector4D &operator*=(qreal factor);
-%End
     QVector4D &operator*=(const QVector4D &vector);
-%If (Qt_5_0_0 -)
     QVector4D &operator/=(float divisor);
-%End
-%If (- Qt_5_0_0)
-    QVector4D &operator/=(qreal divisor);
+%If (Qt_5_5_0 -)
+    QVector4D &operator/=(const QVector4D &vector);
 %End
     QPoint toPoint() const;
     QPointF toPointF() const;
+%If (Qt_5_2_0 -)
+    float operator[](int i) const;
+%End
 };
 
-%End
-%If (Qt_4_6_0 -)
 bool operator==(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_4_6_0 -)
 bool operator!=(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_4_6_0 -)
 const QVector4D operator+(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_4_6_0 -)
 const QVector4D operator-(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_5_0_0 -)
 const QVector4D operator*(float factor, const QVector4D &vector);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QVector4D operator*(qreal factor, const QVector4D &vector);
-%End
-%If (Qt_5_0_0 -)
 const QVector4D operator*(const QVector4D &vector, float factor);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QVector4D operator*(const QVector4D &vector, qreal factor);
-%End
-%If (Qt_4_6_0 -)
 const QVector4D operator*(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_4_6_0 -)
 const QVector4D operator-(const QVector4D &vector);
-%End
-%If (Qt_5_0_0 -)
 const QVector4D operator/(const QVector4D &vector, float divisor);
+%If (Qt_5_5_0 -)
+const QVector4D operator/(const QVector4D &vector, const QVector4D &divisor);
 %End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QVector4D operator/(const QVector4D &vector, qreal divisor);
-%End
-%If (Qt_4_6_0 -)
 bool qFuzzyCompare(const QVector4D &v1, const QVector4D &v2);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator<<(QDataStream &, const QVector4D & /Constrained/);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator>>(QDataStream &, QVector4D & /Constrained/);
-%End
+QDataStream &operator<<(QDataStream &, const QVector4D & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QVector4D & /Constrained/) /ReleaseGIL/;

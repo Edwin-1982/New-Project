@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -39,7 +39,7 @@ public:
     qreal descent() const;
     qreal ascent() const;
     qreal width() const;
-    QFlags<QTextItem::RenderFlag> renderFlags() const;
+    QTextItem::RenderFlags renderFlags() const;
     QString text() const;
     QFont font() const;
 };
@@ -67,25 +67,13 @@ public:
         PainterPaths,
         Antialiasing,
         BrushStroke,
-%If (Qt_4_2_0 -)
         ConstantOpacity,
-%End
-%If (Qt_4_2_0 -)
         MaskedBrush,
-%End
         PaintOutsidePaintEvent,
-%If (Qt_4_3_0 -)
         PerspectiveTransform,
-%End
-%If (Qt_4_3_0 -)
         BlendModes,
-%End
-%If (Qt_4_4_0 -)
         ObjectBoundingModeGradients,
-%End
-%If (Qt_4_5_0 -)
         RasterOpModes,
-%End
         AllFeatures,
     };
 
@@ -105,9 +93,7 @@ public:
         DirtyHints,
         DirtyCompositionMode,
         DirtyClipEnabled,
-%If (Qt_4_2_0 -)
         DirtyOpacity,
-%End
         AllDirty,
     };
 
@@ -121,7 +107,7 @@ public:
         PolylineMode,
     };
 
-    explicit QPaintEngine(QFlags<QPaintEngine::PaintEngineFeature> features = 0);
+    explicit QPaintEngine(QPaintEngine::PaintEngineFeatures features = QPaintEngine::PaintEngineFeatures());
     virtual ~QPaintEngine();
     bool isActive() const;
     void setActive(bool newState);
@@ -159,36 +145,25 @@ public:
         Picture,
         SVG,
         Raster,
-%If (Qt_4_3_0 -)
         Direct3D,
-%End
-%If (Qt_4_4_0 -)
         Pdf,
-%End
-%If (Qt_4_5_0 -)
         OpenVG,
-%End
-%If (Qt_4_6_0 -)
         OpenGL2,
-%End
-%If (Qt_4_6_0 -)
         PaintBuffer,
-%End
-%If (Qt_4_8_0 -)
         Blitter,
+%If (Qt_5_3_0 -)
+        Direct2D,
 %End
         User,
         MaxUser,
     };
 
     virtual QPaintEngine::Type type() const = 0;
-    bool hasFeature(QFlags<QPaintEngine::PaintEngineFeature> feature) const;
     QPainter *painter() const;
+    bool hasFeature(QPaintEngine::PaintEngineFeatures feature) const;
 
 private:
-%If (Qt_4_2_0 -)
     QPaintEngine(const QPaintEngine &);
-%End
 };
 
 QFlags<QPaintEngine::PaintEngineFeature> operator|(QPaintEngine::PaintEngineFeature f1, QFlags<QPaintEngine::PaintEngineFeature> f2);
@@ -200,31 +175,22 @@ class QPaintEngineState
 %End
 
 public:
-    QFlags<QPaintEngine::DirtyFlag> state() const;
+    QPaintEngine::DirtyFlags state() const;
     QPen pen() const;
     QBrush brush() const;
     QPointF brushOrigin() const;
     QBrush backgroundBrush() const;
     Qt::BGMode backgroundMode() const;
     QFont font() const;
-    QMatrix matrix() const;
-%If (Qt_4_2_0 -)
     qreal opacity() const;
-%End
     Qt::ClipOperation clipOperation() const;
     QRegion clipRegion() const;
     QPainterPath clipPath() const;
     bool isClipEnabled() const;
-    QFlags<QPainter::RenderHint> renderHints() const;
+    QPainter::RenderHints renderHints() const;
     QPainter::CompositionMode compositionMode() const;
     QPainter *painter() const;
-%If (Qt_4_3_0 -)
     QTransform transform() const;
-%End
-%If (Qt_4_3_0 -)
     bool brushNeedsResolving() const;
-%End
-%If (Qt_4_3_0 -)
     bool penNeedsResolving() const;
-%End
 };

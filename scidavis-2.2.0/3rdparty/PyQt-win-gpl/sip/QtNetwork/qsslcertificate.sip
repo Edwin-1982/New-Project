@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 class QSslCertificate
 {
@@ -38,61 +37,27 @@ public:
         OrganizationalUnitName,
         CountryName,
         StateOrProvinceName,
-%If (Qt_5_0_0 -)
         DistinguishedNameQualifier,
-%End
-%If (Qt_5_0_0 -)
         SerialNumber,
-%End
-%If (Qt_5_0_0 -)
         EmailAddress,
-%End
     };
 
-    QSslCertificate(QIODevice *device, QSsl::EncodingFormat format = QSsl::Pem);
+    QSslCertificate(QIODevice *device, QSsl::EncodingFormat format = QSsl::Pem) /ReleaseGIL/;
     QSslCertificate(const QByteArray &data = QByteArray(), QSsl::EncodingFormat format = QSsl::Pem);
     QSslCertificate(const QSslCertificate &other);
     ~QSslCertificate();
     bool operator==(const QSslCertificate &other) const;
     bool operator!=(const QSslCertificate &other) const;
     bool isNull() const;
-%If (PyQt_Deprecated_5_0)
-    bool isValid() const;
-%End
     void clear();
     QByteArray version() const;
     QByteArray serialNumber() const;
     QByteArray digest(QCryptographicHash::Algorithm algorithm = QCryptographicHash::Md5) const;
-%If (Qt_5_0_0 -)
     QStringList issuerInfo(QSslCertificate::SubjectInfo info) const;
-%End
-%If (- Qt_5_0_0)
-    QString issuerInfo(QSslCertificate::SubjectInfo info) const;
-%End
-%If (Qt_5_0_0 -)
     QStringList issuerInfo(const QByteArray &attribute) const;
-%End
-%If (- Qt_5_0_0)
-    QString issuerInfo(const QByteArray &tag) const;
-%End
-%If (Qt_5_0_0 -)
     QStringList subjectInfo(QSslCertificate::SubjectInfo info) const;
-%End
-%If (- Qt_5_0_0)
-    QString subjectInfo(QSslCertificate::SubjectInfo info) const;
-%End
-%If (Qt_5_0_0 -)
     QStringList subjectInfo(const QByteArray &attribute) const;
-%End
-%If (- Qt_5_0_0)
-    QString subjectInfo(const QByteArray &tag) const;
-%End
-%If (Qt_5_0_0 -)
     QMultiMap<QSsl::AlternativeNameEntryType, QString> subjectAlternativeNames() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QMultiMap<QSsl::AlternateNameEntryType, QString> alternateSubjectNames() const;
-%End
     QDateTime effectiveDate() const;
     QDateTime expiryDate() const;
     QSslKey publicKey() const;
@@ -102,330 +67,32 @@ public:
     static QList<QSslCertificate> fromDevice(QIODevice *device, QSsl::EncodingFormat format = QSsl::Pem);
     static QList<QSslCertificate> fromData(const QByteArray &data, QSsl::EncodingFormat format = QSsl::Pem);
     Qt::HANDLE handle() const;
-%If (Qt_5_0_0 -)
-    void swap(QSslCertificate &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QSslCertificate &other /Constrained/);
     bool isBlacklisted() const;
-%End
-%If (Qt_5_0_0 -)
     QList<QByteArray> subjectInfoAttributes() const;
-%End
-%If (Qt_5_0_0 -)
     QList<QByteArray> issuerInfoAttributes() const;
-%End
-%If (Qt_5_0_0 -)
     QList<QSslCertificateExtension> extensions() const;
-%End
-%If (Qt_5_0_0 -)
     QString toText() const;
-%End
-%If (Qt_5_0_0 -)
     static QList<QSslError> verify(QList<QSslCertificate> certificateChain, const QString &hostName = QString());
+%If (Qt_5_4_0 -)
+    bool isSelfSigned() const;
+%End
+%If (Qt_5_4_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
+%End
+
+%End
+%If (Qt_5_4_0 -)
+    static bool importPkcs12(QIODevice *device, QSslKey *key, QSslCertificate *certificate, QList<QSslCertificate> *caCertificates = 0, const QByteArray &passPhrase = QByteArray()) /ReleaseGIL/;
+%End
+%If (Qt_5_12_0 -)
+    QString issuerDisplayName() const;
+%End
+%If (Qt_5_12_0 -)
+    QString subjectDisplayName() const;
 %End
 };
 
-%End
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_OpenSSL)
-// Mapped type for QMultiMap<QSsl::AlternativeNameEntryType, QString>.
-%MappedType QMultiMap<QSsl::AlternativeNameEntryType, QString> /TypeHintOut="Dict[QSsl.AlternateNameEntryType, List[QString]]", TypeHintValue="{}"/
-{
-%TypeHeaderCode
-#include <QtCore/qmap.h>
-#include <QtCore/qstring.h>
-#include <QtNetwork/qssl.h>
-%End
-
-%ConvertFromTypeCode
-    // Get the enum objects that are the dictionary keys.
-    static PyObject *email_entry = NULL;
-    static PyObject *dns_entry = NULL;
-
-    if (email_entry == NULL)
-    {
-        email_entry = PyObject_GetAttrString((PyObject *)sipTypeAsPyTypeObject(sipType_QSsl),
-#if PY_VERSION_HEX >= 0x02050000
-                "EmailEntry");
-#else
-                const_cast<char *>("EmailEntry"));
-#endif
-
-        if (email_entry == NULL)
-            return NULL;
-    }
-
-    if (dns_entry == NULL)
-    {
-        dns_entry = PyObject_GetAttrString((PyObject *)sipTypeAsPyTypeObject(sipType_QSsl),
-#if PY_VERSION_HEX >= 0x02050000
-                "DnsEntry");
-#else
-                const_cast<char *>("DnsEntry"));
-#endif
-
-        if (dns_entry == NULL)
-            return NULL;
-    }
-
-    // Create the dictionary.
-    PyObject *d = PyDict_New();
-
-    if (d == NULL)
-        return NULL;
-
-    QList<QString> vl;
-
-    // Handle the Qssl::EmailEntry key.
-    vl = sipCpp->values(QSsl::EmailEntry);
-
-    if (!vl.isEmpty())
-    {
-        PyObject *vlobj = PyList_New(vl.count());
-
-        if (vlobj == NULL)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        int rc = PyDict_SetItem(d, email_entry, vlobj);
-
-        Py_DECREF(email_entry);
-        Py_DECREF(vlobj);
-
-        if (rc < 0)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        for (int i = 0; i < vl.count(); ++i)
-        {
-            QString *s = new QString(vl.at(i));
-            PyObject *vobj = sipConvertFromNewType(s, sipType_QString, sipTransferObj);
-
-            if (vobj == NULL)
-            {
-                delete s;
-                Py_DECREF(d);
-                return NULL;
-            }
-
-            PyList_SET_ITEM(vlobj, i, vobj);
-        }
-    }
-
-    // Handle the Qssl::DnsEntry key.
-    vl = sipCpp->values(QSsl::DnsEntry);
-
-    if (!vl.isEmpty())
-    {
-        PyObject *vlobj = PyList_New(vl.count());
-
-        if (vlobj == NULL)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        int rc = PyDict_SetItem(d, dns_entry, vlobj);
-
-        Py_DECREF(dns_entry);
-        Py_DECREF(vlobj);
-
-        if (rc < 0)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        for (int i = 0; i < vl.count(); ++i)
-        {
-            QString *s = new QString(vl.at(i));
-            PyObject *vobj = sipConvertFromNewType(s, sipType_QString, sipTransferObj);
-
-            if (vobj == NULL)
-            {
-                delete s;
-                Py_DECREF(d);
-                return NULL;
-            }
-
-            PyList_SET_ITEM(vlobj, i, vobj);
-        }
-    }
-
-    return d;
-%End
-
-%ConvertToTypeCode
-    if (sipIsErr == NULL)
-    {
-        // We don't support passing the type as an argument as it isn't
-        // currently needed (and is unlikely to be in the future).
-        PyErr_SetString(PyExc_NotImplementedError, "converting to QMultiMap<QSsl::AlternativeNameEntryType, QString> is unsupported");
-
-        return 0;
-    }
-
-    // Keep the compiler quiet.
-    sipPy = NULL;
-    return 0;
-%End
-};
-%End
-%End
-%If (Qt_4_3_0 -)
-%If (PyQt_Deprecated_5_0)
-// Mapped type for QMultiMap<QSsl::AlternateNameEntryType, QString>.
-%If (PyQt_OpenSSL)
-%MappedType QMultiMap<QSsl::AlternateNameEntryType, QString> /TypeHintOut="Dict[QSsl.AlternateNameEntryType, List[QString]]", TypeHintValue="{}"/
-{
-%TypeHeaderCode
-#include <QtCore/qmap.h>
-#include <QtCore/qstring.h>
-#include <QtNetwork/qssl.h>
-%End
-
-%ConvertFromTypeCode
-    // Get the enum objects that are the dictionary keys.
-    static PyObject *email_entry = NULL;
-    static PyObject *dns_entry = NULL;
-
-    if (email_entry == NULL)
-    {
-        email_entry = PyObject_GetAttrString((PyObject *)sipTypeAsPyTypeObject(sipType_QSsl),
-#if PY_VERSION_HEX >= 0x02050000
-                "EmailEntry");
-#else
-                const_cast<char *>("EmailEntry"));
-#endif
-
-        if (email_entry == NULL)
-            return NULL;
-    }
-
-    if (dns_entry == NULL)
-    {
-        dns_entry = PyObject_GetAttrString((PyObject *)sipTypeAsPyTypeObject(sipType_QSsl),
-#if PY_VERSION_HEX >= 0x02050000
-                "DnsEntry");
-#else
-                const_cast<char *>("DnsEntry"));
-#endif
-
-        if (dns_entry == NULL)
-            return NULL;
-    }
-
-    // Create the dictionary.
-    PyObject *d = PyDict_New();
-
-    if (d == NULL)
-        return NULL;
-
-    QList<QString> vl;
-
-    // Handle the Qssl::EmailEntry key.
-    vl = sipCpp->values(QSsl::EmailEntry);
-
-    if (!vl.isEmpty())
-    {
-        PyObject *vlobj = PyList_New(vl.count());
-
-        if (vlobj == NULL)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        int rc = PyDict_SetItem(d, email_entry, vlobj);
-
-        Py_DECREF(email_entry);
-        Py_DECREF(vlobj);
-
-        if (rc < 0)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        for (int i = 0; i < vl.count(); ++i)
-        {
-            QString *s = new QString(vl.at(i));
-            PyObject *vobj = sipConvertFromNewType(s, sipType_QString, sipTransferObj);
-
-            if (vobj == NULL)
-            {
-                delete s;
-                Py_DECREF(d);
-                return NULL;
-            }
-
-            PyList_SET_ITEM(vlobj, i, vobj);
-        }
-    }
-
-    // Handle the Qssl::DnsEntry key.
-    vl = sipCpp->values(QSsl::DnsEntry);
-
-    if (!vl.isEmpty())
-    {
-        PyObject *vlobj = PyList_New(vl.count());
-
-        if (vlobj == NULL)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        int rc = PyDict_SetItem(d, dns_entry, vlobj);
-
-        Py_DECREF(dns_entry);
-        Py_DECREF(vlobj);
-
-        if (rc < 0)
-        {
-            Py_DECREF(d);
-            return NULL;
-        }
-
-        for (int i = 0; i < vl.count(); ++i)
-        {
-            QString *s = new QString(vl.at(i));
-            PyObject *vobj = sipConvertFromNewType(s, sipType_QString, sipTransferObj);
-
-            if (vobj == NULL)
-            {
-                delete s;
-                Py_DECREF(d);
-                return NULL;
-            }
-
-            PyList_SET_ITEM(vlobj, i, vobj);
-        }
-    }
-
-    return d;
-%End
-
-%ConvertToTypeCode
-    if (sipIsErr == NULL)
-    {
-        // We don't support passing the type as an argument as it isn't
-        // currently needed (and is unlikely to be in the future).
-        PyErr_SetString(PyExc_NotImplementedError, "converting to QMultiMap<QSsl::AlternateNameEntryType, QString> is unsupported");
-
-        return 0;
-    }
-
-    // Keep the compiler quiet.
-    sipPy = NULL;
-    return 0;
-%End
-};
-%End
-%End
 %End

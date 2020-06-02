@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QSignalTransition : QAbstractTransition
 {
 %TypeHeaderCode
@@ -30,54 +28,18 @@ class QSignalTransition : QAbstractTransition
 
 public:
     QSignalTransition(QState *sourceState /TransferThis/ = 0);
-%If (Qt_5_0_0 -)
-    QSignalTransition(const QObject *sender, SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/, QState *sourceState /TransferThis/ = 0) [(const QObject *sender, const char *signal, QState *sourceState = 0)];
-%MethodCode
-        const char *signal = pyqt4_get_signal(a1);
-        
-        if (signal)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipCpp = new sipQSignalTransition(a0, signal, a2);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(1, a1);
-        }
-%End
-
-%End
-%If (- Qt_5_0_0)
-    QSignalTransition(QObject *sender, SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/, QState *sourceState /TransferThis/ = 0) [(QObject *sender, const char *signal, QState *sourceState = 0)];
-%MethodCode
-        const char *signal = pyqt4_get_signal(a1);
-        
-        if (signal)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            sipCpp = new sipQSignalTransition(a0, signal, a2);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(1, a1);
-        }
-%End
-
-%End
-    QSignalTransition(SIP_PYOBJECT signal /TypeHint="PYQT_SIGNAL"/, QState *sourceState /TransferThis/ = 0) /NoDerived/;
+    QSignalTransition(SIP_PYOBJECT signal /TypeHint="pyqtBoundSignal"/, QState *sourceState /TransferThis/ = 0) /NoDerived/;
 %MethodCode
         QObject *sender;
-        const char *signal = pyqt4_get_pyqtsignal_parts(a0, &sender);
+        QByteArray signal_signature;
         
-        if (signal)
+        if ((sipError = pyqt5_get_pyqtsignal_parts(a0, &sender, signal_signature)) == sipErrorNone)
         {
-            Py_BEGIN_ALLOW_THREADS
-            sipCpp = new sipQSignalTransition(sender, signal, a1);
-            Py_END_ALLOW_THREADS
+            sipCpp = new sipQSignalTransition(a1);
+            sipCpp->setSenderObject(sender);
+            sipCpp->setSignal(signal_signature);
         }
-        else
+        else if (sipError == sipErrorContinue)
         {
             sipError = sipBadCallableArg(0, a0);
         }
@@ -85,12 +47,7 @@ public:
 
     virtual ~QSignalTransition();
     QObject *senderObject() const;
-%If (Qt_5_0_0 -)
     void setSenderObject(const QObject *sender);
-%End
-%If (- Qt_5_0_0)
-    void setSenderObject(QObject *sender);
-%End
     QByteArray signal() const;
     void setSignal(const QByteArray &signal);
 
@@ -99,8 +56,11 @@ protected:
     virtual void onTransition(QEvent *event);
     virtual bool event(QEvent *e);
 
-private:
-    QSignalTransition(const QSignalTransition &);
-};
-
+signals:
+%If (Qt_5_4_0 -)
+    void senderObjectChanged();
 %End
+%If (Qt_5_4_0 -)
+    void signalChanged();
+%End
+};

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QNetworkRequest
 {
@@ -37,14 +35,20 @@ public:
         LastModifiedHeader,
         CookieHeader,
         SetCookieHeader,
-%If (Qt_4_8_0 -)
         ContentDispositionHeader,
-%End
-%If (Qt_5_0_0 -)
         UserAgentHeader,
-%End
-%If (Qt_5_0_0 -)
         ServerHeader,
+%If (Qt_5_12_0 -)
+        IfModifiedSinceHeader,
+%End
+%If (Qt_5_12_0 -)
+        ETagHeader,
+%End
+%If (Qt_5_12_0 -)
+        IfMatchHeader,
+%End
+%If (Qt_5_12_0 -)
+        IfNoneMatchHeader,
 %End
     };
 
@@ -56,32 +60,41 @@ public:
         ConnectionEncryptedAttribute,
         CacheLoadControlAttribute,
         CacheSaveControlAttribute,
-%If (Qt_4_5_0 -)
         SourceIsFromCacheAttribute,
-%End
-%If (Qt_4_6_0 -)
         DoNotBufferUploadDataAttribute,
-%End
-%If (Qt_4_6_0 -)
         HttpPipeliningAllowedAttribute,
-%End
-%If (Qt_4_6_0 -)
         HttpPipeliningWasUsedAttribute,
-%End
-%If (Qt_4_7_0 -)
         CustomVerbAttribute,
-%End
-%If (Qt_4_7_0 -)
         CookieLoadControlAttribute,
-%End
-%If (Qt_4_7_0 -)
         AuthenticationReuseAttribute,
-%End
-%If (Qt_4_7_0 -)
         CookieSaveControlAttribute,
-%End
-%If (Qt_5_0_0 -)
         BackgroundRequestAttribute,
+%If (Qt_5_3_0 -)
+        SpdyAllowedAttribute,
+%End
+%If (Qt_5_3_0 -)
+        SpdyWasUsedAttribute,
+%End
+%If (Qt_5_5_0 -)
+        EmitAllUploadProgressSignalsAttribute,
+%End
+%If (Qt_5_6_0 -)
+        FollowRedirectsAttribute,
+%End
+%If (Qt_5_8_0 -)
+        HTTP2AllowedAttribute,
+%End
+%If (Qt_5_8_0 -)
+        HTTP2WasUsedAttribute,
+%End
+%If (Qt_5_9_0 -)
+        OriginalContentLengthAttribute,
+%End
+%If (Qt_5_9_0 -)
+        RedirectPolicyAttribute,
+%End
+%If (Qt_5_11_0 -)
+        Http2DirectAttribute,
 %End
         User,
         UserMax,
@@ -95,16 +108,11 @@ public:
         AlwaysCache,
     };
 
-%If (Qt_4_7_0 -)
-
     enum LoadControl
     {
         Automatic,
         Manual,
     };
-
-%End
-%If (Qt_4_7_0 -)
 
     enum Priority
     {
@@ -113,7 +121,6 @@ public:
         LowPriority,
     };
 
-%End
     explicit QNetworkRequest(const QUrl &url = QUrl());
     QNetworkRequest(const QNetworkRequest &other);
     ~QNetworkRequest();
@@ -127,29 +134,40 @@ public:
     void setRawHeader(const QByteArray &headerName, const QByteArray &value);
     QVariant attribute(QNetworkRequest::Attribute code, const QVariant &defaultValue = QVariant()) const;
     void setAttribute(QNetworkRequest::Attribute code, const QVariant &value);
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     QSslConfiguration sslConfiguration() const;
 %End
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     void setSslConfiguration(const QSslConfiguration &configuration);
 %End
     bool operator==(const QNetworkRequest &other) const;
     bool operator!=(const QNetworkRequest &other) const;
-%If (Qt_4_6_0 -)
     void setOriginatingObject(QObject *object /KeepReference/);
-%End
-%If (Qt_4_6_0 -)
     QObject *originatingObject() const;
-%End
-%If (Qt_4_7_0 -)
     QNetworkRequest::Priority priority() const;
-%End
-%If (Qt_4_7_0 -)
     void setPriority(QNetworkRequest::Priority priority);
+    void swap(QNetworkRequest &other /Constrained/);
+%If (Qt_5_6_0 -)
+    int maximumRedirectsAllowed() const;
 %End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkRequest &other);
+%If (Qt_5_6_0 -)
+    void setMaximumRedirectsAllowed(int maximumRedirectsAllowed);
 %End
-};
+%If (Qt_5_9_0 -)
+
+    enum RedirectPolicy
+    {
+        ManualRedirectPolicy,
+        NoLessSafeRedirectPolicy,
+        SameOriginRedirectPolicy,
+        UserVerifiedRedirectPolicy,
+    };
 
 %End
+%If (Qt_5_13_0 -)
+    QString peerVerifyName() const;
+%End
+%If (Qt_5_13_0 -)
+    void setPeerVerifyName(const QString &peerName);
+%End
+};

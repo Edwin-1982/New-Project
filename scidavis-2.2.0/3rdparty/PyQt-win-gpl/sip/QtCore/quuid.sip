@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_5_0_0 -)
 
 class QUuid
 {
@@ -49,8 +47,18 @@ public:
         Sha1,
     };
 
+%If (Qt_5_11_0 -)
+
+    enum StringFormat
+    {
+        WithBraces,
+        WithoutBraces,
+        Id128,
+    };
+
+%End
     QUuid();
-    QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8);
+    QUuid(uint l, ushort w1, ushort w2, uchar b1 /PyInt/, uchar b2 /PyInt/, uchar b3 /PyInt/, uchar b4 /PyInt/, uchar b5 /PyInt/, uchar b6 /PyInt/, uchar b7 /PyInt/, uchar b8 /PyInt/);
     QUuid(const QString &);
     QUuid(const QByteArray &);
     long __hash__() const;
@@ -65,9 +73,9 @@ public:
         if (uni)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QUuid(%R)", uni);
+            sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QUuid(%R)", uni);
         #else
-            sipRes = PyString_FromFormat("PyQt4.QtCore.QUuid(");
+            sipRes = PyString_FromFormat("PyQt5.QtCore.QUuid(");
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(uni));
             PyString_ConcatAndDel(&sipRes, PyString_FromString(")"));
         #endif
@@ -77,6 +85,9 @@ public:
 %End
 
     QString toString() const;
+%If (Qt_5_11_0 -)
+    QString toString(QUuid::StringFormat mode) const;
+%End
     bool isNull() const;
     bool operator==(const QUuid &orig) const;
     bool operator!=(const QUuid &orig) const;
@@ -90,82 +101,18 @@ public:
     QUuid::Variant variant() const;
     QUuid::Version version() const;
     QByteArray toByteArray() const;
+%If (Qt_5_11_0 -)
+    QByteArray toByteArray(QUuid::StringFormat mode) const;
+%End
     QByteArray toRfc4122() const;
     static QUuid fromRfc4122(const QByteArray &);
 };
 
+QDataStream &operator<<(QDataStream &, const QUuid & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QUuid & /Constrained/) /ReleaseGIL/;
+%If (Qt_5_5_0 -)
+bool operator<=(const QUuid &lhs, const QUuid &rhs);
 %End
-%If (- Qt_5_0_0)
-
-struct QUuid
-{
-%TypeHeaderCode
-#include <quuid.h>
+%If (Qt_5_5_0 -)
+bool operator>=(const QUuid &lhs, const QUuid &rhs);
 %End
-
-    enum Variant
-    {
-        VarUnknown,
-        NCS,
-        DCE,
-        Microsoft,
-        Reserved,
-    };
-
-    enum Version
-    {
-        VerUnknown,
-        Time,
-        EmbeddedPOSIX,
-        Name,
-        Random,
-    };
-
-    QUuid();
-    QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8);
-    QUuid(const QString &);
-%If (Qt_4_8_0 -)
-    QUuid(const QByteArray &);
-%End
-    SIP_PYOBJECT __repr__() const /TypeHint="str"/;
-%MethodCode
-        PyObject *uni = qpycore_PyObject_FromQString(sipCpp->toString());
-        
-        if (uni)
-        {
-        #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QUuid(%R)", uni);
-        #else
-            sipRes = PyString_FromFormat("PyQt4.QtCore.QUuid(");
-            PyString_ConcatAndDel(&sipRes, PyObject_Repr(uni));
-            PyString_ConcatAndDel(&sipRes, PyString_FromString(")"));
-        #endif
-        
-            Py_DECREF(uni);
-        }
-%End
-
-    QString toString() const;
-    bool isNull() const;
-    bool operator==(const QUuid &orig) const;
-    bool operator!=(const QUuid &orig) const;
-    bool operator<(const QUuid &other) const;
-    bool operator>(const QUuid &other) const;
-    static QUuid createUuid();
-    QUuid::Variant variant() const;
-    QUuid::Version version() const;
-    operator QString() const;
-%If (Qt_4_8_0 -)
-    QByteArray toByteArray() const;
-%End
-%If (Qt_4_8_0 -)
-    QByteArray toRfc4122() const;
-%End
-%If (Qt_4_8_0 -)
-    static QUuid fromRfc4122(const QByteArray &);
-%End
-};
-
-%End
-QDataStream &operator<<(QDataStream &, const QUuid & /Constrained/);
-QDataStream &operator>>(QDataStream &, QUuid & /Constrained/);

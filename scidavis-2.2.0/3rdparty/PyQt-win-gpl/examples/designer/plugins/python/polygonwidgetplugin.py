@@ -23,13 +23,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-from PyQt4 import QtGui, QtDesigner
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtDesigner import QPyDesignerCustomWidgetPlugin
+
 from polygonwidget import PolygonWidget
 
 
-class PolygonWidgetPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
-
-    """PolygonWidgetPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin)
+class PolygonWidgetPlugin(QPyDesignerCustomWidgetPlugin):
+    """PolygonWidgetPlugin(QPyDesignerCustomWidgetPlugin)
     
     Provides a Python custom plugin for Qt Designer by implementing the
     QDesignerCustomWidgetPlugin via a PyQt-specific custom plugin class.
@@ -75,7 +76,7 @@ class PolygonWidgetPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
     # Returns the icon used to represent the custom widget in Qt Designer's
     # widget box.
     def icon(self):
-        return QtGui.QIcon(_logo_pixmap)
+        return QIcon(_logo_pixmap)
 
     # Returns a short description of the custom widget for use in a tool tip.
     def toolTip(self):
@@ -171,4 +172,4 @@ _logo_16x16_xpm = [
 "#bbbbbbbbcdbbbbe",
 "aeeeeeeeeeeeeeeR"]
 
-_logo_pixmap = QtGui.QPixmap(_logo_16x16_xpm)
+_logo_pixmap = QPixmap(_logo_16x16_xpm)

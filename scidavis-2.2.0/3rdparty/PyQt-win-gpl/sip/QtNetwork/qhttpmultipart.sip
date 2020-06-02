@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_8_0 -)
 
 class QHttpPart
 {
@@ -38,13 +36,8 @@ public:
     void setRawHeader(const QByteArray &headerName, const QByteArray &headerValue);
     void setBody(const QByteArray &body);
     void setBodyDevice(QIODevice *device);
-%If (Qt_5_0_0 -)
-    void swap(QHttpPart &other);
-%End
+    void swap(QHttpPart &other /Constrained/);
 };
-
-%End
-%If (Qt_4_8_0 -)
 
 class QHttpMultiPart : QObject
 {
@@ -61,21 +54,11 @@ public:
         AlternativeType,
     };
 
-%If (Qt_5_0_0 -)
     explicit QHttpMultiPart(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QHttpMultiPart(QObject *parent /TransferThis/ = 0);
-%End
     QHttpMultiPart(QHttpMultiPart::ContentType contentType, QObject *parent /TransferThis/ = 0);
     virtual ~QHttpMultiPart();
     void append(const QHttpPart &httpPart);
     void setContentType(QHttpMultiPart::ContentType contentType);
     QByteArray boundary() const;
     void setBoundary(const QByteArray &boundary);
-
-private:
-    QHttpMultiPart(const QHttpMultiPart &);
 };
-
-%End

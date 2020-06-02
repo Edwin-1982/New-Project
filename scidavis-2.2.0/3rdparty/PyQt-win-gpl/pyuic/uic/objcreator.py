@@ -38,15 +38,9 @@
 #############################################################################
 
 
-import sys
 import os.path
 
-from PyQt4.uic.exceptions import NoSuchWidgetError, WidgetPluginError
-
-if sys.hexversion >= 0x03000000:
-    from PyQt4.uic.port_v3.load_plugin import load_plugin
-else:
-    from PyQt4.uic.port_v2.load_plugin import load_plugin
+from .exceptions import NoSuchWidgetError, WidgetPluginError
 
 
 # The list of directories that are searched for widget plugins.  This is
@@ -65,7 +59,7 @@ class QObjectCreator(object):
         self._cpolicy = creatorPolicy
 
         self._cwFilters = []
-        self._modules = [self._cpolicy.createQtGuiWrapper()]
+        self._modules = self._cpolicy.createQtGuiWidgetsWrappers()
 
         # Get the optional plugins.
         for plugindir in widgetPluginPath:
@@ -88,7 +82,7 @@ class QObjectCreator(object):
 
                 plugin_locals = {}
 
-                if load_plugin(filename, plugin_globals, plugin_locals):
+                if self.load_plugin(filename, plugin_globals, plugin_locals):
                     pluginType = plugin_locals["pluginType"]
                     if pluginType == MODULE:
                         modinfo = plugin_locals["moduleInformation"]()
@@ -147,3 +141,23 @@ class QObjectCreator(object):
                 break
 
         self._customWidgets.addCustomWidget(widgetClass, baseClass, module)
+
+    @staticmethod
+    def load_plugin(filename, plugin_globals, plugin_locals):
+        """ Load the plugin from the given file.  Return True if the plugin was
+        loaded, or False if it wanted to be ignored.  Raise an exception if
+        there was an error.
+        """
+
+        plugin = open(filename)
+
+        try:
+            exec(plugin.read(), plugin_globals, plugin_locals)
+        except ImportError:
+            return False
+        except Exception as e:
+            raise WidgetPluginError("%s: %s" % (e.__class__, str(e)))
+        finally:
+            plugin.close()
+
+        return True

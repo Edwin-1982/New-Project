@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -59,12 +59,7 @@ public:
     void setText(const QString &string);
     QString text() const;
     void setTextOption(const QTextOption &option);
-%If (Qt_5_0_0 -)
     const QTextOption &textOption() const;
-%End
-%If (- Qt_5_0_0)
-    QTextOption textOption() const;
-%End
     void setPreeditArea(int position, const QString &text);
     int preeditAreaPosition() const;
     QString preeditAreaText() const;
@@ -103,36 +98,28 @@ public:
     int previousCursorPosition(int oldPos, QTextLayout::CursorMode mode = QTextLayout::SkipCharacters) const;
     void draw(QPainter *p, const QPointF &pos, const QVector<QTextLayout::FormatRange> &selections = QVector<QTextLayout::FormatRange>(), const QRectF &clip = QRectF()) const;
     void drawCursor(QPainter *p, const QPointF &pos, int cursorPosition) const;
-%If (Qt_4_2_0 -)
     void drawCursor(QPainter *p, const QPointF &pos, int cursorPosition, int width) const;
-%End
     QPointF position() const;
     void setPosition(const QPointF &p);
     QRectF boundingRect() const;
     qreal minimumWidth() const;
     qreal maximumWidth() const;
-%If (Qt_4_4_0 -)
     void clearLayout();
-%End
-%If (Qt_4_8_0 -)
     void setCursorMoveStyle(Qt::CursorMoveStyle style);
-%End
-%If (Qt_4_8_0 -)
     Qt::CursorMoveStyle cursorMoveStyle() const;
-%End
-%If (Qt_4_8_0 -)
     int leftCursorPosition(int oldPos) const;
-%End
-%If (Qt_4_8_0 -)
     int rightCursorPosition(int oldPos) const;
-%End
-%If (Qt_5_0_0 -)
+%If (PyQt_RawFont)
     QList<QGlyphRun> glyphRuns(int from = -1, int length = -1) const;
 %End
-%If (Qt_4_8_0 - Qt_5_0_0)
-%If (PyQt_RawFont)
-    QList<QGlyphRun> glyphRuns() const;
+%If (Qt_5_6_0 -)
+    void setFormats(const QVector<QTextLayout::FormatRange> &overrides);
 %End
+%If (Qt_5_6_0 -)
+    QVector<QTextLayout::FormatRange> formats() const;
+%End
+%If (Qt_5_6_0 -)
+    void clearFormats();
 %End
 
 private:
@@ -174,30 +161,25 @@ public:
     int xToCursor(qreal x, QTextLine::CursorPosition edge = QTextLine::CursorBetweenCharacters) const;
     void setLineWidth(qreal width);
     void setNumColumns(int columns);
-%If (Qt_4_3_0 -)
     void setNumColumns(int columns, qreal alignmentWidth);
-%End
     void setPosition(const QPointF &pos);
     int textStart() const;
     int textLength() const;
     int lineNumber() const;
     void draw(QPainter *painter, const QPointF &position, const QTextLayout::FormatRange *selection = 0) const;
-%If (Qt_4_2_0 -)
     QPointF position() const;
-%End
-%If (Qt_4_6_0 -)
     qreal leading() const;
-%End
-%If (Qt_4_6_0 -)
     void setLeadingIncluded(bool included);
-%End
-%If (Qt_4_6_0 -)
     bool leadingIncluded() const;
-%End
-%If (Qt_4_7_0 -)
     qreal horizontalAdvance() const;
-%End
-%If (Qt_5_0_0 -)
+%If (PyQt_RawFont)
     QList<QGlyphRun> glyphRuns(int from = -1, int length = -1) const;
 %End
 };
+
+%If (Qt_5_6_0 -)
+bool operator==(const QTextLayout::FormatRange &lhs, const QTextLayout::FormatRange &rhs);
+%End
+%If (Qt_5_6_0 -)
+bool operator!=(const QTextLayout::FormatRange &lhs, const QTextLayout::FormatRange &rhs);
+%End

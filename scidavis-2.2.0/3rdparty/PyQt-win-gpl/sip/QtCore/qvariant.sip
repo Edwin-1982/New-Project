@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,7 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-class QVariant /AllowNone,API=QVariant: - 2,TypeHintIn="Union[QVariant, Any])"/
+class QVariant /AllowNone,TypeHint="Any",TypeHintValue="None"/
 {
 %TypeHeaderCode
 #include <qvariant.h>
@@ -49,6 +49,10 @@ if (*sipIsErr)
 *sipCppPtr = new QVariant(var);
 
 return sipGetState(sipTransferObj);
+%End
+
+%ConvertFromTypeCode
+return qpycore_PyObject_FromQVariant(*sipCpp);
 %End
 
 public:
@@ -98,53 +102,28 @@ public:
         Pen,
         TextLength,
         TextFormat,
-%If (Qt_4_2_0 -)
         Matrix,
-%End
-%If (Qt_4_3_0 -)
         Transform,
-%End
-%If (Qt_4_5_0 -)
         Hash,
-%End
-%If (Qt_4_6_0 -)
         Matrix4x4,
-%End
-%If (Qt_4_6_0 -)
         Vector2D,
-%End
-%If (Qt_4_6_0 -)
         Vector3D,
-%End
-%If (Qt_4_6_0 -)
         Vector4D,
-%End
-%If (Qt_4_6_0 -)
         Quaternion,
-%End
-%If (Qt_4_7_0 -)
         EasingCurve,
-%End
-%If (Qt_5_0_0 -)
         Uuid,
-%End
-%If (Qt_5_0_0 -)
         ModelIndex,
-%End
-%If (Qt_5_0_0 -)
         PolygonF,
-%End
-%If (Qt_5_0_0 -)
         RegularExpression,
+%If (Qt_5_5_0 -)
+        PersistentModelIndex,
 %End
         UserType,
     };
 
     QVariant();
     QVariant(QVariant::Type type /Constrained/);
-    QVariant(int typeOrUserType, const void *copy);
-    QVariant(const QVariant &other);
-    QVariant(SIP_PYOBJECT);
+    QVariant(SIP_PYOBJECT obj);
 %MethodCode
         int is_err = 0;
         QVariant var = qpycore_PyObject_AsQVariant(a0, &is_err);
@@ -156,307 +135,43 @@ public:
 %End
 
     ~QVariant();
-    static QVariant fromList(const QList<QVariant> &list);
+    SIP_PYOBJECT value() const;
 %MethodCode
-        // We don't implement this as a Python ctor to allow an empty Python list to be
-        // handled as a Python object.
-        sipRes = new QVariant(*a0);
-%End
-
-    static QVariant fromMap(const QMap<QString, QVariant> &map);
-%MethodCode
-        // We don't implement this as a Python ctor to allow an empty Python dictionary
-        // to be handled as a Python object.
-        sipRes = new QVariant(*a0);
+        sipRes = qpycore_PyObject_FromQVariant(*sipCpp);
 %End
 
     QVariant::Type type() const;
     int userType() const;
     const char *typeName() const;
-%If (Qt_5_0_0 -)
     bool canConvert(int targetTypeId) const;
-%End
-%If (- Qt_5_0_0)
-    bool canConvert(QVariant::Type t) const;
-%End
-%If (Qt_5_0_0 -)
     bool convert(int targetTypeId);
-%End
-%If (- Qt_5_0_0)
-    bool convert(QVariant::Type t);
-%End
     bool isValid() const;
     bool isNull() const;
     void clear();
-    void detach();
-    bool isDetached() const;
-    int toInt(bool *ok = 0) const;
-    uint toUInt(bool *ok = 0) const;
-    qlonglong toLongLong(bool *ok = 0) const;
-    qulonglong toULongLong(bool *ok = 0) const;
-    bool toBool() const;
-    double toDouble(bool *ok = 0) const;
-    QByteArray toByteArray() const;
-    QBitArray toBitArray() const;
-    QString toString() const;
-    QStringList toStringList() const;
-    QChar toChar() const;
-    QDate toDate() const;
-    QTime toTime() const;
-    QDateTime toDateTime() const;
-    QList<QVariant> toList() const;
-    QMap<QString, QVariant> toMap() const;
-%If (Qt_4_5_0 -)
-    QHash<QString, QVariant> toHash() const;
-%End
-    QPoint toPoint() const;
-    QPointF toPointF() const;
-    QSize toSize() const;
-    QSizeF toSizeF() const;
-    QLine toLine() const;
-    QLineF toLineF() const;
-    QRect toRect() const;
-    QRectF toRectF() const;
-    QUrl toUrl() const;
-    QLocale toLocale() const;
-    QRegExp toRegExp() const;
-    SIP_PYOBJECT toPyObject() const;
-%MethodCode
-        sipRes = qpycore_PyObject_FromQVariant(*sipCpp);
-%End
-
-    void load(QDataStream &ds);
-    void save(QDataStream &ds) const;
-%If (Qt_5_0_0 -)
+    void load(QDataStream &ds) /ReleaseGIL/;
+    void save(QDataStream &ds) const /ReleaseGIL/;
     static const char *typeToName(int typeId);
-%End
-%If (- Qt_5_0_0)
-    static const char *typeToName(QVariant::Type type);
-%End
     static QVariant::Type nameToType(const char *name);
-    void *data();
     bool operator==(const QVariant &v) const;
     bool operator!=(const QVariant &v) const;
-%If (Qt_4_6_0 -)
-    float toFloat(bool *ok = 0) const;
+    void swap(QVariant &other /Constrained/);
+%If (Qt_5_2_0 -)
+    bool operator<(const QVariant &v) const;
 %End
-%If (Qt_4_6_0 -)
-    qreal toReal(bool *ok = 0) const;
+%If (Qt_5_2_0 -)
+    bool operator<=(const QVariant &v) const;
 %End
-%If (Qt_4_7_0 -)
-    QEasingCurve toEasingCurve() const;
+%If (Qt_5_2_0 -)
+    bool operator>(const QVariant &v) const;
 %End
-%If (Qt_4_8_0 -)
-    void swap(QVariant &other);
-%End
-%If (Qt_5_0_0 -)
-    QUuid toUuid() const;
-%End
-%If (Qt_5_0_0 -)
-    QModelIndex toModelIndex() const;
+%If (Qt_5_2_0 -)
+    bool operator>=(const QVariant &v) const;
 %End
 };
 
-typedef QList<QVariant> QVariantList;
-// class QVariant /AllowNone, API=QVariant:2 -, TypeHint="Any"/
-%MappedType QVariant /AllowNone, API=QVariant:2 -, TypeHint="Any", TypeHintValue="None"/
-{
-%TypeHeaderCode
-#include <qvariant.h>
-%End
-
-%ConvertToTypeCode
-    if (!sipIsErr)
-        // We can always convert to a QVariant.
-        return 1;
-
-    // If it is a null QVariant then just return it.
-    if (Py_TYPE(sipPy) == sipTypeAsPyTypeObject(sipType_QPyNullVariant))
-    {
-        *sipCppPtr = reinterpret_cast<QVariant *>(
-                sipConvertToType(sipPy, sipType_QPyNullVariant, sipTransferObj,
-                        SIP_NO_CONVERTORS, 0, sipIsErr));
-
-        return 0;
-    }
-
-    QVariant var = qpycore_PyObject_AsQVariant(sipPy, sipIsErr);
-
-    if (*sipIsErr)
-        return 0;
-
-    *sipCppPtr = new QVariant(var);
-
-    return sipGetState(sipTransferObj);
-%End
-
-%ConvertFromTypeCode
-    return qpycore_PyObject_FromQVariant(*sipCpp);
-%End
-
-    // The following must match the v1 API.
-
-    enum Type
-    {
-        Invalid,
-        Bool,
-        Int,
-        UInt,
-        LongLong,
-        ULongLong,
-        Double,
-        Char,
-        Map,
-        List,
-        String,
-        StringList,
-        ByteArray,
-        BitArray,
-        Date,
-        Time,
-        DateTime,
-        Url,
-        Locale,
-        Rect,
-        RectF,
-        Size,
-        SizeF,
-        Line,
-        LineF,
-        Point,
-        PointF,
-        RegExp,
-        Font,
-        Pixmap,
-        Brush,
-        Color,
-        Palette,
-        Icon,
-        Image,
-        Polygon,
-        Region,
-        Bitmap,
-        Cursor,
-        SizePolicy,
-        KeySequence,
-        Pen,
-        TextLength,
-        TextFormat,
-%If (Qt_4_2_0 -)
-        Matrix,
-%End
-%If (Qt_4_3_0 -)
-        Transform,
-%End
-%If (Qt_4_5_0 -)
-        Hash,
-%End
-%If (Qt_4_6_0 -)
-        Matrix4x4,
-%End
-%If (Qt_4_6_0 -)
-        Vector2D,
-%End
-%If (Qt_4_6_0 -)
-        Vector3D,
-%End
-%If (Qt_4_6_0 -)
-        Vector4D,
-%End
-%If (Qt_4_6_0 -)
-        Quaternion,
-%End
-%If (Qt_4_7_0 -)
-        EasingCurve,
-%End
-%If (Qt_5_0_0 -)
-        Uuid,
-%End
-%If (Qt_5_0_0 -)
-        ModelIndex,
-%End
-%If (Qt_5_0_0 -)
-        PolygonF,
-%End
-%If (Qt_5_0_0 -)
-        RegularExpression,
-%End
-        UserType,
-    };
-
-%If (Qt_5_0_0 -)
-    static const char *typeToName(int typeId);
-%End
-%If (- Qt_5_0_0)
-    static const char *typeToName(QVariant::Type type);
-%End
-    static QVariant::Type nameToType(const char *name);
-};
-%If (Qt_4_5_0 -)
-typedef QHash<QString, QVariant> QVariantHash;
-%End
-QDataStream &operator>>(QDataStream &s, QVariant &p /Constrained/) /API=QVariant: - 2/;
-typedef QMap<QString, QVariant> QVariantMap;
-QDataStream &operator<<(QDataStream &s, const QVariant &p /Constrained/) /API=QVariant: - 2/;
-QDataStream &operator>>(QDataStream &s, QVariant::Type &p /Constrained,In/);
-QDataStream &operator<<(QDataStream &s, const QVariant::Type p /Constrained/);
-// QList<QVariant::Type> is implemented as a Python list.
-%MappedType QList<QVariant::Type> /TypeHint="List[QVariant.Type]", TypeHintValue="[]"/
-{
-%TypeHeaderCode
-#include <qvariant.h>
-%End
-
-%ConvertFromTypeCode
-    // Create the list.
-    PyObject *l;
-
-    if ((l = PyList_New(sipCpp->size())) == NULL)
-        return NULL;
-
-    // Set the list elements.
-    for (int i = 0; i < sipCpp->size(); ++i)
-    {
-        QVariant::Type e = sipCpp->at(i);
-        PyObject *eobj;
-
-        if ((eobj = sipConvertFromEnum(e, sipType_QVariant_Type)) == NULL)
-        {
-            Py_DECREF(l);
-
-            return NULL;
-        }
-
-        PyList_SET_ITEM(l, i, eobj);
-    }
-
-    return l;
-%End
-
-%ConvertToTypeCode
-    // Check the type if that is all that is required.
-    if (sipIsErr == NULL)
-    {
-        if (!PyList_Check(sipPy))
-            return 0;
-
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-            if (!sipCanConvertToEnum(PyList_GET_ITEM(sipPy, i), sipType_QVariant_Type))
-                return 0;
-
-        return 1;
-    }
-
-    QList<QVariant::Type> *ql = new QList<QVariant::Type>;
-
-    for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-    {
-        long l = SIPLong_AsLong(PyList_GET_ITEM(sipPy, i));
-        ql->append(static_cast<QVariant::Type>(l));
-    }
-
-    *sipCppPtr = ql;
-
-    return sipGetState(sipTransferObj);
-%End
-};
+typedef QList<QVariant> QVariantList /TypeHint="List[QVariant]"/;
+typedef QHash<QString, QVariant> QVariantHash /TypeHint="Dict[QString, QVariant]"/;
+QDataStream &operator>>(QDataStream &s, QVariant &p /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &s, const QVariant &p /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &s, QVariant::Type &p /Constrained,In/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &s, const QVariant::Type p /Constrained/) /ReleaseGIL/;

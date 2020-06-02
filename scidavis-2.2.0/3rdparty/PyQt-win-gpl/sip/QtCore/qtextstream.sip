@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -60,16 +60,13 @@ public:
         Ok,
         ReadPastEnd,
         ReadCorruptData,
-%If (Qt_4_8_0 -)
         WriteFailed,
-%End
     };
 
     typedef QFlags<QTextStream::NumberFlag> NumberFlags;
     QTextStream();
     explicit QTextStream(QIODevice *device);
-    QTextStream(QString *string /Constrained/, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /API=QString: - 2/;
-    QTextStream(QByteArray *array /Constrained/, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite);
+    QTextStream(QByteArray *array /Constrained/, QIODevice::OpenMode mode = QIODevice::ReadWrite);
     virtual ~QTextStream();
     void setCodec(QTextCodec *codec /KeepReference/);
     void setCodec(const char *codecName);
@@ -80,8 +77,6 @@ public:
     bool generateByteOrderMark() const;
     void setDevice(QIODevice *device);
     QIODevice *device() const;
-    void setString(QString *string /Constrained/, QFlags<QIODevice::OpenModeFlag> mode = QIODevice::ReadWrite) /API=QString: - 2/;
-    QString *string() const /API=QString: - 2/;
     bool atEnd() const;
     void reset();
     void flush() /ReleaseGIL/;
@@ -96,8 +91,8 @@ public:
     QChar padChar() const;
     void setFieldWidth(int width);
     int fieldWidth() const;
-    void setNumberFlags(QFlags<QTextStream::NumberFlag> flags);
-    QFlags<QTextStream::NumberFlag> numberFlags() const;
+    void setNumberFlags(QTextStream::NumberFlags flags);
+    QTextStream::NumberFlags numberFlags() const;
     void setIntegerBase(int base);
     int integerBase() const;
     void setRealNumberNotation(QTextStream::RealNumberNotation notation);
@@ -107,27 +102,50 @@ public:
     QTextStream::Status status() const;
     void setStatus(QTextStream::Status status);
     void resetStatus();
-%If (Qt_4_2_0 -)
     qint64 pos() const;
-%End
-    QTextStream &operator>>(QChar &ch /Constrained/) /API=QString: - 2/;
-    QTextStream &operator>>(QString &s /Constrained/) /API=QString: - 2/;
     QTextStream &operator>>(QByteArray &array /Constrained/);
-    QTextStream &operator<<(double f /Constrained/);
-%If (- Qt_5_0_0)
-    QTextStream &operator<<(bool b /Constrained/) [QTextStream & (QBool b)];
-%End
-    QTextStream &operator<<(int i /Constrained/);
-    QTextStream &operator<<(qlonglong i);
-    QTextStream &operator<<(qulonglong i);
     QTextStream &operator<<(const QString &s);
     QTextStream &operator<<(const QByteArray &array);
-%If (Qt_4_5_0 -)
+    QTextStream &operator<<(double f /Constrained/);
+    QTextStream &operator<<(SIP_PYOBJECT i /TypeHint="int"/);
+%MethodCode
+        #if PY_MAJOR_VERSION < 3
+        if (PyInt_Check(a1))
+        {
+            qlonglong val = PyInt_AsLong(a1);
+        
+            sipRes = &(*a0 << val);
+        }
+        else
+        #endif
+        {
+            qlonglong val = sipLong_AsLongLong(a1);
+        
+            if (!PyErr_Occurred())
+            {
+                sipRes = &(*a0 << val);
+            }
+            else
+            {
+                // If it is positive then it might fit an unsigned long long.
+        
+                qulonglong uval = sipLong_AsUnsignedLongLong(a1);
+        
+                if (!PyErr_Occurred())
+                {
+                    sipRes = &(*a0 << uval);
+                }
+                else
+                {
+                    sipError = (PyErr_ExceptionMatches(PyExc_OverflowError)
+                            ? sipErrorFail : sipErrorContinue);
+                }
+            }
+        }
+%End
+
     void setLocale(const QLocale &locale);
-%End
-%If (Qt_4_5_0 -)
     QLocale locale() const;
-%End
 
 private:
     QTextStream(const QTextStream &);
@@ -136,13 +154,10 @@ private:
 QFlags<QTextStream::NumberFlag> operator|(QTextStream::NumberFlag f1, QFlags<QTextStream::NumberFlag> f2);
 class QTextStreamManipulator;
 QTextStream &operator<<(QTextStream &s, QTextStreamManipulator m);
-QTextStream &bin(QTextStream &s) /API=QTextStream: - 2/;
-QTextStream &bin(QTextStream &s) /API=QTextStream:2 - , PyName=bin_/;
-QTextStream &oct(QTextStream &s) /API=QTextStream: - 2/;
-QTextStream &oct(QTextStream &s) /API=QTextStream:2 - , PyName=oct_/;
+QTextStream &bin(QTextStream &s) /PyName=bin_/;
+QTextStream &oct(QTextStream &s) /PyName=oct_/;
 QTextStream &dec(QTextStream &s);
-QTextStream &hex(QTextStream &s) /API=QTextStream: - 2/;
-QTextStream &hex(QTextStream &s) /API=QTextStream:2 - , PyName=hex_/;
+QTextStream &hex(QTextStream &s) /PyName=hex_/;
 QTextStream &showbase(QTextStream &s);
 QTextStream &forcesign(QTextStream &s);
 QTextStream &forcepoint(QTextStream &s);

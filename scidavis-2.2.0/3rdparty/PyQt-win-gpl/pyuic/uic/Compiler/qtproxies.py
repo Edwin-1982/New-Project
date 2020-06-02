@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2012 Riverbank Computing Limited.
+## Copyright (C) 2014 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -41,15 +41,15 @@
 import sys
 import re
 
-from PyQt4.uic.Compiler.indenter import write_code
-from PyQt4.uic.Compiler.misc import Literal, moduleMember
+from .indenter import write_code
+from .misc import Literal, moduleMember
 
 if sys.hexversion >= 0x03000000:
-    from PyQt4.uic.port_v3.proxy_base import ProxyBase
-    from PyQt4.uic.port_v3.as_string import as_string
+    from ..port_v3.proxy_base import ProxyBase
+    from ..port_v3.as_string import as_string
 else:
-    from PyQt4.uic.port_v2.proxy_base import ProxyBase
-    from PyQt4.uic.port_v2.as_string import as_string
+    from ..port_v2.proxy_base import ProxyBase
+    from ..port_v2.as_string import as_string
 
 
 i18n_strings = []
@@ -85,11 +85,9 @@ class i18n_string(object):
 
     def __str__(self):
         if self.disambig is None:
-            disambig = "None"
-        else:
-            disambig = as_string(self.disambig, encode=False)
+            return '_translate("%s", %s)' % (i18n_context, as_string(self.string))
 
-        return '_translate("%s", %s, %s)' % (i18n_context, as_string(self.string, encode=False), disambig)
+        return '_translate("%s", %s, %s)' % (i18n_context, as_string(self.string), as_string(self.disambig))
 
 
 # Classes with this flag will be handled as literal values. If functions are
@@ -98,7 +96,11 @@ class i18n_string(object):
 # the code
 # >>> QSize(9,10).expandedTo(...)
 # will print just that code.
-AS_ARGUMENT = 2
+AS_ARGUMENT = 0x02
+
+# Classes with this flag may have members that are signals which themselves
+# will have a connect() member.
+AS_SIGNAL = 0x01
 
 # ATTENTION: currently, classes can either be literal or normal. If a class
 # should need both kinds of behaviour, the code has to be changed.
@@ -114,7 +116,7 @@ class ProxyClassMember(object):
     
     def __call__(self, *args):
         if self.function_name == 'setProperty':
-            str_args = (as_string(args[0], encode=False), as_string(args[1]))
+            str_args = (as_string(args[0]), as_string(args[1]))
         else:
             str_args = map(as_string, args)
 
@@ -133,6 +135,46 @@ class ProxyClassMember(object):
                 i18n_print(func_call)
             else:
                 write_code(func_call)                       
+
+    def __getattribute__(self, attribute):
+        """ Reimplemented to create a proxy connect() if requested and this
+        might be a proxy for a signal.
+        """
+
+        try:
+            return object.__getattribute__(self, attribute)
+        except AttributeError:
+            if attribute == 'connect' and self.flags & AS_SIGNAL:
+                return ProxyClassMember(self, attribute, 0)
+
+            raise
+
+    def __getitem__(self, idx):
+        """ Reimplemented to create a proxy member that should be a signal that
+        passes arguments.  We handle signals without arguments before we get
+        here and never apply the index notation to them.
+        """
+
+        return ProxySignalWithArguments(self.proxy, self.function_name, idx)
+
+
+class ProxySignalWithArguments(object):
+    """ This is a proxy for (what should be) a signal that passes arguments.
+    """
+
+    def __init__(self, sender, signal_name, signal_index):
+        self._sender = sender
+        self._signal_name = signal_name
+
+        # Convert the signal index, which will be a single argument or a tuple
+        # of arguments, to quoted strings.
+        if isinstance(signal_index, tuple):
+            self._signal_index = ','.join(["'%s'" % a for a in signal_index])
+        else:
+            self._signal_index = "'%s'" % signal_index
+
+    def connect(self, slot):
+        write_code("%s.%s[%s].connect(%s)" % (self._sender, self._signal_name, self._signal_index, slot))
 
 
 class ProxyClass(ProxyBase):
@@ -176,6 +218,7 @@ class LiteralProxyClass(ProxyClass):
     >>> str(Foo(1,2,3)) == "Foo(1,2,3)"
     """
     flags = AS_ARGUMENT
+
     def __init__(self, *args):
         self._uic_name = "%s(%s)" % \
                      (moduleMember(self.module, self.__class__.__name__),
@@ -186,7 +229,7 @@ class ProxyNamespace(ProxyBase):
     pass
 
 
-# These are all the Qt classes used by pyuic4 in their namespaces. If a class
+# These are all the Qt classes used by pyuic5 in their namespaces. If a class
 # is missing, the compiler will fail, normally with an AttributeError.
 #
 # For adding new classes:
@@ -207,12 +250,13 @@ class QtCore(ProxyNamespace):
     ## otherwise they would be created as LiteralProxyClasses and never be
     ## printed
     class QMetaObject(ProxyClass):
+        @classmethod
         def connectSlotsByName(cls, *args):
             ProxyClassMember(cls, "connectSlotsByName", 0)(*args)
-        connectSlotsByName = classmethod(connectSlotsByName)
-
 
     class QObject(ProxyClass):
+        flags = AS_SIGNAL
+
         def metaObject(self):
             class _FakeMetaObject(object):
                 def className(*args):
@@ -222,27 +266,8 @@ class QtCore(ProxyNamespace):
         def objectName(self):
             return self._uic_name.split(".")[-1]
 
-        def connect(cls, *args):
-            # Handle slots that have names corresponding to Python keywords.
-            slot_name = str(args[-1])
-            if slot_name.endswith('.raise'):
-                args = list(args[:-1])
-                args.append(Literal(slot_name + '_'))
-
-            ProxyClassMember(cls, "connect", 0)(*args)
-        connect = classmethod(connect)
-
-# These sub-class QWidget but aren't themselves sub-classed.
-_qwidgets = ("QCalendarWidget", "QDialogButtonBox", "QDockWidget", "QGroupBox",
-        "QLineEdit", "QMainWindow", "QMenuBar", "QProgressBar", "QStatusBar",
-        "QToolBar", "QWizardPage")
 
 class QtGui(ProxyNamespace):
-    class QApplication(QtCore.QObject):
-        def translate(uiname, text, disambig, encoding):
-            return i18n_string(text or "", disambig)
-        translate = staticmethod(translate)
-
     class QIcon(ProxyClass):
         class fromTheme(ProxyClass): pass
 
@@ -253,11 +278,24 @@ class QtGui(ProxyNamespace):
     class QPainter(ProxyClass): pass
     class QPalette(ProxyClass): pass
     class QFont(ProxyClass): pass
+
+
+# These sub-class QWidget but aren't themselves sub-classed.
+_qwidgets = ("QCalendarWidget", "QDialogButtonBox", "QDockWidget", "QGroupBox",
+        "QLineEdit", "QMainWindow", "QMenuBar", "QOpenGLWidget",
+        "QProgressBar", "QStatusBar", "QToolBar", "QWizardPage")
+
+class QtWidgets(ProxyNamespace):
+    class QApplication(QtCore.QObject):
+        @staticmethod
+        def translate(uiname, text, disambig):
+            return i18n_string(text or "", disambig)
+
     class QSpacerItem(ProxyClass): pass
     class QSizePolicy(ProxyClass): pass
-    ## QActions inherit from QObject for the metaobject stuff
-    ## and the hierarchy has to be correct since we have a
-    ## isinstance(x, QtGui.QLayout) call in the ui parser
+    # QActions inherit from QObject for the meta-object stuff and the hierarchy
+    # has to be correct since we have a isinstance(x, QtWidgets.QLayout) call
+    # in the UI parser.
     class QAction(QtCore.QObject): pass
     class QActionGroup(QtCore.QObject): pass
     class QButtonGroup(QtCore.QObject): pass
@@ -281,13 +319,11 @@ class QtGui(ProxyNamespace):
             return sp
 
     class QDialog(QWidget): pass
-    class QAbstractPrintDialog(QDialog): pass
     class QColorDialog(QDialog): pass
     class QFileDialog(QDialog): pass
     class QFontDialog(QDialog): pass
     class QInputDialog(QDialog): pass
     class QMessageBox(QDialog): pass
-    class QPageSetupDialog(QDialog): pass
     class QWizard(QDialog): pass
 
     class QAbstractSlider(QWidget): pass
@@ -345,12 +381,12 @@ class QtGui(ProxyNamespace):
             return Literal("%s.indexOf(%s)" % (self, page))
 
         def layout(self):
-            return QtGui.QLayout("%s.layout()" % self,
+            return QtWidgets.QLayout("%s.layout()" % self,
                     False, (), noInstantiation=True)
 
     class QAbstractScrollArea(QFrame):
         def viewport(self):
-            return QtGui.QWidget("%s.viewport()" % self, False, (),
+            return QtWidgets.QWidget("%s.viewport()" % self, False, (),
                     noInstantiation=True)
 
     class QGraphicsView(QAbstractScrollArea): pass
@@ -368,16 +404,16 @@ class QtGui(ProxyNamespace):
 
     class QTableView(QAbstractItemView):
         def horizontalHeader(self):
-            return QtGui.QHeaderView("%s.horizontalHeader()" % self,
+            return QtWidgets.QHeaderView("%s.horizontalHeader()" % self,
                     False, (), noInstantiation=True)
 
         def verticalHeader(self):
-            return QtGui.QHeaderView("%s.verticalHeader()" % self,
+            return QtWidgets.QHeaderView("%s.verticalHeader()" % self,
                     False, (), noInstantiation=True)
 
     class QTreeView(QAbstractItemView):
         def header(self):
-            return QtGui.QHeaderView("%s.header()" % self,
+            return QtWidgets.QHeaderView("%s.header()" % self,
                     False, (), noInstantiation=True)
 
     class QListWidgetItem(ProxyClass): pass
@@ -398,7 +434,7 @@ class QtGui(ProxyNamespace):
 
     class QTreeWidgetItem(ProxyClass):
         def child(self, index):
-            return QtGui.QTreeWidgetItem("%s.child(%i)" % (self, index),
+            return QtWidgets.QTreeWidgetItem("%s.child(%i)" % (self, index),
                     False, (), noInstantiation=True)
 
     class QTreeWidget(QTreeView):
@@ -406,11 +442,11 @@ class QtGui(ProxyNamespace):
         isSortingEnabled = i18n_func("isSortingEnabled")
 
         def headerItem(self):
-            return QtGui.QWidget("%s.headerItem()" % self, False, (),
+            return QtWidgets.QWidget("%s.headerItem()" % self, False, (),
                     noInstantiation=True)
 
         def topLevelItem(self, index):
-            return QtGui.QTreeWidgetItem("%s.topLevelItem(%i)" % (self, index),
+            return QtWidgets.QTreeWidgetItem("%s.topLevelItem(%i)" % (self, index),
                     False, (), noInstantiation=True)
 
     class QAbstractButton(QWidget): pass
@@ -420,6 +456,7 @@ class QtGui(ProxyNamespace):
 
     class QPushButton(QAbstractButton): pass
     class QCommandLinkButton(QPushButton): pass
+    class QKeySequenceEdit(QWidget): pass
 
     # Add all remaining classes.
     for _class in _qwidgets:

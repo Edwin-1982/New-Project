@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,13 +20,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
 %ModuleCode
 #include <qquaternion.h>
 %End
-%End
-
-%If (Qt_4_6_0 -)
 
 class QQuaternion
 {
@@ -41,18 +37,8 @@ class QQuaternion
 
 public:
     QQuaternion();
-%If (Qt_5_0_0 -)
     QQuaternion(float aScalar, float xpos, float ypos, float zpos);
-%End
-%If (- Qt_5_0_0)
-    QQuaternion(qreal aScalar, qreal xpos, qreal ypos, qreal zpos);
-%End
-%If (Qt_5_0_0 -)
     QQuaternion(float aScalar, const QVector3D &aVector);
-%End
-%If (- Qt_5_0_0)
-    QQuaternion(qreal aScalar, const QVector3D &aVector);
-%End
     explicit QQuaternion(const QVector4D &aVector);
     SIP_PYOBJECT __repr__() const /TypeHint="str"/;
 %MethodCode
@@ -64,10 +50,10 @@ public:
         if (scalar && x && y && z)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QQuaternion(%R, %R, %R, %R)",
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QQuaternion(%R, %R, %R, %R)",
                     scalar, x, y, z);
         #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QQuaternion(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QQuaternion(");
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(scalar));
             PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(x));
@@ -85,165 +71,91 @@ public:
         Py_XDECREF(z);
 %End
 
-%If (Qt_5_0_0 -)
     float length() const;
-%End
-%If (- Qt_5_0_0)
-    qreal length() const;
-%End
-%If (Qt_5_0_0 -)
     float lengthSquared() const;
-%End
-%If (- Qt_5_0_0)
-    qreal lengthSquared() const;
-%End
     QQuaternion normalized() const;
     void normalize();
     QVector3D rotatedVector(const QVector3D &vector) const;
-%If (Qt_5_0_0 -)
     static QQuaternion fromAxisAndAngle(const QVector3D &axis, float angle);
-%End
-%If (- Qt_5_0_0)
-    static QQuaternion fromAxisAndAngle(const QVector3D &axis, qreal angle);
-%End
-%If (Qt_5_0_0 -)
     static QQuaternion fromAxisAndAngle(float x, float y, float z, float angle);
-%End
-%If (- Qt_5_0_0)
-    static QQuaternion fromAxisAndAngle(qreal x, qreal y, qreal z, qreal angle);
-%End
-%If (Qt_5_0_0 -)
     static QQuaternion slerp(const QQuaternion &q1, const QQuaternion &q2, float t);
-%End
-%If (- Qt_5_0_0)
-    static QQuaternion slerp(const QQuaternion &q1, const QQuaternion &q2, qreal t);
-%End
-%If (Qt_5_0_0 -)
     static QQuaternion nlerp(const QQuaternion &q1, const QQuaternion &q2, float t);
-%End
-%If (- Qt_5_0_0)
-    static QQuaternion nlerp(const QQuaternion &q1, const QQuaternion &q2, qreal t);
-%End
     bool isNull() const;
     bool isIdentity() const;
-%If (Qt_5_0_0 -)
     float x() const;
-%End
-%If (- Qt_5_0_0)
-    qreal x() const;
-%End
-%If (Qt_5_0_0 -)
     float y() const;
-%End
-%If (- Qt_5_0_0)
-    qreal y() const;
-%End
-%If (Qt_5_0_0 -)
     float z() const;
-%End
-%If (- Qt_5_0_0)
-    qreal z() const;
-%End
-%If (Qt_5_0_0 -)
     float scalar() const;
-%End
-%If (- Qt_5_0_0)
-    qreal scalar() const;
-%End
-%If (Qt_5_0_0 -)
     void setX(float aX);
-%End
-%If (- Qt_5_0_0)
-    void setX(qreal aX);
-%End
-%If (Qt_5_0_0 -)
     void setY(float aY);
-%End
-%If (- Qt_5_0_0)
-    void setY(qreal aY);
-%End
-%If (Qt_5_0_0 -)
     void setZ(float aZ);
-%End
-%If (- Qt_5_0_0)
-    void setZ(qreal aZ);
-%End
-%If (Qt_5_0_0 -)
     void setScalar(float aScalar);
-%End
-%If (- Qt_5_0_0)
-    void setScalar(qreal aScalar);
-%End
     QQuaternion conjugate() const;
     QQuaternion &operator+=(const QQuaternion &quaternion);
     QQuaternion &operator-=(const QQuaternion &quaternion);
-%If (Qt_5_0_0 -)
     QQuaternion &operator*=(float factor);
-%End
-%If (- Qt_5_0_0)
-    QQuaternion &operator*=(qreal factor);
-%End
     QQuaternion &operator*=(const QQuaternion &quaternion);
-%If (Qt_5_0_0 -)
     QQuaternion &operator/=(float divisor);
-%End
-%If (- Qt_5_0_0)
-    QQuaternion &operator/=(qreal divisor);
-%End
     void setVector(const QVector3D &aVector);
     QVector3D vector() const;
-%If (Qt_5_0_0 -)
     void setVector(float aX, float aY, float aZ);
-%End
-%If (- Qt_5_0_0)
-    void setVector(qreal aX, qreal aY, qreal aZ);
-%End
     QVector4D toVector4D() const;
+%If (Qt_5_5_0 -)
+    void getAxisAndAngle(QVector3D *axis /Out/, float *angle) const;
+%End
+%If (Qt_5_5_0 -)
+    void getEulerAngles(float *pitch, float *yaw, float *roll) const;
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion fromEulerAngles(float pitch, float yaw, float roll);
+%End
+%If (Qt_5_5_0 -)
+    QMatrix3x3 toRotationMatrix() const;
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion fromRotationMatrix(const QMatrix3x3 &rot3x3);
+%End
+%If (Qt_5_5_0 -)
+    void getAxes(QVector3D *xAxis /Out/, QVector3D *yAxis /Out/, QVector3D *zAxis /Out/) const;
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion fromAxes(const QVector3D &xAxis, const QVector3D &yAxis, const QVector3D &zAxis);
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion fromDirection(const QVector3D &direction, const QVector3D &up);
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion rotationTo(const QVector3D &from, const QVector3D &to);
+%End
+%If (Qt_5_5_0 -)
+    static float dotProduct(const QQuaternion &q1, const QQuaternion &q2);
+%End
+%If (Qt_5_5_0 -)
+    QQuaternion inverted() const;
+%End
+%If (Qt_5_5_0 -)
+    QQuaternion conjugated() const;
+%End
+%If (Qt_5_5_0 -)
+    QVector3D toEulerAngles() const;
+%End
+%If (Qt_5_5_0 -)
+    static QQuaternion fromEulerAngles(const QVector3D &eulerAngles);
+%End
 };
 
-%End
-%If (Qt_4_6_0 -)
 const QQuaternion operator*(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_4_6_0 -)
 bool operator==(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_4_6_0 -)
 bool operator!=(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_4_6_0 -)
 const QQuaternion operator+(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_4_6_0 -)
 const QQuaternion operator-(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_5_0_0 -)
 const QQuaternion operator*(float factor, const QQuaternion &quaternion);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QQuaternion operator*(qreal factor, const QQuaternion &quaternion);
-%End
-%If (Qt_5_0_0 -)
 const QQuaternion operator*(const QQuaternion &quaternion, float factor);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QQuaternion operator*(const QQuaternion &quaternion, qreal factor);
-%End
-%If (Qt_4_6_0 -)
 const QQuaternion operator-(const QQuaternion &quaternion);
-%End
-%If (Qt_5_0_0 -)
 const QQuaternion operator/(const QQuaternion &quaternion, float divisor);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-const QQuaternion operator/(const QQuaternion &quaternion, qreal divisor);
-%End
-%If (Qt_4_6_0 -)
 bool qFuzzyCompare(const QQuaternion &q1, const QQuaternion &q2);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator<<(QDataStream &, const QQuaternion & /Constrained/);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator>>(QDataStream &, QQuaternion & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QQuaternion & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QQuaternion & /Constrained/) /ReleaseGIL/;
+%If (Qt_5_5_0 -)
+QVector3D operator*(const QQuaternion &quaternion, const QVector3D &vec);
 %End

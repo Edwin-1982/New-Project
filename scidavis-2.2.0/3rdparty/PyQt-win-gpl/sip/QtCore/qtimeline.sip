@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_2_0 -)
-
 class QTimeLine : QObject
 {
 %TypeHeaderCode
@@ -36,9 +34,7 @@ public:
         EaseInOutCurve,
         LinearCurve,
         SineCurve,
-%If (Qt_4_4_0 -)
         CosineCurve,
-%End
     };
 
     enum Direction
@@ -79,9 +75,7 @@ public:
     virtual qreal valueForTime(int msec) const;
 
 public slots:
-%If (Qt_4_3_0 -)
     void resume();
-%End
     void setCurrentTime(int msec);
     void setPaused(bool paused);
     void start();
@@ -98,15 +92,6 @@ protected:
     virtual void timerEvent(QTimerEvent *event);
 
 public:
-%If (Qt_4_6_0 -)
     QEasingCurve easingCurve() const;
-%End
-%If (Qt_4_6_0 -)
     void setEasingCurve(const QEasingCurve &curve);
-%End
-
-private:
-    QTimeLine(const QTimeLine &);
 };
-
-%End

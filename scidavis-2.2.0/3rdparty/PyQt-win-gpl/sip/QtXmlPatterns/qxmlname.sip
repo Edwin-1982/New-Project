@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QXmlName
 {
 %TypeHeaderCode
@@ -31,6 +29,9 @@ class QXmlName
 public:
     QXmlName();
     QXmlName(QXmlNamePool &namePool, const QString &localName, const QString &namespaceUri = QString(), const QString &prefix = QString());
+%If (Qt_5_9_0 -)
+    QXmlName(const QXmlName &other);
+%End
     QString namespaceUri(const QXmlNamePool &query) const;
     QString prefix(const QXmlNamePool &query) const;
     QString localName(const QXmlNamePool &query) const;
@@ -39,13 +40,9 @@ public:
     bool operator!=(const QXmlName &other) const;
     bool isNull() const;
     static bool isNCName(const QString &candidate);
-%If (Qt_4_5_0 -)
     static QXmlName fromClarkName(const QString &clarkName, const QXmlNamePool &namePool);
-%End
     long __hash__() const;
 %MethodCode
         sipRes = qHash(*sipCpp);
 %End
 };
-
-%End

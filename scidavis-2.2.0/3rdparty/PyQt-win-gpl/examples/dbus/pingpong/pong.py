@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2011 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2011 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -42,39 +42,36 @@
 #############################################################################
 
 
-# This is only needed for Python v2 but is harmless for Python v3.
-import sip
-sip.setapi('QString', 2)
-
 import sys
-from PyQt4 import QtCore, QtDBus
+
+from PyQt5.QtCore import pyqtSlot, QCoreApplication, QMetaObject, QObject
+from PyQt5.QtDBus import QDBusConnection
 
 
-class Pong(QtCore.QObject):
+class Pong(QObject):
 
-    @QtCore.pyqtSlot(str, result=str)
+    @pyqtSlot(str, result=str)
     def ping(self, arg):
-        QtCore.QMetaObject.invokeMethod(QtCore.QCoreApplication.instance(),
-                'quit')
+        QMetaObject.invokeMethod(QCoreApplication.instance(), 'quit')
 
         return "ping(\"%s\") got called" % arg
 
 
 if __name__ == '__main__':
-    app = QtCore.QCoreApplication(sys.argv)
+    app = QCoreApplication(sys.argv)
 
-    if not QtDBus.QDBusConnection.sessionBus().isConnected():
+    if not QDBusConnection.sessionBus().isConnected():
         sys.stderr.write("Cannot connect to the D-Bus session bus.\n"
                 "To start it, run:\n"
                 "\teval `dbus-launch --auto-syntax`\n");
         sys.exit(1)
 
-    if not QtDBus.QDBusConnection.sessionBus().registerService('com.trolltech.QtDBus.PingExample'):
-        sys.stderr.write("%s\n" % QtDBus.QDBusConnection.sessionBus().lastError().message())
+    if not QDBusConnection.sessionBus().registerService('org.example.QtDBus.PingExample'):
+        sys.stderr.write("%s\n" % QDBusConnection.sessionBus().lastError().message())
         sys.exit(1)
 
     pong = Pong()
-    QtDBus.QDBusConnection.sessionBus().registerObject('/', pong,
-            QtDBus.QDBusConnection.ExportAllSlots)
+    QDBusConnection.sessionBus().registerObject('/', pong,
+            QDBusConnection.ExportAllSlots)
 
     sys.exit(app.exec_())

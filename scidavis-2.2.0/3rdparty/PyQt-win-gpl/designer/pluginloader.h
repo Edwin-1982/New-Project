@@ -1,9 +1,9 @@
 /*
  * This is the interface of the Qt Designer plugin.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  * 
- * This file is part of PyQt4.
+ * This file is part of PyQt5.
  * 
  * This file may be used under the terms of the GNU General Public License
  * version 3.0 as published by the Free Software Foundation and appearing in
@@ -25,7 +25,7 @@
 
 #include <Python.h>
 
-#include <QDesignerCustomWidgetCollectionInterface>
+#include <QtDesigner>
 #include <QList>
 #include <QObject>
 
@@ -39,9 +39,7 @@ class PyCustomWidgets
     : public QObject, public QDesignerCustomWidgetCollectionInterface
 {
     Q_OBJECT
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
-#endif
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
@@ -50,7 +48,17 @@ public:
     virtual QList<QDesignerCustomWidgetInterface *> customWidgets() const;
 
 private:
+    bool importPlugins(const QString &dir, const QStringList &plugins);
     static PyObject *getModuleAttr(const char *module, const char *attr);
+
+    // The sys.path object if we need it.
+    PyObject *sys_path;
+
+    // The sip.unwrapinstance object if we need it.
+    PyObject *sip_unwrapinstance;
+
+    // The PyQt5.QtDesigner.QPyDesignerCustomWidgetPlugin object if we need it.
+    PyObject *qtdesigner_custom;
 
     QList<QDesignerCustomWidgetInterface *> widgets;
 };

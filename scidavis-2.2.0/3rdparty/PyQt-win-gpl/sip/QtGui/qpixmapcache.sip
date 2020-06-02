@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,8 +27,6 @@ class QPixmapCache
 %End
 
 public:
-%If (Qt_4_6_0 -)
-
     class Key
     {
 %TypeHeaderCode
@@ -41,31 +39,42 @@ public:
         ~Key();
         bool operator==(const QPixmapCache::Key &key) const;
         bool operator!=(const QPixmapCache::Key &key) const;
+%If (Qt_5_6_0 -)
+        void swap(QPixmapCache::Key &other /Constrained/);
+%End
+%If (Qt_5_7_0 -)
+        bool isValid() const;
+%End
     };
 
-%End
     static int cacheLimit();
     static void clear();
-    static QPixmap *find(const QString &key);
-%If (- Qt_4_6_0)
-    static bool find(const QString &key, QPixmap &);
+    static QPixmap find(const QString &key);
+%MethodCode
+        sipRes = new QPixmap;
+        
+        if (!QPixmapCache::find(*a0, sipRes))
+        {
+            delete sipRes;
+            sipRes = 0;
+        }
 %End
-%If (Qt_4_6_0 -)
-    static bool find(const QString &key, QPixmap *pixmap);
+
+    static QPixmap find(const QPixmapCache::Key &key);
+%MethodCode
+        sipRes = new QPixmap;
+        
+        if (!QPixmapCache::find(*a0, sipRes))
+        {
+            delete sipRes;
+            sipRes = 0;
+        }
 %End
-%If (Qt_4_6_0 -)
-    static bool find(const QPixmapCache::Key &key, QPixmap *pixmap);
-%End
+
     static bool insert(const QString &key, const QPixmap &);
-%If (Qt_4_6_0 -)
     static QPixmapCache::Key insert(const QPixmap &pixmap);
-%End
     static void remove(const QString &key);
-%If (Qt_4_6_0 -)
     static void remove(const QPixmapCache::Key &key);
-%End
-%If (Qt_4_6_0 -)
     static bool replace(const QPixmapCache::Key &key, const QPixmap &pixmap);
-%End
     static void setCacheLimit(int);
 };

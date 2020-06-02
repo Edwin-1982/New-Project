@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 
 namespace QSsl
 {
@@ -43,64 +42,65 @@ namespace QSsl
 
     enum KeyAlgorithm
     {
-%If (Qt_5_0_0 -)
         Opaque,
-%End
         Rsa,
         Dsa,
+%If (Qt_5_5_0 -)
+        Ec,
+%End
+%If (Qt_5_13_0 -)
+        Dh,
+%End
     };
-
-%If (Qt_5_0_0 -)
 
     enum AlternativeNameEntryType
     {
         EmailEntry,
         DnsEntry,
+%If (Qt_5_13_0 -)
+        IpAddressEntry,
+%End
     };
-
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_Deprecated_5_0)
-    typedef QSsl::AlternativeNameEntryType AlternateNameEntryType;
-%End
-%End
-%If (- Qt_5_0_0)
-
-    enum AlternateNameEntryType
-    {
-        EmailEntry,
-        DnsEntry,
-    };
-
-%End
 
     enum SslProtocol
     {
         UnknownProtocol,
         SslV3,
         SslV2,
-%If (PyQt_Deprecated_5_0)
-        TlsV1,
-%End
-%If (Qt_5_0_0 -)
         TlsV1_0,
+%If (Qt_5_5_0 -)
+        TlsV1_0OrLater,
 %End
-%If (Qt_5_0_0 -)
         TlsV1_1,
+%If (Qt_5_5_0 -)
+        TlsV1_1OrLater,
 %End
-%If (Qt_5_0_0 -)
         TlsV1_2,
+%If (Qt_5_5_0 -)
+        TlsV1_2OrLater,
 %End
         AnyProtocol,
-%If (Qt_4_8_0 -)
         TlsV1SslV3,
-%End
-%If (Qt_4_8_0 -)
         SecureProtocols,
+%If (Qt_5_12_0 -)
+        DtlsV1_0,
+%End
+%If (Qt_5_12_0 -)
+        DtlsV1_0OrLater,
+%End
+%If (Qt_5_12_0 -)
+        DtlsV1_2,
+%End
+%If (Qt_5_12_0 -)
+        DtlsV1_2OrLater,
+%End
+%If (Qt_5_12_0 -)
+        TlsV1_3,
+%End
+%If (Qt_5_12_0 -)
+        TlsV1_3OrLater,
 %End
     };
-
-%If (Qt_4_8_0 -)
 
     enum SslOption
     {
@@ -109,23 +109,21 @@ namespace QSsl
         SslOptionDisableCompression,
         SslOptionDisableServerNameIndication,
         SslOptionDisableLegacyRenegotiation,
+%If (Qt_5_2_0 -)
+        SslOptionDisableSessionSharing,
+%End
+%If (Qt_5_2_0 -)
+        SslOptionDisableSessionPersistence,
+%End
+%If (Qt_5_6_0 -)
+        SslOptionDisableServerCipherPreference,
+%End
     };
 
-%End
-%If (Qt_4_8_0 -)
     typedef QFlags<QSsl::SslOption> SslOptions;
-%End
 };
 
 %End
-%End
-%If (Qt_4_8_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
 QFlags<QSsl::SslOption> operator|(QSsl::SslOption f1, QFlags<QSsl::SslOption> f2);
-%End
-%End
-%If (Qt_4_8_0 -)
-%If (PyQt_OpenSSL)
-QFlags<QSsl::SslOption> operator|(QSsl::SslOption f1, QSsl::SslOption f2);
-%End
 %End

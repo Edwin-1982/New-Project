@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,20 +37,26 @@ public:
         Truncate,
         Text,
         Unbuffered,
+%If (Qt_5_11_0 -)
+        NewOnly,
+%End
+%If (Qt_5_11_0 -)
+        ExistingOnly,
+%End
     };
 
     typedef QFlags<QIODevice::OpenModeFlag> OpenMode;
     QIODevice();
     explicit QIODevice(QObject *parent /TransferThis/);
     virtual ~QIODevice();
-    QFlags<QIODevice::OpenModeFlag> openMode() const;
+    QIODevice::OpenMode openMode() const;
     void setTextModeEnabled(bool enabled);
     bool isTextModeEnabled() const;
     bool isOpen() const;
     bool isReadable() const;
     bool isWritable() const;
     virtual bool isSequential() const;
-    virtual bool open(QFlags<QIODevice::OpenModeFlag> mode) /ReleaseGIL/;
+    virtual bool open(QIODevice::OpenMode mode) /ReleaseGIL/;
     virtual void close() /ReleaseGIL/;
     virtual qint64 pos() const;
     virtual qint64 size() const;
@@ -155,9 +161,7 @@ signals:
     void readyRead();
     void bytesWritten(qint64 bytes);
     void aboutToClose();
-%If (Qt_4_4_0 -)
     void readChannelFinished();
-%End
 
 protected:
     virtual SIP_PYOBJECT readData(qint64 maxlen) = 0 /TypeHint="Py_v3:bytes;str",ReleaseGIL/ [qint64 (char *data, qint64 maxlen)];
@@ -216,8 +220,8 @@ protected:
             }
             else
             {
-                memcpy(a0, SIPBytes_AS_STRING(buf), SIPBytes_GET_SIZE(buf));
-                sipRes = SIPBytes_GET_SIZE(buf);
+                memcpy(a0, SIPBytes_AsString(buf), SIPBytes_Size(buf));
+                sipRes = SIPBytes_Size(buf);
             }
         
             Py_DECREF(buf);
@@ -281,8 +285,8 @@ protected:
             }
             else
             {
-                memcpy(a0, SIPBytes_AS_STRING(buf), SIPBytes_GET_SIZE(buf));
-                sipRes = SIPBytes_GET_SIZE(buf);
+                memcpy(a0, SIPBytes_AsString(buf), SIPBytes_Size(buf));
+                sipRes = SIPBytes_Size(buf);
             }
         
             Py_DECREF(buf);
@@ -290,12 +294,54 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) = 0;
-    void setOpenMode(QFlags<QIODevice::OpenModeFlag> openMode);
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) = 0;
+    void setOpenMode(QIODevice::OpenMode openMode);
     void setErrorString(const QString &errorString);
 
-private:
-    QIODevice(const QIODevice &);
+public:
+%If (Qt_5_7_0 -)
+    int readChannelCount() const;
+%End
+%If (Qt_5_7_0 -)
+    int writeChannelCount() const;
+%End
+%If (Qt_5_7_0 -)
+    int currentReadChannel() const;
+%End
+%If (Qt_5_7_0 -)
+    void setCurrentReadChannel(int channel);
+%End
+%If (Qt_5_7_0 -)
+    int currentWriteChannel() const;
+%End
+%If (Qt_5_7_0 -)
+    void setCurrentWriteChannel(int channel);
+%End
+%If (Qt_5_7_0 -)
+    void startTransaction();
+%End
+%If (Qt_5_7_0 -)
+    void commitTransaction();
+%End
+%If (Qt_5_7_0 -)
+    void rollbackTransaction();
+%End
+%If (Qt_5_7_0 -)
+    bool isTransactionStarted() const;
+%End
+
+signals:
+%If (Qt_5_7_0 -)
+    void channelReadyRead(int channel);
+%End
+%If (Qt_5_7_0 -)
+    void channelBytesWritten(int channel, qint64 bytes);
+%End
+
+public:
+%If (Qt_5_10_0 -)
+    qint64 skip(qint64 maxSize);
+%End
 };
 
 QFlags<QIODevice::OpenModeFlag> operator|(QIODevice::OpenModeFlag f1, QFlags<QIODevice::OpenModeFlag> f2);

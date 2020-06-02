@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QWebSettings
 {
@@ -47,77 +45,37 @@ public:
         PluginsEnabled,
         PrivateBrowsingEnabled,
         JavascriptCanOpenWindows,
-%If (Qt_4_8_0 -)
         JavascriptCanCloseWindows,
-%End
         JavascriptCanAccessClipboard,
         DeveloperExtrasEnabled,
         LinksIncludedInFocusChain,
-%If (Qt_4_5_0 -)
         ZoomTextOnly,
-%End
-%If (Qt_4_5_0 -)
         PrintElementBackgrounds,
-%End
-%If (Qt_4_5_0 -)
         OfflineStorageDatabaseEnabled,
-%End
-%If (Qt_4_5_0 -)
         OfflineWebApplicationCacheEnabled,
-%End
-%If (Qt_4_5_0 -)
         LocalStorageDatabaseEnabled,
-%End
-%If (Qt_4_6_0 -)
         LocalStorageEnabled,
-%End
-%If (Qt_4_6_0 -)
         LocalContentCanAccessRemoteUrls,
-%End
-%If (Qt_4_6_0 -)
         DnsPrefetchEnabled,
-%End
-%If (Qt_4_7_0 -)
         XSSAuditingEnabled,
-%End
-%If (Qt_4_7_0 -)
         AcceleratedCompositingEnabled,
-%End
-%If (Qt_4_7_0 -)
         SpatialNavigationEnabled,
-%End
-%If (Qt_4_7_0 -)
         LocalContentCanAccessFileUrls,
-%End
-%If (Qt_4_7_0 -)
         TiledBackingStoreEnabled,
-%End
-%If (Qt_4_7_0 -)
         FrameFlatteningEnabled,
-%End
-%If (Qt_4_7_0 -)
         SiteSpecificQuirksEnabled,
-%End
-%If (Qt_4_8_0 -)
         WebGLEnabled,
-%End
-%If (Qt_4_8_0 -)
         HyperlinkAuditingEnabled,
-%End
-%If (Qt_5_0_0 -)
         CSSRegionsEnabled,
-%End
-%If (Qt_5_0_0 -)
         CSSGridLayoutEnabled,
-%End
-%If (Qt_5_0_0 -)
         ScrollAnimatorEnabled,
-%End
-%If (Qt_5_0_0 -)
         CaretBrowsingEnabled,
-%End
-%If (Qt_5_0_0 -)
         NotificationsEnabled,
+%If (Qt_5_2_0 -)
+        WebAudioEnabled,
+%End
+%If (Qt_5_4_0 -)
+        Accelerated2dCanvasEnabled,
 %End
     };
 
@@ -127,15 +85,9 @@ public:
         MissingPluginGraphic,
         DefaultFrameIconGraphic,
         TextAreaSizeGripCornerGraphic,
-%If (Qt_4_8_0 -)
         InputSpeechButtonGraphic,
-%End
-%If (Qt_4_8_0 -)
         SearchCancelButtonGraphic,
-%End
-%If (Qt_4_8_0 -)
         SearchCancelButtonPressedGraphic,
-%End
     };
 
     enum FontSize
@@ -174,49 +126,20 @@ private:
     ~QWebSettings();
 
 public:
-%If (Qt_4_5_0 -)
     static void setOfflineStoragePath(const QString &path);
-%End
-%If (Qt_4_5_0 -)
     static QString offlineStoragePath();
-%End
-%If (Qt_4_5_0 -)
     static void setOfflineStorageDefaultQuota(qint64 maximumSize);
-%End
-%If (Qt_4_5_0 -)
     static qint64 offlineStorageDefaultQuota();
-%End
-%If (Qt_4_6_0 -)
     void setDefaultTextEncoding(const QString &encoding);
-%End
-%If (Qt_4_6_0 -)
     QString defaultTextEncoding() const;
-%End
-%If (Qt_4_6_0 -)
     static void setOfflineWebApplicationCachePath(const QString &path);
-%End
-%If (Qt_4_6_0 -)
     static QString offlineWebApplicationCachePath();
-%End
-%If (Qt_4_6_0 -)
     static void setOfflineWebApplicationCacheQuota(qint64 maximumSize);
-%End
-%If (Qt_4_6_0 -)
     static qint64 offlineWebApplicationCacheQuota();
-%End
-%If (Qt_4_6_0 -)
     void setLocalStoragePath(const QString &path);
-%End
-%If (Qt_4_6_0 -)
     QString localStoragePath() const;
-%End
-%If (Qt_4_6_0 -)
     static void clearMemoryCaches();
-%End
-%If (Qt_4_6_0 -)
     static void enablePersistentStorage(const QString &path = QString());
-%End
-%If (Qt_5_0_0 -)
 
     enum ThirdPartyCookiePolicy
     {
@@ -225,13 +148,12 @@ public:
         AllowThirdPartyWithExistingCookies,
     };
 
-%End
-%If (Qt_5_0_0 -)
     void setThirdPartyCookiePolicy(QWebSettings::ThirdPartyCookiePolicy);
-%End
-%If (Qt_5_0_0 -)
     QWebSettings::ThirdPartyCookiePolicy thirdPartyCookiePolicy() const;
+%If (Qt_5_1_0 -)
+    void setCSSMediaType(const QString &);
+%End
+%If (Qt_5_1_0 -)
+    QString cssMediaType() const;
 %End
 };
-
-%End

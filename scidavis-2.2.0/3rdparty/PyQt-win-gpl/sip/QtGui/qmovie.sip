@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -40,12 +40,7 @@ public:
         CacheAll,
     };
 
-%If (Qt_5_0_0 -)
     explicit QMovie(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QMovie(QObject *parent /TransferThis/ = 0);
-%End
     QMovie(QIODevice *device, const QByteArray &format = QByteArray(), QObject *parent /TransferThis/ = 0);
     QMovie(const QString &fileName, const QByteArray &format = QByteArray(), QObject *parent /TransferThis/ = 0);
     virtual ~QMovie();
@@ -72,12 +67,7 @@ public:
     int speed() const;
     QSize scaledSize();
     void setScaledSize(const QSize &size);
-%If (Qt_4_2_0 -)
     QMovie::CacheMode cacheMode() const;
-%End
-%If (- Qt_4_2_0)
-    QMovie::CacheMode cacheMode();
-%End
     void setCacheMode(QMovie::CacheMode mode);
 
 signals:
@@ -95,6 +85,11 @@ public slots:
     void setPaused(bool paused);
     void stop();
 
-private:
-    QMovie(const QMovie &);
+public:
+%If (Qt_5_10_0 -)
+    QImageReader::ImageReaderError lastError() const;
+%End
+%If (Qt_5_10_0 -)
+    QString lastErrorString() const;
+%End
 };

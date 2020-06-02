@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,14 +20,14 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%Module(name=PyQt4.QtDBus, keyword_arguments="Optional")
+%Module(name=PyQt5.QtDBus, keyword_arguments="Optional", use_limited_api=True)
 
 %Import QtCore/QtCoremod.sip
 
 %Copying
-Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 
-This file is part of PyQt4.
+This file is part of PyQt5.
 
 This file may be used under the terms of the GNU General Public License
 version 3.0 as published by the Free Software Foundation and appearing in
@@ -57,5 +57,5 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include qdbuspendingcall.sip
 %Include qdbusservicewatcher.sip
 %Include qdbusunixfiledescriptor.sip
-%Include qpydbuspendingreply.sip
 %Include qpydbusreply.sip
+%Include qpydbuspendingreply.sip

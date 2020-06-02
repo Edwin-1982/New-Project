@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2015 Riverbank Computing Limited.
+## Copyright (C) 2019 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -40,39 +40,31 @@
 
 __all__ = ("compileUi", "compileUiDir", "loadUiType", "loadUi", "widgetPluginPath")
 
-from PyQt4.uic.Compiler import indenter, compiler
+from .Compiler import indenter, compiler
 
 
 _header = """# -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file '%s'
 #
-# Created by: PyQt4 UI code generator %s
+# Created by: PyQt5 UI code generator %s
 #
 # WARNING! All changes made in this file will be lost!
 
-"""
 
-
-_pyqt3_wrapper_code = """
-class %(widgetname)s(QtGui.%(baseclass)s, %(uiclass)s):
-\tdef __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):
-\t\tQtGui.%(baseclass)s.__init__(self, parent, f)
-
-\t\tself.setupUi(self)
 """
 
 
 _display_code = """
+
 if __name__ == "__main__":
 \timport sys
-\tapp = QtGui.QApplication(sys.argv)
-\t%(widgetname)s = QtGui.%(baseclass)s()
+\tapp = QtWidgets.QApplication(sys.argv)
+\t%(widgetname)s = QtWidgets.%(baseclass)s()
 \tui = %(uiclass)s()
 \tui.setupUi(%(widgetname)s)
 \t%(widgetname)s.show()
-\tsys.exit(app.exec_())
-"""
+\tsys.exit(app.exec_())"""
 
 
 def compileUiDir(dir, recurse=False, map=None, **compileUi_args):
@@ -137,8 +129,8 @@ def compileUiDir(dir, recurse=False, map=None, **compileUi_args):
                 compile_ui(dir, ui)
 
 
-def compileUi(uifile, pyfile, execute=False, indent=4, pyqt3_wrapper=False, from_imports=False, resource_suffix='_rc'):
-    """compileUi(uifile, pyfile, execute=False, indent=4, pyqt3_wrapper=False, from_imports=False, resource_suffix='_rc')
+def compileUi(uifile, pyfile, execute=False, indent=4, from_imports=False, resource_suffix='_rc', import_from='.'):
+    """compileUi(uifile, pyfile, execute=False, indent=4, from_imports=False, resource_suffix='_rc', import_from='.')
 
     Creates a Python module from a Qt Designer .ui file.
     
@@ -148,18 +140,18 @@ def compileUi(uifile, pyfile, execute=False, indent=4, pyqt3_wrapper=False, from
     code to be run as a standalone application.  The default is False.
     indent is the optional indentation width using spaces.  If it is 0 then a
     tab is used.  The default is 4.
-    pyqt3_wrapper is optionally set to generate extra code that allows the code
-    to be used as it would be with PyQt v3.
-    from_imports is optionally set to generate import statements that are
-    relative to '.'.
+    from_imports is optionally set to generate relative import statements.  At
+    the moment this only applies to the import of resource modules.
     resource_suffix is the suffix appended to the basename of any resource file
     specified in the .ui file to create the name of the Python module generated
     from the resource file by pyrcc4.  The default is '_rc', i.e. if the .ui
     file specified a resource file called foo.qrc then the corresponding Python
     module is foo_rc.
+    import_from is optionally set to the package used for relative import
+    statements.  The default is ``'.'``.
     """
 
-    from PyQt4.QtCore import PYQT_VERSION_STR
+    from PyQt5.QtCore import PYQT_VERSION_STR
 
     try:
         uifname = uifile.name
@@ -170,47 +162,56 @@ def compileUi(uifile, pyfile, execute=False, indent=4, pyqt3_wrapper=False, from
 
     pyfile.write(_header % (uifname, PYQT_VERSION_STR))
 
-    winfo = compiler.UICompiler().compileUi(uifile, pyfile, from_imports, resource_suffix)
-
-    if pyqt3_wrapper:
-        indenter.write_code(_pyqt3_wrapper_code % winfo)
+    winfo = compiler.UICompiler().compileUi(uifile, pyfile, from_imports, resource_suffix, import_from)
 
     if execute:
         indenter.write_code(_display_code % winfo)
 
 
-def loadUiType(uifile, from_imports=False, resource_suffix='_rc'):
-    """loadUiType(uifile, from_imports=False) -> (form class, base class)
+def loadUiType(uifile, from_imports=False, resource_suffix='_rc', import_from='.'):
+    """loadUiType(uifile, from_imports=False, resource_suffix='_rc', import_from='.') -> (form class, base class)
 
     Load a Qt Designer .ui file and return the generated form class and the Qt
     base class.
 
     uifile is a file name or file-like object containing the .ui file.
-    from_imports is optionally set to use import statements that are relative
-    to '.'.
+    from_imports is optionally set to generate relative import statements.  At
+    the moment this only applies to the import of resource modules.
     resource_suffix is the suffix appended to the basename of any resource file
     specified in the .ui file to create the name of the Python module generated
     from the resource file by pyrcc4.  The default is '_rc', i.e. if the .ui
     file specified a resource file called foo.qrc then the corresponding Python
     module is foo_rc.
+    import_from is optionally set to the package used for relative import
+    statements.  The default is ``'.'``.
     """
 
     import sys
 
-    from PyQt4 import QtGui
+    from PyQt5 import QtWidgets
 
     if sys.hexversion >= 0x03000000:
-        from PyQt4.uic.port_v3.string_io import StringIO
+        from .port_v3.string_io import StringIO
     else:
-        from PyQt4.uic.port_v2.string_io import StringIO
+        from .port_v2.string_io import StringIO
 
     code_string = StringIO()
-    winfo = compiler.UICompiler().compileUi(uifile, code_string, from_imports, resource_suffix)
+    winfo = compiler.UICompiler().compileUi(uifile, code_string, from_imports,
+            resource_suffix, import_from)
 
     ui_globals = {}
     exec(code_string.getvalue(), ui_globals)
 
-    return (ui_globals[winfo["uiclass"]], getattr(QtGui, winfo["baseclass"]))
+    uiclass = winfo["uiclass"]
+    baseclass = winfo["baseclass"]
+
+    # Assume that the base class is a custom class exposed in the globals.
+    ui_base = ui_globals.get(baseclass)
+    if ui_base is None:
+        # Otherwise assume it is in the QtWidgets module.
+        ui_base = getattr(QtWidgets, baseclass)
+
+    return (ui_globals[uiclass], ui_base)
 
 
 def loadUi(uifile, baseinstance=None, package='', resource_suffix='_rc'):
@@ -231,10 +232,10 @@ def loadUi(uifile, baseinstance=None, package='', resource_suffix='_rc'):
     module is foo_rc.
     """
 
-    from PyQt4.uic.Loader.loader import DynamicUILoader
+    from .Loader.loader import DynamicUILoader
 
     return DynamicUILoader(package).loadUi(uifile, baseinstance, resource_suffix)
 
 
 # The list of directories that are searched for widget plugins.
-from PyQt4.uic.objcreator import widgetPluginPath
+from .objcreator import widgetPluginPath

@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2015 Riverbank Computing Limited.
+## Copyright (C) 2018 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -41,32 +41,34 @@
 import logging
 import sys
 
-try:
-    set()
-except NameError:
-    from sets import Set as set
-
-from PyQt4.uic.Compiler.indenter import write_code
-from PyQt4.uic.Compiler.qtproxies import QtGui, Literal, strict_getattr
+from .indenter import write_code
+from .qtproxies import QtGui, QtWidgets, Literal, strict_getattr
 
 if sys.hexversion >= 0x03000000:
-    from PyQt4.uic.port_v3.as_string import as_string
+    from ..port_v3.as_string import as_string
 else:
-    from PyQt4.uic.port_v2.as_string import as_string
+    from ..port_v2.as_string import as_string
 
 
 logger = logging.getLogger(__name__)
 DEBUG = logger.debug
 
 
-class _QtGuiWrapper(object):
-    def search(clsname):
+class _QtWrapper(object):
+    @classmethod
+    def search(cls, name):
         try:
-            return strict_getattr(QtGui, clsname)
+            return strict_getattr(cls.module, name)
         except AttributeError:
             return None
 
-    search = staticmethod(search)
+
+class _QtGuiWrapper(_QtWrapper):
+    module = QtGui
+
+
+class _QtWidgetsWrapper(_QtWrapper):
+    module = QtWidgets
 
 
 class _ModuleWrapper(object):
@@ -85,7 +87,11 @@ class _ModuleWrapper(object):
     def search(self, cls):
         if cls in self._classes:
             self._used = True
-            return type(cls, (QtGui.QWidget,), {"module": self._module})
+
+            # Remove any C++ scope.
+            cls = cls.split('.')[-1]
+
+            return type(cls, (QtWidgets.QWidget,), {"module": self._module})
         else:
             return None
 
@@ -109,7 +115,7 @@ class _CustomWidgetLoader(object):
     def _resolveBaseclass(self, baseClass):
         try:
             for x in range(0, 10):
-                try: return strict_getattr(QtGui, baseClass)
+                try: return strict_getattr(QtWidgets, baseClass)
                 except AttributeError: pass
                 
                 baseClass = self._widgets[baseClass][0]
@@ -136,22 +142,16 @@ class _CustomWidgetLoader(object):
             _, module = self._widgets[widget]
             imports.setdefault(module, []).append(widget)
 
-        # For repeatability sort the imports and the classes being imported and
-        # in a way that is portable between Python v2 and v3.
-        modules = list(imports.keys())
-        modules.sort()
-        for module in modules:
-            classes = imports[module]
-            classes.sort()
-            write_code("from %s import %s" % (module, ", ".join(classes)))
+        for module, classes in sorted(imports.items()):
+            write_code("from %s import %s" % (module, ", ".join(sorted(classes))))
 
 
 class CompilerCreatorPolicy(object):
     def __init__(self):
         self._modules = []
         
-    def createQtGuiWrapper(self):
-        return _QtGuiWrapper
+    def createQtGuiWidgetsWrappers(self):
+        return [_QtGuiWrapper, _QtWidgetsWrapper]
 
     def createModuleWrapper(self, name, classes):
         mw = _ModuleWrapper(name, classes)

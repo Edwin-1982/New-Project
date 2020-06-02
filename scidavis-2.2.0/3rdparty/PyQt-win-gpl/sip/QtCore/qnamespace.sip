@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -58,9 +58,7 @@ namespace Qt
         AltModifier,
         MetaModifier,
         KeypadModifier,
-%If (Qt_4_2_0 -)
         GroupSwitchModifier,
-%End
         KeyboardModifierMask,
     };
 
@@ -79,98 +77,40 @@ namespace Qt
     enum MouseButton
     {
         NoButton,
-%If (Qt_5_0_0 -)
         AllButtons,
-%End
         LeftButton,
         RightButton,
         MidButton,
-%If (Qt_4_7_0 -)
         MiddleButton,
-%End
         XButton1,
         XButton2,
-%If (Qt_5_0_0 -)
         BackButton,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton1,
-%End
-%If (Qt_5_0_0 -)
         ForwardButton,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton2,
-%End
-%If (Qt_5_0_0 -)
         TaskButton,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton3,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton4,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton5,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton6,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton7,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton8,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton9,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton10,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton11,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton12,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton13,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton14,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton15,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton16,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton17,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton18,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton19,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton20,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton21,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton22,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton23,
-%End
-%If (Qt_5_0_0 -)
         ExtraButton24,
-%End
     };
 
     typedef QFlags<Qt::MouseButton> MouseButtons;
@@ -213,6 +153,9 @@ namespace Qt
         AlignVCenter,
         AlignVertical_Mask,
         AlignCenter,
+%If (Qt_5_2_0 -)
+        AlignBaseline,
+%End
     };
 
     typedef QFlags<Qt::AlignmentFlag> Alignment;
@@ -228,9 +171,7 @@ namespace Qt
         TextDontPrint,
         TextIncludeTrailingSpaces,
         TextHideMnemonic,
-%If (Qt_4_3_0 -)
         TextJustificationForced,
-%End
     };
 
     enum TextElideMode
@@ -238,9 +179,7 @@ namespace Qt
         ElideLeft,
         ElideRight,
         ElideMiddle,
-%If (Qt_4_2_0 -)
         ElideNone,
-%End
     };
 
     enum WindowType
@@ -261,9 +200,7 @@ namespace Qt
         MSWindowsOwnDC,
         X11BypassWindowManagerHint,
         FramelessWindowHint,
-%If (Qt_4_2_0 -)
         CustomizeWindowHint,
-%End
         WindowTitleHint,
         WindowSystemMenuHint,
         WindowMinimizeButtonHint,
@@ -272,44 +209,32 @@ namespace Qt
         WindowContextHelpButtonHint,
         WindowShadeButtonHint,
         WindowStaysOnTopHint,
-%If (Qt_4_4_0 - Qt_5_0_0)
+%If (- Qt_5_8_0)
         WindowOkButtonHint,
 %End
-%If (Qt_4_4_0 - Qt_5_0_0)
+%If (- Qt_5_8_0)
         WindowCancelButtonHint,
 %End
-%If (Qt_4_5_0 -)
         WindowStaysOnBottomHint,
-%End
-%If (Qt_4_5_0 -)
         WindowCloseButtonHint,
-%End
-%If (Qt_4_5_0 -)
         MacWindowToolBarButtonHint,
-%End
-%If (Qt_4_5_0 -)
         BypassGraphicsProxyWidget,
-%End
-%If (Qt_4_6_3 - Qt_5_0_0)
-        WindowSoftkeysVisibleHint,
-%End
-%If (Qt_4_6_3 - Qt_5_0_0)
-        WindowSoftkeysRespondHint,
-%End
-%If (Qt_5_0_0 -)
         WindowTransparentForInput,
-%End
-%If (Qt_5_0_0 -)
         WindowOverridesSystemGestures,
-%End
-%If (Qt_5_0_0 -)
         WindowDoesNotAcceptFocus,
-%End
-%If (Qt_5_0_0 -)
         NoDropShadowWindowHint,
-%End
-%If (Qt_5_0_0 -)
         WindowFullscreenButtonHint,
+%If (Qt_5_1_0 -)
+        ForeignWindow,
+%End
+%If (Qt_5_1_0 -)
+        BypassWindowManagerHint,
+%End
+%If (Qt_5_2_0 -)
+        CoverWindow,
+%End
+%If (Qt_5_5_0 -)
+        MaximizeUsingFullscreenGeometryHint,
 %End
     };
 
@@ -339,9 +264,6 @@ namespace Qt
         WA_UpdatesDisabled,
         WA_Mapped,
         WA_MacNoClickThrough,
-%If (- Qt_5_0_0)
-        WA_PaintOutsidePaintEvent,
-%End
         WA_InputMethodEnabled,
         WA_WState_Visible,
         WA_WState_Hidden,
@@ -391,135 +313,57 @@ namespace Qt
         WA_WindowPropagation,
         WA_NoX11EventCompression,
         WA_TintedBackground,
-%If (Qt_4_1_3 -)
         WA_X11OpenGLOverlay,
-%End
         WA_AttributeCount,
-%If (Qt_4_2_0 -)
         WA_AlwaysShowToolTips,
-%End
-%If (Qt_4_2_0 -)
         WA_MacOpaqueSizeGrip,
-%End
-%If (Qt_4_2_0 -)
         WA_SetStyle,
-%End
-%If (Qt_4_3_0 -)
         WA_MacBrushedMetal,
-%End
-%If (Qt_4_3_0 -)
         WA_SetLocale,
-%End
-%If (Qt_4_3_0 -)
         WA_MacShowFocusRect,
-%End
-%If (Qt_4_3_0 -)
         WA_MacNormalSize,
-%End
-%If (Qt_4_3_0 -)
         WA_MacSmallSize,
-%End
-%If (Qt_4_3_0 -)
         WA_MacMiniSize,
-%End
-%If (Qt_4_3_0 -)
         WA_LayoutUsesWidgetRect,
-%End
-%If (Qt_4_3_0 -)
         WA_StyledBackground,
-%End
-%If (Qt_4_3_0 -)
         WA_MSWindowsUseDirect3D,
-%End
-%If (Qt_4_3_0 -)
         WA_MacAlwaysShowToolWindow,
-%End
-%If (Qt_4_3_0 -)
         WA_StyleSheet,
-%End
-%If (Qt_4_4_0 -)
         WA_ShowWithoutActivating,
-%End
-%If (Qt_4_4_0 -)
         WA_NativeWindow,
-%End
-%If (Qt_4_4_0 -)
         WA_DontCreateNativeAncestors,
-%End
-%If (Qt_4_4_0 -)
         WA_MacVariableSize,
-%End
-%If (Qt_4_4_0 -)
+        WA_DontShowOnScreen,
         WA_X11NetWmWindowTypeDesktop,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeDock,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeToolBar,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeMenu,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeUtility,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeSplash,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeDialog,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeDropDownMenu,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypePopupMenu,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeToolTip,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeNotification,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeCombo,
-%End
-%If (Qt_4_4_0 -)
         WA_X11NetWmWindowTypeDND,
-%End
-%If (Qt_4_5_0 -)
         WA_MacFrameworkScaled,
-%End
-%If (Qt_4_5_0 -)
         WA_TranslucentBackground,
-%End
-%If (Qt_4_6_0 -)
         WA_AcceptTouchEvents,
-%End
-%If (Qt_4_6_0 -)
         WA_TouchPadAcceptSingleTouchEvents,
-%End
-%If (Qt_4_6_2 - Qt_5_0_0)
-        WA_MergeSoftkeys,
-%End
-%If (Qt_4_6_2 - Qt_5_0_0)
-        WA_MergeSoftkeysRecursively,
-%End
-%If (Qt_4_7_0 -)
         WA_X11DoNotAcceptFocus,
-%End
-%If (Qt_4_7_2 - Qt_5_0_0)
-        WA_LockPortraitOrientation,
-%End
-%If (Qt_4_7_2 - Qt_5_0_0)
-        WA_LockLandscapeOrientation,
-%End
-%If (Qt_4_7_2 - Qt_5_0_0)
-        WA_AutoOrientation,
-%End
-%If (Qt_4_8_0 -)
         WA_MacNoShadow,
+%If (Qt_5_4_0 -)
+        WA_AlwaysStackOnTop,
+%End
+%If (Qt_5_9_0 -)
+        WA_TabletTracking,
+%End
+%If (Qt_5_11_0 -)
+        WA_ContentsMarginsRespectsSafeArea,
+%End
+%If (Qt_5_12_0 -)
+        WA_StyleSheetTarget,
 %End
     };
 
@@ -537,6 +381,8 @@ namespace Qt
         AutoDither,
         PreferDither,
         AvoidDither,
+        NoOpaqueDetection,
+        NoFormatConversion,
     };
 
     typedef QFlags<Qt::ImageConversionFlag> ImageConversionFlags;
@@ -860,335 +706,259 @@ namespace Qt
         Key_Hangup,
         Key_Flip,
         Key_unknown,
-%If (Qt_4_2_0 -)
         Key_Execute,
-%End
-%If (Qt_4_2_0 -)
         Key_Printer,
-%End
-%If (Qt_4_2_0 -)
         Key_Play,
-%End
-%If (Qt_4_2_0 -)
         Key_Sleep,
-%End
-%If (Qt_4_2_0 -)
         Key_Zoom,
-%End
-%If (Qt_4_2_0 -)
         Key_Cancel,
-%End
-%If (Qt_4_6_0 -)
         Key_MonBrightnessUp,
-%End
-%If (Qt_4_6_0 -)
         Key_MonBrightnessDown,
-%End
-%If (Qt_4_6_0 -)
         Key_KeyboardLightOnOff,
-%End
-%If (Qt_4_6_0 -)
         Key_KeyboardBrightnessUp,
-%End
-%If (Qt_4_6_0 -)
         Key_KeyboardBrightnessDown,
-%End
-%If (Qt_4_6_0 -)
         Key_PowerOff,
-%End
-%If (Qt_4_6_0 -)
         Key_WakeUp,
-%End
-%If (Qt_4_6_0 -)
         Key_Eject,
-%End
-%If (Qt_4_6_0 -)
         Key_ScreenSaver,
-%End
-%If (Qt_4_6_0 -)
         Key_WWW,
-%End
-%If (Qt_4_6_0 -)
         Key_Memo,
-%End
-%If (Qt_4_6_0 -)
         Key_LightBulb,
-%End
-%If (Qt_4_6_0 -)
         Key_Shop,
-%End
-%If (Qt_4_6_0 -)
         Key_History,
-%End
-%If (Qt_4_6_0 -)
         Key_AddFavorite,
-%End
-%If (Qt_4_6_0 -)
         Key_HotLinks,
-%End
-%If (Qt_4_6_0 -)
         Key_BrightnessAdjust,
-%End
-%If (Qt_4_6_0 -)
         Key_Finance,
-%End
-%If (Qt_4_6_0 -)
         Key_Community,
-%End
-%If (Qt_4_6_0 -)
         Key_AudioRewind,
-%End
-%If (Qt_4_6_0 -)
         Key_BackForward,
-%End
-%If (Qt_4_6_0 -)
         Key_ApplicationLeft,
-%End
-%If (Qt_4_6_0 -)
         Key_ApplicationRight,
-%End
-%If (Qt_4_6_0 -)
         Key_Book,
-%End
-%If (Qt_4_6_0 -)
         Key_CD,
-%End
-%If (Qt_4_6_0 -)
         Key_Calculator,
-%End
-%If (Qt_4_6_0 -)
         Key_ToDoList,
-%End
-%If (Qt_4_6_0 -)
         Key_ClearGrab,
-%End
-%If (Qt_4_6_0 -)
         Key_Close,
-%End
-%If (Qt_4_6_0 -)
         Key_Copy,
-%End
-%If (Qt_4_6_0 -)
         Key_Cut,
-%End
-%If (Qt_4_6_0 -)
         Key_Display,
-%End
-%If (Qt_4_6_0 -)
         Key_DOS,
-%End
-%If (Qt_4_6_0 -)
         Key_Documents,
-%End
-%If (Qt_4_6_0 -)
         Key_Excel,
-%End
-%If (Qt_4_6_0 -)
         Key_Explorer,
-%End
-%If (Qt_4_6_0 -)
         Key_Game,
-%End
-%If (Qt_4_6_0 -)
         Key_Go,
-%End
-%If (Qt_4_6_0 -)
         Key_iTouch,
-%End
-%If (Qt_4_6_0 -)
         Key_LogOff,
-%End
-%If (Qt_4_6_0 -)
         Key_Market,
-%End
-%If (Qt_4_6_0 -)
         Key_Meeting,
-%End
-%If (Qt_4_6_0 -)
         Key_MenuKB,
-%End
-%If (Qt_4_6_0 -)
         Key_MenuPB,
-%End
-%If (Qt_4_6_0 -)
         Key_MySites,
-%End
-%If (Qt_4_6_0 -)
         Key_News,
-%End
-%If (Qt_4_6_0 -)
         Key_OfficeHome,
-%End
-%If (Qt_4_6_0 -)
         Key_Option,
-%End
-%If (Qt_4_6_0 -)
         Key_Paste,
-%End
-%If (Qt_4_6_0 -)
         Key_Phone,
-%End
-%If (Qt_4_6_0 -)
         Key_Calendar,
-%End
-%If (Qt_4_6_0 -)
         Key_Reply,
-%End
-%If (Qt_4_6_0 -)
         Key_Reload,
-%End
-%If (Qt_4_6_0 -)
         Key_RotateWindows,
-%End
-%If (Qt_4_6_0 -)
         Key_RotationPB,
-%End
-%If (Qt_4_6_0 -)
         Key_RotationKB,
-%End
-%If (Qt_4_6_0 -)
         Key_Save,
-%End
-%If (Qt_4_6_0 -)
         Key_Send,
-%End
-%If (Qt_4_6_0 -)
         Key_Spell,
-%End
-%If (Qt_4_6_0 -)
         Key_SplitScreen,
-%End
-%If (Qt_4_6_0 -)
         Key_Support,
-%End
-%If (Qt_4_6_0 -)
         Key_TaskPane,
-%End
-%If (Qt_4_6_0 -)
         Key_Terminal,
-%End
-%If (Qt_4_6_0 -)
         Key_Tools,
-%End
-%If (Qt_4_6_0 -)
         Key_Travel,
-%End
-%If (Qt_4_6_0 -)
         Key_Video,
-%End
-%If (Qt_4_6_0 -)
         Key_Word,
-%End
-%If (Qt_4_6_0 -)
         Key_Xfer,
-%End
-%If (Qt_4_6_0 -)
         Key_ZoomIn,
-%End
-%If (Qt_4_6_0 -)
         Key_ZoomOut,
-%End
-%If (Qt_4_6_0 -)
         Key_Away,
-%End
-%If (Qt_4_6_0 -)
         Key_Messenger,
-%End
-%If (Qt_4_6_0 -)
         Key_WebCam,
-%End
-%If (Qt_4_6_0 -)
         Key_MailForward,
-%End
-%If (Qt_4_6_0 -)
         Key_Pictures,
-%End
-%If (Qt_4_6_0 -)
         Key_Music,
-%End
-%If (Qt_4_6_0 -)
         Key_Battery,
-%End
-%If (Qt_4_6_0 -)
         Key_Bluetooth,
-%End
-%If (Qt_4_6_0 -)
         Key_WLAN,
-%End
-%If (Qt_4_6_0 -)
         Key_UWB,
-%End
-%If (Qt_4_6_0 -)
         Key_AudioForward,
-%End
-%If (Qt_4_6_0 -)
         Key_AudioRepeat,
-%End
-%If (Qt_4_6_0 -)
         Key_AudioRandomPlay,
-%End
-%If (Qt_4_6_0 -)
         Key_Subtitle,
-%End
-%If (Qt_4_6_0 -)
         Key_AudioCycleTrack,
-%End
-%If (Qt_4_6_0 -)
         Key_Time,
-%End
-%If (Qt_4_6_0 -)
         Key_Hibernate,
-%End
-%If (Qt_4_6_0 -)
         Key_View,
-%End
-%If (Qt_4_6_0 -)
         Key_TopMenu,
-%End
-%If (Qt_4_6_0 -)
         Key_PowerDown,
-%End
-%If (Qt_4_6_0 -)
         Key_Suspend,
-%End
-%If (Qt_4_6_0 -)
         Key_ContrastAdjust,
-%End
-%If (Qt_4_7_0 -)
         Key_MediaPause,
-%End
-%If (Qt_4_7_0 -)
         Key_MediaTogglePlayPause,
-%End
-%If (Qt_4_7_0 -)
         Key_LaunchG,
-%End
-%If (Qt_4_7_0 -)
         Key_LaunchH,
-%End
-%If (Qt_4_7_0 -)
         Key_ToggleCallHangup,
-%End
-%If (Qt_4_7_0 -)
         Key_VoiceDial,
-%End
-%If (Qt_4_7_0 -)
         Key_LastNumberRedial,
-%End
-%If (Qt_4_7_0 -)
         Key_Camera,
-%End
-%If (Qt_4_7_0 -)
         Key_CameraFocus,
-%End
-%If (Qt_5_0_0 -)
         Key_TouchpadToggle,
-%End
-%If (Qt_5_0_0 -)
         Key_TouchpadOn,
-%End
-%If (Qt_5_0_0 -)
         Key_TouchpadOff,
+%If (Qt_5_1_0 -)
+        Key_MicMute,
+%End
+%If (Qt_5_2_0 -)
+        Key_Red,
+%End
+%If (Qt_5_2_0 -)
+        Key_Green,
+%End
+%If (Qt_5_2_0 -)
+        Key_Yellow,
+%End
+%If (Qt_5_2_0 -)
+        Key_Blue,
+%End
+%If (Qt_5_2_0 -)
+        Key_ChannelUp,
+%End
+%If (Qt_5_2_0 -)
+        Key_ChannelDown,
+%End
+%If (Qt_5_3_0 -)
+        Key_Guide,
+%End
+%If (Qt_5_3_0 -)
+        Key_Info,
+%End
+%If (Qt_5_3_0 -)
+        Key_Settings,
+%End
+%If (Qt_5_3_0 -)
+        Key_Exit,
+%End
+%If (Qt_5_4_0 -)
+        Key_MicVolumeUp,
+%End
+%If (Qt_5_4_0 -)
+        Key_MicVolumeDown,
+%End
+%If (Qt_5_4_0 -)
+        Key_New,
+%End
+%If (Qt_5_4_0 -)
+        Key_Open,
+%End
+%If (Qt_5_4_0 -)
+        Key_Find,
+%End
+%If (Qt_5_4_0 -)
+        Key_Undo,
+%End
+%If (Qt_5_4_0 -)
+        Key_Redo,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Stroke,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Abovecomma,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Abovereversedcomma,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Doublegrave,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowring,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowmacron,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowcircumflex,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowtilde,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowbreve,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowdiaeresis,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Invertedbreve,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowcomma,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Currency,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_a,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_A,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_e,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_E,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_i,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_I,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_o,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_O,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_u,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_U,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Small_Schwa,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Capital_Schwa,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Greek,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Lowline,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Aboveverticalline,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Belowverticalline,
+%End
+%If (Qt_5_11_0 -)
+        Key_Dead_Longsolidusoverlay,
 %End
     };
 
@@ -1227,9 +997,7 @@ namespace Qt
         BevelJoin,
         RoundJoin,
         MPenJoinStyle,
-%If (Qt_4_2_0 -)
         SvgMiterJoin,
-%End
     };
 
     enum BrushStyle
@@ -1283,28 +1051,16 @@ namespace Qt
         SplitHCursor,
         PointingHandCursor,
         ForbiddenCursor,
-%If (Qt_4_2_0 -)
         OpenHandCursor,
-%End
-%If (Qt_4_2_0 -)
         ClosedHandCursor,
-%End
         WhatsThisCursor,
         BusyCursor,
         LastCursor,
         BitmapCursor,
-%If (Qt_4_1_3 -)
         CustomCursor,
-%End
-%If (Qt_4_7_0 -)
         DragCopyCursor,
-%End
-%If (Qt_4_7_0 -)
         DragMoveCursor,
-%End
-%If (Qt_4_7_0 -)
         DragLinkCursor,
-%End
     };
 
     enum TextFormat
@@ -1312,9 +1068,6 @@ namespace Qt
         PlainText,
         RichText,
         AutoText,
-%If (- Qt_5_0_0)
-        LogText,
-%End
     };
 
     enum AspectRatioMode
@@ -1324,16 +1077,6 @@ namespace Qt
         KeepAspectRatioByExpanding,
     };
 
-%If (- Qt_5_0_0)
-
-    enum AnchorAttribute
-    {
-        AnchorName,
-        AnchorHref,
-    };
-
-%End
-
     enum DockWidgetArea
     {
         LeftDockWidgetArea,
@@ -1342,13 +1085,10 @@ namespace Qt
         BottomDockWidgetArea,
         DockWidgetArea_Mask,
         AllDockWidgetAreas,
-%If (Qt_4_2_0 -)
         NoDockWidgetArea,
-%End
     };
 
     typedef QFlags<Qt::DockWidgetArea> DockWidgetAreas;
-%If (Qt_5_0_0 -)
 
     enum TimerType
     {
@@ -1356,8 +1096,6 @@ namespace Qt
         CoarseTimer,
         VeryCoarseTimer,
     };
-
-%End
 
     enum ToolBarArea
     {
@@ -1367,9 +1105,7 @@ namespace Qt
         BottomToolBarArea,
         ToolBarArea_Mask,
         AllToolBarAreas,
-%If (Qt_4_2_0 -)
         NoToolBarArea,
-%End
     };
 
     typedef QFlags<Qt::ToolBarArea> ToolBarAreas;
@@ -1378,24 +1114,18 @@ namespace Qt
     {
         TextDate,
         ISODate,
+%If (Qt_5_8_0 -)
+        ISODateWithMs,
+%End
         LocalDate,
-%If (Qt_4_2_0 -)
         SystemLocaleDate,
-%End
-%If (Qt_4_2_0 -)
         LocaleDate,
-%End
-%If (Qt_4_4_0 -)
         SystemLocaleShortDate,
-%End
-%If (Qt_4_4_0 -)
         SystemLocaleLongDate,
-%End
-%If (Qt_4_4_0 -)
         DefaultLocaleShortDate,
-%End
-%If (Qt_4_4_0 -)
         DefaultLocaleLongDate,
+%If (Qt_5_2_0 -)
+        RFC2822Date,
 %End
     };
 
@@ -1403,8 +1133,9 @@ namespace Qt
     {
         LocalTime,
         UTC,
-%If (Qt_4_4_0 -)
         OffsetFromUTC,
+%If (Qt_5_2_0 -)
+        TimeZone,
 %End
     };
 
@@ -1445,15 +1176,8 @@ namespace Qt
         AutoConnection,
         DirectConnection,
         QueuedConnection,
-%If (- Qt_5_0_0)
-        AutoCompatConnection,
-%End
-%If (Qt_4_3_0 -)
         BlockingQueuedConnection,
-%End
-%If (Qt_4_6_0 -)
         UniqueConnection,
-%End
     };
 
     enum ShortcutContext
@@ -1461,9 +1185,7 @@ namespace Qt
         WidgetShortcut,
         WindowShortcut,
         ApplicationShortcut,
-%If (Qt_4_4_0 -)
         WidgetWithChildrenShortcut,
-%End
     };
 
     enum FillRule
@@ -1477,9 +1199,6 @@ namespace Qt
         NoClip,
         ReplaceClip,
         IntersectClip,
-%If (- Qt_5_0_0)
-        UniteClip,
-%End
     };
 
     enum TransformationMode
@@ -1504,9 +1223,7 @@ namespace Qt
     enum ContextMenuPolicy
     {
         NoContextMenu,
-%If (Qt_4_2_0 -)
         PreventContextMenu,
-%End
         DefaultContextMenu,
         ActionsContextMenu,
         CustomContextMenu,
@@ -1519,38 +1236,36 @@ namespace Qt
         ImCursorPosition,
         ImSurroundingText,
         ImCurrentSelection,
-%If (Qt_4_6_0 -)
         ImMaximumTextLength,
-%End
-%If (Qt_4_6_0 -)
         ImAnchorPosition,
-%End
-%If (Qt_5_0_0 -)
         ImEnabled,
-%End
-%If (Qt_5_0_0 -)
         ImCursorRectangle,
-%End
-%If (Qt_5_0_0 -)
         ImHints,
-%End
-%If (Qt_5_0_0 -)
         ImPreferredLanguage,
-%End
-%If (Qt_5_0_0 -)
         ImPlatformData,
-%End
-%If (Qt_5_0_0 -)
         ImQueryInput,
-%End
-%If (Qt_5_0_0 -)
         ImQueryAll,
+%If (Qt_5_3_0 -)
+        ImAbsolutePosition,
+%End
+%If (Qt_5_3_0 -)
+        ImTextBeforeCursor,
+%End
+%If (Qt_5_3_0 -)
+        ImTextAfterCursor,
+%End
+%If (Qt_5_6_0 -)
+        ImEnterKeyType,
+%End
+%If (Qt_5_7_0 -)
+        ImAnchorRectangle,
+%End
+%If (Qt_5_7_0 -)
+        ImInputItemClipRectangle,
 %End
     };
 
-%If (Qt_5_0_0 -)
     typedef QFlags<Qt::InputMethodQuery> InputMethodQueries;
-%End
 
     enum ToolButtonStyle
     {
@@ -1558,18 +1273,14 @@ namespace Qt
         ToolButtonTextOnly,
         ToolButtonTextBesideIcon,
         ToolButtonTextUnderIcon,
-%If (Qt_4_6_0 -)
         ToolButtonFollowStyle,
-%End
     };
 
     enum LayoutDirection
     {
         LeftToRight,
         RightToLeft,
-%If (Qt_4_7_0 -)
         LayoutDirectionAuto,
-%End
     };
 
     enum DropAction
@@ -1601,29 +1312,21 @@ namespace Qt
         WhatsThisRole,
         FontRole,
         TextAlignmentRole,
-%If (Qt_4_2_0 -)
         BackgroundRole,
-%End
         BackgroundColorRole,
-%If (Qt_4_2_0 -)
         ForegroundRole,
-%End
         TextColorRole,
         CheckStateRole,
         AccessibleTextRole,
         AccessibleDescriptionRole,
         SizeHintRole,
-%If (Qt_4_8_0 -)
         InitialSortOrderRole,
-%End
         UserRole,
     };
 
     enum ItemFlag
     {
-%If (Qt_4_4_0 -)
         NoItemFlags,
-%End
         ItemIsSelectable,
         ItemIsEditable,
         ItemIsDragEnabled,
@@ -1631,6 +1334,15 @@ namespace Qt
         ItemIsUserCheckable,
         ItemIsEnabled,
         ItemIsTristate,
+%If (Qt_5_1_0 -)
+        ItemNeverHasChildren,
+%End
+%If (Qt_5_5_0 -)
+        ItemIsUserTristate,
+%End
+%If (Qt_5_6_0 -)
+        ItemIsAutoTristate,
+%End
     };
 
     typedef QFlags<Qt::ItemFlag> ItemFlags;
@@ -1638,9 +1350,7 @@ namespace Qt
     enum MatchFlag
     {
         MatchExactly,
-%If (Qt_4_2_0 -)
         MatchFixedString,
-%End
         MatchContains,
         MatchStartsWith,
         MatchEndsWith,
@@ -1652,22 +1362,7 @@ namespace Qt
     };
 
     typedef QFlags<Qt::MatchFlag> MatchFlags;
-%If (Qt_5_0_0 -)
     typedef void *HANDLE;
-%End
-%If (- Qt_5_0_0)
-%If (WS_WIN || WS_MACX)
-    typedef void *HANDLE;
-%End
-%End
-%If (- Qt_5_0_0)
-%If (WS_X11)
-    typedef unsigned long HANDLE;
-%End
-%End
-%If (PyQt_Deprecated_5_0)
-    typedef Qt::WindowFlags WFlags;
-%End
 
     enum WindowModality
     {
@@ -1676,57 +1371,78 @@ namespace Qt
         ApplicationModal,
     };
 
-%If (Qt_4_2_0 -)
-
     enum ApplicationAttribute
     {
         AA_ImmediateWidgetCreation,
-%If (Qt_4_3_0 -)
         AA_MSWindowsUseDirect3DByDefault,
-%End
-%If (Qt_4_4_0 -)
         AA_DontShowIconsInMenus,
-%End
-%If (Qt_4_4_0 -)
         AA_NativeWindows,
-%End
-%If (Qt_4_4_1 -)
         AA_DontCreateNativeWidgetSiblings,
-%End
-%If (Qt_4_5_0 -)
         AA_MacPluginApplication,
-%End
-%If (Qt_4_6_0 -)
         AA_DontUseNativeMenuBar,
-%End
-%If (Qt_4_6_0 -)
         AA_MacDontSwapCtrlAndMeta,
-%End
-%If (Qt_4_6_1 - Qt_5_0_0)
-        AA_S60DontConstructApplicationPanes,
-%End
-%If (Qt_4_7_2 - Qt_5_0_0)
-        AA_S60DisablePartialScreenInputMode,
-%End
-%If (Qt_4_8_0 -)
         AA_X11InitThreads,
-%End
-%If (Qt_4_8_0 - Qt_5_0_0)
-        AA_CaptureMultimediaKeys,
-%End
-%If (Qt_5_0_0 -)
         AA_Use96Dpi,
-%End
-%If (Qt_5_0_0 -)
         AA_SynthesizeTouchForUnhandledMouseEvents,
-%End
-%If (Qt_5_0_0 -)
         AA_SynthesizeMouseForUnhandledTouchEvents,
+%If (Qt_5_1_0 -)
+        AA_UseHighDpiPixmaps,
+%End
+%If (Qt_5_3_0 -)
+        AA_ForceRasterWidgets,
+%End
+%If (Qt_5_3_0 -)
+        AA_UseDesktopOpenGL,
+%End
+%If (Qt_5_3_0 -)
+        AA_UseOpenGLES,
+%End
+%If (Qt_5_4_0 -)
+        AA_UseSoftwareOpenGL,
+%End
+%If (Qt_5_4_0 -)
+        AA_ShareOpenGLContexts,
+%End
+%If (Qt_5_5_0 -)
+        AA_SetPalette,
+%End
+%If (Qt_5_6_0 -)
+        AA_EnableHighDpiScaling,
+%End
+%If (Qt_5_6_0 -)
+        AA_DisableHighDpiScaling,
+%End
+%If (Qt_5_7_0 -)
+        AA_PluginApplication,
+%End
+%If (Qt_5_7_0 -)
+        AA_UseStyleSheetPropagationInWidgetStyles,
+%End
+%If (Qt_5_7_0 -)
+        AA_DontUseNativeDialogs,
+%End
+%If (Qt_5_7_0 -)
+        AA_SynthesizeMouseForUnhandledTabletEvents,
+%End
+%If (Qt_5_7_0 -)
+        AA_CompressHighFrequencyEvents,
+%End
+%If (Qt_5_8_0 -)
+        AA_DontCheckOpenGLContextThreadAffinity,
+%End
+%If (Qt_5_9_0 -)
+        AA_DisableShaderDiskCache,
+%End
+%If (Qt_5_10_0 -)
+        AA_DontShowShortcutsInContextMenus,
+%End
+%If (Qt_5_10_0 -)
+        AA_CompressTabletEvents,
+%End
+%If (Qt_5_10_0 -)
+        AA_DisableWindowContextHelpButton,
 %End
     };
-
-%End
-%If (Qt_4_2_0 -)
 
     enum ItemSelectionMode
     {
@@ -1735,9 +1451,6 @@ namespace Qt
         ContainsItemBoundingRect,
         IntersectsItemBoundingRect,
     };
-
-%End
-%If (Qt_4_2_0 -)
 
     enum TextInteractionFlag
     {
@@ -1751,20 +1464,13 @@ namespace Qt
         TextBrowserInteraction,
     };
 
-%End
-%If (Qt_4_2_0 -)
     typedef QFlags<Qt::TextInteractionFlag> TextInteractionFlags;
-%End
-%If (Qt_4_3_0 -)
 
     enum MaskMode
     {
         MaskInColor,
         MaskOutColor,
     };
-
-%End
-%If (Qt_4_3_0 -)
 
     enum Axis
     {
@@ -1773,9 +1479,6 @@ namespace Qt
         ZAxis,
     };
 
-%End
-%If (Qt_4_3_0 -)
-
     enum EventPriority
     {
         HighEventPriority,
@@ -1783,17 +1486,11 @@ namespace Qt
         LowEventPriority,
     };
 
-%End
-%If (Qt_4_4_0 -)
-
     enum SizeMode
     {
         AbsoluteSize,
         RelativeSize,
     };
-
-%End
-%If (Qt_4_4_0 -)
 
     enum SizeHint
     {
@@ -1802,9 +1499,6 @@ namespace Qt
         MaximumSize,
         MinimumDescent,
     };
-
-%End
-%If (Qt_4_4_0 -)
 
     enum WindowFrameSection
     {
@@ -1820,18 +1514,12 @@ namespace Qt
         TitleBarArea,
     };
 
-%End
-%If (Qt_4_6_0 -)
-
     enum TileRule
     {
         StretchTile,
         RepeatTile,
         RoundTile,
     };
-
-%End
-%If (Qt_4_6_0 -)
 
     enum InputMethodHint
     {
@@ -1850,28 +1538,23 @@ namespace Qt
         ImhEmailCharactersOnly,
         ImhUrlCharactersOnly,
         ImhExclusiveInputMask,
-%If (Qt_5_0_0 -)
         ImhSensitiveData,
-%End
-%If (Qt_5_0_0 -)
         ImhDate,
-%End
-%If (Qt_5_0_0 -)
         ImhTime,
-%End
-%If (Qt_5_0_0 -)
         ImhPreferLatin,
-%End
-%If (Qt_5_0_0 -)
         ImhLatinOnly,
+%If (Qt_5_1_0 -)
+        ImhMultiLine,
+%End
+%If (Qt_5_11_0 -)
+        ImhNoEditMenu,
+%End
+%If (Qt_5_11_0 -)
+        ImhNoTextHandles,
 %End
     };
 
-%End
-%If (Qt_4_6_0 -)
     typedef QFlags<Qt::InputMethodHint> InputMethodHints;
-%End
-%If (Qt_4_6_0 -)
 
     enum AnchorPoint
     {
@@ -1883,17 +1566,11 @@ namespace Qt
         AnchorBottom,
     };
 
-%End
-%If (Qt_4_6_0 -)
-
     enum CoordinateSystem
     {
         DeviceCoordinates,
         LogicalCoordinates,
     };
-
-%End
-%If (Qt_4_6_0 -)
 
     enum TouchPointState
     {
@@ -1903,11 +1580,7 @@ namespace Qt
         TouchPointReleased,
     };
 
-%End
-%If (Qt_4_6_0 -)
     typedef QFlags<Qt::TouchPointState> TouchPointStates;
-%End
-%If (Qt_4_6_0 -)
 
     enum GestureState
     {
@@ -1916,9 +1589,6 @@ namespace Qt
         GestureFinished,
         GestureCanceled,
     };
-
-%End
-%If (Qt_4_6_0 -)
 
     enum GestureType
     {
@@ -1930,23 +1600,14 @@ namespace Qt
         CustomGesture,
     };
 
-%End
-%If (Qt_4_6_0 -)
-
     enum GestureFlag
     {
         DontStartGestureOnChildren,
         ReceivePartialGestures,
-%If (Qt_4_7_0 -)
         IgnoredGesturesPropagateToParent,
-%End
     };
 
-%End
-%If (Qt_4_6_0 -)
     typedef QFlags<Qt::GestureFlag> GestureFlags;
-%End
-%If (Qt_4_6_0 -)
 
     enum NavigationMode
     {
@@ -1957,17 +1618,11 @@ namespace Qt
         NavigationModeCursorForceVisible,
     };
 
-%End
-%If (Qt_4_8_0 -)
-
     enum CursorMoveStyle
     {
         LogicalMoveStyle,
         VisualMoveStyle,
     };
-
-%End
-%If (Qt_5_0_0 -)
 
     enum ScreenOrientation
     {
@@ -1978,11 +1633,7 @@ namespace Qt
         InvertedLandscapeOrientation,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<Qt::ScreenOrientation> ScreenOrientations;
-%End
-%If (Qt_5_0_0 -)
 
     enum FindChildOption
     {
@@ -1990,11 +1641,7 @@ namespace Qt
         FindChildrenRecursively,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<Qt::FindChildOption> FindChildOptions;
-%End
-%If (Qt_5_0_0 -)
 
     enum WhiteSpaceMode
     {
@@ -2004,197 +1651,140 @@ namespace Qt
         WhiteSpaceModeUndefined,
     };
 
-%End
-%If (Qt_5_0_0 -)
-
     enum HitTestAccuracy
     {
         ExactHit,
         FuzzyHit,
     };
 
+%If (Qt_5_1_0 -)
+
+    enum ApplicationState
+    {
+        ApplicationSuspended,
+        ApplicationHidden,
+        ApplicationInactive,
+        ApplicationActive,
+    };
+
+%End
+%If (Qt_5_1_0 -)
+    typedef QFlags<Qt::ApplicationState> ApplicationStates;
+%End
+%If (Qt_5_1_0 -)
+
+    enum Edge
+    {
+        TopEdge,
+        LeftEdge,
+        RightEdge,
+        BottomEdge,
+    };
+
+%End
+%If (Qt_5_2_0 -)
+
+    enum NativeGestureType
+    {
+        BeginNativeGesture,
+        EndNativeGesture,
+        PanNativeGesture,
+        ZoomNativeGesture,
+        SmartZoomNativeGesture,
+        RotateNativeGesture,
+        SwipeNativeGesture,
+    };
+
+%End
+%If (Qt_5_2_0 -)
+
+    enum ScrollPhase
+    {
+        ScrollBegin,
+        ScrollUpdate,
+        ScrollEnd,
+%If (Qt_5_7_0 -)
+        NoScrollPhase,
+%End
+%If (Qt_5_12_0 -)
+        ScrollMomentum,
+%End
+    };
+
+%End
+%If (Qt_5_3_0 -)
+    typedef QFlags<Qt::Edge> Edges;
+%End
+%If (Qt_5_3_0 -)
+
+    enum MouseEventSource
+    {
+        MouseEventNotSynthesized,
+        MouseEventSynthesizedBySystem,
+        MouseEventSynthesizedByQt,
+%If (Qt_5_6_0 -)
+        MouseEventSynthesizedByApplication,
+%End
+    };
+
+%End
+%If (Qt_5_3_0 -)
+
+    enum MouseEventFlag
+    {
+        MouseEventCreatedDoubleClick,
+    };
+
+%End
+%If (Qt_5_3_0 -)
+    typedef QFlags<Qt::MouseEventFlag> MouseEventFlags;
+%End
+%If (Qt_5_5_0 -)
+
+    enum TabFocusBehavior
+    {
+        NoTabFocus,
+        TabFocusTextControls,
+        TabFocusListControls,
+        TabFocusAllControls,
+    };
+
+%End
+%If (Qt_5_5_0 -)
+
+    enum ItemSelectionOperation
+    {
+        ReplaceSelection,
+        AddToSelection,
+    };
+
+%End
+%If (Qt_5_6_0 -)
+
+    enum EnterKeyType
+    {
+        EnterKeyDefault,
+        EnterKeyReturn,
+        EnterKeyDone,
+        EnterKeyGo,
+        EnterKeySend,
+        EnterKeySearch,
+        EnterKeyNext,
+        EnterKeyPrevious,
+    };
+
+%End
+%If (Qt_5_9_0 -)
+
+    enum ChecksumType
+    {
+        ChecksumIso3309,
+        ChecksumItuV41,
+    };
+
 %End
 };
 
-%If (Py_v3)
-// Mapped type for QSet<Qt::DayOfWeek> in Python v3.
-%MappedType QSet<Qt::DayOfWeek> /TypeHintIn="Iterable[Qt.DayOfWeek]", TypeHintOut="Set[Qt.DayOfWeek]", TypeHintValue="set()"/
-{
-%TypeHeaderCode
-#include <qnamespace.h>
-#include <qset.h>
-%End
-
-%ConvertFromTypeCode
-    // Create the set.
-    PyObject *s;
-
-    if ((s = PySet_New(NULL)) == NULL)
-        return NULL;
-
-    // Set the set elements.
-    QSet<Qt::DayOfWeek>::const_iterator it = sipCpp->constBegin();
-    QSet<Qt::DayOfWeek>::const_iterator end = sipCpp->constEnd();
-
-    while (it != end)
-    {
-        PyObject *el_obj;
-
-        if ((el_obj = sipConvertFromEnum(*it, sipType_Qt_DayOfWeek)) == NULL)
-        {
-            Py_DECREF(s);
-
-            return NULL;
-        }
-
-        PySet_Add(s, el_obj);
-
-        ++it;
-    }
-
-    return s;
-%End
-
-%ConvertToTypeCode
-    PyObject *it = PyObject_GetIter(sipPy), *itm;
-
-    // Check the type if that is all that is required.
-    if (sipIsErr == NULL)
-    {
-        if (it == NULL)
-            return 0;
-
-        while ((itm = PyIter_Next(it)) != NULL)
-        {
-            int ok = sipCanConvertToEnum(itm, sipType_Qt_DayOfWeek);
-
-            Py_DECREF(itm);
-
-            if (!ok)
-            {
-                Py_DECREF(it);
-                return 0;
-            }
-        }
-
-        Py_DECREF(it);
-        return 1;
-    }
-
-    if (it == NULL)
-    {
-        *sipIsErr = 1;
-        return 0;
-    }
-
-    QSet<Qt::DayOfWeek> *qs = new QSet<Qt::DayOfWeek>;
-
-    while ((itm = PyIter_Next(it)) != NULL)
-    {
-        long l = SIPLong_AsLong(itm);
-
-        Py_DECREF(itm);
-
-        qs->insert(static_cast<Qt::DayOfWeek>(l));
-    }
-
-    Py_DECREF(it);
-
-    *sipCppPtr = qs;
-
-    return sipGetState(sipTransferObj);
-%End
-};
-%End
-%If (!Py_v3)
-// Mapped type for QSet<Qt::DayOfWeek> in Python v2.
-%MappedType QSet<Qt::DayOfWeek> /TypeHintIn="Iterable[Qt.DayOfWeek]", TypeHintOut="List[Qt.DayOfWeek]", TypeHintValue="[]"/
-{
-%TypeHeaderCode
-#include <qnamespace.h>
-#include <qset.h>
-%End
-
-%ConvertFromTypeCode
-    // Create the list.
-    PyObject *l;
-
-    if ((l = PyList_New(sipCpp->size())) == NULL)
-        return NULL;
-
-    // Set the list elements.
-    QSet<Qt::DayOfWeek>::const_iterator it = sipCpp->constBegin();
-
-    for (int i = 0; i < sipCpp->size(); ++i)
-    {
-        PyObject *el_obj;
-
-        if ((el_obj = sipConvertFromEnum(*it, sipType_Qt_DayOfWeek)) == NULL)
-        {
-            Py_DECREF(l);
-
-            return NULL;
-        }
-
-        PyList_SET_ITEM(l, i, el_obj);
-
-        ++it;
-    }
-
-    return l;
-%End
-
-%ConvertToTypeCode
-    PyObject *it = PyObject_GetIter(sipPy), *itm;
-
-    // Check the type if that is all that is required.
-    if (sipIsErr == NULL)
-    {
-        if (it == NULL)
-            return 0;
-
-        while ((itm = PyIter_Next(it)) != NULL)
-        {
-            int ok = sipCanConvertToEnum(itm, sipType_Qt_DayOfWeek);
-
-            Py_DECREF(itm);
-
-            if (!ok)
-            {
-                Py_DECREF(it);
-                return 0;
-            }
-        }
-
-        Py_DECREF(it);
-        return 1;
-    }
-
-    if (it == NULL)
-    {
-        *sipIsErr = 1;
-        return 0;
-    }
-
-    QSet<Qt::DayOfWeek> *qs = new QSet<Qt::DayOfWeek>;
-
-    while ((itm = PyIter_Next(it)) != NULL)
-    {
-        long l = SIPLong_AsLong(itm);
-
-        Py_DECREF(itm);
-
-        qs->insert(static_cast<Qt::DayOfWeek>(l));
-    }
-
-    Py_DECREF(it);
-
-    *sipCppPtr = qs;
-
-    return sipGetState(sipTransferObj);
-%End
-};
-%End
 QFlags<Qt::MouseButton> operator|(Qt::MouseButton f1, QFlags<Qt::MouseButton> f2);
 QFlags<Qt::Orientation> operator|(Qt::Orientation f1, QFlags<Qt::Orientation> f2);
 QFlags<Qt::KeyboardModifier> operator|(Qt::KeyboardModifier f1, QFlags<Qt::KeyboardModifier> f2);
@@ -2207,21 +1797,15 @@ QFlags<Qt::WindowState> operator|(Qt::WindowState f1, QFlags<Qt::WindowState> f2
 QFlags<Qt::DropAction> operator|(Qt::DropAction f1, QFlags<Qt::DropAction> f2);
 QFlags<Qt::ItemFlag> operator|(Qt::ItemFlag f1, QFlags<Qt::ItemFlag> f2);
 QFlags<Qt::MatchFlag> operator|(Qt::MatchFlag f1, QFlags<Qt::MatchFlag> f2);
-%If (Qt_4_2_0 -)
 QFlags<Qt::TextInteractionFlag> operator|(Qt::TextInteractionFlag f1, QFlags<Qt::TextInteractionFlag> f2);
-%End
-%If (Qt_4_6_0 -)
 QFlags<Qt::InputMethodHint> operator|(Qt::InputMethodHint f1, QFlags<Qt::InputMethodHint> f2);
-%End
-%If (Qt_4_6_0 -)
 QFlags<Qt::TouchPointState> operator|(Qt::TouchPointState f1, QFlags<Qt::TouchPointState> f2);
-%End
-%If (Qt_4_6_0 -)
 QFlags<Qt::GestureFlag> operator|(Qt::GestureFlag f1, QFlags<Qt::GestureFlag> f2);
-%End
-%If (Qt_5_0_0 -)
 QFlags<Qt::ScreenOrientation> operator|(Qt::ScreenOrientation f1, QFlags<Qt::ScreenOrientation> f2);
-%End
-%If (Qt_5_0_0 -)
 QFlags<Qt::InputMethodQuery> operator|(Qt::InputMethodQuery f1, QFlags<Qt::InputMethodQuery> f2);
+%If (Qt_5_3_0 -)
+QFlags<Qt::Edge> operator|(Qt::Edge f1, QFlags<Qt::Edge> f2);
+%End
+%If (Qt_5_3_0 -)
+QFlags<Qt::MouseEventFlag> operator|(Qt::MouseEventFlag f1, QFlags<Qt::MouseEventFlag> f2);
 %End

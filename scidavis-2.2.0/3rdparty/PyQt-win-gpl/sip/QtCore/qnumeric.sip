@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,27 +20,16 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
 %ModuleCode
 #include <qnumeric.h>
 %End
-%End
 
-%If (Qt_4_3_0 -)
 bool qIsInf(double d);
-%End
-%If (Qt_4_3_0 -)
 bool qIsFinite(double d);
-%End
-%If (Qt_4_3_0 -)
 bool qIsNaN(double d);
-%End
-%If (Qt_4_3_0 -)
 double qInf();
-%End
-%If (Qt_4_3_0 -)
 double qSNaN();
-%End
-%If (Qt_4_3_0 -)
 double qQNaN();
+%If (Qt_5_3_0 -)
+quint64 qFloatDistance(double a, double b);
 %End

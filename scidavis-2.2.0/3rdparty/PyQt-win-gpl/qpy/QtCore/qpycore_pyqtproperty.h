@@ -1,8 +1,8 @@
 // This contains the definitions for the implementation of pyqtProperty.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -61,16 +61,22 @@ typedef struct {
     // The DESIGNABLE, SCRIPTABLE, STORED, USER, CONSTANT and FINAL flags.
     unsigned pyqtprop_flags;
 
+    // The REVISION.
+    int pyqtprop_revision;
+
     // The property's sequence number that determines the position of the
     // property in the QMetaObject.
     uint pyqtprop_sequence;
 } qpycore_pyqtProperty;
 
-
-// This implements the PyQt version of the standard Python property type.
-extern PyTypeObject qpycore_pyqtProperty_Type;
-
 }
+
+
+// The type object.
+extern PyTypeObject *qpycore_pyqtProperty_TypeObject;
+
+
+bool qpycore_pyqtProperty_init_type();
 
 
 #endif

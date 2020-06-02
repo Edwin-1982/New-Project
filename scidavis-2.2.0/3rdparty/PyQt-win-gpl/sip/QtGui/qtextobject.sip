@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -36,9 +36,6 @@ public:
     int formatIndex() const;
     QTextDocument *document() const;
     int objectIndex() const;
-
-private:
-    QTextObject(const QTextObject &);
 };
 
 class QTextBlockGroup : QTextObject
@@ -54,9 +51,6 @@ protected:
     virtual void blockRemoved(const QTextBlock &block);
     virtual void blockFormatChanged(const QTextBlock &block);
     QList<QTextBlock> blockList() const;
-
-private:
-    QTextBlockGroup(const QTextBlockGroup &);
 };
 
 class QTextFrame : QTextObject
@@ -73,7 +67,7 @@ public:
     QTextCursor lastCursorPosition() const;
     int firstPosition() const;
     int lastPosition() const;
-    QList<QTextFrame*> childFrames() const;
+    QList<QTextFrame *> childFrames() const;
     QTextFrame *parentFrame() const;
 
     class iterator
@@ -115,11 +109,6 @@ public:
     typedef QTextFrame::iterator Iterator;
     QTextFrame::iterator begin() const;
     QTextFrame::iterator end() const;
-
-private:
-    QTextFrame(const QTextFrame &);
-
-public:
     void setFrameFormat(const QTextFrameFormat &aformat);
 };
 
@@ -214,35 +203,18 @@ public:
 
     int userState() const;
     void setUserState(int state);
-%If (Qt_4_4_0 -)
     void clearLayout();
-%End
-%If (Qt_4_4_0 -)
     int revision() const;
-%End
-%If (Qt_4_4_0 -)
     void setRevision(int rev);
-%End
-%If (Qt_4_4_0 -)
     bool isVisible() const;
-%End
-%If (Qt_4_4_0 -)
     void setVisible(bool visible);
-%End
-%If (Qt_4_4_0 -)
     int blockNumber() const;
-%End
-%If (Qt_4_5_0 -)
     int firstLineNumber() const;
-%End
-%If (Qt_4_5_0 -)
     void setLineCount(int count);
-%End
-%If (Qt_4_5_0 -)
     int lineCount() const;
-%End
-%If (Qt_4_7_0 -)
     Qt::LayoutDirection textDirection() const;
+%If (Qt_5_3_0 -)
+    QVector<QTextLayout::FormatRange> textFormats() const;
 %End
 };
 
@@ -265,13 +237,8 @@ public:
     QTextCharFormat charFormat() const;
     int charFormatIndex() const;
     QString text() const;
-%If (Qt_5_0_0 -)
-    QList<QGlyphRun> glyphRuns(int from = -1, int length = -1) const;
-%End
-%If (Qt_4_8_0 - Qt_5_0_0)
 %If (PyQt_RawFont)
-    QList<QGlyphRun> glyphRuns() const;
-%End
+    QList<QGlyphRun> glyphRuns(int from = -1, int length = -1) const;
 %End
 };
 
@@ -309,10 +276,8 @@ static PyObject *qtgui_wrap_ancestors_worker(QObject *obj)
             (py_parent != Py_None ? py_parent : 0));
 
     Py_DECREF(py_parent);
-    
     return py_obj;
 }
-
 
 PyObject *qtgui_wrap_ancestors(QObject *obj, const sipTypeDef *td)
 {
@@ -325,7 +290,7 @@ PyObject *qtgui_wrap_ancestors(QObject *obj, const sipTypeDef *td)
             (py_parent != Py_None ? py_parent : 0));
 
     Py_DECREF(py_parent);
-    
+
     return py_obj;
 }
 %End

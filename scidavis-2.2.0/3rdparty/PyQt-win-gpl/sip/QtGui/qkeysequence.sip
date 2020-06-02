@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -35,10 +35,8 @@ if (sipIsErr == NULL)
     if (sipCanConvertToType(sipPy, sipType_QKeySequence, SIP_NO_CONVERTORS))
         return 1;
 
-#if QT_VERSION >= 0x040200
     if (PyObject_TypeCheck(sipPy, sipTypeAsPyTypeObject(sipType_QKeySequence_StandardKey)))
         return 1;
-#endif
 
     if (sipCanConvertToType(sipPy, sipType_QString, 0))
         return 1;
@@ -57,14 +55,12 @@ if (sipCanConvertToType(sipPy, sipType_QKeySequence, SIP_NO_CONVERTORS))
     return 0;
 }
 
-#if QT_VERSION >= 0x040200
 if (PyObject_TypeCheck(sipPy, sipTypeAsPyTypeObject(sipType_QKeySequence_StandardKey)))
 {
     *sipCppPtr = new QKeySequence((QKeySequence::StandardKey)SIPLong_AsLong(sipPy));
 
     return sipGetState(sipTransferObj);
 }
-#endif
 
 if (sipCanConvertToType(sipPy, sipType_QString, 0))
 {
@@ -108,8 +104,6 @@ public:
         PartialMatch,
         ExactMatch,
     };
-
-%If (Qt_4_2_0 -)
 
     enum StandardKey
     {
@@ -174,68 +168,46 @@ public:
         DeleteStartOfWord,
         DeleteEndOfWord,
         DeleteEndOfLine,
-%If (Qt_4_5_0 -)
         InsertParagraphSeparator,
-%End
-%If (Qt_4_5_0 -)
         InsertLineSeparator,
-%End
-%If (Qt_4_5_0 -)
         SaveAs,
-%End
-%If (Qt_4_6_0 -)
         Preferences,
-%End
-%If (Qt_4_6_0 -)
         Quit,
-%End
-%If (Qt_5_0_0 -)
         FullScreen,
+%If (Qt_5_1_0 -)
+        Deselect,
+%End
+%If (Qt_5_2_0 -)
+        DeleteCompleteLine,
+%End
+%If (Qt_5_5_0 -)
+        Backspace,
+%End
+%If (Qt_5_6_0 -)
+        Cancel,
 %End
     };
 
-%End
     QKeySequence();
     QKeySequence(const QKeySequence &ks);
-%If (Qt_5_0_0 -)
     QKeySequence(const QString &key, QKeySequence::SequenceFormat format = QKeySequence::NativeText);
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-    QKeySequence(const QString &key, QKeySequence::SequenceFormat format);
-%End
     QKeySequence(int k1, int key2 = 0, int key3 = 0, int key4 = 0);
     QKeySequence(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QKeySequence>())
             sipCpp = new QKeySequence(a0->value<QKeySequence>());
-        #else
-        if (qVariantCanConvert<QKeySequence>(*a0))
-            sipCpp = new QKeySequence(qVariantValue<QKeySequence>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
 
     ~QKeySequence();
-%If (Qt_5_0_0 -)
     int count() const /__len__/;
-%End
-%If (- Qt_5_0_0)
-    uint count() const /__len__/;
-%End
     bool isEmpty() const;
     QKeySequence::SequenceMatch matches(const QKeySequence &seq) const;
     static QKeySequence mnemonic(const QString &text);
-%If (PyQt_Deprecated_5_0)
-    operator QString() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    operator int() const;
-%End
     int operator[](int i) const;
 %MethodCode
-        SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+        Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
         
         if (idx < 0)
             sipIsErr = 1;
@@ -250,15 +222,25 @@ public:
     bool operator<=(const QKeySequence &other) const;
     bool operator>=(const QKeySequence &other) const;
     bool isDetached() const;
+    void swap(QKeySequence &other /Constrained/);
     QString toString(QKeySequence::SequenceFormat format = QKeySequence::PortableText) const;
     static QKeySequence fromString(const QString &str, QKeySequence::SequenceFormat format = QKeySequence::PortableText);
-%If (Qt_4_2_0 -)
     static QList<QKeySequence> keyBindings(QKeySequence::StandardKey key);
+%If (Qt_5_1_0 -)
+    static QList<QKeySequence> listFromString(const QString &str, QKeySequence::SequenceFormat format = QKeySequence::PortableText);
 %End
-%If (Qt_4_8_0 -)
-    void swap(QKeySequence &other);
+%If (Qt_5_1_0 -)
+    static QString listToString(const QList<QKeySequence> &list, QKeySequence::SequenceFormat format = QKeySequence::PortableText);
+%End
+%If (Qt_5_6_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
+%End
+
 %End
 };
 
-QDataStream &operator<<(QDataStream &in, const QKeySequence &ks /Constrained/);
-QDataStream &operator>>(QDataStream &out, QKeySequence &ks /Constrained/);
+QDataStream &operator<<(QDataStream &in, const QKeySequence &ks /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &out, QKeySequence &ks /Constrained/) /ReleaseGIL/;
+void qt_set_sequence_auto_mnemonic(bool b);

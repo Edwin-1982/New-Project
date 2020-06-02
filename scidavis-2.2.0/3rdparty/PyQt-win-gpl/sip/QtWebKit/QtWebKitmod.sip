@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,16 +20,16 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%Module(name=PyQt4.QtWebKit, keyword_arguments="Optional")
+%Module(name=PyQt5.QtWebKit, keyword_arguments="Optional", use_limited_api=True)
 
 %Import QtCore/QtCoremod.sip
 %Import QtGui/QtGuimod.sip
 %Import QtNetwork/QtNetworkmod.sip
 
 %Copying
-Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 
-This file is part of PyQt4.
+This file is part of PyQt5.
 
 This file may be used under the terms of the GNU General Public License
 version 3.0 as published by the Free Software Foundation and appearing in
@@ -47,17 +47,11 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 %DefaultSupertype sip.simplewrapper
 
-%Include qgraphicswebview.sip
 %Include qwebdatabase.sip
 %Include qwebelement.sip
-%Include qwebframe.sip
 %Include qwebkitglobal.sip
 %Include qwebhistory.sip
 %Include qwebhistoryinterface.sip
-%Include qwebinspector.sip
-%Include qwebkitversion.sip
-%Include qwebpage.sip
 %Include qwebpluginfactory.sip
 %Include qwebsecurityorigin.sip
 %Include qwebsettings.sip
-%Include qwebview.sip

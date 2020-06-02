@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2010 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -39,23 +39,23 @@
 #############################################################################
 
 
-from PyQt4 import QtSql, QtGui
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 
 def createConnection():
-    db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+    db = QSqlDatabase.addDatabase('QSQLITE')
     db.setDatabaseName(':memory:')
     if not db.open():
-        QtGui.QMessageBox.critical(None, QtGui.qApp.tr("Cannot open database"),
-                QtGui.qApp.tr("Unable to establish a database connection.\n"
-                              "This example needs SQLite support. Please read "
-                              "the Qt SQL driver documentation for information "
-                              "how to build it.\n\n"
-                              "Click Cancel to exit."),
-                QtGui.QMessageBox.Cancel)
+        QMessageBox.critical(None, "Cannot open database",
+                "Unable to establish a database connection.\n"
+                "This example needs SQLite support. Please read the Qt SQL "
+                "driver documentation for information how to build it.\n\n"
+                "Click Cancel to exit.",
+                QMessageBox.Cancel)
         return False
     
-    query = QtSql.QSqlQuery()
+    query = QSqlQuery()
     query.exec_("create table person(id int primary key, "
                 "firstname varchar(20), lastname varchar(20))")
     query.exec_("insert into person values(101, 'Danny', 'Young')")

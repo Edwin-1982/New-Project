@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QXmlNodeModelIndex
 {
@@ -72,9 +70,6 @@ public:
 %End
 };
 
-%End
-%If (Qt_4_4_0 -)
-
 class QAbstractXmlNodeModel
 {
 %TypeHeaderCode
@@ -103,9 +98,7 @@ public:
     virtual QVector<QXmlName> namespaceBindings(const QXmlNodeModelIndex &n) const = 0;
     virtual QXmlNodeModelIndex elementById(const QXmlName &NCName) const = 0;
     virtual QVector<QXmlNodeModelIndex> nodesByIdref(const QXmlName &NCName) const = 0;
-%If (Qt_4_6_0 -)
     QSourceLocation sourceLocation(const QXmlNodeModelIndex &index) const;
-%End
 
 protected:
     virtual QXmlNodeModelIndex nextFromSimpleAxis(QAbstractXmlNodeModel::SimpleAxis axis, const QXmlNodeModelIndex &origin) const = 0;
@@ -117,9 +110,6 @@ protected:
 private:
     QAbstractXmlNodeModel(const QAbstractXmlNodeModel &);
 };
-
-%End
-%If (Qt_4_4_0 -)
 
 class QXmlItem
 {
@@ -139,5 +129,3 @@ public:
     QVariant toAtomicValue() const;
     QXmlNodeModelIndex toNodeModelIndex() const;
 };
-
-%End

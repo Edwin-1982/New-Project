@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QNetworkConfiguration
 {
@@ -72,24 +70,38 @@ public:
         BearerHSPA,
         BearerBluetooth,
         BearerWiMAX,
+%If (Qt_5_2_0 -)
+        BearerEVDO,
+%End
+%If (Qt_5_2_0 -)
+        BearerLTE,
+%End
+%If (Qt_5_2_0 -)
+        Bearer3G,
+%End
+%If (Qt_5_2_0 -)
+        Bearer4G,
+%End
     };
 
-    QFlags<QNetworkConfiguration::StateFlag> state() const;
+    QNetworkConfiguration::StateFlags state() const;
     QNetworkConfiguration::Type type() const;
     QNetworkConfiguration::Purpose purpose() const;
-%If (- Qt_5_0_0)
-    QString bearerName() const;
-%End
     QNetworkConfiguration::BearerType bearerType() const;
     QString bearerTypeName() const;
+%If (Qt_5_2_0 -)
+    QNetworkConfiguration::BearerType bearerTypeFamily() const;
+%End
     QString identifier() const;
     bool isRoamingAvailable() const;
     QList<QNetworkConfiguration> children() const;
     QString name() const;
     bool isValid() const;
-%If (Qt_5_0_0 -)
-    void swap(QNetworkConfiguration &other);
+    void swap(QNetworkConfiguration &other /Constrained/);
+%If (Qt_5_9_0 -)
+    int connectTimeout() const;
+%End
+%If (Qt_5_9_0 -)
+    bool setConnectTimeout(int timeout);
 %End
 };
-
-%End

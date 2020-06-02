@@ -1,8 +1,8 @@
 #############################################################################
 ##
-## Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+## Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 ## 
-## This file is part of PyQt4.
+## This file is part of PyQt5.
 ## 
 ## This file may be used under the terms of the GNU General Public License
 ## version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,14 +23,9 @@
 import re
 
 
-def as_string(obj, encode=True):
+def as_string(obj):
     if isinstance(obj, basestring):
-        s = '"' + _escape(obj.encode('UTF-8')) + '"'
-
-        if encode:
-            s = '_fromUtf8(' + s + ')'
-
-        return s
+        return '"' + _escape(obj.encode('UTF-8')) + '"'
 
     return str(obj)
 

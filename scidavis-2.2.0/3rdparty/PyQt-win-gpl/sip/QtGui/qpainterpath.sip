@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -49,9 +49,7 @@ public:
         bool isLineTo() const;
         bool isCurveTo() const;
         bool operator==(const QPainterPath::Element &e) const;
-%If (Qt_4_2_0 -)
         bool operator!=(const QPainterPath::Element &e) const;
-%End
         operator QPointF() const;
     };
 
@@ -81,18 +79,26 @@ public:
     Qt::FillRule fillRule() const;
     void setFillRule(Qt::FillRule fillRule);
     QPainterPath toReversed() const;
-    QList<QPolygonF> toSubpathPolygons(const QMatrix &matrix = QMatrix()) const;
-    QList<QPolygonF> toFillPolygons(const QMatrix &matrix = QMatrix()) const;
-    QPolygonF toFillPolygon(const QMatrix &matrix = QMatrix()) const;
+    QList<QPolygonF> toSubpathPolygons() const;
+%MethodCode
+        sipRes = new QList<QPolygonF>(sipCpp->toSubpathPolygons());
+%End
+
+    QList<QPolygonF> toFillPolygons() const;
+%MethodCode
+        sipRes = new QList<QPolygonF>(sipCpp->toFillPolygons());
+%End
+
+    QPolygonF toFillPolygon() const;
+%MethodCode
+        sipRes = new QPolygonF(sipCpp->toFillPolygon());
+%End
+
     bool operator==(const QPainterPath &other) const;
     bool operator!=(const QPainterPath &other) const;
     void moveTo(qreal x, qreal y);
-%If (Qt_4_2_0 -)
     void arcMoveTo(const QRectF &rect, qreal angle);
-%End
-%If (Qt_4_2_0 -)
     void arcMoveTo(qreal x, qreal y, qreal w, qreal h, qreal angle);
-%End
     void arcTo(qreal x, qreal y, qreal w, qreal h, qreal startAngle, qreal arcLenght);
     void lineTo(qreal x, qreal y);
     void cubicTo(qreal ctrlPt1x, qreal ctrlPt1y, qreal ctrlPt2x, qreal ctrlPt2y, qreal endPtx, qreal endPty);
@@ -102,124 +108,51 @@ public:
     void addText(qreal x, qreal y, const QFont &f, const QString &text);
     bool isEmpty() const;
     int elementCount() const;
-%If (Qt_5_0_0 -)
     QPainterPath::Element elementAt(int i) const;
-%End
-%If (- Qt_5_0_0)
-    const QPainterPath::Element &elementAt(int i) const;
-%End
-%If (Qt_4_2_0 -)
     void setElementPositionAt(int i, qreal x, qreal y);
-%End
-%If (Qt_4_3_0 -)
-    void addRoundRect(const QRectF &rect, int xRnd, int yRnd);
-%End
-%If (Qt_4_3_0 -)
     QList<QPolygonF> toSubpathPolygons(const QTransform &matrix) const;
-%End
-%If (Qt_4_3_0 -)
     QList<QPolygonF> toFillPolygons(const QTransform &matrix) const;
-%End
-%If (Qt_4_3_0 -)
     QPolygonF toFillPolygon(const QTransform &matrix) const;
-%End
-%If (Qt_4_3_0 -)
     qreal length() const;
-%End
-%If (Qt_4_3_0 -)
     qreal percentAtLength(qreal t) const;
-%End
-%If (Qt_4_3_0 -)
     QPointF pointAtPercent(qreal t) const;
-%End
-%If (Qt_4_3_0 -)
     qreal angleAtPercent(qreal t) const;
-%End
-%If (Qt_4_3_0 -)
     qreal slopeAtPercent(qreal t) const;
-%End
-%If (Qt_4_3_0 -)
     bool intersects(const QPainterPath &p) const;
-%End
-%If (Qt_4_3_0 -)
     bool contains(const QPainterPath &p) const;
-%End
-%If (Qt_4_3_0 -)
     QPainterPath united(const QPainterPath &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPainterPath intersected(const QPainterPath &r) const;
-%End
-%If (Qt_4_3_0 -)
     QPainterPath subtracted(const QPainterPath &r) const;
-%End
-%If (Qt_4_3_0 -)
-    QPainterPath subtractedInverted(const QPainterPath &r) const;
-%End
-%If (Qt_4_3_0 -)
-    void addRoundRect(qreal x, qreal y, qreal w, qreal h, int xRnd, int yRnd);
-%End
-%If (Qt_4_3_0 -)
-    void addRoundRect(const QRectF &rect, int roundness);
-%End
-%If (Qt_4_3_0 -)
-    void addRoundRect(qreal x, qreal y, qreal w, qreal h, int roundness);
-%End
-%If (Qt_4_4_0 -)
     void addRoundedRect(const QRectF &rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize);
-%End
-%If (Qt_4_4_0 -)
     void addRoundedRect(qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize);
-%End
-%If (Qt_4_4_0 -)
     void addEllipse(const QPointF &center, qreal rx, qreal ry);
-%End
-%If (Qt_4_4_0 -)
     QPainterPath simplified() const;
-%End
-%If (Qt_4_5_0 -)
     QPainterPath operator&(const QPainterPath &other) const;
-%End
-%If (Qt_4_5_0 -)
     QPainterPath operator|(const QPainterPath &other) const;
-%End
-%If (Qt_4_5_0 -)
     QPainterPath operator+(const QPainterPath &other) const;
-%End
-%If (Qt_4_5_0 -)
     QPainterPath operator-(const QPainterPath &other) const;
-%End
-%If (Qt_4_5_0 -)
     QPainterPath &operator&=(const QPainterPath &other);
-%End
-%If (Qt_4_5_0 -)
     QPainterPath &operator|=(const QPainterPath &other);
-%End
-%If (Qt_4_5_0 -)
     QPainterPath &operator+=(const QPainterPath &other);
-%End
-%If (Qt_4_5_0 -)
     QPainterPath &operator-=(const QPainterPath &other);
-%End
-%If (Qt_4_6_0 -)
     void translate(qreal dx, qreal dy);
-%End
-%If (Qt_4_6_0 -)
     QPainterPath translated(qreal dx, qreal dy) const;
-%End
-%If (Qt_4_6_0 -)
     void translate(const QPointF &offset);
-%End
-%If (Qt_4_6_0 -)
     QPainterPath translated(const QPointF &offset) const;
+    void swap(QPainterPath &other /Constrained/);
+%If (Qt_5_13_0 -)
+    void clear();
 %End
-%If (Qt_4_8_0 -)
-    void swap(QPainterPath &other);
+%If (Qt_5_13_0 -)
+    void reserve(int size);
+%End
+%If (Qt_5_13_0 -)
+    int capacity() const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QPainterPath & /Constrained/);
-QDataStream &operator>>(QDataStream &, QPainterPath & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QPainterPath & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QPainterPath & /Constrained/) /ReleaseGIL/;
 
 class QPainterPathStroker
 {
@@ -229,6 +162,9 @@ class QPainterPathStroker
 
 public:
     QPainterPathStroker();
+%If (Qt_5_3_0 -)
+    explicit QPainterPathStroker(const QPen &pen);
+%End
     ~QPainterPathStroker();
     void setWidth(qreal width);
     qreal width() const;
@@ -244,15 +180,9 @@ public:
     void setDashPattern(const QVector<qreal> &dashPattern);
     QVector<qreal> dashPattern() const;
     QPainterPath createStroke(const QPainterPath &path) const;
-%If (Qt_4_3_0 -)
     void setDashOffset(qreal offset);
-%End
-%If (Qt_4_3_0 -)
     qreal dashOffset() const;
-%End
 
 private:
-%If (Qt_4_6_0 -)
     QPainterPathStroker(const QPainterPathStroker &);
-%End
 };

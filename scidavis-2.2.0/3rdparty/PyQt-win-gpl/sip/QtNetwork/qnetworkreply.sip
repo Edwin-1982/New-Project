@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QNetworkReply : QIODevice
 {
@@ -53,17 +51,33 @@ public:
         ProtocolUnknownError,
         ProtocolInvalidOperationError,
         ProtocolFailure,
-%If (Qt_4_6_0 -)
         ContentReSendError,
-%End
-%If (Qt_4_7_0 -)
         TemporaryNetworkFailureError,
-%End
-%If (Qt_5_0_0 -)
         NetworkSessionFailedError,
-%End
-%If (Qt_5_0_0 -)
         BackgroundRequestNotAllowedError,
+%If (Qt_5_3_0 -)
+        ContentConflictError,
+%End
+%If (Qt_5_3_0 -)
+        ContentGoneError,
+%End
+%If (Qt_5_3_0 -)
+        InternalServerError,
+%End
+%If (Qt_5_3_0 -)
+        OperationNotImplementedError,
+%End
+%If (Qt_5_3_0 -)
+        ServiceUnavailableError,
+%End
+%If (Qt_5_3_0 -)
+        UnknownServerError,
+%End
+%If (Qt_5_6_0 -)
+        TooManyRedirectsError,
+%End
+%If (Qt_5_6_0 -)
+        InsecureRedirectError,
 %End
     };
 
@@ -83,10 +97,10 @@ public:
     QList<QByteArray> rawHeaderList() const;
     QByteArray rawHeader(const QByteArray &headerName) const;
     QVariant attribute(QNetworkRequest::Attribute code) const;
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     QSslConfiguration sslConfiguration() const;
 %End
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     void setSslConfiguration(const QSslConfiguration &configuration);
 %End
 
@@ -96,21 +110,32 @@ public slots:
 signals:
     void metaDataChanged();
     void finished();
+%If (Qt_5_1_0 -)
+%If (PyQt_SSL)
+    void encrypted();
+%End
+%End
     void error(QNetworkReply::NetworkError);
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     void sslErrors(const QList<QSslError> &errors);
 %End
     void uploadProgress(qint64 bytesSent, qint64 bytesTotal);
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+%If (Qt_5_5_0 -)
+%If (PyQt_SSL)
+    void preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *authenticator);
+%End
+%End
+%If (Qt_5_6_0 -)
+    void redirected(const QUrl &url);
+%End
+%If (Qt_5_9_0 -)
+    void redirectAllowed();
+%End
 
 protected:
-%If (Qt_5_0_0 -)
     explicit QNetworkReply(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QNetworkReply(QObject *parent /TransferThis/ = 0);
-%End
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) /ReleaseGIL/;
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) /ReleaseGIL/;
     void setOperation(QNetworkAccessManager::Operation operation);
     void setRequest(const QNetworkRequest &request);
     void setError(QNetworkReply::NetworkError errorCode, const QString &errorString);
@@ -118,42 +143,24 @@ protected:
     void setHeader(QNetworkRequest::KnownHeaders header, const QVariant &value);
     void setRawHeader(const QByteArray &headerName, const QByteArray &value);
     void setAttribute(QNetworkRequest::Attribute code, const QVariant &value);
-%If (Qt_4_8_0 -)
     void setFinished(bool finished);
-%End
 
 public:
-%If (Qt_4_6_0 -)
     bool isFinished() const;
-%End
-%If (Qt_4_6_0 -)
     bool isRunning() const;
-%End
-%If (Qt_4_6_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     void ignoreSslErrors(const QList<QSslError> &errors);
 %End
-%End
-%If (Qt_4_7_0 -)
     const QList<QPair<QByteArray, QByteArray>> &rawHeaderPairs() const;
-%End
 
 protected:
-%If (Qt_5_0_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     virtual void sslConfigurationImplementation(QSslConfiguration &) const;
 %End
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     virtual void setSslConfigurationImplementation(const QSslConfiguration &);
 %End
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_OpenSSL)
+%If (PyQt_SSL)
     virtual void ignoreSslErrorsImplementation(const QList<QSslError> &);
 %End
-%End
 };
-
-%End

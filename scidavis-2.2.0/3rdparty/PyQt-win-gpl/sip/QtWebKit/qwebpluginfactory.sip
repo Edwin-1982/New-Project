@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,12 +20,39 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QWebPluginFactory : QObject
 {
 %TypeHeaderCode
 #include <qwebpluginfactory.h>
+%End
+
+%ConvertToSubClassCode
+    static struct class_graph {
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+        {sipName_QWebHistoryInterface, &sipType_QWebHistoryInterface, -1, 1},
+        {sipName_QWebPluginFactory, &sipType_QWebPluginFactory, -1, -1},
+    };
+    
+    int i = 0;
+    
+    sipType = NULL;
+    
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
+        {
+            sipType = *cg->type;
+            i = cg->yes;
+        }
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
@@ -38,12 +65,8 @@ public:
         QString name;
         QString description;
         QStringList fileExtensions;
-%If (Qt_4_6_0 -)
         bool operator==(const QWebPluginFactory::MimeType &other) const;
-%End
-%If (Qt_4_6_0 -)
         bool operator!=(const QWebPluginFactory::MimeType &other) const;
-%End
     };
 
     struct Plugin
@@ -84,5 +107,3 @@ public:
     virtual bool extension(QWebPluginFactory::Extension extension, const QWebPluginFactory::ExtensionOption *option = 0, QWebPluginFactory::ExtensionReturn *output = 0);
     virtual bool supportsExtension(QWebPluginFactory::Extension extension) const;
 };
-
-%End

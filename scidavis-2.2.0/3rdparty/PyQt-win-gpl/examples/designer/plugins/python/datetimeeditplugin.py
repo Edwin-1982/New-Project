@@ -20,18 +20,24 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE              #
 # OR PERFORMANCE OF THIS SOFTWARE.                                           #
 #----------------------------------------------------------------------------#
-from PyQt4 import QtGui, QtDesigner
+
+
+from PyQt5.QtGui import QIcon
+from PyQt5.QtDesigner import QPyDesignerCustomWidgetPlugin
+
 from datetimeedit import PyDateEdit, PyDateTimeEdit
+
 
 #============================================================================#
 # The group name in designer widgetbox                                       #
 #----------------------------------------------------------------------------#
 DESIGNER_GROUP_NAME = "PyQt Examples"
 
+
 #============================================================================#
 # Plugin for PyDateEdit                                                      #
 #----------------------------------------------------------------------------#
-class PyDateEditPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
+class PyDateEditPlugin(QPyDesignerCustomWidgetPlugin):
 
     def __init__(self, parent=None):
         super(PyDateEditPlugin, self).__init__(parent)
@@ -50,7 +56,7 @@ class PyDateEditPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
         return False
 
     def icon(self):
-        return QtGui.QIcon()
+        return QIcon()
 
     def domXml(self):
         return '<widget class="PyDateEdit" name="pyDateEdit">\n</widget>\n'
@@ -77,7 +83,7 @@ class PyDateEditPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
 #============================================================================#
 # Plugin for PyDateTimeEdit                                                  #
 #----------------------------------------------------------------------------#
-class PyDateTimeEditPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
+class PyDateTimeEditPlugin(QPyDesignerCustomWidgetPlugin):
 
     def __init__(self, parent=None):
         super(PyDateTimeEditPlugin, self).__init__(parent)
@@ -96,7 +102,7 @@ class PyDateTimeEditPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):
         return False
 
     def icon(self):
-        return QtGui.QIcon()
+        return QIcon()
 
     def domXml(self):
         return '<widget class="PyDateTimeEdit" name="pyDateTimeEdit">\n</widget>\n'

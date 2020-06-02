@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_5_0_0 -)
-
 class QScreen : QObject /NoDefaultCtors/
 {
 %TypeHeaderCode
@@ -29,6 +27,9 @@ class QScreen : QObject /NoDefaultCtors/
 %End
 
 public:
+%If (Qt_5_4_0 -)
+    virtual ~QScreen();
+%End
     QString name() const;
     int depth() const;
     QSize size() const;
@@ -42,11 +43,14 @@ public:
     qreal logicalDotsPerInch() const;
     QSize availableSize() const;
     QRect availableGeometry() const;
-    QList<QScreen*> virtualSiblings() const;
+    QList<QScreen *> virtualSiblings() const;
     QSize virtualSize() const;
     QRect virtualGeometry() const;
     QSize availableVirtualSize() const;
     QRect availableVirtualGeometry() const;
+%If (Qt_5_2_0 -)
+    Qt::ScreenOrientation nativeOrientation() const;
+%End
     Qt::ScreenOrientation primaryOrientation() const;
     Qt::ScreenOrientation orientation() const;
     Qt::ScreenOrientations orientationUpdateMask() const;
@@ -69,9 +73,21 @@ signals:
     void refreshRateChanged(qreal refreshRate);
     void physicalSizeChanged(const QSizeF &size);
     void virtualGeometryChanged(const QRect &rect);
+%If (Qt_5_4_0 -)
+    void availableGeometryChanged(const QRect &geometry);
+%End
+
+public:
+%If (Qt_5_9_0 -)
+    QString manufacturer() const;
+%End
+%If (Qt_5_9_0 -)
+    QString model() const;
+%End
+%If (Qt_5_9_0 -)
+    QString serialNumber() const;
+%End
 
 private:
     QScreen(const QScreen &);
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -39,15 +39,9 @@ public:
         Decorative,
         System,
         AnyStyle,
-%If (Qt_4_7_0 -)
         Cursive,
-%End
-%If (Qt_4_7_0 -)
         Monospace,
-%End
-%If (Qt_4_7_0 -)
         Fantasy,
-%End
     };
 
     enum StyleStrategy
@@ -61,21 +55,35 @@ public:
         PreferQuality,
         PreferAntialias,
         NoAntialias,
-        OpenGLCompatible,
-%If (Qt_4_2_0 -)
-        NoFontMerging,
+%If (Qt_5_4_0 -)
+        NoSubpixelAntialias,
 %End
-%If (Qt_4_7_0 -)
+        OpenGLCompatible,
+        NoFontMerging,
         ForceIntegerMetrics,
+%If (Qt_5_10_0 -)
+        PreferNoShaping,
 %End
     };
 
     enum Weight
     {
+%If (Qt_5_5_0 -)
+        Thin,
+%End
+%If (Qt_5_5_0 -)
+        ExtraLight,
+%End
         Light,
         Normal,
+%If (Qt_5_5_0 -)
+        Medium,
+%End
         DemiBold,
         Bold,
+%If (Qt_5_5_0 -)
+        ExtraBold,
+%End
         Black,
     };
 
@@ -88,6 +96,9 @@ public:
 
     enum Stretch
     {
+%If (Qt_5_8_0 -)
+        AnyStretch,
+%End
         UltraCondensed,
         ExtraCondensed,
         Condensed,
@@ -105,13 +116,8 @@ public:
     QFont(const QFont &);
     QFont(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QFont>())
             sipCpp = new QFont(a0->value<QFont>());
-        #else
-        if (qVariantCanConvert<QFont>(*a0))
-            sipCpp = new QFont(qVariantValue<QFont>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -152,16 +158,6 @@ public:
     bool operator!=(const QFont &) const;
     bool operator<(const QFont &) const;
     bool isCopyOf(const QFont &) const;
-%If (- Qt_5_0_0)
-%If (WS_WIN)
-    HFONT handle() const;
-%End
-%End
-%If (- Qt_5_0_0)
-%If (WS_X11 || WS_MACX)
-    Qt::HANDLE handle() const;
-%End
-%End
     void setRawName(const QString &);
     QString rawName() const;
     QString key() const;
@@ -172,12 +168,7 @@ public:
     static QStringList substitutions();
     static void insertSubstitution(const QString &, const QString &);
     static void insertSubstitutions(const QString &, const QStringList &);
-%If (Qt_5_0_0 -)
     static void removeSubstitutions(const QString &);
-%End
-%If (PyQt_Deprecated_5_0)
-    static void removeSubstitution(const QString &);
-%End
     static void initialize();
     static void cleanup();
     static void cacheStatistics();
@@ -189,7 +180,6 @@ public:
     void setBold(bool enable);
     bool italic() const;
     void setItalic(bool b);
-%If (Qt_4_4_0 -)
 
     enum Capitalization
     {
@@ -200,38 +190,19 @@ public:
         Capitalize,
     };
 
-%End
-%If (Qt_4_4_0 -)
-
     enum SpacingType
     {
         PercentageSpacing,
         AbsoluteSpacing,
     };
 
-%End
-%If (Qt_4_4_0 -)
     qreal letterSpacing() const;
-%End
-%If (Qt_4_4_0 -)
     QFont::SpacingType letterSpacingType() const;
-%End
-%If (Qt_4_4_0 -)
     void setLetterSpacing(QFont::SpacingType type, qreal spacing);
-%End
-%If (Qt_4_4_0 -)
     qreal wordSpacing() const;
-%End
-%If (Qt_4_4_0 -)
     void setWordSpacing(qreal spacing);
-%End
-%If (Qt_4_4_0 -)
     void setCapitalization(QFont::Capitalization);
-%End
-%If (Qt_4_4_0 -)
     QFont::Capitalization capitalization() const;
-%End
-%If (Qt_4_8_0 -)
 
     enum HintingPreference
     {
@@ -241,23 +212,25 @@ public:
         PreferFullHinting,
     };
 
-%End
-%If (Qt_4_8_0 -)
     QString styleName() const;
-%End
-%If (Qt_4_8_0 -)
     void setStyleName(const QString &styleName);
-%End
-%If (Qt_4_8_0 -)
     void setHintingPreference(QFont::HintingPreference hintingPreference);
-%End
-%If (Qt_4_8_0 -)
     QFont::HintingPreference hintingPreference() const;
+    void swap(QFont &other /Constrained/);
+%If (Qt_5_3_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
 %End
-%If (Qt_5_0_0 -)
-    void swap(QFont &other);
+
+%End
+%If (Qt_5_13_0 -)
+    QStringList families() const;
+%End
+%If (Qt_5_13_0 -)
+    void setFamilies(const QStringList &);
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QFont & /Constrained/);
-QDataStream &operator>>(QDataStream &, QFont & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QFont & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QFont & /Constrained/) /ReleaseGIL/;

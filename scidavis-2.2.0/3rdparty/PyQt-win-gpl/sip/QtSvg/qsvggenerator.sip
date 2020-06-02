@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSvg Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_3_0 -)
 
 class QSvgGenerator : QPaintDevice
 {
@@ -39,34 +37,16 @@ public:
     void setOutputDevice(QIODevice *outputDevice);
     int resolution() const;
     void setResolution(int resolution);
-%If (Qt_4_5_0 -)
     QString title() const;
-%End
-%If (Qt_4_5_0 -)
     void setTitle(const QString &title);
-%End
-%If (Qt_4_5_0 -)
     QString description() const;
-%End
-%If (Qt_4_5_0 -)
     void setDescription(const QString &description);
-%End
-%If (Qt_4_5_0 -)
     QRect viewBox() const;
-%End
-%If (Qt_4_5_0 -)
     QRectF viewBoxF() const;
-%End
-%If (Qt_4_5_0 -)
     void setViewBox(const QRect &viewBox);
-%End
-%If (Qt_4_5_0 -)
     void setViewBox(const QRectF &viewBox);
-%End
 
 protected:
     virtual QPaintEngine *paintEngine() const;
     virtual int metric(QPaintDevice::PaintDeviceMetric metric) const;
 };
-
-%End

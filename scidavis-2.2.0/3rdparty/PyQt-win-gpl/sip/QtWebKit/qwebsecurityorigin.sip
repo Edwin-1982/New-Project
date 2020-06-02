@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_5_0 -)
-
 class QWebSecurityOrigin
 {
 %TypeHeaderCode
@@ -29,6 +27,9 @@ class QWebSecurityOrigin
 %End
 
 public:
+%If (Qt_5_2_0 -)
+    explicit QWebSecurityOrigin(const QUrl &url);
+%End
     QWebSecurityOrigin(const QWebSecurityOrigin &other);
     ~QWebSecurityOrigin();
     static QList<QWebSecurityOrigin> allOrigins();
@@ -39,18 +40,23 @@ public:
     qint64 databaseQuota() const;
     void setDatabaseQuota(qint64 quota);
     QList<QWebDatabase> databases() const;
-%If (Qt_4_6_0 -)
     static void addLocalScheme(const QString &scheme);
-%End
-%If (Qt_4_6_0 -)
     static void removeLocalScheme(const QString &scheme);
-%End
-%If (Qt_4_6_0 -)
     static QStringList localSchemes();
-%End
-%If (Qt_4_8_0 -)
     void setApplicationCacheQuota(qint64 quota);
-%End
-};
+%If (Qt_5_2_0 -)
+
+    enum SubdomainSetting
+    {
+        AllowSubdomains,
+        DisallowSubdomains,
+    };
 
 %End
+%If (Qt_5_2_0 -)
+    void addAccessWhitelistEntry(const QString &scheme, const QString &host, QWebSecurityOrigin::SubdomainSetting subdomainSetting);
+%End
+%If (Qt_5_2_0 -)
+    void removeAccessWhitelistEntry(const QString &scheme, const QString &host, QWebSecurityOrigin::SubdomainSetting subdomainSetting);
+%End
+};

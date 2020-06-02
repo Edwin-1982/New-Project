@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,13 +20,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
 %ModuleCode
 #include <qmatrix4x4.h>
 %End
-%End
-
-%If (Qt_4_6_0 -)
 
 class QMatrix4x4
 {
@@ -49,7 +45,6 @@ class QMatrix4x4
 
 public:
     QMatrix4x4();
-%If (Qt_5_0_0 -)
     explicit QMatrix4x4(SIP_PYOBJECT values /TypeHint="Sequence[float]"/) [(const float *values)];
 %MethodCode
         float values[16];
@@ -58,25 +53,8 @@ public:
             sipCpp = new QMatrix4x4(values);
 %End
 
-%End
-%If (- Qt_5_0_0)
-    explicit QMatrix4x4(SIP_PYOBJECT values /TypeHint="Sequence[float]"/) [(const qreal *values)];
-%MethodCode
-        qreal values[16];
-        
-        if ((sipError = qtgui_matrixDataFromSequence(a0, 16, values)) == sipErrorNone)
-            sipCpp = new QMatrix4x4(values);
-%End
-
-%End
-%If (Qt_5_0_0 -)
     QMatrix4x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44);
-%End
-%If (- Qt_5_0_0)
-    QMatrix4x4(qreal m11, qreal m12, qreal m13, qreal m14, qreal m21, qreal m22, qreal m23, qreal m24, qreal m31, qreal m32, qreal m33, qreal m34, qreal m41, qreal m42, qreal m43, qreal m44);
-%End
     QMatrix4x4(const QTransform &transform);
-    QMatrix4x4(const QMatrix &matrix);
     SIP_PYOBJECT __repr__() const /TypeHint="str"/;
 %MethodCode
         bool bad = false;
@@ -98,7 +76,7 @@ public:
         if (!bad)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix4x4("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix4x4("
                     "%R, %R, %R, %R, "
                     "%R, %R, %R, %R, "
                     "%R, %R, %R, %R, "
@@ -108,7 +86,7 @@ public:
                     m[8], m[9], m[10], m[11],
                     m[12], m[13], m[14], m[15]);
         #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix4x4(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix4x4(");
         
             for (i = 0; i < 16; ++i)
             {
@@ -126,83 +104,26 @@ public:
             Py_XDECREF(m[i]);
 %End
 
-%If (Qt_5_0_0 -)
     double determinant() const;
-%End
-%If (- Qt_5_0_0)
-    qreal determinant() const;
-%End
     QMatrix4x4 inverted(bool *invertible = 0) const;
     QMatrix4x4 transposed() const;
     QMatrix3x3 normalMatrix() const;
     void scale(const QVector3D &vector);
-%If (Qt_5_0_0 -)
     void scale(float x, float y);
-%End
-%If (- Qt_5_0_0)
-    void scale(qreal x, qreal y);
-%End
-%If (Qt_5_0_0 -)
     void scale(float x, float y, float z);
-%End
-%If (- Qt_5_0_0)
-    void scale(qreal x, qreal y, qreal z);
-%End
-%If (Qt_5_0_0 -)
     void scale(float factor);
-%End
-%If (- Qt_5_0_0)
-    void scale(qreal factor);
-%End
     void translate(const QVector3D &vector);
-%If (Qt_5_0_0 -)
     void translate(float x, float y);
-%End
-%If (- Qt_5_0_0)
-    void translate(qreal x, qreal y);
-%End
-%If (Qt_5_0_0 -)
     void translate(float x, float y, float z);
-%End
-%If (- Qt_5_0_0)
-    void translate(qreal x, qreal y, qreal z);
-%End
-%If (Qt_5_0_0 -)
     void rotate(float angle, const QVector3D &vector);
-%End
-%If (- Qt_5_0_0)
-    void rotate(qreal angle, const QVector3D &vector);
-%End
-%If (Qt_5_0_0 -)
-    void rotate(float angle, float x, float y, float z = 0.0f);
-%End
-%If (- Qt_5_0_0)
-    void rotate(qreal angle, qreal x, qreal y, qreal z = 0.0);
-%End
+    void rotate(float angle, float x, float y, float z = 0.F);
     void rotate(const QQuaternion &quaternion);
     void ortho(const QRect &rect);
     void ortho(const QRectF &rect);
-%If (Qt_5_0_0 -)
     void ortho(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-%End
-%If (- Qt_5_0_0)
-    void ortho(qreal left, qreal right, qreal bottom, qreal top, qreal nearPlane, qreal farPlane);
-%End
-%If (Qt_5_0_0 -)
     void frustum(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-%End
-%If (- Qt_5_0_0)
-    void frustum(qreal left, qreal right, qreal bottom, qreal top, qreal nearPlane, qreal farPlane);
-%End
-%If (Qt_5_0_0 -)
     void perspective(float angle, float aspect, float nearPlane, float farPlane);
-%End
-%If (- Qt_5_0_0)
-    void perspective(qreal angle, qreal aspect, qreal nearPlane, qreal farPlane);
-%End
     void lookAt(const QVector3D &eye, const QVector3D &center, const QVector3D &up);
-    void flipCoordinates();
-%If (Qt_5_0_0 -)
     SIP_PYLIST copyDataTo() const /TypeHint="List[float]"/;
 %MethodCode
         float values[16];
@@ -211,41 +132,15 @@ public:
         sipError = qtgui_matrixDataAsList(16, values, &sipRes);
 %End
 
-%End
-%If (- Qt_5_0_0)
-    SIP_PYLIST copyDataTo() const /TypeHint="List[float]"/;
-%MethodCode
-        qreal values[16];
-        
-        sipCpp->copyDataTo(values);
-        sipError = qtgui_matrixDataAsList(16, values, &sipRes);
-%End
-
-%End
-    QMatrix toAffine() const;
     QTransform toTransform() const;
-%If (Qt_5_0_0 -)
     QTransform toTransform(float distanceToPlane) const;
-%End
-%If (- Qt_5_0_0)
-    QTransform toTransform(qreal distanceToPlane) const;
-%End
     QRect mapRect(const QRect &rect) const;
     QRectF mapRect(const QRectF &rect) const;
-%If (Qt_5_0_0 -)
     SIP_PYLIST data() /TypeHint="List[float]"/;
 %MethodCode
         sipError = qtgui_matrixDataAsList(16, sipCpp->constData(), &sipRes);
 %End
 
-%End
-%If (- Qt_5_0_0)
-    SIP_PYLIST data() /TypeHint="List[float]"/;
-%MethodCode
-        sipError = qtgui_matrixDataAsList(16, sipCpp->constData(), &sipRes);
-%End
-
-%End
     void optimize();
     SIP_PYOBJECT __getitem__(SIP_PYOBJECT) const;
 %MethodCode
@@ -274,27 +169,12 @@ public:
     void setRow(int index, const QVector4D &value);
     bool isIdentity() const;
     void setToIdentity();
-%If (Qt_5_0_0 -)
     void fill(float value);
-%End
-%If (- Qt_5_0_0)
-    void fill(qreal value);
-%End
     QMatrix4x4 &operator+=(const QMatrix4x4 &other);
     QMatrix4x4 &operator-=(const QMatrix4x4 &other);
-    QMatrix4x4 &operator*=(const QMatrix4x4 &other);
-%If (Qt_5_0_0 -)
+    QMatrix4x4 &operator*=(const QMatrix4x4 &other) /__imatmul__/;
     QMatrix4x4 &operator*=(float factor);
-%End
-%If (- Qt_5_0_0)
-    QMatrix4x4 &operator*=(qreal factor);
-%End
-%If (Qt_5_0_0 -)
     QMatrix4x4 &operator/=(float divisor);
-%End
-%If (- Qt_5_0_0)
-    QMatrix4x4 &operator/=(qreal divisor);
-%End
     bool operator==(const QMatrix4x4 &other) const;
     bool operator!=(const QMatrix4x4 &other) const;
     QPoint map(const QPoint &point) const;
@@ -302,80 +182,39 @@ public:
     QVector3D map(const QVector3D &point) const;
     QVector3D mapVector(const QVector3D &vector) const;
     QVector4D map(const QVector4D &point) const;
+%If (Qt_5_4_0 -)
+    void viewport(float left, float bottom, float width, float height, float nearPlane = 0.F, float farPlane = 1.F);
+%End
+%If (Qt_5_4_0 -)
+    void viewport(const QRectF &rect);
+%End
+%If (Qt_5_5_0 -)
+    bool isAffine() const;
+%End
 };
 
-%End
-%If (Qt_5_0_0 -)
 QMatrix4x4 operator/(const QMatrix4x4 &matrix, float divisor);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-QMatrix4x4 operator/(const QMatrix4x4 &matrix, qreal divisor);
-%End
-%If (Qt_4_6_0 -)
 QMatrix4x4 operator+(const QMatrix4x4 &m1, const QMatrix4x4 &m2);
-%End
-%If (Qt_4_6_0 -)
 QMatrix4x4 operator-(const QMatrix4x4 &m1, const QMatrix4x4 &m2);
-%End
-%If (Qt_4_6_0 -)
-QMatrix4x4 operator*(const QMatrix4x4 &m1, const QMatrix4x4 &m2);
-%End
-%If (Qt_4_6_0 -)
+QMatrix4x4 operator*(const QMatrix4x4 &m1, const QMatrix4x4 &m2) /__matmul__/;
 QVector3D operator*(const QVector3D &vector, const QMatrix4x4 &matrix);
-%End
-%If (Qt_4_6_0 -)
 QVector3D operator*(const QMatrix4x4 &matrix, const QVector3D &vector);
-%End
-%If (Qt_4_6_0 -)
 QVector4D operator*(const QVector4D &vector, const QMatrix4x4 &matrix);
-%End
-%If (Qt_4_6_0 -)
 QVector4D operator*(const QMatrix4x4 &matrix, const QVector4D &vector);
-%End
-%If (Qt_4_6_0 -)
 QPoint operator*(const QPoint &point, const QMatrix4x4 &matrix);
-%End
-%If (Qt_4_6_0 -)
 QPointF operator*(const QPointF &point, const QMatrix4x4 &matrix);
-%End
-%If (Qt_4_6_0 -)
 QPoint operator*(const QMatrix4x4 &matrix, const QPoint &point);
-%End
-%If (Qt_4_6_0 -)
 QPointF operator*(const QMatrix4x4 &matrix, const QPointF &point);
-%End
-%If (Qt_4_6_0 -)
 QMatrix4x4 operator-(const QMatrix4x4 &matrix);
-%End
-%If (Qt_5_0_0 -)
 QMatrix4x4 operator*(float factor, const QMatrix4x4 &matrix);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-QMatrix4x4 operator*(qreal factor, const QMatrix4x4 &matrix);
-%End
-%If (Qt_5_0_0 -)
 QMatrix4x4 operator*(const QMatrix4x4 &matrix, float factor);
-%End
-%If (Qt_4_6_0 - Qt_5_0_0)
-QMatrix4x4 operator*(const QMatrix4x4 &matrix, qreal factor);
-%End
-%If (Qt_4_6_0 -)
 bool qFuzzyCompare(const QMatrix4x4 &m1, const QMatrix4x4 &m2);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator<<(QDataStream &, const QMatrix4x4 & /Constrained/);
-%End
-%If (Qt_4_6_0 -)
-QDataStream &operator>>(QDataStream &, QMatrix4x4 & /Constrained/);
-%End
+QDataStream &operator<<(QDataStream &, const QMatrix4x4 & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QMatrix4x4 & /Constrained/) /ReleaseGIL/;
 
 %ModuleHeaderCode
 // Helpers for the matrix classes.
-#if QT_VERSION >= 0x050000
 typedef float PYQT_FLOAT;
-#else
-typedef qreal PYQT_FLOAT;
-#endif
 
 sipErrorState qtgui_matrixParseIndex(PyObject *tup, int nr_rows,
         int nr_columns, int *row, int *column);
@@ -392,11 +231,7 @@ sipErrorState qtgui_matrixParseIndex(PyObject *tup, int nr_rows,
 {
     sipErrorState es = sipErrorContinue;
 
-#if PY_VERSION_HEX >= 0x02050000
     if (PyTuple_Check(tup) && PyArg_ParseTuple(tup, "ii", row, column))
-#else
-    if (PyTuple_Check(tup) && PyArg_ParseTuple(tup, const_cast<char *>("ii"), row, column))
-#endif
         if (*row >= 0 && *row < nr_rows && *column >= 0 && *column < nr_columns)
             es = sipErrorNone;
 
@@ -475,7 +310,7 @@ sipErrorState qtgui_matrixDataAsList(int nr_values, const PYQT_FLOAT *values,
             return sipErrorFail;
         }
 
-        PyList_SET_ITEM(l, i, value);
+        PyList_SetItem(l, i, value);
     }
 
     *list = l;

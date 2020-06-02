@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QMargins
 {
@@ -40,18 +38,145 @@ public:
     void setTop(int atop);
     void setRight(int aright);
     void setBottom(int abottom);
+%If (Qt_5_1_0 -)
+    QMargins &operator+=(const QMargins &margins);
+%End
+%If (Qt_5_1_0 -)
+    QMargins &operator-=(const QMargins &margins);
+%End
+%If (Qt_5_1_0 -)
+    QMargins &operator*=(int factor /Constrained/);
+%End
+%If (Qt_5_1_0 -)
+    QMargins &operator/=(int divisor /Constrained/);
+%End
+%If (Qt_5_1_0 -)
+    QMargins &operator*=(qreal factor);
+%End
+%If (Qt_5_1_0 -)
+    QMargins &operator/=(qreal divisor);
+%End
+%If (Qt_5_2_0 -)
+    QMargins &operator+=(int margin);
+%End
+%If (Qt_5_2_0 -)
+    QMargins &operator-=(int margin);
+%End
+};
+
+bool operator==(const QMargins &m1, const QMargins &m2);
+bool operator!=(const QMargins &m1, const QMargins &m2);
+QDataStream &operator<<(QDataStream &, const QMargins & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QMargins & /Constrained/) /ReleaseGIL/;
+%If (Qt_5_1_0 - Qt_5_3_0)
+QRect operator+(const QRect &rectangle, const QMargins &margins);
+%End
+%If (Qt_5_1_0 - Qt_5_3_0)
+QRect operator+(const QMargins &margins, const QRect &rectangle);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator+(const QMargins &m1, const QMargins &m2);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator-(const QMargins &m1, const QMargins &m2);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator*(const QMargins &margins, int factor /Constrained/);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator*(const QMargins &margins, qreal factor);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator/(const QMargins &margins, int divisor /Constrained/);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator/(const QMargins &margins, qreal divisor);
+%End
+%If (Qt_5_1_0 -)
+QMargins operator-(const QMargins &margins);
+%End
+%If (Qt_5_3_0 -)
+QMargins operator+(const QMargins &lhs, int rhs);
+%End
+%If (Qt_5_3_0 -)
+QMargins operator+(int lhs, const QMargins &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMargins operator-(const QMargins &lhs, int rhs);
+%End
+%If (Qt_5_3_0 -)
+QMargins operator+(const QMargins &margins);
+%End
+%If (Qt_5_3_0 -)
+
+class QMarginsF
+{
+%TypeHeaderCode
+#include <qmargins.h>
+%End
+
+public:
+    QMarginsF();
+    QMarginsF(qreal aleft, qreal atop, qreal aright, qreal abottom);
+    QMarginsF(const QMargins &margins);
+    bool isNull() const;
+    qreal left() const;
+    qreal top() const;
+    qreal right() const;
+    qreal bottom() const;
+    void setLeft(qreal aleft);
+    void setTop(qreal atop);
+    void setRight(qreal aright);
+    void setBottom(qreal abottom);
+    QMarginsF &operator+=(const QMarginsF &margins);
+    QMarginsF &operator-=(const QMarginsF &margins);
+    QMarginsF &operator+=(qreal addend);
+    QMarginsF &operator-=(qreal subtrahend);
+    QMarginsF &operator*=(qreal factor);
+    QMarginsF &operator/=(qreal divisor);
+    QMargins toMargins() const;
 };
 
 %End
-%If (Qt_4_6_0 -)
-bool operator==(const QMargins &m1, const QMargins &m2);
+%If (Qt_5_3_0 -)
+QDataStream &operator<<(QDataStream &, const QMarginsF & /Constrained/);
 %End
-%If (Qt_4_6_0 -)
-bool operator!=(const QMargins &m1, const QMargins &m2);
+%If (Qt_5_3_0 -)
+QDataStream &operator>>(QDataStream &, QMarginsF & /Constrained/);
 %End
-%If (Qt_5_0_0 -)
-QDataStream &operator<<(QDataStream &, const QMargins & /Constrained/);
+%If (Qt_5_3_0 -)
+bool operator==(const QMarginsF &lhs, const QMarginsF &rhs);
 %End
-%If (Qt_5_0_0 -)
-QDataStream &operator>>(QDataStream &, QMargins & /Constrained/);
+%If (Qt_5_3_0 -)
+bool operator!=(const QMarginsF &lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator+(const QMarginsF &lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator-(const QMarginsF &lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator+(const QMarginsF &lhs, qreal rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator+(qreal lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator-(const QMarginsF &lhs, qreal rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator*(const QMarginsF &lhs, qreal rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator*(qreal lhs, const QMarginsF &rhs);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator/(const QMarginsF &lhs, qreal divisor);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator+(const QMarginsF &margins);
+%End
+%If (Qt_5_3_0 -)
+QMarginsF operator-(const QMarginsF &margins);
 %End

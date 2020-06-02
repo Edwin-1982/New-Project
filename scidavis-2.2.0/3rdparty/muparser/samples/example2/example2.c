@@ -45,6 +45,7 @@ muFloat_t ZeroArg()
 
 muFloat_t BulkTest(int nBulkIdx, int nThreadIdx, muFloat_t v1)
 {
+    (void*)&nThreadIdx;  // STFU compiler warning...
     myprintf(_T("%d,%2.2f\n"), nBulkIdx, v1);
     return v1 / (nBulkIdx + 1);
 }
@@ -178,7 +179,7 @@ void ListVar(muParserHandle_t a_hParser)
         muFloat_t* pVar = 0;
 
         mupGetVar(a_hParser, i, &szName, &pVar);
-        myprintf(_T("Name: %s    Address: [0x%x]\n"), szName, (int)pVar);
+        myprintf(_T("Name: %s    Address: [0x%x]\n"), szName, (long long)pVar);
     }
 }
 
@@ -205,7 +206,7 @@ void ListExprVar(muParserHandle_t a_hParser)
         muFloat_t* pVar = 0;
 
         mupGetExprVar(a_hParser, i, &szName, &pVar);
-        myprintf(_T("Name: %s   Address: [0x%x]\n"), szName, (int)pVar);
+        myprintf(_T("Name: %s   Address: [0x%x]\n"), szName, (long long)pVar);
     }
 }
 
@@ -425,7 +426,7 @@ void Calc()
 
     } // while 
 
-    // finally free the parser resources
+    // finalle free the parser ressources
     mupRelease(hParser);
 }
 
@@ -434,7 +435,7 @@ int main(int argc, char *argv[])
 {
     // The next line is just for shutting up the compiler warning
     // about unused variables without getting another warning about not
-    // being able to use type lists in function declarations.
+    // beeing able to use type lists in function declarations.
     myprintf(_T("Executing \"%s\" (argc=%d)\n"), argv[0], argc);
     Calc();
     printf(_T("done..."));

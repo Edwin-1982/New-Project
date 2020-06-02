@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,7 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_8_0 -)
 %If (PyQt_RawFont)
 
 class QRawFont
@@ -50,6 +49,9 @@ public:
     int weight() const;
     QVector<unsigned int> glyphIndexesForString(const QString &text) const;
     QVector<QPointF> advancesForGlyphIndexes(const QVector<unsigned int> &glyphIndexes) const;
+%If (Qt_5_1_0 -)
+    QVector<QPointF> advancesForGlyphIndexes(const QVector<unsigned int> &glyphIndexes, QRawFont::LayoutFlags layoutFlags) const;
+%End
     QImage alphaMapForGlyph(quint32 glyphIndex, QRawFont::AntialiasingType antialiasingType = QRawFont::SubPixelAntialiasing, const QTransform &transform = QTransform()) const;
     QPainterPath pathForGlyph(quint32 glyphIndex) const;
     void setPixelSize(qreal pixelSize);
@@ -64,29 +66,41 @@ public:
     qreal unitsPerEm() const;
     void loadFromFile(const QString &fileName, qreal pixelSize, QFont::HintingPreference hintingPreference) /ReleaseGIL/;
     void loadFromData(const QByteArray &fontData, qreal pixelSize, QFont::HintingPreference hintingPreference) /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     bool supportsCharacter(uint ucs4) const;
-%End
-%If (- Qt_5_0_0)
-    bool supportsCharacter(quint32 ucs4) const;
-%End
     bool supportsCharacter(QChar character) const;
     QList<QFontDatabase::WritingSystem> supportedWritingSystems() const;
     QByteArray fontTable(const char *tagName) const;
     static QRawFont fromFont(const QFont &font, QFontDatabase::WritingSystem writingSystem = QFontDatabase::Any);
-%If (Qt_5_0_0 -)
     QRectF boundingRect(quint32 glyphIndex) const;
-%End
-%If (Qt_5_0_0 -)
     qreal lineThickness() const;
-%End
-%If (Qt_5_0_0 -)
     qreal underlinePosition() const;
+    void swap(QRawFont &other /Constrained/);
+%If (Qt_5_1_0 -)
+
+    enum LayoutFlag
+    {
+        SeparateAdvances,
+        KernedAdvances,
+        UseDesignMetrics,
+    };
+
 %End
-%If (Qt_5_0_0 -)
-    void swap(QRawFont &other);
+%If (Qt_5_1_0 -)
+    typedef QFlags<QRawFont::LayoutFlag> LayoutFlags;
+%End
+%If (Qt_5_8_0 -)
+    qreal capHeight() const;
+%End
+%If (Qt_5_8_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
+%End
+
 %End
 };
 
 %End
+%If (Qt_5_1_0 -)
+QFlags<QRawFont::LayoutFlag> operator|(QRawFont::LayoutFlag f1, QFlags<QRawFont::LayoutFlag> f2);
 %End

@@ -1,8 +1,8 @@
 // This is the initialisation support code for the QtCore module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,52 +20,79 @@
 
 #include <Python.h>
 
-#include "qpycore_chimera.h"
+#include "qpycore_api.h"
 #include "qpycore_public_api.h"
+#include "qpycore_pyqtslotproxy.h"
 #include "qpycore_qobject_helpers.h"
-#include "qpycore_sip.h"
-#include "qpycore_types.h"
+
+#include "sipAPIQtCore.h"
+
+#include <QCoreApplication>
+
+
+// This is called to clean up on exit.  It is done in case the QCoreApplication
+// dealloc code hasn't been called.
+static PyObject *cleanup_on_exit(PyObject *, PyObject *)
+{
+    //pyqt5_cleanup_qobjects();
+    if (pyqt5_cleanup_qobjects())
+    {
+        // Implement the new scheme.
+
+        QCoreApplication *app = QCoreApplication::instance();
+
+        if (app)
+        {
+            Py_BEGIN_ALLOW_THREADS
+            delete app;
+            Py_END_ALLOW_THREADS
+        }
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 
 
 // Perform any required initialisation.
 void qpycore_init()
 {
-    // Initialise the meta-type.
-    qpycore_pyqtWrapperType_Type.tp_base = sipWrapperType_Type;
-
-    if (PyType_Ready(&qpycore_pyqtWrapperType_Type) < 0)
-        Py_FatalError("PyQt4.QtCore: Failed to initialise pyqtWrapperType type");
-
-    // Register the meta-type.
-    if (sipRegisterPyType((PyTypeObject *)&qpycore_pyqtWrapperType_Type) < 0)
-        Py_FatalError("PyQt4.QtCore: Failed to register pyqtWrapperType type");
-
-    // Export the private helpers.
+    // Export the private helpers, ie. those that should not be used by
+    // external handwritten code.
     sipExportSymbol("qtcore_qt_metaobject",
             (void *)qpycore_qobject_metaobject);
     sipExportSymbol("qtcore_qt_metacall", (void *)qpycore_qobject_qt_metacall);
     sipExportSymbol("qtcore_qt_metacast", (void *)qpycore_qobject_qt_metacast);
-    sipExportSymbol("qpycore_qobject_sender", (void *)qpycore_qobject_sender);
-    sipExportSymbol("qpycore_qobject_receivers",
-            (void *)qpycore_qobject_receivers);
+    sipExportSymbol("qtcore_qobject_sender",
+            (void *)PyQtSlotProxy::lastSender);
 
     // Export the public API.
-    sipExportSymbol("pyqt4_from_argv_list", (void *)pyqt4_from_argv_list);
-    sipExportSymbol("pyqt4_from_qvariant_by_type",
-            (void *)pyqt4_from_qvariant_by_type);
-    sipExportSymbol("pyqt4_get_connection_parts",
-            (void *)pyqt4_get_connection_parts);
-    sipExportSymbol("pyqt4_get_pyqtsignal_parts",
-            (void *)pyqt4_get_pyqtsignal_parts);
-    sipExportSymbol("pyqt4_get_pyqtslot_parts",
-            (void *)pyqt4_get_pyqtslot_parts);
-    sipExportSymbol("pyqt4_get_signal", (void *)pyqt4_get_signal);
-    sipExportSymbol("pyqt4_get_slot", (void *)pyqt4_get_slot);
-    sipExportSymbol("pyqt4_register_from_qvariant_convertor",
-            (void *)Chimera::registerToPyObject);
-    sipExportSymbol("pyqt4_register_to_qvariant_convertor",
-            (void *)Chimera::registerToQVariant);
-    sipExportSymbol("pyqt4_register_to_qvariant_data_convertor",
-            (void *)Chimera::registerToQVariantData);
-    sipExportSymbol("pyqt4_update_argv_list", (void *)pyqt4_update_argv_list);
+    sipExportSymbol("pyqt5_cleanup_qobjects", (void *)pyqt5_cleanup_qobjects);
+    sipExportSymbol("pyqt5_err_print", (void *)pyqt5_err_print);
+    sipExportSymbol("pyqt5_from_argv_list", (void *)pyqt5_from_argv_list);
+    sipExportSymbol("pyqt5_from_qvariant_by_type",
+            (void *)pyqt5_from_qvariant_by_type);
+    sipExportSymbol("pyqt5_get_connection_parts",
+            (void *)pyqt5_get_connection_parts);
+    sipExportSymbol("pyqt5_get_pyqtsignal_parts",
+            (void *)pyqt5_get_pyqtsignal_parts);
+    sipExportSymbol("pyqt5_get_pyqtslot_parts",
+            (void *)pyqt5_get_pyqtslot_parts);
+    sipExportSymbol("pyqt5_get_qmetaobject", (void *)pyqt5_get_qmetaobject);
+    sipExportSymbol("pyqt5_get_signal_signature",
+            (void *)pyqt5_get_signal_signature);
+    sipExportSymbol("pyqt5_register_from_qvariant_convertor",
+            (void *)pyqt5_register_from_qvariant_convertor);
+    sipExportSymbol("pyqt5_register_to_qvariant_convertor",
+            (void *)pyqt5_register_to_qvariant_convertor);
+    sipExportSymbol("pyqt5_register_to_qvariant_data_convertor",
+            (void *)pyqt5_register_to_qvariant_data_convertor);
+    sipExportSymbol("pyqt5_update_argv_list", (void *)pyqt5_update_argv_list);
+
+    // Register the cleanup function.
+    static PyMethodDef cleanup_md = {
+        "_qtcore_cleanup", cleanup_on_exit, METH_NOARGS, SIP_NULLPTR
+    };
+
+    sipRegisterExitNotifier(&cleanup_md);
 }

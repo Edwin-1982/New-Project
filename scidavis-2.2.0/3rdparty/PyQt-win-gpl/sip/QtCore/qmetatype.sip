@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,9 +29,7 @@ class QMetaType
 public:
     enum Type
     {
-%If (Qt_5_0_0 -)
         UnknownType,
-%End
         Void,
         Bool,
         Int,
@@ -42,9 +40,7 @@ public:
         QChar,
         QVariantMap,
         QVariantList,
-%If (Qt_4_5_0 -)
         QVariantHash,
-%End
         QString,
         QStringList,
         QByteArray,
@@ -82,9 +78,7 @@ public:
         QTextLength,
         QTextFormat,
         QMatrix,
-%If (Qt_4_3_0 -)
         QTransform,
-%End
         VoidStar,
         Long,
         Short,
@@ -94,56 +88,39 @@ public:
         UChar,
         Float,
         QObjectStar,
-%If (- Qt_5_0_0)
-        QWidgetStar,
-%End
-%If (Qt_4_6_0 -)
         QMatrix4x4,
-%End
-%If (Qt_4_6_0 -)
         QVector2D,
-%End
-%If (Qt_4_6_0 -)
         QVector3D,
-%End
-%If (Qt_4_6_0 -)
         QVector4D,
-%End
-%If (Qt_4_6_0 -)
         QQuaternion,
-%End
-%If (Qt_4_7_0 -)
         QEasingCurve,
-%End
-%If (Qt_4_7_0 -)
         QVariant,
-%End
-%If (Qt_5_0_0 -)
         QUuid,
-%End
-%If (Qt_5_0_0 -)
         QModelIndex,
-%End
-%If (Qt_5_0_0 -)
         QPolygonF,
-%End
-%If (Qt_5_0_0 -)
         SChar,
-%End
-%If (Qt_5_0_0 -)
         QRegularExpression,
-%End
-%If (Qt_5_0_0 -)
         QJsonValue,
-%End
-%If (Qt_5_0_0 -)
         QJsonObject,
-%End
-%If (Qt_5_0_0 -)
         QJsonArray,
-%End
-%If (Qt_5_0_0 -)
         QJsonDocument,
+%If (Qt_5_4_0 -)
+        QByteArrayList,
+%End
+%If (Qt_5_5_0 -)
+        QPersistentModelIndex,
+%End
+%If (Qt_5_12_0 -)
+        QCborSimpleType,
+%End
+%If (Qt_5_12_0 -)
+        QCborValue,
+%End
+%If (Qt_5_12_0 -)
+        QCborArray,
+%End
+%If (Qt_5_12_0 -)
+        QCborMap,
 %End
         User,
     };
@@ -151,47 +128,30 @@ public:
     static int type(const char *typeName);
     static const char *typeName(int type);
     static bool isRegistered(int type);
-%If (Qt_5_0_0 -)
     explicit QMetaType(const int type);
-%End
-%If (Qt_5_0_0 -)
     ~QMetaType();
-%End
-%If (Qt_5_0_0 -)
 
     enum TypeFlag
     {
         NeedsConstruction,
         NeedsDestruction,
         MovableType,
+        PointerToQObject,
+        IsEnumeration,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QMetaType::TypeFlag> TypeFlags;
-%End
-%If (Qt_5_0_0 -)
-    static QFlags<QMetaType::TypeFlag> typeFlags(int type);
-%End
-%If (Qt_5_0_0 -)
+    static QMetaType::TypeFlags typeFlags(int type);
+    QMetaType::TypeFlags flags() const;
     bool isValid() const;
-%End
-%If (Qt_5_0_0 -)
     bool isRegistered() const;
-%End
-%If (Qt_5_0_0 -)
-    QFlags<QMetaType::TypeFlag> flags() const;
-%End
-%If (Qt_5_0_0 -)
     static const QMetaObject *metaObjectForType(int type);
+%If (Qt_5_13_0 -)
+    int id() const;
 %End
 
 private:
-%If (Qt_5_0_0 -)
     QMetaType(const QMetaType &other);
-%End
 };
 
-%If (Qt_5_0_0 -)
 QFlags<QMetaType::TypeFlag> operator|(QMetaType::TypeFlag f1, QFlags<QMetaType::TypeFlag> f2);
-%End

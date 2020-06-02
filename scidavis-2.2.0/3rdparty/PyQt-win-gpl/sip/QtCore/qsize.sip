@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -40,9 +40,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QSize()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QSize()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QSize()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QSize()");
         #endif
         }
         else
@@ -53,7 +53,7 @@ public:
         #else
                 PyString_FromFormat
         #endif
-                    ("PyQt4.QtCore.QSize(%i, %i)", sipCpp->width(), sipCpp->height());
+                    ("PyQt5.QtCore.QSize(%i, %i)", sipCpp->width(), sipCpp->height());
         }
 %End
 
@@ -76,19 +76,13 @@ public:
     QSize &operator/=(qreal c);
     QSize expandedTo(const QSize &otherSize) const;
     QSize boundedTo(const QSize &otherSize) const;
-%If (Qt_5_0_0 -)
     QSize scaled(const QSize &s, Qt::AspectRatioMode mode) const;
-%End
-%If (Qt_5_0_0 -)
     QSize scaled(int w, int h, Qt::AspectRatioMode mode) const;
-%End
-%If (Qt_5_0_0 -)
     QSize transposed() const;
-%End
 };
 
-QDataStream &operator<<(QDataStream &, const QSize & /Constrained/);
-QDataStream &operator>>(QDataStream &, QSize & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QSize & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QSize & /Constrained/) /ReleaseGIL/;
 bool operator==(const QSize &s1, const QSize &s2);
 bool operator!=(const QSize &s1, const QSize &s2);
 const QSize operator+(const QSize &s1, const QSize &s2);
@@ -118,9 +112,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QSizeF()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QSizeF()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QSizeF()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QSizeF()");
         #endif
         }
         else
@@ -131,9 +125,9 @@ public:
             if (w && h)
             {
         #if PY_MAJOR_VERSION >= 3
-                sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QSizeF(%R, %R)", w, h);
+                sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QSizeF(%R, %R)", w, h);
         #else
-                sipRes = PyString_FromString("PyQt4.QtCore.QSizeF(");
+                sipRes = PyString_FromString("PyQt5.QtCore.QSizeF(");
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(w));
                 PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(h));
@@ -166,19 +160,13 @@ public:
     QSizeF expandedTo(const QSizeF &otherSize) const;
     QSizeF boundedTo(const QSizeF &otherSize) const;
     QSize toSize() const;
-%If (Qt_5_0_0 -)
     QSizeF scaled(const QSizeF &s, Qt::AspectRatioMode mode) const;
-%End
-%If (Qt_5_0_0 -)
     QSizeF scaled(qreal w, qreal h, Qt::AspectRatioMode mode) const;
-%End
-%If (Qt_5_0_0 -)
     QSizeF transposed() const;
-%End
 };
 
-QDataStream &operator<<(QDataStream &, const QSizeF & /Constrained/);
-QDataStream &operator>>(QDataStream &, QSizeF & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QSizeF & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QSizeF & /Constrained/) /ReleaseGIL/;
 bool operator==(const QSizeF &s1, const QSizeF &s2);
 bool operator!=(const QSizeF &s1, const QSizeF &s2);
 const QSizeF operator+(const QSizeF &s1, const QSizeF &s2);

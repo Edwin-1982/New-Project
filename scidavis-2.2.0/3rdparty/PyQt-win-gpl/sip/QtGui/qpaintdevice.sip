@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -39,6 +39,12 @@ public:
         PdmDpiY,
         PdmPhysicalDpiX,
         PdmPhysicalDpiY,
+%If (Qt_5_1_0 -)
+        PdmDevicePixelRatio,
+%End
+%If (Qt_5_6_0 -)
+        PdmDevicePixelRatioScaled,
+%End
     };
 
     virtual ~QPaintDevice();
@@ -51,18 +57,24 @@ public:
     int logicalDpiY() const;
     int physicalDpiX() const;
     int physicalDpiY() const;
-%If (- Qt_5_0_0)
-    int numColors() const;
-%End
     int depth() const;
     bool paintingActive() const;
-%If (Qt_4_6_0 -)
     int colorCount() const;
+%If (Qt_5_1_0 -)
+    int devicePixelRatio() const;
 %End
 
 protected:
     QPaintDevice();
     virtual int metric(QPaintDevice::PaintDeviceMetric metric) const;
+
+public:
+%If (Qt_5_6_0 -)
+    qreal devicePixelRatioF() const;
+%End
+%If (Qt_5_6_0 -)
+    static qreal devicePixelRatioFScale();
+%End
 
 private:
     QPaintDevice(const QPaintDevice &);

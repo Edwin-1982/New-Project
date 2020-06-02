@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -40,9 +40,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QLine()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QLine()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QLine()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QLine()");
         #endif
         }
         else
@@ -53,7 +53,7 @@ public:
         #else
                 PyString_FromFormat
         #endif
-                    ("PyQt4.QtCore.QLine(%i, %i, %i, %i)",
+                    ("PyQt5.QtCore.QLine(%i, %i, %i, %i)",
                     sipCpp->x1(), sipCpp->y1(), sipCpp->x2(), sipCpp->y2());
         }
 %End
@@ -75,28 +75,19 @@ public:
     void translate(const QPoint &point);
     void translate(int adx, int ady);
     bool operator==(const QLine &d) const;
-%If (Qt_4_4_0 -)
     QLine translated(const QPoint &p) const;
-%End
-%If (Qt_4_4_0 -)
     QLine translated(int adx, int ady) const;
-%End
-%If (Qt_4_4_0 -)
     void setP1(const QPoint &aP1);
-%End
-%If (Qt_4_4_0 -)
     void setP2(const QPoint &aP2);
-%End
-%If (Qt_4_4_0 -)
     void setPoints(const QPoint &aP1, const QPoint &aP2);
-%End
-%If (Qt_4_4_0 -)
     void setLine(int aX1, int aY1, int aX2, int aY2);
+%If (Qt_5_8_0 -)
+    QPoint center() const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QLine & /Constrained/);
-QDataStream &operator>>(QDataStream &, QLine & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QLine & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QLine & /Constrained/) /ReleaseGIL/;
 
 class QLineF
 {
@@ -126,7 +117,6 @@ public:
     qreal length() const;
     QLineF unitVector() const;
     QLineF::IntersectType intersect(const QLineF &l, QPointF *intersectionPoint) const;
-    qreal angle(const QLineF &l) const;
     bool operator!=(const QLineF &d) const;
     QLineF();
     QLineF(const QPointF &apt1, const QPointF &apt2);
@@ -136,9 +126,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QLineF()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QLineF()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QLineF()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QLineF()");
         #endif
         }
         else
@@ -151,10 +141,10 @@ public:
             if (x1 && y1 && x2 && y2)
             {
         #if PY_MAJOR_VERSION >= 3
-                sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QLineF(%R, %R, %R, %R)",
+                sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QLineF(%R, %R, %R, %R)",
                         x1, y1, x2, y2);
         #else
-                sipRes = PyString_FromString("PyQt4.QtCore.QLineF(");
+                sipRes = PyString_FromString("PyQt5.QtCore.QLineF(");
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(x1));
                 PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(y1));
@@ -188,37 +178,20 @@ public:
     QPointF pointAt(qreal t) const;
     QLine toLine() const;
     bool operator==(const QLineF &d) const;
-%If (Qt_4_4_0 -)
     static QLineF fromPolar(qreal length, qreal angle);
-%End
-%If (Qt_4_4_0 -)
     qreal angle() const;
-%End
-%If (Qt_4_4_0 -)
     void setAngle(qreal angle);
-%End
-%If (Qt_4_4_0 -)
     qreal angleTo(const QLineF &l) const;
-%End
-%If (Qt_4_4_0 -)
     QLineF translated(const QPointF &p) const;
-%End
-%If (Qt_4_4_0 -)
     QLineF translated(qreal adx, qreal ady) const;
-%End
-%If (Qt_4_4_0 -)
     void setP1(const QPointF &aP1);
-%End
-%If (Qt_4_4_0 -)
     void setP2(const QPointF &aP2);
-%End
-%If (Qt_4_4_0 -)
     void setPoints(const QPointF &aP1, const QPointF &aP2);
-%End
-%If (Qt_4_4_0 -)
     void setLine(qreal aX1, qreal aY1, qreal aX2, qreal aY2);
+%If (Qt_5_8_0 -)
+    QPointF center() const;
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QLineF & /Constrained/);
-QDataStream &operator>>(QDataStream &, QLineF & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QLineF & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QLineF & /Constrained/) /ReleaseGIL/;

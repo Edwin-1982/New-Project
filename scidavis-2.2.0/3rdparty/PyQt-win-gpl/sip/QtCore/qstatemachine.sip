@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QStateMachine : QState
 {
@@ -60,16 +58,6 @@ public:
         HighPriority,
     };
 
-%If (- Qt_5_0_0)
-
-    enum RestorePolicy
-    {
-        DontRestoreProperties,
-        RestoreProperties,
-    };
-
-%End
-
     enum Error
     {
         NoError,
@@ -78,15 +66,8 @@ public:
         NoCommonAncestorForTransitionError,
     };
 
-%If (Qt_5_0_0 -)
     explicit QStateMachine(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_5_0_0)
-    QStateMachine(QObject *parent /TransferThis/ = 0);
-%End
-%If (Qt_5_0_0 -)
     QStateMachine(QState::ChildMode childMode, QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QStateMachine();
     void addState(QAbstractState *state /Transfer/);
     void removeState(QAbstractState *state /TransferBack/);
@@ -103,70 +84,64 @@ public:
         sipCpp->addDefaultAnimation(a0);
         
         // Use the user object as a list of the references.
-        PyObject *user = ((sipSimpleWrapper *)sipSelf)->user;
+        PyObject *user = sipGetUserObject((sipSimpleWrapper *)sipSelf);
         
         if (!user)
-            user = ((sipSimpleWrapper *)sipSelf)->user = PyList_New(0);
+        {
+            user = PyList_New(0);
+            sipSetUserObject((sipSimpleWrapper *)sipSelf, user);
+        }
         
         if (user)
             PyList_Append(user, a0Wrapper);
 %End
 
-    QList<QAbstractAnimation*> defaultAnimations() const;
+    QList<QAbstractAnimation *> defaultAnimations() const;
     void removeDefaultAnimation(QAbstractAnimation *animation /GetWrapper/);
 %MethodCode
         // Discard the extra animation reference that we took in addDefaultAnimation().
         sipCpp->removeDefaultAnimation(a0);
         
         // Use the user object as a list of the references.
-        PyObject *user = ((sipSimpleWrapper *)sipSelf)->user;
+        PyObject *user = sipGetUserObject((sipSimpleWrapper *)sipSelf);
         
         if (user)
         {
-            SIP_SSIZE_T i = 0;
+            Py_ssize_t i = 0;
             
             // Note that we deal with an object appearing in the list more than once.
-            while (i < PyList_GET_SIZE(user))
-                if (PyList_GET_ITEM(user, i) == a0Wrapper)
+            while (i < PyList_Size(user))
+                if (PyList_GetItem(user, i) == a0Wrapper)
                     PyList_SetSlice(user, i, i + 1, NULL);
                 else
                     ++i;
         }
 %End
 
-%If (Qt_5_0_0 -)
     QState::RestorePolicy globalRestorePolicy() const;
-%End
-%If (- Qt_5_0_0)
-    QStateMachine::RestorePolicy globalRestorePolicy() const;
-%End
-%If (Qt_5_0_0 -)
     void setGlobalRestorePolicy(QState::RestorePolicy restorePolicy);
-%End
-%If (- Qt_5_0_0)
-    void setGlobalRestorePolicy(QStateMachine::RestorePolicy restorePolicy);
-%End
     void postEvent(QEvent *event /Transfer/, QStateMachine::EventPriority priority = QStateMachine::NormalPriority);
     int postDelayedEvent(QEvent *event /Transfer/, int delay);
     bool cancelDelayedEvent(int id);
-    QSet<QAbstractState*> configuration() const;
+    QSet<QAbstractState *> configuration() const;
     virtual bool eventFilter(QObject *watched, QEvent *event);
 
 public slots:
     void start();
     void stop();
+%If (Qt_5_4_0 -)
+    void setRunning(bool running);
+%End
 
 signals:
     void started();
     void stopped();
+%If (Qt_5_4_0 -)
+    void runningChanged(bool running);
+%End
 
 protected:
     virtual void onEntry(QEvent *event);
     virtual void onExit(QEvent *event);
     virtual bool event(QEvent *e);
-
-private:
-    QStateMachine(const QStateMachine &);
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -63,16 +63,17 @@ public:
     void setPaintDevice(QPaintDevice *device);
     QPaintDevice *paintDevice() const;
     QTextDocument *document() const;
-    void registerHandler(int objectType, QObject *component /KeepReference/);
+    void registerHandler(int objectType, QObject *component);
+%If (Qt_5_2_0 -)
+    void unregisterHandler(int objectType, QObject *component = 0);
+%End
     QTextObjectInterface *handlerForObject(int objectType) const;
 
 signals:
-    void update(const QRectF &rect = QRectF(0.0, 0.0, 1.0e+9, 1.0e+9));
+    void update(const QRectF &rect = QRectF(0., 0., 1.0E+9, 1.0E+9));
     void documentSizeChanged(const QSizeF &newSize);
     void pageCountChanged(int newPages);
-%If (Qt_4_4_0 -)
     void updateBlock(const QTextBlock &block);
-%End
 
 protected:
     virtual void documentChanged(int from, int charsRemoved, int charsAdded) = 0;
@@ -80,9 +81,17 @@ protected:
     virtual void positionInlineObject(QTextInlineObject item, int posInDocument, const QTextFormat &format);
     virtual void drawInlineObject(QPainter *painter, const QRectF &rect, QTextInlineObject object, int posInDocument, const QTextFormat &format);
     QTextCharFormat format(int pos);
+
+public:
+%If (Qt_5_8_0 -)
+    QString imageAt(const QPointF &pos) const;
+%End
+%If (Qt_5_8_0 -)
+    QTextFormat formatAt(const QPointF &pos) const;
+%End
 };
 
-class QTextObjectInterface
+class QTextObjectInterface /Mixin,PyQtInterface="org.qt-project.Qt.QTextObjectInterface"/
 {
 %TypeHeaderCode
 #include <qabstracttextdocumentlayout.h>

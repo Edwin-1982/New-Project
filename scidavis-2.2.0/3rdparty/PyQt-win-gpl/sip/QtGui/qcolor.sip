@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -59,22 +59,18 @@ public:
         Rgb,
         Hsv,
         Cmyk,
-%If (Qt_4_6_0 -)
         Hsl,
-%End
     };
 
     QColor(Qt::GlobalColor color /Constrained/);
     QColor(QRgb rgb);
+%If (Qt_5_6_0 -)
+    QColor(QRgba64 rgba64);
+%End
     QColor(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QColor>())
             sipCpp = new QColor(a0->value<QColor>());
-        #else
-        if (qVariantCanConvert<QColor>(*a0))
-            sipCpp = new QColor(qVariantValue<QColor>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -102,7 +98,7 @@ public:
     void getRgb(int *r, int *g, int *b, int *alpha = 0) const;
     void setRgb(int r, int g, int b, int alpha = 255);
     void getRgbF(qreal *r, qreal *g, qreal *b, qreal *alpha = 0) const;
-    void setRgbF(qreal r, qreal g, qreal b, qreal alpha = 1.0e+0);
+    void setRgbF(qreal r, qreal g, qreal b, qreal alpha = 1.);
     QRgb rgba() const;
     void setRgba(QRgb rgba);
     QRgb rgb() const;
@@ -116,7 +112,7 @@ public:
     void getHsv(int *h, int *s, int *v, int *alpha = 0) const;
     void setHsv(int h, int s, int v, int alpha = 255);
     void getHsvF(qreal *h, qreal *s, qreal *v, qreal *alpha = 0) const;
-    void setHsvF(qreal h, qreal s, qreal v, qreal alpha = 1.0e+0);
+    void setHsvF(qreal h, qreal s, qreal v, qreal alpha = 1.);
     int cyan() const;
     int magenta() const;
     int yellow() const;
@@ -128,7 +124,7 @@ public:
     void getCmyk(int *c, int *m, int *y, int *k, int *alpha = 0);
     void setCmyk(int c, int m, int y, int k, int alpha = 255);
     void getCmykF(qreal *c, qreal *m, qreal *y, qreal *k, qreal *alpha = 0);
-    void setCmykF(qreal c, qreal m, qreal y, qreal k, qreal alpha = 1.0e+0);
+    void setCmykF(qreal c, qreal m, qreal y, qreal k, qreal alpha = 1.);
     QColor toRgb() const;
     QColor toHsv() const;
     QColor toCmyk() const;
@@ -136,17 +132,11 @@ public:
     static QColor fromRgb(QRgb rgb);
     static QColor fromRgba(QRgb rgba);
     static QColor fromRgb(int r, int g, int b, int alpha = 255);
-    static QColor fromRgbF(qreal r, qreal g, qreal b, qreal alpha = 1.0e+0);
+    static QColor fromRgbF(qreal r, qreal g, qreal b, qreal alpha = 1.);
     static QColor fromHsv(int h, int s, int v, int alpha = 255);
-    static QColor fromHsvF(qreal h, qreal s, qreal v, qreal alpha = 1.0e+0);
+    static QColor fromHsvF(qreal h, qreal s, qreal v, qreal alpha = 1.);
     static QColor fromCmyk(int c, int m, int y, int k, int alpha = 255);
-    static QColor fromCmykF(qreal c, qreal m, qreal y, qreal k, qreal alpha = 1.0e+0);
-%If (PyQt_Deprecated_5_0)
-    QColor light(int factor = 150) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QColor dark(int factor = 200) const;
-%End
+    static QColor fromCmykF(qreal c, qreal m, qreal y, qreal k, qreal alpha = 1.);
     bool operator==(const QColor &c) const;
     bool operator!=(const QColor &c) const;
     QColor();
@@ -154,77 +144,51 @@ public:
     QColor(const QString &aname);
     QColor(const QColor &acolor);
     bool isValid() const;
-%If (Qt_4_3_0 - Qt_5_0_0)
-%If (WS_X11)
-    static bool allowX11ColorNames();
-%End
-%End
-%If (Qt_4_3_0 - Qt_5_0_0)
-%If (WS_X11)
-    static void setAllowX11ColorNames(bool enabled);
-%End
-%End
-%If (Qt_4_3_0 -)
     QColor lighter(int factor = 150) const;
-%End
-%If (Qt_4_3_0 -)
     QColor darker(int factor = 200) const;
-%End
-%If (Qt_4_6_0 -)
     int hsvHue() const;
-%End
-%If (Qt_4_6_0 -)
     int hsvSaturation() const;
-%End
-%If (Qt_4_6_0 -)
     qreal hsvHueF() const;
-%End
-%If (Qt_4_6_0 -)
     qreal hsvSaturationF() const;
-%End
-%If (Qt_4_6_0 -)
     int hslHue() const;
-%End
-%If (Qt_4_6_0 -)
     int hslSaturation() const;
-%End
-%If (Qt_4_6_0 -)
     int lightness() const;
-%End
-%If (Qt_4_6_0 -)
     qreal hslHueF() const;
-%End
-%If (Qt_4_6_0 -)
     qreal hslSaturationF() const;
-%End
-%If (Qt_4_6_0 -)
     qreal lightnessF() const;
-%End
-%If (Qt_4_6_0 -)
     void getHsl(int *h, int *s, int *l, int *alpha = 0) const;
-%End
-%If (Qt_4_6_0 -)
     void setHsl(int h, int s, int l, int alpha = 255);
-%End
-%If (Qt_4_6_0 -)
     void getHslF(qreal *h, qreal *s, qreal *l, qreal *alpha = 0) const;
-%End
-%If (Qt_4_6_0 -)
-    void setHslF(qreal h, qreal s, qreal l, qreal alpha = 1.0e+0);
-%End
-%If (Qt_4_6_0 -)
+    void setHslF(qreal h, qreal s, qreal l, qreal alpha = 1.);
     QColor toHsl() const;
-%End
-%If (Qt_4_6_0 -)
     static QColor fromHsl(int h, int s, int l, int alpha = 255);
-%End
-%If (Qt_4_6_0 -)
-    static QColor fromHslF(qreal h, qreal s, qreal l, qreal alpha = 1.0e+0);
-%End
-%If (Qt_4_7_0 -)
+    static QColor fromHslF(qreal h, qreal s, qreal l, qreal alpha = 1.);
     static bool isValidColor(const QString &name);
+%If (Qt_5_2_0 -)
+
+    enum NameFormat
+    {
+        HexRgb,
+        HexArgb,
+    };
+
+%End
+%If (Qt_5_2_0 -)
+    QString name(QColor::NameFormat format) const;
+%End
+%If (Qt_5_6_0 -)
+    QRgba64 rgba64() const;
+%End
+%If (Qt_5_6_0 -)
+    void setRgba64(QRgba64 rgba);
+%End
+%If (Qt_5_6_0 -)
+    static QColor fromRgba64(ushort r, ushort g, ushort b, ushort alpha = 65535);
+%End
+%If (Qt_5_6_0 -)
+    static QColor fromRgba64(QRgba64 rgba);
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QColor & /Constrained/);
-QDataStream &operator>>(QDataStream &, QColor & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QColor & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QColor & /Constrained/) /ReleaseGIL/;

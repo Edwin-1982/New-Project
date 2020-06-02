@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -33,6 +33,9 @@ public:
     QString indexColumn() const;
     QString displayColumn() const;
     bool isValid() const;
+%If (Qt_5_8_0 -)
+    void swap(QSqlRelation &other /Constrained/);
+%End
 };
 
 class QSqlRelationalTableModel : QSqlTableModel
@@ -53,29 +56,20 @@ public:
     QSqlRelation relation(int column) const;
     virtual QSqlTableModel *relationModel(int column) const;
     virtual void revertRow(int row);
-%If (Qt_4_2_0 -)
     virtual bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex());
-%End
 
 protected:
     virtual QString selectStatement() const;
     virtual bool updateRowInTable(int row, const QSqlRecord &values);
     virtual QString orderByClause() const;
-%If (Qt_4_2_0 -)
     virtual bool insertRowIntoTable(const QSqlRecord &values);
-%End
 
 public:
-%If (Qt_4_8_0 -)
-
     enum JoinMode
     {
         InnerJoin,
         LeftJoin,
     };
 
-%End
-%If (Qt_4_8_0 -)
     void setJoinMode(QSqlRelationalTableModel::JoinMode joinMode);
-%End
 };

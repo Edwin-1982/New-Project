@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -31,37 +31,15 @@ public:
     static QTextCodec *codecForName(const char *name);
     static QTextCodec *codecForMib(int mib);
     static QTextCodec *codecForHtml(const QByteArray &ba);
-%If (Qt_4_4_0 -)
     static QTextCodec *codecForHtml(const QByteArray &ba, QTextCodec *defaultCodec);
-%End
-%If (Qt_4_6_0 -)
     static QTextCodec *codecForUtfText(const QByteArray &ba);
-%End
-%If (Qt_4_6_0 -)
     static QTextCodec *codecForUtfText(const QByteArray &ba, QTextCodec *defaultCodec);
-%End
     static QList<QByteArray> availableCodecs();
     static QList<int> availableMibs();
     static QTextCodec *codecForLocale();
     static void setCodecForLocale(QTextCodec *c /KeepReference/);
-%If (Qt_5_0_0 -)
-    QTextDecoder *makeDecoder(QFlags<QTextCodec::ConversionFlag> flags = QTextCodec::DefaultConversion) const /Factory/;
-%End
-%If (- Qt_5_0_0)
-    QTextDecoder *makeDecoder() const /Factory/;
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-    QTextDecoder *makeDecoder(QFlags<QTextCodec::ConversionFlag> flags) const /Factory/;
-%End
-%If (Qt_5_0_0 -)
-    QTextEncoder *makeEncoder(QFlags<QTextCodec::ConversionFlag> flags = QTextCodec::DefaultConversion) const /Factory/;
-%End
-%If (- Qt_5_0_0)
-    QTextEncoder *makeEncoder() const /Factory/;
-%End
-%If (Qt_4_7_0 - Qt_5_0_0)
-    QTextEncoder *makeEncoder(QFlags<QTextCodec::ConversionFlag> flags) const /Factory/;
-%End
+    QTextDecoder *makeDecoder(QTextCodec::ConversionFlags flags = QTextCodec::DefaultConversion) const /Factory/;
+    QTextEncoder *makeEncoder(QTextCodec::ConversionFlags flags = QTextCodec::DefaultConversion) const /Factory/;
     bool canEncode(const QString &) const;
     QString toUnicode(const QByteArray &) const;
     QString toUnicode(const char *chars /Encoding="None"/) const;
@@ -82,36 +60,22 @@ public:
 #include <qtextcodec.h>
 %End
 
-        ConverterState(QFlags<QTextCodec::ConversionFlag> flags = QTextCodec::DefaultConversion);
+        ConverterState(QTextCodec::ConversionFlags flags = QTextCodec::DefaultConversion);
         ~ConverterState();
 
     private:
         ConverterState(const QTextCodec::ConverterState &);
     };
 
-    QString toUnicode(const char *in /Array, TypeHint="Py_v3:bytes;str"/, int length /ArraySize/, QTextCodec::ConverterState *state = 0) const;
+    QString toUnicode(const char *in /Array/, int length /ArraySize/, QTextCodec::ConverterState *state = 0) const;
     virtual QByteArray name() const = 0;
     virtual QList<QByteArray> aliases() const;
     virtual int mibEnum() const = 0;
 
 protected:
-    virtual QString convertToUnicode(const char *in /Array, TypeHint="Py_v3:bytes;str"/, int length /ArraySize/, QTextCodec::ConverterState *state) const = 0;
+    virtual QString convertToUnicode(const char *in /Array/, int length /ArraySize/, QTextCodec::ConverterState *state) const = 0;
     QTextCodec() /Transfer/;
     virtual ~QTextCodec();
-
-public:
-%If (PyQt_Deprecated_5_0)
-    static QTextCodec *codecForTr();
-%End
-%If (- Qt_5_0_0)
-    static void setCodecForTr(QTextCodec *c /KeepReference/);
-%End
-%If (- Qt_5_0_0)
-    static QTextCodec *codecForCStrings();
-%End
-%If (- Qt_5_0_0)
-    static void setCodecForCStrings(QTextCodec *c /KeepReference/);
-%End
 
 private:
     QTextCodec(const QTextCodec &);
@@ -127,9 +91,7 @@ class QTextEncoder /Supertype=sip.wrapper/
 
 public:
     explicit QTextEncoder(const QTextCodec *codec);
-%If (Qt_4_7_0 -)
-    QTextEncoder(const QTextCodec *codec, QFlags<QTextCodec::ConversionFlag> flags);
-%End
+    QTextEncoder(const QTextCodec *codec, QTextCodec::ConversionFlags flags);
     ~QTextEncoder();
     QByteArray fromUnicode(const QString &str);
 
@@ -145,14 +107,9 @@ class QTextDecoder /Supertype=sip.wrapper/
 
 public:
     explicit QTextDecoder(const QTextCodec *codec);
-%If (Qt_4_7_0 -)
-    QTextDecoder(const QTextCodec *codec, QFlags<QTextCodec::ConversionFlag> flags);
-%End
+    QTextDecoder(const QTextCodec *codec, QTextCodec::ConversionFlags flags);
     ~QTextDecoder();
-    QString toUnicode(const char *chars /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/);
-%If (Qt_4_3_0 -)
-    void toUnicode(QString *target /Constrained/, const char *chars /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/) /API=QString: - 2/;
-%End
+    QString toUnicode(const char *chars /Array/, int len /ArraySize/);
     QString toUnicode(const QByteArray &ba);
 
 private:

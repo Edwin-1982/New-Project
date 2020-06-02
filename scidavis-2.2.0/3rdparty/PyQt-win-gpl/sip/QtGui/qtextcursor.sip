@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -70,18 +70,10 @@ public:
         NextWord,
         Right,
         WordRight,
-%If (Qt_4_5_0 -)
         NextCell,
-%End
-%If (Qt_4_5_0 -)
         PreviousCell,
-%End
-%If (Qt_4_5_0 -)
         NextRow,
-%End
-%If (Qt_4_5_0 -)
         PreviousRow,
-%End
     };
 
     bool movePosition(QTextCursor::MoveOperation op, QTextCursor::MoveMode mode = QTextCursor::MoveAnchor, int n = 1);
@@ -93,9 +85,7 @@ public:
         WordUnderCursor,
         LineUnderCursor,
         BlockUnderCursor,
-%If (Qt_4_2_0 -)
         Document,
-%End
     };
 
     void select(QTextCursor::SelectionType selection);
@@ -136,26 +126,16 @@ public:
     QTextFrame *insertFrame(const QTextFrameFormat &format);
     QTextFrame *currentFrame() const;
     void insertFragment(const QTextDocumentFragment &fragment);
-%If (Qt_4_2_0 -)
     void insertHtml(const QString &html);
-%End
     void insertImage(const QTextImageFormat &format);
-%If (Qt_4_2_0 -)
     void insertImage(const QTextImageFormat &format, QTextFrameFormat::Position alignment);
-%End
     void insertImage(const QString &name);
-%If (Qt_4_5_0 -)
     void insertImage(const QImage &image, const QString &name = QString());
-%End
     void beginEditBlock();
     void joinPreviousEditBlock();
     void endEditBlock();
-%If (Qt_4_2_0 -)
     int blockNumber() const;
-%End
-%If (Qt_4_2_0 -)
     int columnNumber() const;
-%End
     bool operator!=(const QTextCursor &rhs) const;
     bool operator<(const QTextCursor &rhs) const;
     bool operator<=(const QTextCursor &rhs) const;
@@ -163,31 +143,13 @@ public:
     bool operator>=(const QTextCursor &rhs) const;
     bool operator>(const QTextCursor &rhs) const;
     bool isCopyOf(const QTextCursor &other) const;
-%If (Qt_4_4_0 -)
     bool visualNavigation() const;
-%End
-%If (Qt_4_4_0 -)
     void setVisualNavigation(bool b);
-%End
-%If (Qt_4_5_0 -)
     QTextDocument *document() const;
-%End
-%If (Qt_4_7_0 -)
     int positionInBlock() const;
-%End
-%If (Qt_4_7_0 -)
     void setVerticalMovementX(int x);
-%End
-%If (Qt_4_7_0 -)
     int verticalMovementX() const;
-%End
-%If (Qt_4_7_0 -)
     void setKeepPositionOnInsert(bool b);
-%End
-%If (Qt_4_7_0 -)
     bool keepPositionOnInsert() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QTextCursor &other);
-%End
+    void swap(QTextCursor &other /Constrained/);
 };

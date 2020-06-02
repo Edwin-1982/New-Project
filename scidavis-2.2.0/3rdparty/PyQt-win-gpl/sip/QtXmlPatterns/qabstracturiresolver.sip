@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXmlPatterns Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QAbstractUriResolver : QObject
 {
 %TypeHeaderCode
@@ -32,9 +30,4 @@ public:
     QAbstractUriResolver(QObject *parent /TransferThis/ = 0);
     virtual ~QAbstractUriResolver();
     virtual QUrl resolve(const QUrl &relative, const QUrl &baseURI) const = 0;
-
-private:
-    QAbstractUriResolver(const QAbstractUriResolver &);
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,13 +20,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_3_0 -)
 %ModuleCode
 #include <qtransform.h>
 %End
-%End
-
-%If (Qt_4_3_0 -)
 
 class QTransform
 {
@@ -52,7 +48,9 @@ public:
     QTransform();
     QTransform(qreal m11, qreal m12, qreal m13, qreal m21, qreal m22, qreal m23, qreal m31, qreal m32, qreal m33 = 1.0e+0);
     QTransform(qreal h11, qreal h12, qreal h13, qreal h21, qreal h22, qreal h23);
-    explicit QTransform(const QMatrix &mtx);
+%If (Qt_5_7_0 -)
+    QTransform(const QTransform &other);
+%End
     QTransform::TransformationType type() const;
     void setMatrix(qreal m11, qreal m12, qreal m13, qreal m21, qreal m22, qreal m23, qreal m31, qreal m32, qreal m33);
     QTransform inverted(bool *invertible = 0) const;
@@ -68,8 +66,8 @@ public:
     static bool quadToQuad(const QPolygonF &one, const QPolygonF &two, QTransform &result);
     bool operator==(const QTransform &) const;
     bool operator!=(const QTransform &) const;
-    QTransform &operator*=(const QTransform &);
-    QTransform operator*(const QTransform &o) const;
+    QTransform &operator*=(const QTransform &) /__imatmul__/;
+    QTransform operator*(const QTransform &o) const /__matmul__/;
     void reset();
     void map(int x /Constrained/, int y /Constrained/, int *tx, int *ty) const;
     void map(qreal x, qreal y, qreal *tx, qreal *ty) const;
@@ -84,7 +82,6 @@ public:
     QPolygon mapToPolygon(const QRect &r) const;
     QRect mapRect(const QRect &) const;
     QRectF mapRect(const QRectF &) const;
-    const QMatrix &toAffine() const;
     bool isAffine() const;
     bool isIdentity() const;
     bool isInvertible() const;
@@ -92,7 +89,6 @@ public:
     bool isRotating() const;
     bool isTranslating() const;
     qreal determinant() const;
-    qreal det() const;
     qreal m11() const;
     qreal m12() const;
     qreal m13() const;
@@ -104,61 +100,33 @@ public:
     qreal m33() const;
     qreal dx() const;
     qreal dy() const;
-%If (Qt_4_5_0 -)
     static QTransform fromTranslate(qreal dx, qreal dy);
-%End
-%If (Qt_4_5_0 -)
     static QTransform fromScale(qreal dx, qreal dy);
-%End
     QTransform &operator*=(qreal num);
     QTransform &operator/=(qreal div);
     QTransform &operator+=(qreal num);
     QTransform &operator-=(qreal num);
-};
+%If (Qt_5_6_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
+%End
 
 %End
-%If (Qt_4_3_0 -)
-QDataStream &operator<<(QDataStream &, const QTransform & /Constrained/);
-%End
-%If (Qt_4_3_0 -)
-QDataStream &operator>>(QDataStream &, QTransform & /Constrained/);
-%End
-%If (Qt_4_3_0 -)
+};
+
+QDataStream &operator<<(QDataStream &, const QTransform & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QTransform & /Constrained/) /ReleaseGIL/;
 QPoint operator*(const QPoint &p, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QPointF operator*(const QPointF &p, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QLineF operator*(const QLineF &l, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QLine operator*(const QLine &l, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QPolygon operator*(const QPolygon &a, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QPolygonF operator*(const QPolygonF &a, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QRegion operator*(const QRegion &r, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QPainterPath operator*(const QPainterPath &p, const QTransform &m);
-%End
-%If (Qt_4_3_0 -)
 QTransform operator*(const QTransform &a, qreal n);
-%End
-%If (Qt_4_3_0 -)
 QTransform operator/(const QTransform &a, qreal n);
-%End
-%If (Qt_4_3_0 -)
 QTransform operator+(const QTransform &a, qreal n);
-%End
-%If (Qt_4_3_0 -)
 QTransform operator-(const QTransform &a, qreal n);
-%End
-%If (Qt_4_6_0 -)
 bool qFuzzyCompare(const QTransform &t1, const QTransform &t2);
-%End

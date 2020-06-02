@@ -2,9 +2,9 @@
 //
 // This file is part of the QtWebKit Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,7 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
+class QWebFrame /External/;
 
 class QWebElement
 {
@@ -102,13 +102,8 @@ public:
     QString styleProperty(const QString &name, QWebElement::StyleResolveStrategy strategy) const;
     void setStyleProperty(const QString &name, const QString &value);
     void render(QPainter *painter);
-%If (Qt_4_8_0 -)
     void render(QPainter *painter, const QRect &clip);
-%End
 };
-
-%End
-%If (Qt_4_6_0 -)
 
 class QWebElementCollection
 {
@@ -128,7 +123,7 @@ public:
     QWebElement at(int i) const;
     QWebElement operator[](int i) const;
 %MethodCode
-        SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+        Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
         
         if (idx < 0)
             sipIsErr = 1;
@@ -140,5 +135,3 @@ public:
     QWebElement last() const;
     QList<QWebElement> toList() const;
 };
-
-%End

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,12 +29,8 @@ class QThread : QObject
 public:
     static QThread *currentThread();
     static Qt::HANDLE currentThreadId();
-%If (Qt_4_3_0 -)
     static int idealThreadCount();
-%End
-%If (Qt_4_5_0 -)
     static void yieldCurrentThread() /ReleaseGIL/;
-%End
     explicit QThread(QObject *parent /TransferThis/ = 0);
     virtual ~QThread();
 
@@ -69,49 +65,29 @@ public:
 signals:
     void started();
     void finished();
-%If (- Qt_5_0_0)
-    void terminated();
-%End
 
 protected:
-%If (- Qt_4_4_0)
-    virtual void run() = 0 /NewThread/;
-%End
-%If (Qt_4_4_0 -)
     virtual void run() /NewThread/;
-%End
     int exec() /PyName=exec_,ReleaseGIL/;
 %If (Py_v3)
     int exec() /ReleaseGIL/;
 %End
     static void setTerminationEnabled(bool enabled = true);
-%If (- Qt_5_0_0)
-    static void sleep(unsigned long) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    static void msleep(unsigned long) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    static void usleep(unsigned long) /ReleaseGIL/;
-%End
 
 public:
-%If (Qt_5_0_0 -)
     virtual bool event(QEvent *event);
-%End
-%If (Qt_5_0_0 -)
     static void sleep(unsigned long) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static void msleep(unsigned long) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static void usleep(unsigned long) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     QAbstractEventDispatcher *eventDispatcher() const;
-%End
-%If (Qt_5_0_0 -)
     void setEventDispatcher(QAbstractEventDispatcher *eventDispatcher /Transfer/);
+%If (Qt_5_2_0 -)
+    void requestInterruption();
+%End
+%If (Qt_5_2_0 -)
+    bool isInterruptionRequested() const;
+%End
+%If (Qt_5_5_0 -)
+    int loopLevel() const;
 %End
 };

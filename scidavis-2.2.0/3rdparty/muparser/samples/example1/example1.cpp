@@ -1,4 +1,3 @@
-/*
 //---------------------------------------------------------------------------
 //
 //                 __________                                      
@@ -12,7 +11,6 @@
 //  example1.cpp - using the parser as a static library
 //
 //---------------------------------------------------------------------------
-*/
 
 #include "muParserTest.h"
 
@@ -51,7 +49,7 @@ using namespace mu;
 
 // Dumping memory leaks in the destructor of the static guard
 // guarantees i won't get false positives from the ParserErrorMsg 
-// class which is a singleton with a static instance.
+// class wich is a singleton with a static instance.
 struct DumpLeaks
 {
  ~DumpLeaks()
@@ -66,21 +64,21 @@ struct DumpLeaks
 void CalcBulk();
 
 // Operator callback functions
-static value_type Mega(value_type a_fVal) { return a_fVal * 1e6; }
-static value_type Milli(value_type a_fVal) { return a_fVal / (value_type)1e3; }
-static value_type Rnd(value_type v) { return v*std::rand()/(value_type)(RAND_MAX+1.0); }
-static value_type Not(value_type v) { return v==0; }
-static value_type Add(value_type v1, value_type v2) { return v1+v2; }
-static value_type Mul(value_type v1, value_type v2) { return v1*v2; }
+value_type Mega(value_type a_fVal) { return a_fVal * 1e6; }
+value_type Milli(value_type a_fVal) { return a_fVal / (value_type)1e3; }
+value_type Rnd(value_type v) { return v*std::rand()/(value_type)(RAND_MAX+1.0); }
+value_type Not(value_type v) { return v==0; }
+value_type Add(value_type v1, value_type v2) { return v1+v2; }
+value_type Mul(value_type v1, value_type v2) { return v1*v2; }
 
 //---------------------------------------------------------------------------
-static value_type ThrowAnException(value_type) 
+value_type ThrowAnException(value_type) 
 { 
   throw std::runtime_error("This function does throw an exception.");
 }
 
 //---------------------------------------------------------------------------
-static value_type BulkFun1(int nBulkIdx, int nThreadIdx, value_type v1)
+value_type BulkFun1(int nBulkIdx, int nThreadIdx, value_type v1)
 {
   // Note: I'm just doing something with all three parameters to shut 
   // compiler warnings up!
@@ -88,14 +86,14 @@ static value_type BulkFun1(int nBulkIdx, int nThreadIdx, value_type v1)
 }
 
 //---------------------------------------------------------------------------
-static value_type Ping() 
+value_type Ping() 
 { 
   mu::console() << "ping\n"; 
   return 0; 
 }
 
 //---------------------------------------------------------------------------
-static value_type StrFun0(const char_type *szMsg) 
+value_type StrFun0(const char_type *szMsg) 
 {
   if (szMsg) 
     mu::console() << szMsg << std::endl;
@@ -104,14 +102,14 @@ static value_type StrFun0(const char_type *szMsg)
 }
 
 //---------------------------------------------------------------------------
-static value_type StrFun2(const char_type *v1, value_type v2,value_type v3) 
+value_type StrFun2(const char_type *v1, value_type v2,value_type v3) 
 { 
   mu::console() << v1 << std::endl;
   return v2+v3; 
 }
 
 //---------------------------------------------------------------------------
-static value_type Debug(mu::value_type v1, mu::value_type v2) 
+value_type Debug(mu::value_type v1, mu::value_type v2) 
 { 
   ParserBase::EnableDebugDump(v1!=0, v2!=0);
   mu::console() << _T("Bytecode dumping ") << ((v1!=0) ? _T("active") : _T("inactive")) << _T("\n");
@@ -121,7 +119,7 @@ static value_type Debug(mu::value_type v1, mu::value_type v2)
 //---------------------------------------------------------------------------
 // Factory function for creating new parser variables
 // This could as well be a function performing database queries.
-static value_type* AddVariable(const char_type *a_szName, void *a_pUserData)
+value_type* AddVariable(const char_type *a_szName, void *a_pUserData)
 {
   // I don't want dynamic allocation here, so i used this static buffer
   // If you want dynamic allocation you must allocate all variables dynamically
@@ -145,7 +143,7 @@ static value_type* AddVariable(const char_type *a_szName, void *a_pUserData)
     return &afValBuf[iVal];
 }
 
-static int IsHexValue(const char_type *a_szExpr, int *a_iPos, value_type *a_fVal) 
+int IsHexValue(const char_type *a_szExpr, int *a_iPos, value_type *a_fVal) 
 { 
   if (a_szExpr[1]==0 || (a_szExpr[0]!='0' || a_szExpr[1]!='x') ) 
     return 0;
@@ -168,7 +166,7 @@ static int IsHexValue(const char_type *a_szExpr, int *a_iPos, value_type *a_fVal
 }
 
 //---------------------------------------------------------------------------
-static void Splash()
+void Splash()
 {
   mu::console() << _T("                 __________                                       \n");
   mu::console() << _T("    _____   __ __\\______   \\_____  _______  ______  ____ _______\n");
@@ -181,7 +179,7 @@ static void Splash()
 }
 
 //---------------------------------------------------------------------------
-static value_type SelfTest()
+value_type SelfTest()
 {
   mu::console() << _T( "-----------------------------------------------------------\n");
   mu::console() << _T( "Running test suite:\n\n");
@@ -201,7 +199,7 @@ static value_type SelfTest()
 }
 
 //---------------------------------------------------------------------------
-static value_type Help()
+value_type Help()
 {
   mu::console() << _T( "-----------------------------------------------------------\n");
   mu::console() << _T( "Commands:\n\n");
@@ -224,7 +222,7 @@ static value_type Help()
 
 //---------------------------------------------------------------------------
 /*
-static void CheckLocale()
+void CheckLocale()
 {
   // Local names:
   // "C" - the classic C locale
@@ -251,7 +249,7 @@ static void CheckLocale()
 }
 
 //---------------------------------------------------------------------------
-static void CheckDiff()
+void CheckDiff()
 {
   mu::Parser  parser;
   value_type x = 1, 
@@ -272,7 +270,7 @@ static void CheckDiff()
 */
 
 //---------------------------------------------------------------------------
-static void ListVar(const mu::ParserBase &parser)
+void ListVar(const mu::ParserBase &parser)
 {
   // Query the used variables (must be done after calc)
   mu::varmap_type variables = parser.GetVar();
@@ -288,7 +286,7 @@ static void ListVar(const mu::ParserBase &parser)
 }
 
 //---------------------------------------------------------------------------
-static void ListConst(const mu::ParserBase &parser)
+void ListConst(const mu::ParserBase &parser)
 {
   mu::console() << _T("\nParser constants:\n");
   mu::console() << _T("-----------------\n");
@@ -307,7 +305,7 @@ static void ListConst(const mu::ParserBase &parser)
 }
 
 //---------------------------------------------------------------------------
-static void ListExprVar(const mu::ParserBase &parser)
+void ListExprVar(const mu::ParserBase &parser)
 {
   string_type sExpr = parser.GetExpr();
   if (sExpr.length()==0)
@@ -338,7 +336,7 @@ static void ListExprVar(const mu::ParserBase &parser)
 //---------------------------------------------------------------------------
 /** \brief Check for external keywords.
 */
-static int CheckKeywords(const mu::char_type *a_szLine, mu::Parser &a_Parser)
+int CheckKeywords(const mu::char_type *a_szLine, mu::Parser &a_Parser)
 {
   string_type sLine(a_szLine);
 
@@ -446,7 +444,7 @@ void CalcBulk()
 }
 
 //---------------------------------------------------------------------------
-static void Calc()
+void Calc()
 {
   mu::Parser  parser;
 

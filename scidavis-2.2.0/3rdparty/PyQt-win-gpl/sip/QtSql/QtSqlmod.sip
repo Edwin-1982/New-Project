@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,15 +20,15 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%Module(name=PyQt4.QtSql, keyword_arguments="Optional")
+%Module(name=PyQt5.QtSql, keyword_arguments="Optional", use_limited_api=True)
 
 %Import QtCore/QtCoremod.sip
-%Import QtGui/QtGuimod.sip
+%Import QtWidgets/QtWidgetsmod.sip
 
 %Copying
-Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 
-This file is part of PyQt4.
+This file is part of PyQt5.
 
 This file may be used under the terms of the GNU General Public License
 version 3.0 as published by the Free Software Foundation and appearing in
@@ -43,8 +43,6 @@ info@riverbankcomputing.com.
 This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %End
-
-%Include(name=staticplugins.sip, optional=True)
 
 %DefaultSupertype sip.simplewrapper
 
@@ -61,3 +59,4 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include qsqlrelationaltablemodel.sip
 %Include qsqlresult.sip
 %Include qsqltablemodel.sip
+%Include qtsqlglobal.sip

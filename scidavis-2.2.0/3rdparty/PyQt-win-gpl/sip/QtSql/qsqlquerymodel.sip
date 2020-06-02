@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -48,41 +48,21 @@ public:
 
 protected:
     virtual void queryChange();
-%If (Qt_5_0_0 -)
     virtual QModelIndex indexInQuery(const QModelIndex &item) const;
-%End
-%If (- Qt_5_0_0)
-    QModelIndex indexInQuery(const QModelIndex &item) const;
-%End
     void setLastError(const QSqlError &error);
-%If (Qt_5_0_0 -)
     void beginResetModel();
-%End
-%If (Qt_5_0_0 -)
     void endResetModel();
-%End
-%If (Qt_5_0_0 -)
     void beginInsertRows(const QModelIndex &parent, int first, int last);
-%End
-%If (Qt_5_0_0 -)
     void endInsertRows();
-%End
-%If (Qt_5_0_0 -)
     void beginRemoveRows(const QModelIndex &parent, int first, int last);
-%End
-%If (Qt_5_0_0 -)
     void endRemoveRows();
-%End
-%If (Qt_5_0_0 -)
     void beginInsertColumns(const QModelIndex &parent, int first, int last);
-%End
-%If (Qt_5_0_0 -)
     void endInsertColumns();
-%End
-%If (Qt_5_0_0 -)
     void beginRemoveColumns(const QModelIndex &parent, int first, int last);
-%End
-%If (Qt_5_0_0 -)
     void endRemoveColumns();
+
+public:
+%If (Qt_5_10_0 -)
+    virtual QHash<int, QByteArray> roleNames() const;
 %End
 };

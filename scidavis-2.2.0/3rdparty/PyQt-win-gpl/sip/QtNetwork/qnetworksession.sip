@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QNetworkSession : QObject
 {
@@ -82,99 +80,19 @@ signals:
     void newConfigurationActivated();
 
 protected:
-%If (Qt_5_0_0 -)
     virtual void connectNotify(const QMetaMethod &signal);
-%End
-%If (- Qt_5_0_0)
-    virtual void connectNotify(SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/) [void (const char *signal)];
-%MethodCode
-        typedef const char *(*pyqt4_get_signal_t)(PyObject *);
-        
-        static pyqt4_get_signal_t pyqt4_get_signal = 0;
-        
-        if (!pyqt4_get_signal)
-        {
-            pyqt4_get_signal = (pyqt4_get_signal_t)sipImportSymbol("pyqt4_get_signal");
-            Q_ASSERT(pyqt4_get_signal);
-        }
-        
-        const char *sig = pyqt4_get_signal(a0);
-            
-        if (sig)
-        {
-        #if defined(SIP_PROTECTED_IS_PUBLIC)
-            (sipSelfWasArg ? sipCpp->QNetworkSession::connectNotify(sig) : sipCpp->connectNotify(sig));
-        #else
-            sipCpp->sipProtectVirt_connectNotify(sipSelfWasArg, sig);
-        #endif
-        }
-        else
-        {
-            sipError = sipBadCallableArg(0, a0);
-        }
-%End
-
-%End
-%If (Qt_5_0_0 -)
     virtual void disconnectNotify(const QMetaMethod &signal);
-%End
-%If (- Qt_5_0_0)
-    virtual void disconnectNotify(SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/) [void (const char *signal)];
-%MethodCode
-        typedef const char *(*pyqt4_get_signal_t)(PyObject *);
-        
-        static pyqt4_get_signal_t pyqt4_get_signal = 0;
-        
-        if (!pyqt4_get_signal)
-        {
-            pyqt4_get_signal = (pyqt4_get_signal_t)sipImportSymbol("pyqt4_get_signal");
-            Q_ASSERT(pyqt4_get_signal);
-        }
-        
-        const char *sig = pyqt4_get_signal(a0);
-            
-        if (sig)
-        {
-        #if defined(SIP_PROTECTED_IS_PUBLIC)
-            (sipSelfWasArg ? sipCpp->QNetworkSession::disconnectNotify(sig) : sipCpp->disconnectNotify(sig));
-        #else
-            sipCpp->sipProtectVirt_disconnectNotify(sipSelfWasArg, sig);
-        #endif
-        }
-        else
-        {
-            sipError = sipBadCallableArg(0, a0);
-        }
-%End
-
-%End
 
 public:
-%If (Qt_5_0_0 -)
-
     enum UsagePolicy
     {
         NoPolicy,
         NoBackgroundTrafficPolicy,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QNetworkSession::UsagePolicy> UsagePolicies;
-%End
-%If (Qt_5_0_0 -)
-    QFlags<QNetworkSession::UsagePolicy> usagePolicies() const;
-%End
+    QNetworkSession::UsagePolicies usagePolicies() const;
 
 signals:
-%If (Qt_5_0_0 -)
-    void usagePoliciesChanged(QFlags<QNetworkSession::UsagePolicy>);
-%End
-
-private:
-%If (Qt_5_0_0 -)
-    QNetworkSession(const QNetworkSession &);
-%End
+    void usagePoliciesChanged(QNetworkSession::UsagePolicies usagePolicies);
 };
-
-%End

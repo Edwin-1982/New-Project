@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_2_0 -)
-
 class QFileSystemWatcher : QObject
 {
 %TypeHeaderCode
@@ -32,36 +30,14 @@ public:
     QFileSystemWatcher(QObject *parent /TransferThis/ = 0);
     QFileSystemWatcher(const QStringList &paths, QObject *parent /TransferThis/ = 0);
     virtual ~QFileSystemWatcher();
-%If (Qt_5_0_0 -)
     bool addPath(const QString &file);
-%End
-%If (- Qt_5_0_0)
-    void addPath(const QString &file);
-%End
-%If (Qt_5_0_0 -)
     QStringList addPaths(const QStringList &files);
-%End
-%If (- Qt_5_0_0)
-    void addPaths(const QStringList &files);
-%End
     QStringList directories() const;
     QStringList files() const;
-%If (Qt_5_0_0 -)
     bool removePath(const QString &file);
-%End
-%If (- Qt_5_0_0)
-    void removePath(const QString &file);
-%End
-%If (Qt_5_0_0 -)
     QStringList removePaths(const QStringList &files);
-%End
-%If (- Qt_5_0_0)
-    void removePaths(const QStringList &files);
-%End
 
 signals:
     void directoryChanged(const QString &path);
     void fileChanged(const QString &path);
 };
-
-%End

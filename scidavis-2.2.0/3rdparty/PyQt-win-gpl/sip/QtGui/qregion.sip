@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -41,13 +41,8 @@ public:
     QRegion(const QRegion &region);
     QRegion(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QRegion>())
             sipCpp = new QRegion(a0->value<QRegion>());
-        #else
-        if (qVariantCanConvert<QRegion>(*a0))
-            sipCpp = new QRegion(qVariantValue<QRegion>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -75,81 +70,79 @@ public:
     void translate(const QPoint &p);
     QRegion translated(int dx, int dy) const;
     QRegion translated(const QPoint &p) const;
-%If (PyQt_Deprecated_5_0)
-    QRegion unite(const QRegion &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRegion united(const QRegion &r) const;
-%End
-%If (Qt_4_4_0 -)
     QRegion united(const QRect &r) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QRegion intersect(const QRegion &r) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QRegion subtract(const QRegion &r) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QRegion eor(const QRegion &r) const;
-%End
     QRect boundingRect() const;
     QVector<QRect> rects() const;
+%If (Qt_5_4_0 -)
+    QRegion operator|(const QRegion &r) const;
+%End
+    void setRects(const QVector<QRect> &);
+%MethodCode
+        if (a0->size())
+            sipCpp->setRects(a0->data(), a0->size());
+        else
+            sipCpp->setRects(0, 0);
+%End
+
+%If (- Qt_5_4_0)
     const QRegion operator|(const QRegion &r) const;
+%End
+%If (Qt_5_4_0 -)
+    QRegion operator+(const QRegion &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator+(const QRegion &r) const;
-%If (Qt_4_4_0 -)
+%End
+%If (Qt_5_4_0 -)
+    QRegion operator+(const QRect &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator+(const QRect &r) const;
 %End
+%If (Qt_5_4_0 -)
+    QRegion operator&(const QRegion &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator&(const QRegion &r) const;
-%If (Qt_4_4_0 -)
+%End
+%If (Qt_5_4_0 -)
+    QRegion operator&(const QRect &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator&(const QRect &r) const;
 %End
+%If (Qt_5_4_0 -)
+    QRegion operator-(const QRegion &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator-(const QRegion &r) const;
+%End
+%If (Qt_5_4_0 -)
+    QRegion operator^(const QRegion &r) const;
+%End
+%If (- Qt_5_4_0)
     const QRegion operator^(const QRegion &r) const;
+%End
     QRegion &operator|=(const QRegion &r);
     QRegion &operator+=(const QRegion &r);
-%If (Qt_4_4_0 -)
     QRegion &operator+=(const QRect &r);
-%End
     QRegion &operator&=(const QRegion &r);
-%If (Qt_4_4_0 -)
     QRegion &operator&=(const QRect &r);
-%End
     QRegion &operator-=(const QRegion &r);
     QRegion &operator^=(const QRegion &r);
     bool operator==(const QRegion &r) const;
     bool operator!=(const QRegion &r) const;
-%If (Qt_4_2_0 -)
     QRegion intersected(const QRegion &r) const;
-%End
-%If (Qt_4_4_0 -)
     QRegion intersected(const QRect &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRegion subtracted(const QRegion &r) const;
-%End
-%If (Qt_4_2_0 -)
     QRegion xored(const QRegion &r) const;
-%End
-%If (Qt_4_2_0 -)
     bool intersects(const QRegion &r) const;
-%End
-%If (Qt_4_2_0 -)
     bool intersects(const QRect &r) const;
-%End
-%If (Qt_4_4_0 - Qt_5_0_0)
-    int numRects() const;
-%End
-%If (Qt_4_6_0 -)
     int rectCount() const;
-%End
-%If (Qt_4_8_0 -)
-    void swap(QRegion &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QRegion &other /Constrained/);
     bool isNull() const;
-%End
 };
 
-QDataStream &operator<<(QDataStream &, const QRegion & /Constrained/);
-QDataStream &operator>>(QDataStream &, QRegion & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QRegion & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QRegion & /Constrained/) /ReleaseGIL/;

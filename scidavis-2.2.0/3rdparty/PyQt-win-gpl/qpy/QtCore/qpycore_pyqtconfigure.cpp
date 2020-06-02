@@ -1,8 +1,8 @@
 // This implements the helper for QObject.pyqtConfigure().
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -25,9 +25,11 @@
 #include <QObject>
 #include <QVariant>
 
+#include "qpycore_api.h"
 #include "qpycore_chimera.h"
 #include "qpycore_pyqtboundsignal.h"
-#include "qpycore_sip.h"
+
+#include "sipAPIQtCore.h"
 
 
 // The result of handling a keyword argument.
@@ -62,7 +64,7 @@ PyObject *qpycore_pyqtconfigure(PyObject *self, PyObject *args, PyObject *kwds)
         return 0;
 
     PyObject *name_obj, *value_obj;
-    SIP_SSIZE_T pos = 0;
+    Py_ssize_t pos = 0;
 
     while (PyDict_Next(kwds, &pos, &name_obj, &value_obj))
     {
@@ -77,17 +79,17 @@ PyObject *qpycore_pyqtconfigure(PyObject *self, PyObject *args, PyObject *kwds)
             PyErr_Format(PyExc_AttributeError,
                     "'%S' is not the name of a Qt property or signal",
                     name_obj);
-#else
+#else   
             PyObject *name_s = PyObject_Str(name_obj);
-   
+    
             if (name_s != NULL)
-            {
+            {   
                 PyErr_Format(PyExc_AttributeError,
                         "'%s' is not the name of a Qt property or signal", 
                         PyString_AsString(name_s));
 
                 Py_DECREF(name_s);
-            }
+            }   
 #endif
 
             return 0;
@@ -112,7 +114,7 @@ int qpycore_qobject_finalisation(PyObject *self, QObject *qobj, PyObject *kwds,
     PyObject *unused = (updated_kwds ? 0 : kwds);
 
     PyObject *name_obj, *value_obj;
-    SIP_SSIZE_T pos = 0;
+    Py_ssize_t pos = 0;
 
     while (PyDict_Next(kwds, &pos, &name_obj, &value_obj))
     {
@@ -219,7 +221,7 @@ static ArgStatus handle_argument(PyObject *self, QObject *qobj,
 
         if (sig)
         {
-            if (PyObject_TypeCheck(sig, &qpycore_pyqtBoundSignal_Type))
+            if (PyObject_TypeCheck(sig, qpycore_pyqtBoundSignal_TypeObject))
             {
                 static PyObject *connect_obj = NULL;
 

@@ -1,8 +1,8 @@
 // This is the SIP interface definition for QAxObject.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -17,8 +17,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (WS_WIN)
 
 class QAxObject : QObject, QAxBase /PyQtNoQMetaObject/
 {
@@ -35,16 +33,16 @@ public:
 %ConvertToSubClassCode
     static struct class_graph {
         const char *name;
-        sipWrapperType **type;
+        sipTypeDef **type;
         int yes, no;
     } graph[] = {
-        {sipName_QAxObject, &sipClass_QAxObject,    1, -1},
-        {sipName_QAxWidget, &sipClass_QAxWidget,    -1, -1},
+        {sipName_QAxObject, &sipType_QAxObject,    1, -1},
+        {sipName_QAxWidget, &sipType_QAxWidget,    -1, -1},
     };
 
     int i = 0;
 
-    sipClass = NULL;
+    sipType = NULL;
 
     do
     {
@@ -52,7 +50,7 @@ public:
 
         if (cg->name != NULL && sipCpp->inherits(cg->name))
         {
-            sipClass = *cg->type;
+            sipType = *cg->type;
             i = cg->yes;
         }
         else
@@ -64,12 +62,5 @@ public:
     bool doVerb(const QString &);
 
 protected:
-%If (Qt_5_0_0 -)
     void connectNotify(const QMetaMethod &);
-%End
-%If (- Qt_5_0_0)
-    void connectNotify(const char *);
-%End
 };
-
-%End

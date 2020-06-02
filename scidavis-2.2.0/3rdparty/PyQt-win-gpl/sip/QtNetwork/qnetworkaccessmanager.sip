@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QNetworkAccessManager : QObject
 {
 %TypeHeaderCode
@@ -35,12 +33,8 @@ public:
         GetOperation,
         PutOperation,
         PostOperation,
-%If (Qt_4_6_0 -)
         DeleteOperation,
-%End
-%If (Qt_4_7_0 -)
         CustomOperation,
-%End
     };
 
     explicit QNetworkAccessManager(QObject *parent /TransferThis/ = 0);
@@ -53,46 +47,39 @@ public:
     QNetworkReply *get(const QNetworkRequest &request);
     QNetworkReply *post(const QNetworkRequest &request, QIODevice *data);
     QNetworkReply *post(const QNetworkRequest &request, const QByteArray &data);
-%If (Qt_4_8_0 -)
     QNetworkReply *post(const QNetworkRequest &request, QHttpMultiPart *multiPart);
-%End
     QNetworkReply *put(const QNetworkRequest &request, QIODevice *data);
     QNetworkReply *put(const QNetworkRequest &request, const QByteArray &data);
-%If (Qt_4_8_0 -)
     QNetworkReply *put(const QNetworkRequest &request, QHttpMultiPart *multiPart);
-%End
 
 signals:
     void proxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *authenticator);
     void authenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
     void finished(QNetworkReply *reply);
-%If (PyQt_OpenSSL)
+%If (Qt_5_1_0 -)
+%If (PyQt_SSL)
+    void encrypted(QNetworkReply *reply);
+%End
+%End
+%If (PyQt_SSL)
     void sslErrors(QNetworkReply *reply, const QList<QSslError> &errors);
 %End
-%If (Qt_4_7_0 -)
     void networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible);
+%If (Qt_5_5_0 -)
+%If (PyQt_SSL)
+    void preSharedKeyAuthenticationRequired(QNetworkReply *reply, QSslPreSharedKeyAuthenticator *authenticator);
+%End
 %End
 
 protected:
-    virtual QNetworkReply *createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *device = 0) /AbortOnException,DisallowNone/;
+    virtual QNetworkReply *createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *device = 0) /AbortOnException,DisallowNone,ReleaseGIL/;
 
 public:
-%If (Qt_4_5_0 -)
     QNetworkProxyFactory *proxyFactory() const;
-%End
-%If (Qt_4_5_0 -)
     void setProxyFactory(QNetworkProxyFactory *factory /Transfer/);
-%End
-%If (Qt_4_5_0 -)
     QAbstractNetworkCache *cache() const;
-%End
-%If (Qt_4_5_0 -)
     void setCache(QAbstractNetworkCache *cache /Transfer/);
-%End
-%If (Qt_4_6_0 -)
     QNetworkReply *deleteResource(const QNetworkRequest &request);
-%End
-%If (Qt_4_7_0 -)
 
     enum NetworkAccessibility
     {
@@ -101,28 +88,67 @@ public:
         Accessible,
     };
 
-%End
-%If (Qt_4_7_0 -)
     QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = 0);
+%If (Qt_5_8_0 -)
+    QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, const QByteArray &data);
 %End
-%If (Qt_4_7_0 -)
+%If (Qt_5_8_0 -)
+    QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QHttpMultiPart *multiPart);
+%End
     void setConfiguration(const QNetworkConfiguration &config);
-%End
-%If (Qt_4_7_0 -)
     QNetworkConfiguration configuration() const;
-%End
-%If (Qt_4_7_0 -)
     QNetworkConfiguration activeConfiguration() const;
-%End
-%If (Qt_4_7_0 -)
     void setNetworkAccessible(QNetworkAccessManager::NetworkAccessibility accessible);
-%End
-%If (Qt_4_7_0 -)
     QNetworkAccessManager::NetworkAccessibility networkAccessible() const;
-%End
-%If (Qt_5_0_0 -)
     void clearAccessCache();
+%If (Qt_5_2_0 -)
+    QStringList supportedSchemes() const;
+%End
+%If (Qt_5_2_0 -)
+%If (PyQt_SSL)
+    void connectToHostEncrypted(const QString &hostName, quint16 port = 443, const QSslConfiguration &sslConfiguration = QSslConfiguration::defaultConfiguration());
+%End
+%End
+%If (Qt_5_13_0 -)
+%If (PyQt_SSL)
+    void connectToHostEncrypted(const QString &hostName, quint16 port, const QSslConfiguration &sslConfiguration, const QString &peerName);
+%End
+%End
+%If (Qt_5_2_0 -)
+    void connectToHost(const QString &hostName, quint16 port = 80);
+%End
+
+protected slots:
+%If (Qt_5_2_0 -)
+    QStringList supportedSchemesImplementation() const;
+%End
+
+public:
+%If (Qt_5_9_0 -)
+    void clearConnectionCache();
+%End
+%If (Qt_5_9_0 -)
+    void setStrictTransportSecurityEnabled(bool enabled);
+%End
+%If (Qt_5_9_0 -)
+    bool isStrictTransportSecurityEnabled() const;
+%End
+%If (Qt_5_9_0 -)
+    void addStrictTransportSecurityHosts(const QVector<QHstsPolicy> &knownHosts);
+%End
+%If (Qt_5_9_0 -)
+    QVector<QHstsPolicy> strictTransportSecurityHosts() const;
+%End
+%If (Qt_5_9_0 -)
+    void setRedirectPolicy(QNetworkRequest::RedirectPolicy policy);
+%End
+%If (Qt_5_9_0 -)
+    QNetworkRequest::RedirectPolicy redirectPolicy() const;
+%End
+%If (Qt_5_10_0 -)
+    void enableStrictTransportSecurityStore(bool enabled, const QString &storeDir = QString());
+%End
+%If (Qt_5_10_0 -)
+    bool isStrictTransportSecurityStoreEnabled() const;
 %End
 };
-
-%End

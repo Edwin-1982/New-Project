@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -36,9 +36,6 @@ static void qtcore_invoke_exception()
 
 public:
     QMetaMethod();
-%If (- Qt_5_0_0)
-    const char *signature() const;
-%End
     const char *typeName() const;
     QList<QByteArray> parameterTypes() const;
     QList<QByteArray> parameterNames() const;
@@ -58,14 +55,11 @@ public:
         Method,
         Signal,
         Slot,
-%If (Qt_4_5_0 -)
         Constructor,
-%End
     };
 
     QMetaMethod::MethodType methodType() const;
-%If (Qt_4_5_0 -)
-    SIP_PYOBJECT invoke(QObject *object, Qt::ConnectionType connectionType, QGenericReturnArgument returnValue /GetWrapper/, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0)) const;
+    SIP_PYOBJECT invoke(QObject *object, Qt::ConnectionType connectionType, QGenericReturnArgument returnValue /GetWrapper/, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u)) const;
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -81,9 +75,7 @@ public:
             qtcore_invoke_exception();
 %End
 
-%End
-%If (Qt_4_5_0 -)
-    SIP_PYOBJECT invoke(QObject *object, QGenericReturnArgument returnValue /GetWrapper/, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0)) const;
+    SIP_PYOBJECT invoke(QObject *object, QGenericReturnArgument returnValue /GetWrapper/, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u)) const;
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -99,9 +91,7 @@ public:
             qtcore_invoke_exception();
 %End
 
-%End
-%If (Qt_4_5_0 -)
-    SIP_PYOBJECT invoke(QObject *object, Qt::ConnectionType connectionType, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0)) const;
+    SIP_PYOBJECT invoke(QObject *object, Qt::ConnectionType connectionType, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u)) const;
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -119,9 +109,7 @@ public:
             qtcore_invoke_exception();
 %End
 
-%End
-%If (Qt_4_5_0 -)
-    SIP_PYOBJECT invoke(QObject *object, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0)) const;
+    SIP_PYOBJECT invoke(QObject *object, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u)) const;
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -139,28 +127,13 @@ public:
             qtcore_invoke_exception();
 %End
 
-%End
-%If (Qt_4_6_0 -)
     int methodIndex() const;
-%End
-%If (Qt_5_0_0 -)
     bool isValid() const;
-%End
-%If (Qt_5_0_0 -)
     QByteArray methodSignature() const;
-%End
-%If (Qt_5_0_0 -)
     QByteArray name() const;
-%End
-%If (Qt_5_0_0 -)
     int returnType() const;
-%End
-%If (Qt_5_0_0 -)
     int parameterCount() const;
-%End
-%If (Qt_5_0_0 -)
     int parameterType(int index) const;
-%End
 };
 
 class QMetaEnum
@@ -177,21 +150,17 @@ public:
     const char *key(int index) const;
     int value(int index) const;
     const char *scope() const;
-%If (Qt_5_0_0 -)
     int keyToValue(const char *key, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    int keyToValue(const char *key) const;
-%End
     const char *valueToKey(int value) const;
-%If (Qt_5_0_0 -)
     int keysToValue(const char *keys, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    int keysToValue(const char *keys) const;
-%End
     QByteArray valueToKeys(int value) const;
     bool isValid() const;
+%If (Qt_5_8_0 -)
+    bool isScoped() const;
+%End
+%If (Qt_5_12_0 -)
+    const char *enumName() const;
+%End
 };
 
 class QMetaProperty
@@ -210,7 +179,6 @@ public:
     bool isDesignable(const QObject *object = 0) const;
     bool isScriptable(const QObject *object = 0) const;
     bool isStored(const QObject *object = 0) const;
-    bool isEditable(const QObject *object = 0) const;
     bool isFlagType() const;
     bool isEnumType() const;
     QMetaEnum enumerator() const;
@@ -221,27 +189,13 @@ public:
     bool isValid() const;
     bool isResettable() const;
     bool isUser(const QObject *object = 0) const;
-%If (Qt_4_2_0 -)
     int userType() const;
-%End
-%If (Qt_4_5_0 -)
     bool hasNotifySignal() const;
-%End
-%If (Qt_4_5_0 -)
     QMetaMethod notifySignal() const;
-%End
-%If (Qt_4_5_0 -)
     int notifySignalIndex() const;
-%End
-%If (Qt_4_6_0 -)
     int propertyIndex() const;
-%End
-%If (Qt_4_6_0 -)
     bool isConstant() const;
-%End
-%If (Qt_4_6_0 -)
     bool isFinal() const;
-%End
 };
 
 class QMetaClassInfo
@@ -256,9 +210,5 @@ public:
     const char *value() const;
 };
 
-%If (Qt_5_0_0 -)
 bool operator==(const QMetaMethod &m1, const QMetaMethod &m2);
-%End
-%If (Qt_5_0_0 -)
 bool operator!=(const QMetaMethod &m1, const QMetaMethod &m2);
-%End

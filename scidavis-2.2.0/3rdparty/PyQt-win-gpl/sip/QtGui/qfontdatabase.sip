@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -60,26 +60,16 @@ public:
         Korean,
         Vietnamese,
         Other,
-%If (Qt_4_2_0 -)
         Symbol,
-%End
-%If (Qt_4_2_0 -)
         Ogham,
-%End
-%If (Qt_4_2_0 -)
         Runic,
-%End
-%If (Qt_4_6_0 -)
         Nko,
-%End
     };
 
     static QList<int> standardSizes();
     QFontDatabase();
     QList<QFontDatabase::WritingSystem> writingSystems() const;
-%If (Qt_4_2_0 -)
     QList<QFontDatabase::WritingSystem> writingSystems(const QString &family) const;
-%End
     QStringList families(QFontDatabase::WritingSystem writingSystem = QFontDatabase::Any) const;
     QStringList styles(const QString &family) const;
     QList<int> pointSizes(const QString &family, const QString &style = QString());
@@ -96,84 +86,27 @@ public:
     int weight(const QString &family, const QString &style) const;
     static QString writingSystemName(QFontDatabase::WritingSystem writingSystem);
     static QString writingSystemSample(QFontDatabase::WritingSystem writingSystem);
-%If (Qt_4_2_0 -)
     static int addApplicationFont(const QString &fileName);
-%End
-%If (Qt_4_2_0 -)
     static int addApplicationFontFromData(const QByteArray &fontData);
-%End
-%If (Qt_4_2_0 -)
     static QStringList applicationFontFamilies(int id);
-%End
-%If (Qt_4_2_0 -)
     static bool removeApplicationFont(int id);
-%End
-%If (Qt_4_2_0 -)
     static bool removeAllApplicationFonts();
-%End
-%If (Qt_4_4_0 -)
     static bool supportsThreadedFontRendering();
-%End
-};
+%If (Qt_5_2_0 -)
 
-// QList<QFontDatabase::WritingSystem> is implemented as a Python list.
-%MappedType QList<QFontDatabase::WritingSystem> /TypeHint="List[QFontDatabase.WritingSystem]", TypeHintValue="[]"/
-{
-%TypeHeaderCode
-#include <qfontdatabase.h>
-#include <qlist.h>
-%End
-
-%ConvertFromTypeCode
-    // Create the list.
-    PyObject *l;
-
-    if ((l = PyList_New(sipCpp->size())) == NULL)
-        return NULL;
-
-    // Set the list elements.
-    for (int i = 0; i < sipCpp->size(); ++i)
+    enum SystemFont
     {
-        QFontDatabase::WritingSystem ws = sipCpp->at(i);
-        PyObject *wsobj;
+        GeneralFont,
+        FixedFont,
+        TitleFont,
+        SmallestReadableFont,
+    };
 
-        if ((wsobj = sipConvertFromEnum(ws, sipType_QFontDatabase_WritingSystem)) == NULL)
-        {
-            Py_DECREF(l);
-
-            return NULL;
-        }
-
-        PyList_SET_ITEM(l, i, wsobj);
-    }
-
-    return l;
 %End
-
-%ConvertToTypeCode
-    // Check the type if that is all that is required.
-    if (sipIsErr == NULL)
-    {
-        if (!PyList_Check(sipPy))
-            return 0;
-
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-            if (!sipCanConvertToEnum(PyList_GET_ITEM(sipPy, i), sipType_QFontDatabase_WritingSystem))
-                return 0;
-
-        return 1;
-    }
-
-    QList<QFontDatabase::WritingSystem> *ql = new QList<QFontDatabase::WritingSystem>;
- 
-    for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-    {
-        long l = SIPLong_AsLong(PyList_GET_ITEM(sipPy, i));
-        ql->append(static_cast<QFontDatabase::WritingSystem>(l));
-    }
- 
-    *sipCppPtr = ql;
- 
-    return sipGetState(sipTransferObj);
+%If (Qt_5_2_0 -)
+    static QFont systemFont(QFontDatabase::SystemFont type);
+%End
+%If (Qt_5_5_0 -)
+    bool isPrivateFamily(const QString &family) const;
 %End
 };

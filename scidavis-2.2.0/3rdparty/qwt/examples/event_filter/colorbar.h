@@ -5,26 +5,27 @@ class ColorBar: public QWidget
     Q_OBJECT
 
 public:
-    ColorBar( Qt::Orientation = Qt::Horizontal, QWidget * = NULL );
+    ColorBar(Qt::Orientation = Qt::Horizontal, 
+        QWidget * = NULL);
 
-    virtual void setOrientation( Qt::Orientation );
+    virtual void setOrientation(Qt::Orientation o);
     Qt::Orientation orientation() const { return d_orientation; }
 
-    void setRange( const QColor &light, const QColor &dark );
-    void setLight( const QColor &light );
-    void setDark( const QColor &dark );
+    void setRange(const QColor &light, const QColor &dark);
+    void setLight(const QColor &light);
+    void setDark(const QColor &dark);
 
     QColor light() const { return d_light; }
     QColor dark() const { return d_dark; }
 
-Q_SIGNALS:
-    void selected( const QColor & );
+signals:
+    void selected(const QColor &);
 
 protected:
-    virtual void mousePressEvent( QMouseEvent * );
-    virtual void paintEvent( QPaintEvent * );
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void paintEvent(QPaintEvent *);
 
-    void drawColorBar( QPainter *, const QRect & ) const;
+    void drawColorBar(QPainter *, const QRect &) const;
 
 private:
     Qt::Orientation d_orientation;

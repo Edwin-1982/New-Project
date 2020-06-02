@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -30,17 +30,11 @@ public:
     enum PatternSyntax
     {
         RegExp,
-%If (Qt_4_2_0 -)
         RegExp2,
-%End
         Wildcard,
         FixedString,
-%If (Qt_4_6_0 -)
         WildcardUnix,
-%End
-%If (Qt_4_6_0 -)
         W3CXmlSchema11,
-%End
     };
 
     enum CaretMode
@@ -61,38 +55,38 @@ public:
         if (uni)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QRegExp(%R", uni);
+            sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QRegExp(%R", uni);
         
             if (sipCpp->caseSensitivity() != Qt::CaseSensitive ||
                 sipCpp->patternSyntax() != QRegExp::RegExp)
             {
                 qpycore_Unicode_ConcatAndDel(&sipRes,
-                        PyUnicode_FromFormat(", PyQt4.QtCore.Qt.CaseSensitivity(%i)",
+                        PyUnicode_FromFormat(", PyQt5.QtCore.Qt.CaseSensitivity(%i)",
                                 (int)sipCpp->caseSensitivity()));
         
                 if (sipCpp->patternSyntax() != QRegExp::RegExp)
                     qpycore_Unicode_ConcatAndDel(&sipRes,
                             PyUnicode_FromFormat(
-                                    ", PyQt4.QtCore.QRegExp.PatternSyntax(%i)",
+                                    ", PyQt5.QtCore.QRegExp.PatternSyntax(%i)",
                                     (int)sipCpp->patternSyntax()));
             }
         
             qpycore_Unicode_ConcatAndDel(&sipRes, PyUnicode_FromString(")"));
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QRegExp(");
+            sipRes = PyString_FromString("PyQt5.QtCore.QRegExp(");
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(uni));
         
             if (sipCpp->caseSensitivity() != Qt::CaseSensitive ||
                 sipCpp->patternSyntax() != QRegExp::RegExp)
             {
                 PyString_ConcatAndDel(&sipRes,
-                        PyString_FromFormat(", PyQt4.QtCore.Qt.CaseSensitivity(%i)",
+                        PyString_FromFormat(", PyQt5.QtCore.Qt.CaseSensitivity(%i)",
                                 (int)sipCpp->caseSensitivity()));
         
                 if (sipCpp->patternSyntax() != QRegExp::RegExp)
                     PyString_ConcatAndDel(&sipRes,
                             PyString_FromFormat(
-                                    ", PyQt4.QtCore.QRegExp.PatternSyntax(%i)",
+                                    ", PyQt5.QtCore.QRegExp.PatternSyntax(%i)",
                                     (int)sipCpp->patternSyntax()));
             }
         
@@ -123,21 +117,21 @@ public:
     int indexIn(const QString &str, int offset = 0, QRegExp::CaretMode caretMode = QRegExp::CaretAtZero) const;
     int lastIndexIn(const QString &str, int offset = -1, QRegExp::CaretMode caretMode = QRegExp::CaretAtZero) const;
     int matchedLength() const;
-%If (- Qt_5_0_0)
-    int numCaptures() const;
-%End
     QStringList capturedTexts();
     QString cap(int nth = 0);
     int pos(int nth = 0);
     QString errorString();
     static QString escape(const QString &str);
-%If (Qt_4_6_0 -)
     int captureCount() const;
+    void swap(QRegExp &other /Constrained/);
+%If (Qt_5_6_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
 %End
-%If (Qt_4_8_0 -)
-    void swap(QRegExp &other);
+
 %End
 };
 
-QDataStream &operator<<(QDataStream &out, const QRegExp &regExp /Constrained/);
-QDataStream &operator>>(QDataStream &in, QRegExp &regExp /Constrained/);
+QDataStream &operator<<(QDataStream &out, const QRegExp &regExp /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &in, QRegExp &regExp /Constrained/) /ReleaseGIL/;

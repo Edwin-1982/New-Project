@@ -1,8 +1,8 @@
 // This is the implementation of the various Chimera helpers.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -18,15 +18,17 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-#include "sipAPIQtDBus.h"
-
-#include "qpydbus_chimera_helpers.h"
+#include <Python.h>
 
 #include <QDBusArgument>
 #include <QDBusObjectPath>
 #include <QDBusSignature>
 #include <QDBusVariant>
 #include <QMetaType>
+
+#include "qpydbus_chimera_helpers.h"
+
+#include "sipAPIQtDBus.h"
 
 
 // Forward declarations.
@@ -39,37 +41,37 @@ static PyObject *from_qvariant(const QVariant &arg);
 
 
 // Convert a QVariant to a Python object.
-bool qpydbus_from_qvariant(const QVariant *varp, PyObject **objp)
+bool qpydbus_from_qvariant_convertor(const QVariant &var, PyObject **objp)
 {
     // Handle QDBusObjectPath.
-    if (varp->userType() == qMetaTypeId<QDBusObjectPath>())
+    if (var.userType() == qMetaTypeId<QDBusObjectPath>())
     {
-        *objp = from_qstring(varp->value<QDBusObjectPath>().path());
+        *objp = from_qstring(var.value<QDBusObjectPath>().path());
 
         return true;
     }
 
     // Handle QDBusSignature.
-    if (varp->userType() == qMetaTypeId<QDBusSignature>())
+    if (var.userType() == qMetaTypeId<QDBusSignature>())
     {
-        *objp = from_qstring(varp->value<QDBusSignature>().signature());
+        *objp = from_qstring(var.value<QDBusSignature>().signature());
 
         return true;
     }
 
     // Handle QDBusVariant.
-    if (varp->userType() == qMetaTypeId<QDBusVariant>())
+    if (var.userType() == qMetaTypeId<QDBusVariant>())
     {
-        *objp = from_qvariant(varp->value<QDBusVariant>().variant());
+        *objp = from_qvariant(var.value<QDBusVariant>().variant());
 
         return true;
     }
 
     // Anything else must be a QDBusArgument.
-    if (varp->userType() != qMetaTypeId<QDBusArgument>())
+    if (var.userType() != qMetaTypeId<QDBusArgument>())
         return false;
 
-    QDBusArgument arg = varp->value<QDBusArgument>();
+    QDBusArgument arg = var.value<QDBusArgument>();
 
     switch (arg.currentType())
     {
@@ -141,7 +143,7 @@ static PyObject *from_array_type(const QDBusArgument &arg)
             return 0;
         }
 
-        PyList_SET_ITEM(obj, i, itm);
+        PyList_SetItem(obj, i, itm);
     }
 
     return obj;
@@ -175,7 +177,7 @@ static PyObject *from_structure_type(const QDBusArgument &arg)
             return 0;
         }
 
-        PyTuple_SET_ITEM(obj, i, itm);
+        PyTuple_SetItem(obj, i, itm);
     }
 
     return obj;

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -37,18 +37,7 @@ public:
     bool isLoaded() const;
     void setFileName(const QString &fileName);
     QString fileName() const;
-%If (Qt_4_2_0 -)
     QString errorString() const;
-%End
-%If (Qt_4_4_0 -)
     void setLoadHints(QLibrary::LoadHints loadHints);
-%End
-%If (Qt_4_4_0 -)
     QLibrary::LoadHints loadHints() const;
-%End
-
-private:
-%If (Qt_4_2_0 -)
-    QPluginLoader(const QPluginLoader &);
-%End
 };

@@ -1,8 +1,8 @@
 // This contains the support for Python objects and Qt's metatype system.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,10 @@
 
 #include <Python.h>
 
+#include "qpycore_api.h"
 #include "qpycore_pyqtpyobject.h"
-#include "qpycore_sip.h"
+
+#include "sipAPIQtCore.h"
 
 
 // The Qt metatype id.
@@ -130,8 +132,8 @@ QDataStream &operator<<(QDataStream &out, const PyQt_PyObject &obj)
             {
                 if (SIPBytes_Check(ser_obj))
                 {
-                    ser = SIPBytes_AS_STRING(ser_obj);
-                    len = SIPBytes_GET_SIZE(ser_obj);
+                    ser = SIPBytes_AsString(ser_obj);
+                    len = SIPBytes_Size(ser_obj);
                 }
                 else
                 {
@@ -141,7 +143,7 @@ QDataStream &operator<<(QDataStream &out, const PyQt_PyObject &obj)
             }
             else
             {
-                PyErr_Print();
+                pyqt5_err_print();
             }
         }
 

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,28 +20,5 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-typedef QList<QWidget*> QWidgetList;
-%If (- Qt_5_0_0)
-%If (WS_X11)
-// X11 specific definitions.
-typedef unsigned long WId;
-%End
-%End
-%If (- Qt_5_0_0)
-%If (WS_WIN)
-// Windows specific definitions.
-typedef struct HFONT__ *HFONT;
-typedef struct HBITMAP__ *HBITMAP;
-typedef struct HICON__ *HICON;
-typedef HWND WId;
-%End
-%End
-%If (- Qt_5_0_0)
-%If (WS_MACX)
-// MacOS/X specific definitions.
-typedef long WId;
-%End
-%End
-%If (Qt_5_0_0 -)
+typedef QList<QWindow *> QWindowList;
 typedef quintptr WId;
-%End

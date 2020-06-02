@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -30,7 +30,7 @@ typedef void *Q_PID;
 typedef qint64 Q_PID;
 %End
 %End
-%If (PyQt_NotBootstrapped)
+%If (PyQt_Process)
 
 class QProcess : QIODevice
 {
@@ -73,22 +73,27 @@ public:
         SeparateChannels,
         MergedChannels,
         ForwardedChannels,
+%If (Qt_5_2_0 -)
+        ForwardedOutputChannel,
+%End
+%If (Qt_5_2_0 -)
+        ForwardedErrorChannel,
+%End
     };
 
     explicit QProcess(QObject *parent /TransferThis/ = 0);
     virtual ~QProcess();
-    void start(const QString &program, const QStringList &arguments, QFlags<QIODevice::OpenModeFlag> mode = ReadWrite) /HoldGIL/;
-    void start(const QString &program, QFlags<QIODevice::OpenModeFlag> mode = ReadWrite) /HoldGIL/;
-    QProcess::ProcessChannelMode readChannelMode() const;
-    void setReadChannelMode(QProcess::ProcessChannelMode mode);
+    void start(const QString &program, const QStringList &arguments, QIODevice::OpenMode mode = QIODevice::ReadWrite) /HoldGIL/;
+    void start(const QString &command, QIODevice::OpenMode mode = QIODevice::ReadWrite) /HoldGIL/;
+%If (Qt_5_1_0 -)
+    void start(QIODevice::OpenMode mode = QIODevice::ReadWrite) /HoldGIL/;
+%End
     QProcess::ProcessChannel readChannel() const;
     void setReadChannel(QProcess::ProcessChannel channel);
     void closeReadChannel(QProcess::ProcessChannel channel);
     void closeWriteChannel();
     QString workingDirectory() const;
     void setWorkingDirectory(const QString &dir);
-    void setEnvironment(const QStringList &environment);
-    QStringList environment() const;
     QProcess::ProcessError error() const;
     QProcess::ProcessState state() const;
     Q_PID pid() const;
@@ -108,30 +113,19 @@ public:
     virtual bool atEnd() const;
     static int execute(const QString &program, const QStringList &arguments) /ReleaseGIL/;
     static int execute(const QString &program) /ReleaseGIL/;
-%If (Qt_4_3_0 -)
     static bool startDetached(const QString &program, const QStringList &arguments, const QString &workingDirectory, qint64 *pid = 0);
-%End
     static bool startDetached(const QString &program, const QStringList &arguments);
     static bool startDetached(const QString &program);
+%If (Qt_5_10_0 -)
+    bool startDetached(qint64 *pid = 0);
+%End
     static QStringList systemEnvironment();
-%If (Qt_4_2_0 -)
     QProcess::ProcessChannelMode processChannelMode() const;
-%End
-%If (Qt_4_2_0 -)
     void setProcessChannelMode(QProcess::ProcessChannelMode mode);
-%End
-%If (Qt_4_2_0 -)
     void setStandardInputFile(const QString &fileName);
-%End
-%If (Qt_4_2_0 -)
-    void setStandardOutputFile(const QString &fileName, QFlags<QIODevice::OpenModeFlag> mode = Truncate);
-%End
-%If (Qt_4_2_0 -)
-    void setStandardErrorFile(const QString &fileName, QFlags<QIODevice::OpenModeFlag> mode = Truncate);
-%End
-%If (Qt_4_2_0 -)
+    void setStandardOutputFile(const QString &fileName, QIODevice::OpenMode mode = QIODevice::Truncate);
+    void setStandardErrorFile(const QString &fileName, QIODevice::OpenMode mode = QIODevice::Truncate);
     void setStandardOutputProcess(QProcess *destination);
-%End
 
 public slots:
     void terminate();
@@ -140,11 +134,13 @@ public slots:
 signals:
     void started();
     void finished(int exitCode, QProcess::ExitStatus exitStatus);
-    void finished(int exitCode);
     void error(QProcess::ProcessError error);
     void stateChanged(QProcess::ProcessState state);
     void readyReadStandardOutput();
     void readyReadStandardError();
+%If (Qt_5_6_0 -)
+    void errorOccurred(QProcess::ProcessError error);
+%End
 
 protected:
     void setProcessState(QProcess::ProcessState state);
@@ -187,29 +183,47 @@ protected:
         }
 %End
 
-    virtual qint64 writeData(const char *data /Array, TypeHint="Py_v3:bytes;str"/, qint64 len /ArraySize/) /ReleaseGIL/;
+    virtual qint64 writeData(const char *data /Array/, qint64 len /ArraySize/) /ReleaseGIL/;
 
 public:
-%If (Qt_4_6_0 -)
     void setProcessEnvironment(const QProcessEnvironment &environment);
-%End
-%If (Qt_4_6_0 -)
     QProcessEnvironment processEnvironment() const;
-%End
-%If (Qt_5_0_0 -)
     QString program() const;
+%If (Qt_5_1_0 -)
+    void setProgram(const QString &program);
 %End
-%If (Qt_5_0_0 -)
     QStringList arguments() const;
+%If (Qt_5_1_0 -)
+    void setArguments(const QStringList &arguments);
 %End
+%If (Qt_5_1_0 -)
+    virtual bool open(QIODevice::OpenMode mode = QIODevice::ReadWrite) /ReleaseGIL/;
+%End
+%If (Qt_5_2_0 -)
 
-private:
-    QProcess(const QProcess &);
+    enum InputChannelMode
+    {
+        ManagedInputChannel,
+        ForwardedInputChannel,
+    };
+
+%End
+%If (Qt_5_2_0 -)
+    QProcess::InputChannelMode inputChannelMode() const;
+%End
+%If (Qt_5_2_0 -)
+    void setInputChannelMode(QProcess::InputChannelMode mode);
+%End
+%If (Qt_5_2_0 -)
+    static QString nullDevice();
+%End
+%If (Qt_5_3_0 -)
+    qint64 processId() const;
+%End
 };
 
 %End
-%If (Qt_4_6_0 -)
-%If (PyQt_NotBootstrapped)
+%If (PyQt_Process)
 
 class QProcessEnvironment
 {
@@ -227,20 +241,13 @@ public:
     void clear();
     bool contains(const QString &name) const;
     void insert(const QString &name, const QString &value);
-%If (Qt_4_8_0 -)
     void insert(const QProcessEnvironment &e);
-%End
     void remove(const QString &name);
     QString value(const QString &name, const QString &defaultValue = QString()) const;
     QStringList toStringList() const;
     static QProcessEnvironment systemEnvironment();
-%If (Qt_4_8_0 -)
     QStringList keys() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QProcessEnvironment &other);
-%End
+    void swap(QProcessEnvironment &other /Constrained/);
 };
 
-%End
 %End

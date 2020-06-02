@@ -1,3 +1,6 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$class_qwt_dyn_grid_layout.html" title="The QwtDynGridLayout class lays out widgets in a grid, adjusting the number of columns and rows to th..." alt="" coords="125,5,260,32"/>
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$class_qwt_event_pattern.html" title="A collection of event patterns." alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node3" href="$class_qwt_picker.html" title="QwtPicker provides selections on a widget." alt="" coords="169,5,250,32"/>
+<area shape="rect" id="node5" href="$class_qwt_plot_picker.html" title="QwtPlotPicker provides selections on a plot canvas." alt="" coords="299,5,402,32"/>
+<area shape="rect" id="node7" href="$class_qwt_plot_zoomer.html" title="QwtPlotZoomer provides stacked zooming for a plot widget." alt="" coords="451,5,562,32"/>
 </map>

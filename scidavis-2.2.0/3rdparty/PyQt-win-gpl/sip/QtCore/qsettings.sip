@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -51,6 +51,9 @@ public:
     QSettings(QSettings::Scope scope, const QString &organization, const QString &application = QString(), QObject *parent /TransferThis/ = 0);
     QSettings(QSettings::Format format, QSettings::Scope scope, const QString &organization, const QString &application = QString(), QObject *parent /TransferThis/ = 0);
     QSettings(const QString &fileName, QSettings::Format format, QObject *parent /TransferThis/ = 0);
+%If (Qt_5_13_0 -)
+    QSettings(QSettings::Scope scope, QObject *parent /TransferThis/ = 0);
+%End
     explicit QSettings(QObject *parent /TransferThis/ = 0);
     virtual ~QSettings();
     void clear();
@@ -78,7 +81,7 @@ public:
         value = sipCpp->value(*a0, *a1);
         Py_END_ALLOW_THREADS
         
-        sipRes = pyqt4_from_qvariant_by_type(value, a2);
+        sipRes = pyqt5_from_qvariant_by_type(value, a2);
         
         sipIsErr = !sipRes;
 %End
@@ -88,40 +91,23 @@ public:
     void setFallbacksEnabled(bool b);
     bool fallbacksEnabled() const;
     QString fileName() const;
-    static void setSystemIniPath(const QString &dir);
-    static void setUserIniPath(const QString &dir);
     static void setPath(QSettings::Format format, QSettings::Scope scope, const QString &path);
-%If (Qt_4_4_0 -)
     QSettings::Format format() const;
-%End
-%If (Qt_4_4_0 -)
     QSettings::Scope scope() const;
-%End
-%If (Qt_4_4_0 -)
     QString organizationName() const;
-%End
-%If (Qt_4_4_0 -)
     QString applicationName() const;
-%End
-%If (Qt_4_4_0 -)
     static void setDefaultFormat(QSettings::Format format);
-%End
-%If (Qt_4_4_0 -)
     static QSettings::Format defaultFormat();
-%End
-%If (Qt_4_5_0 -)
     void setIniCodec(QTextCodec *codec /KeepReference/);
-%End
-%If (Qt_4_5_0 -)
     void setIniCodec(const char *codecName);
-%End
-%If (Qt_4_5_0 -)
     QTextCodec *iniCodec() const;
+%If (Qt_5_10_0 -)
+    bool isAtomicSyncRequired() const;
+%End
+%If (Qt_5_10_0 -)
+    void setAtomicSyncRequired(bool enable);
 %End
 
 protected:
     virtual bool event(QEvent *event);
-
-private:
-    QSettings(const QSettings &);
 };

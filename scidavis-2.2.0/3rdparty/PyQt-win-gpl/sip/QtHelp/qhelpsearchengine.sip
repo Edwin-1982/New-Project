@@ -2,9 +2,9 @@
 //
 // This file is part of the QtHelp Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_4_0 -)
 
 class QHelpSearchQuery
 {
@@ -43,9 +41,6 @@ public:
     QHelpSearchQuery(QHelpSearchQuery::FieldName field, const QStringList &wordList);
 };
 
-%End
-%If (Qt_4_4_0 -)
-
 class QHelpSearchEngine : QObject
 {
 %TypeHeaderCode
@@ -55,12 +50,10 @@ class QHelpSearchEngine : QObject
 public:
     QHelpSearchEngine(QHelpEngineCore *helpEngine, QObject *parent /TransferThis/ = 0);
     virtual ~QHelpSearchEngine();
-%If (Qt_4_5_0 -)
     QList<QHelpSearchQuery> query() const;
-%End
     QHelpSearchQueryWidget *queryWidget();
     QHelpSearchResultWidget *resultWidget();
-    int hitsCount() const;
+    int hitCount() const;
     QList<QPair<QString, QString>> hits(int start, int end) const;
 
 public slots:
@@ -76,9 +69,38 @@ signals:
     void searchingFinished(int hits);
 
 public:
-%If (Qt_4_6_0 -)
-    int hitCount() const;
+%If (Qt_5_9_0 -)
+    int searchResultCount() const;
 %End
+%If (Qt_5_9_0 -)
+    QVector<QHelpSearchResult> searchResults(int start, int end) const;
+%End
+%If (Qt_5_9_0 -)
+    QString searchInput() const;
+%End
+
+public slots:
+%If (Qt_5_9_0 -)
+    void search(const QString &searchInput);
+%End
+};
+
+%If (Qt_5_9_0 -)
+
+class QHelpSearchResult
+{
+%TypeHeaderCode
+#include <qhelpsearchengine.h>
+%End
+
+public:
+    QHelpSearchResult();
+    QHelpSearchResult(const QHelpSearchResult &other);
+    QHelpSearchResult(const QUrl &url, const QString &title, const QString &snippet);
+    ~QHelpSearchResult();
+    QString title() const;
+    QUrl url() const;
+    QString snippet() const;
 };
 
 %End

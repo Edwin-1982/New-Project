@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -46,137 +46,56 @@ public:
     virtual bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex());
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     void clear();
-%If (Qt_4_2_0 -)
     virtual Qt::DropActions supportedDropActions() const;
-%End
-%If (Qt_4_2_0 -)
     virtual QMap<int, QVariant> itemData(const QModelIndex &index) const;
-%End
-%If (Qt_4_2_0 -)
     virtual bool setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles);
-%End
-%If (Qt_4_2_0 -)
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *itemFromIndex(const QModelIndex &index) const;
-%End
-%If (Qt_4_2_0 -)
     QModelIndex indexFromItem(const QStandardItem *item) const;
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *item(int row, int column = 0) const;
-%End
-%If (Qt_4_2_0 -)
     void setItem(int row, int column, QStandardItem *item /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     void setItem(int arow, QStandardItem *aitem /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *invisibleRootItem() const /Transfer/;
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *horizontalHeaderItem(int column) const;
-%End
-%If (Qt_4_2_0 -)
     void setHorizontalHeaderItem(int column, QStandardItem *item /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *verticalHeaderItem(int row) const;
-%End
-%If (Qt_4_2_0 -)
     void setVerticalHeaderItem(int row, QStandardItem *item /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     void setHorizontalHeaderLabels(const QStringList &labels);
-%End
-%If (Qt_4_2_0 -)
     void setVerticalHeaderLabels(const QStringList &labels);
-%End
-%If (Qt_4_2_0 -)
     void setRowCount(int rows);
-%End
-%If (Qt_4_2_0 -)
     void setColumnCount(int columns);
-%End
-%If (Qt_4_2_0 -)
-    void appendRow(const QList<QStandardItem*> &items /Transfer/);
-%End
-%If (Qt_4_2_0 -)
-    void appendColumn(const QList<QStandardItem*> &items /Transfer/);
-%End
-%If (Qt_4_2_0 -)
-    void insertRow(int row, const QList<QStandardItem*> &items /Transfer/);
-%End
-%If (Qt_4_2_0 -)
-    void insertColumn(int column, const QList<QStandardItem*> &items /Transfer/);
-%End
-%If (Qt_4_2_0 -)
+    void appendRow(const QList<QStandardItem *> &items /Transfer/);
+    void appendColumn(const QList<QStandardItem *> &items /Transfer/);
+    void insertRow(int row, const QList<QStandardItem *> &items /Transfer/);
+    void insertColumn(int column, const QList<QStandardItem *> &items /Transfer/);
     QStandardItem *takeItem(int row, int column = 0) /TransferBack/;
-%End
-%If (Qt_4_2_0 -)
-    QList<QStandardItem*> takeRow(int row) /TransferBack/;
-%End
-%If (Qt_4_2_0 -)
-    QList<QStandardItem*> takeColumn(int column) /TransferBack/;
-%End
-%If (Qt_4_2_0 -)
+    QList<QStandardItem *> takeRow(int row) /TransferBack/;
+    QList<QStandardItem *> takeColumn(int column) /TransferBack/;
     QStandardItem *takeHorizontalHeaderItem(int column) /TransferBack/;
-%End
-%If (Qt_4_2_0 -)
     QStandardItem *takeVerticalHeaderItem(int row) /TransferBack/;
-%End
-%If (Qt_4_2_0 -)
     const QStandardItem *itemPrototype() const;
-%End
-%If (Qt_4_2_0 -)
     void setItemPrototype(const QStandardItem *item /Transfer/);
-%End
-%If (Qt_4_2_0 -)
-    QList<QStandardItem*> findItems(const QString &text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0) const;
-%End
-%If (Qt_4_2_0 -)
+    QList<QStandardItem *> findItems(const QString &text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0) const;
     int sortRole() const;
-%End
-%If (Qt_4_2_0 -)
     void setSortRole(int role);
-%End
-%If (Qt_4_2_0 -)
     void appendRow(QStandardItem *aitem /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     void insertRow(int arow, QStandardItem *aitem /Transfer/);
-%End
-%If (Qt_4_2_0 -)
     bool insertRow(int row, const QModelIndex &parent = QModelIndex());
-%End
-%If (Qt_4_2_0 -)
     bool insertColumn(int column, const QModelIndex &parent = QModelIndex());
-%End
-%If (Qt_4_5_0 -)
     virtual QStringList mimeTypes() const;
-%End
-%If (Qt_4_5_0 -)
     virtual QMimeData *mimeData(const QModelIndexList &indexes) const /TransferBack/;
-%End
-%If (Qt_4_5_0 -)
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
-%End
-%If (Qt_5_0_0 -)
     virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
-%End
+    void setItemRoleNames(const QHash<int, QByteArray> &roleNames);
 
 signals:
-%If (Qt_4_2_0 -)
     void itemChanged(QStandardItem *item);
+
+public:
+%If (Qt_5_12_0 -)
+    bool clearItemData(const QModelIndex &index);
 %End
-
-private:
-    QStandardItemModel(const QStandardItemModel &);
 };
-
-%If (Qt_4_2_0 -)
 
 class QStandardItem /Supertype=sip.wrapper/
 {
@@ -186,17 +105,12 @@ class QStandardItem /Supertype=sip.wrapper/
 
 public:
     QStandardItem();
-%If (Qt_5_0_0 -)
     explicit QStandardItem(const QString &text);
-%End
-%If (- Qt_5_0_0)
-    QStandardItem(const QString &text);
-%End
     QStandardItem(const QIcon &icon, const QString &text);
     QStandardItem(int rows, int columns = 1);
     virtual ~QStandardItem();
-    virtual QVariant data(int role = Qt::UserRole+1) const;
-    virtual void setData(const QVariant &value, int role = Qt::UserRole+1);
+    virtual QVariant data(int role = Qt::UserRole + 1) const;
+    virtual void setData(const QVariant &value, int role = Qt::UserRole + 1);
     QString text() const;
     QIcon icon() const;
     QString toolTip() const;
@@ -239,18 +153,18 @@ public:
     QStandardItem *child(int row, int column = 0) const;
     void setChild(int row, int column, QStandardItem *item /Transfer/);
     void setChild(int arow, QStandardItem *aitem /Transfer/);
-    void insertRow(int row, const QList<QStandardItem*> &items /Transfer/);
+    void insertRow(int row, const QList<QStandardItem *> &items /Transfer/);
     void insertRow(int arow, QStandardItem *aitem /Transfer/);
     void insertRows(int row, int count);
-    void insertColumn(int column, const QList<QStandardItem*> &items /Transfer/);
+    void insertColumn(int column, const QList<QStandardItem *> &items /Transfer/);
     void insertColumns(int column, int count);
     void removeRow(int row);
     void removeColumn(int column);
     void removeRows(int row, int count);
     void removeColumns(int column, int count);
     QStandardItem *takeChild(int row, int column = 0) /TransferBack/;
-    QList<QStandardItem*> takeRow(int row) /TransferBack/;
-    QList<QStandardItem*> takeColumn(int column) /TransferBack/;
+    QList<QStandardItem *> takeRow(int row) /TransferBack/;
+    QList<QStandardItem *> takeColumn(int column) /TransferBack/;
     void sortChildren(int column, Qt::SortOrder order = Qt::AscendingOrder);
     virtual QStandardItem *clone() const /Factory/;
 
@@ -277,27 +191,33 @@ public:
     void setCheckState(Qt::CheckState acheckState);
     void setAccessibleText(const QString &aaccessibleText);
     void setAccessibleDescription(const QString &aaccessibleDescription);
-    void appendRow(const QList<QStandardItem*> &aitems /Transfer/);
+    void appendRow(const QList<QStandardItem *> &items /Transfer/);
     void appendRow(QStandardItem *aitem /Transfer/);
-    void appendColumn(const QList<QStandardItem*> &aitems /Transfer/);
-%If (Qt_4_3_0 -)
-    void insertRows(int row, const QList<QStandardItem*> &items /Transfer/);
-%End
-%If (Qt_4_3_0 -)
-    void appendRows(const QList<QStandardItem*> &aitems /Transfer/);
-%End
+    void appendColumn(const QList<QStandardItem *> &items /Transfer/);
+    void insertRows(int row, const QList<QStandardItem *> &items /Transfer/);
+    void appendRows(const QList<QStandardItem *> &items /Transfer/);
 
 protected:
     QStandardItem(const QStandardItem &other);
-%If (Qt_4_4_0 -)
     void emitDataChanged();
+
+public:
+%If (Qt_5_6_0 -)
+    bool isAutoTristate() const;
+%End
+%If (Qt_5_6_0 -)
+    void setAutoTristate(bool tristate);
+%End
+%If (Qt_5_6_0 -)
+    bool isUserTristate() const;
+%End
+%If (Qt_5_6_0 -)
+    void setUserTristate(bool tristate);
+%End
+%If (Qt_5_12_0 -)
+    void clearData();
 %End
 };
 
-%End
-%If (Qt_4_2_0 -)
-QDataStream &operator>>(QDataStream &in, QStandardItem &item /Constrained/);
-%End
-%If (Qt_4_2_0 -)
-QDataStream &operator<<(QDataStream &out, const QStandardItem &item /Constrained/);
-%End
+QDataStream &operator>>(QDataStream &in, QStandardItem &item /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &out, const QStandardItem &item /Constrained/) /ReleaseGIL/;

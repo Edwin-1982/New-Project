@@ -1,19 +1,18 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>SIP Specification Files &#8212; SIP v4.19.22 Reference Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SIP Specification Files &#8212; SIP v4.19.19 Reference Guide</title>
     <link rel="stylesheet" href="_static/riverbank.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +34,7 @@
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -59,7 +58,7 @@ handwritten code that have no C/C++ equivalent.  It is even possible (and
 sometimes necessary) to specify a different super-class hierarchy for a C++
 class.  All that matters is that the generated code compiles properly.</p>
 <p>In most cases the Python API matches the C/C++ API.  In some cases handwritten
-code (see <a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>) is used to map from one to the other
+code (see <a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>) is used to map from one to the other
 without SIP having to know the details itself.  However, there are a few cases
 where SIP generates a thin wrapper around a C++ method or constructor (see
 <a class="reference internal" href="c_api.html#ref-derived-classes"><span class="std std-ref">Generated Derived Classes</span></a>) and needs to know the exact C++ signature.  To deal
@@ -89,43 +88,44 @@ public:
 <h2>Syntax Definition<a class="headerlink" href="#syntax-definition" title="Permalink to this headline">¶</a></h2>
 <p>The following is a semi-formal description of the syntax of a specification
 file.</p>
-<pre class="literal-block"><em>specification</em> ::= {<em>module-statement</em>}
+<pre class="literal-block">
+<em>specification</em> ::= {<em>module-statement</em>}
 
 <em>module-statement</em> ::= [<em>module-directive</em> | <em>statement</em>]
 
 <em>module-directive</em> ::= [
-        <a class="reference internal" href="directives.html#std:directive-%API"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%API</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%CompositeModule"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%CompositeModule</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ConsolidatedModule"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConsolidatedModule</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Copying"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Copying</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%DefaultEncoding"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultEncoding</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%DefaultMetatype"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultMetatype</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%DefaultSupertype"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultSupertype</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ExportedHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ExportedHeaderCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ExportedTypeHintCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ExportedTypeHintCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Extract"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Extract</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Feature"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Feature</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Import"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Import</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Include"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Include</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%InitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%InitialisationCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%License"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%License</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%MappedType"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MappedType</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Module"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Module</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ModuleCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ModuleCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ModuleHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ModuleHeaderCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%OptionalInclude"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%OptionalInclude</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Platforms"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Platforms</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%PreInitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PreInitialisationCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%PostInitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PostInitialisationCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Timeline"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Timeline</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%TypeHintCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHintCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%UnitCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%UnitCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%API"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%API</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%CompositeModule"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%CompositeModule</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ConsolidatedModule"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConsolidatedModule</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Copying"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Copying</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%DefaultEncoding"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultEncoding</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%DefaultMetatype"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultMetatype</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%DefaultSupertype"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%DefaultSupertype</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ExportedHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ExportedHeaderCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ExportedTypeHintCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ExportedTypeHintCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Extract"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Extract</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Feature"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Feature</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Import"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Import</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Include"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Include</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%InitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%InitialisationCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%License"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%License</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%MappedType"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MappedType</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Module"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Module</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ModuleCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ModuleCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ModuleHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ModuleHeaderCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%OptionalInclude"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%OptionalInclude</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Platforms"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Platforms</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%PreInitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PreInitialisationCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%PostInitialisationCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PostInitialisationCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Timeline"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Timeline</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%TypeHintCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHintCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%UnitCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%UnitCode</span></code></a> |
         <em>mapped-type-template</em>]
 
 <em>statement</em> :: [<em>class-statement</em> | <em>function</em> | <em>variable</em>]
 
 <em>class-statement</em> :: [
-        <a class="reference internal" href="directives.html#std:directive-%If"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%If</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%If"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%If</span></code></a> |
         <em>class</em> |
         <em>class-template</em> |
         <em>enum</em> |
@@ -144,21 +144,21 @@ file.</p>
 
 <em>class-line</em> ::= [
         <em>class-statement</em> |
-        <a class="reference internal" href="directives.html#std:directive-%BIGetBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetBufferCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%BIGetReadBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetReadBufferCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%BIGetWriteBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetWriteBufferCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%BIGetSegCountCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetSegCountCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%BIGetCharBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetCharBufferCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%BIReleaseBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIReleaseBufferCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ConvertToSubClassCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConvertToSubClassCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%ConvertToTypeCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConvertToTypeCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%GCClearCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GCClearCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%GCTraverseCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GCTraverseCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%InstanceCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%InstanceCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%PickleCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PickleCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%TypeCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeCode</span></code></a> |
-        <a class="reference internal" href="directives.html#std:directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIGetBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetBufferCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIGetReadBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetReadBufferCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIGetWriteBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetWriteBufferCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIGetSegCountCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetSegCountCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIGetCharBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIGetCharBufferCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%BIReleaseBufferCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%BIReleaseBufferCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ConvertToSubClassCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConvertToSubClassCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%ConvertToTypeCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%GCClearCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GCClearCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%GCTraverseCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GCTraverseCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%InstanceCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%InstanceCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%PickleCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%PickleCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%TypeCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeCode</span></code></a> |
+        <a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a> |
         <em>constructor</em> |
         <em>destructor</em> |
         <em>method</em> |
@@ -182,19 +182,19 @@ file.</p>
 
 <em>constructor</em> ::= [<strong>explicit</strong>] <em>name</em> <strong>(</strong> [<em>argument-list</em>] <strong>)</strong>
         [<em>exceptions</em>] [<em>function-annotations</em>]
-        [<em>c++-constructor-signature</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#std:directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<em>c++-constructor-signature</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
 
 <em>c++-constructor-signature</em> ::= <strong>[(</strong> [<em>argument-list</em>] <strong>)]</strong>
 
 <em>destructor</em> ::= [<strong>virtual</strong>] <strong>~</strong> <em>name</em> <strong>()</strong> [<em>exceptions</em>] [<strong>= 0</strong>]
-        [<em>function-annotations</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
+        [<em>function-annotations</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
 
 <em>method</em> ::= [<strong>Q_SIGNAL</strong>] [<strong>Q_SLOT</strong>] <em>type</em> <em>name</em> <strong>(</strong>
         [<em>argument-list</em>] <strong>)</strong> [<strong>const</strong>] [<strong>final</strong>] [<em>exceptions</em>]
         [<strong>= 0</strong>] [<em>function-annotations</em>] [<em>c++-signature</em>] <strong>;</strong>
-        [<a class="reference internal" href="directives.html#std:directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>] [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>] [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
 
 <em>c++-signature</em> ::= <strong>[</strong> <em>type</em> <strong>(</strong> [<em>argument-list</em>] <strong>)]</strong>
 
@@ -203,12 +203,12 @@ file.</p>
 <em>virtual-method</em> ::= [<strong>Q_SIGNAL</strong>] [<strong>Q_SLOT</strong>] <strong>virtual</strong> <em>type</em> <em>name</em>
         <strong>(</strong> [<em>argument-list</em>] <strong>)</strong> [<strong>const</strong>] [<strong>final</strong>]
         [<em>exceptions</em>] [<strong>= 0</strong>] [<em>function-annotations</em>] [<em>c++-signature</em>]
-        <strong>;</strong> [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>] [<a class="reference internal" href="directives.html#std:directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%VirtualCallCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCallCode</span></code></a>]
+        <strong>;</strong> [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>] [<a class="reference internal" href="directives.html#directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%VirtualCallCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCallCode</span></code></a>]
 
 <em>special-method</em> ::= <em>type</em> <em>special-method-name</em>
         <strong>(</strong> [<em>argument-list</em>] <strong>)</strong> [<em>function-annotations</em>] <strong>;</strong>
-        [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
 
 <em>special-method-name</em> ::= [<strong>__abs__</strong> | <strong>__add__</strong> | <strong>__and__</strong> |
         <strong>__aiter__</strong> | <strong>__anext__</strong> | <strong>__await__</strong> | <strong>__bool__</strong> |
@@ -231,13 +231,13 @@ file.</p>
 <em>operator</em> ::= <em>operator-type</em>
         <strong>(</strong> [<em>argument-list</em>] <strong>)</strong> [<strong>const</strong>] [<strong>final</strong>]
         [<em>exceptions</em>] [<em>function-annotations</em>] <strong>;</strong>
-        [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
 
 <em>virtual-operator</em> ::= <strong>virtual</strong> <em>operator-type</em>
         <strong>(</strong> [<em>argument-list</em>] <strong>)</strong> [<strong>const</strong>] [<strong>final</strong>]
         [<em>exceptions</em>] [<strong>= 0</strong>] [<em>function-annotations</em>] <strong>;</strong>
-        [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>] [<a class="reference internal" href="directives.html#std:directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%VirtualCallCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCallCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>] [<a class="reference internal" href="directives.html#directive-%VirtualCatcherCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCatcherCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%VirtualCallCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%VirtualCallCode</span></code></a>]
 
 <em>operatator-type</em> ::= [ <em>operator-function</em> | <em>operator-cast</em> ]
 
@@ -256,21 +256,21 @@ file.</p>
 <em>class-template</em> :: = <strong>template</strong> <strong>&lt;</strong> <em>type-list</em> <strong>&gt;</strong> <em>class</em>
 
 <em>mapped-type-template</em> :: = <strong>template</strong> <strong>&lt;</strong> <em>type-list</em> <strong>&gt;</strong>
-        <a class="reference internal" href="directives.html#std:directive-%MappedType"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MappedType</span></code></a>
+        <a class="reference internal" href="directives.html#directive-%MappedType"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MappedType</span></code></a>
 
 <em>enum</em> ::= <strong>enum</strong> [<em>enum-key</em>] [<em>name</em>] [<em>enum-annotations</em>] <strong>{</strong> {<em>enum-line</em>} <strong>};</strong>
 
 <em>enum-key</em> ::= [<strong>class</strong> | <strong>struct</strong>]
 
-<em>enum-line</em> ::= [<a class="reference internal" href="directives.html#std:directive-%If"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%If</span></code></a> | <em>name</em> [<em>enum-annotations</em>] <strong>,</strong>
+<em>enum-line</em> ::= [<a class="reference internal" href="directives.html#directive-%If"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%If</span></code></a> | <em>name</em> [<em>enum-annotations</em>] <strong>,</strong>
 
 <em>function</em> ::= <em>type</em> <em>name</em> <strong>(</strong> [<em>argument-list</em>] <strong>)</strong> [<em>exceptions</em>]
-        [<em>function-annotations</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#std:directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
+        [<em>function-annotations</em>] <strong>;</strong> [<a class="reference internal" href="directives.html#directive-%Docstring"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Docstring</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%MethodCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%MethodCode</span></code></a>]
 
 <em>namespace</em> ::= <strong>namespace</strong> <em>name</em> [<strong>{</strong> {<em>namespace-line</em>} <strong>}</strong>] <strong>;</strong>
 
-<em>namespace-line</em> ::= [<a class="reference internal" href="directives.html#std:directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a> | <em>statement</em>]
+<em>namespace-line</em> ::= [<a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a> | <em>statement</em>]
 
 <em>opaque-class</em> ::= <strong>class</strong> <em>scoped-name</em> <strong>;</strong>
 
@@ -280,11 +280,11 @@ file.</p>
         <em>typedef-annotations</em> <strong>;</strong>
 
 <em>variable</em>::= <em>typed-name</em> [<em>variable-annotations</em>] <strong>;</strong>
-        [<a class="reference internal" href="directives.html#std:directive-%AccessCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%AccessCode</span></code></a>] [<a class="reference internal" href="directives.html#std:directive-%GetCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GetCode</span></code></a>]
-        [<a class="reference internal" href="directives.html#std:directive-%SetCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%SetCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%AccessCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%AccessCode</span></code></a>] [<a class="reference internal" href="directives.html#directive-%GetCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%GetCode</span></code></a>]
+        [<a class="reference internal" href="directives.html#directive-%SetCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%SetCode</span></code></a>]
 
-<em>exception</em> ::= <a class="reference internal" href="directives.html#std:directive-%Exception"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Exception</span></code></a> <em>exception-name</em> [<em>exception-base</em>]
-        <strong>{</strong> [<a class="reference internal" href="directives.html#std:directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a>] <a class="reference internal" href="directives.html#std:directive-%RaiseCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%RaiseCode</span></code></a> <strong>};</strong>
+<em>exception</em> ::= <a class="reference internal" href="directives.html#directive-%Exception"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Exception</span></code></a> <em>exception-name</em> [<em>exception-base</em>]
+        <strong>{</strong> [<a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%TypeHeaderCode</span></code></a>] <a class="reference internal" href="directives.html#directive-%RaiseCode"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%RaiseCode</span></code></a> <strong>};</strong>
 
 <em>exception-name</em> ::= <em>scoped-name</em>
 
@@ -414,15 +414,16 @@ file.</p>
 
 <em>dotted-name</em> ::= <em>name</em> [<strong>.</strong> <em>dotted-name</em>]
 
-<em>name</em> ::= _A-Za-z {_A-Za-z0-9}</pre>
+<em>name</em> ::= _A-Za-z {_A-Za-z0-9}
+</pre>
 <p>Here is a short list of differences between C++ and the subset supported by
 SIP that might trip you up.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>SIP does not support the use of <code class="docutils literal notranslate"><span class="pre">[]</span></code> in types.  Use pointers instead.</p></li>
-<li><p>A global <code class="docutils literal notranslate"><span class="pre">operator</span></code> can only be defined if its first argument is a
-class or a named enum that has been wrapped in the same module.</p></li>
-<li><p>Variables declared outside of a class are effectively read-only.</p></li>
+<li>SIP does not support the use of <code class="docutils literal notranslate"><span class="pre">[]</span></code> in types.  Use pointers instead.</li>
+<li>A global <code class="docutils literal notranslate"><span class="pre">operator</span></code> can only be defined if its first argument is a
+class or a named enum that has been wrapped in the same module.</li>
+<li>Variables declared outside of a class are effectively read-only.</li>
 </ul>
 </div></blockquote>
 </div>
@@ -437,11 +438,11 @@ remaining arguments are collected as a Python tuple.</p>
 signatures.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_ANYSLOT">
-<code class="sig-name descname">SIP_ANYSLOT</code><a class="headerlink" href="#sip-type-SIP_ANYSLOT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_ANYSLOT</code><a class="headerlink" href="#sip-type-SIP_ANYSLOT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is both a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> and a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is used as the type
 of the member instead of <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> in functions that implement the
@@ -449,114 +450,114 @@ connection or disconnection of an explicitly generated signal to a slot.
 Handwritten code must be provided to interpret the conversion correctly.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYBUFFER">
-<code class="sig-name descname">SIP_PYBUFFER</code><a class="headerlink" href="#sip-type-SIP_PYBUFFER" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYBUFFER</code><a class="headerlink" href="#sip-type-SIP_PYBUFFER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that implements the Python buffer protocol.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYCALLABLE">
-<code class="sig-name descname">SIP_PYCALLABLE</code><a class="headerlink" href="#sip-type-SIP_PYCALLABLE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYCALLABLE</code><a class="headerlink" href="#sip-type-SIP_PYCALLABLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python callable object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYDICT">
-<code class="sig-name descname">SIP_PYDICT</code><a class="headerlink" href="#sip-type-SIP_PYDICT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYDICT</code><a class="headerlink" href="#sip-type-SIP_PYDICT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python dictionary object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYLIST">
-<code class="sig-name descname">SIP_PYLIST</code><a class="headerlink" href="#sip-type-SIP_PYLIST" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYLIST</code><a class="headerlink" href="#sip-type-SIP_PYLIST" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python list object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYOBJECT">
-<code class="sig-name descname">SIP_PYOBJECT</code><a class="headerlink" href="#sip-type-SIP_PYOBJECT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYOBJECT</code><a class="headerlink" href="#sip-type-SIP_PYOBJECT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> of any Python type.  The type <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> can also
 be used.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYSLICE">
-<code class="sig-name descname">SIP_PYSLICE</code><a class="headerlink" href="#sip-type-SIP_PYSLICE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYSLICE</code><a class="headerlink" href="#sip-type-SIP_PYSLICE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python slice object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYTUPLE">
-<code class="sig-name descname">SIP_PYTUPLE</code><a class="headerlink" href="#sip-type-SIP_PYTUPLE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYTUPLE</code><a class="headerlink" href="#sip-type-SIP_PYTUPLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python tuple object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYTYPE">
-<code class="sig-name descname">SIP_PYTYPE</code><a class="headerlink" href="#sip-type-SIP_PYTYPE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_PYTYPE</code><a class="headerlink" href="#sip-type-SIP_PYTYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">PyObject</span> <span class="pre">*</span></code> that is a Python type object.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_QOBJECT">
-<code class="sig-name descname">SIP_QOBJECT</code><a class="headerlink" href="#sip-type-SIP_QOBJECT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_QOBJECT</code><a class="headerlink" href="#sip-type-SIP_QOBJECT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">QObject</span> <span class="pre">*</span></code> that is a C++ instance of a class derived from Qt’s
 <code class="docutils literal notranslate"><span class="pre">QObject</span></code> class.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_RXOBJ_CON">
-<code class="sig-name descname">SIP_RXOBJ_CON</code><a class="headerlink" href="#sip-type-SIP_RXOBJ_CON" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_RXOBJ_CON</code><a class="headerlink" href="#sip-type-SIP_RXOBJ_CON" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">QObject</span> <span class="pre">*</span></code> that is a C++ instance of a class derived from Qt’s
 <code class="docutils literal notranslate"><span class="pre">QObject</span></code> class.  It is used as the type of the receiver instead of <code class="docutils literal notranslate"><span class="pre">const</span>
 <span class="pre">QObject</span> <span class="pre">*</span></code> in functions that implement a connection to a slot.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_RXOBJ_DIS">
-<code class="sig-name descname">SIP_RXOBJ_DIS</code><a class="headerlink" href="#sip-type-SIP_RXOBJ_DIS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_RXOBJ_DIS</code><a class="headerlink" href="#sip-type-SIP_RXOBJ_DIS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">QObject</span> <span class="pre">*</span></code> that is a C++ instance of a class derived from Qt’s
 <code class="docutils literal notranslate"><span class="pre">QObject</span></code> class.  It is used as the type of the receiver instead of <code class="docutils literal notranslate"><span class="pre">const</span>
 <span class="pre">QObject</span> <span class="pre">*</span></code> in functions that implement a disconnection from a slot.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SIGNAL">
-<code class="sig-name descname">SIP_SIGNAL</code><a class="headerlink" href="#sip-type-SIP_SIGNAL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_SIGNAL</code><a class="headerlink" href="#sip-type-SIP_SIGNAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> that is used as the type of the signal instead of
 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> in functions that implement the connection or disconnection
 of an explicitly generated signal to a slot.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SLOT">
-<code class="sig-name descname">SIP_SLOT</code><a class="headerlink" href="#sip-type-SIP_SLOT" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_SLOT</code><a class="headerlink" href="#sip-type-SIP_SLOT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> that is used as the type of the member instead of
 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> in functions that implement the connection or disconnection
 of an explicitly generated signal to a slot.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SLOT_CON">
-<code class="sig-name descname">SIP_SLOT_CON</code><a class="headerlink" href="#sip-type-SIP_SLOT_CON" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_SLOT_CON</code><a class="headerlink" href="#sip-type-SIP_SLOT_CON" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> that is used as the type of the member instead of
 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> in functions that implement the connection of an internally
@@ -575,11 +576,11 @@ accelerator.  The C++ signature is:</p>
 </div>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SLOT_DIS">
-<code class="sig-name descname">SIP_SLOT_DIS</code><a class="headerlink" href="#sip-type-SIP_SLOT_DIS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_SLOT_DIS</code><a class="headerlink" href="#sip-type-SIP_SLOT_DIS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="deprecated">
-<p><span class="versionmodified deprecated">Deprecated since version 4.18.</span></p>
+<p><span class="versionmodified">Deprecated since version 4.18.</span></p>
 </div>
 <p>This is a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> that is used as the type of the member instead of
 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> in functions that implement the disconnection of an
@@ -587,7 +588,7 @@ internally generated signal to a slot.  The type includes a comma separated
 list of types that is the C++ signature of of the signal.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SSIZE_T">
-<code class="sig-name descname">SIP_SSIZE_T</code><a class="headerlink" href="#sip-type-SIP_SSIZE_T" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SIP_SSIZE_T</code><a class="headerlink" href="#sip-type-SIP_SSIZE_T" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This is a <code class="docutils literal notranslate"><span class="pre">Py_ssize_t</span></code> in Python v2.5 and later and <code class="docutils literal notranslate"><span class="pre">int</span></code> in earlier
@@ -664,7 +665,7 @@ defined in the <code class="docutils literal notranslate"><span class="pre">b_mo
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>Alternatively you could just move the <a class="reference internal" href="directives.html#std:directive-%Import"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Import</span></code></a> directive so that it
+<p>Alternatively you could just move the <a class="reference internal" href="directives.html#directive-%Import"><code class="xref std std-directive docutils literal notranslate"><span class="pre">%Import</span></code></a> directive so that it
 is at the end of the file.</p>
 </div>
 </div>
@@ -678,7 +679,7 @@ is at the end of the file.</p>
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">SIP Specification Files</a><ul>
 <li><a class="reference internal" href="#syntax-definition">Syntax Definition</a></li>
@@ -697,15 +698,17 @@ is at the end of the file.</p>
   <p class="topless"><a href="directives.html"
                         title="next chapter">Directives</a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -725,12 +728,12 @@ is at the end of the file.</p>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.22 Reference Guide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SIP v4.19.19 Reference Guide</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020 Riverbank Computing Limited.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+        &#169; Copyright 2019 Riverbank Computing Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
     </div>
   </body>
 </html>

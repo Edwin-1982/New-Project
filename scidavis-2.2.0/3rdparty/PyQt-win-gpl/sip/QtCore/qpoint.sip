@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -39,9 +39,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QPoint()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QPoint()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QPoint()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QPoint()");
         #endif
         }
         else
@@ -52,7 +52,7 @@ public:
         #else
                 PyString_FromFormat
         #endif
-                    ("PyQt4.QtCore.QPoint(%i, %i)", sipCpp->x(), sipCpp->y());
+                    ("PyQt5.QtCore.QPoint(%i, %i)", sipCpp->x(), sipCpp->y());
         }
 %End
 
@@ -68,39 +68,24 @@ public:
     void setY(int ypos);
     QPoint &operator+=(const QPoint &p);
     QPoint &operator-=(const QPoint &p);
-%If (Qt_4_8_0 -)
     QPoint &operator*=(int c /Constrained/);
-%End
-%If (Qt_4_8_0 -)
     QPoint &operator*=(double c);
-%End
-%If (- Qt_4_8_0)
-    QPoint &operator*=(qreal c);
-%End
     QPoint &operator/=(qreal c);
+%If (Qt_5_1_0 -)
+    static int dotProduct(const QPoint &p1, const QPoint &p2);
+%End
 };
 
-QDataStream &operator<<(QDataStream &, const QPoint & /Constrained/);
-QDataStream &operator>>(QDataStream &, QPoint & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QPoint & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QPoint & /Constrained/) /ReleaseGIL/;
 bool operator==(const QPoint &p1, const QPoint &p2);
 bool operator!=(const QPoint &p1, const QPoint &p2);
 const QPoint operator+(const QPoint &p1, const QPoint &p2);
 const QPoint operator-(const QPoint &p1, const QPoint &p2);
-%If (Qt_4_8_0 -)
 const QPoint operator*(const QPoint &p, int c /Constrained/);
-%End
-%If (Qt_4_8_0 -)
 const QPoint operator*(int c /Constrained/, const QPoint &p);
-%End
-%If (Qt_4_8_0 -)
 const QPoint operator*(const QPoint &p, double c);
-%End
-%If (Qt_4_8_0 -)
 const QPoint operator*(double c, const QPoint &p);
-%End
-%If (- Qt_4_8_0)
-const QPoint operator*(const QPoint &p, qreal c);
-%End
 const QPoint operator-(const QPoint &p);
 const QPoint operator/(const QPoint &p, qreal c);
 
@@ -155,9 +140,9 @@ public:
         if (sipCpp->isNull())
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromString("PyQt4.QtCore.QPointF()");
+            sipRes = PyUnicode_FromString("PyQt5.QtCore.QPointF()");
         #else
-            sipRes = PyString_FromString("PyQt4.QtCore.QPointF()");
+            sipRes = PyString_FromString("PyQt5.QtCore.QPointF()");
         #endif
         }
         else
@@ -168,9 +153,9 @@ public:
             if (x && y)
             {
         #if PY_MAJOR_VERSION >= 3
-                sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QPointF(%R, %R)", x, y);
+                sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QPointF(%R, %R)", x, y);
         #else
-                sipRes = PyString_FromString("PyQt4.QtCore.QPointF(");
+                sipRes = PyString_FromString("PyQt5.QtCore.QPointF(");
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(x));
                 PyString_ConcatAndDel(&sipRes, PyString_FromString(", "));
                 PyString_ConcatAndDel(&sipRes, PyObject_Repr(y));
@@ -198,13 +183,14 @@ public:
     QPointF &operator*=(qreal c);
     QPointF &operator/=(qreal c);
     QPoint toPoint() const;
-%If (Qt_4_6_0 -)
     qreal manhattanLength() const;
+%If (Qt_5_1_0 -)
+    static qreal dotProduct(const QPointF &p1, const QPointF &p2);
 %End
 };
 
-QDataStream &operator<<(QDataStream &, const QPointF & /Constrained/);
-QDataStream &operator>>(QDataStream &, QPointF & /Constrained/);
+QDataStream &operator<<(QDataStream &, const QPointF & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QPointF & /Constrained/) /ReleaseGIL/;
 bool operator==(const QPointF &p1, const QPointF &p2);
 bool operator!=(const QPointF &p1, const QPointF &p2);
 const QPointF operator+(const QPointF &p1, const QPointF &p2);
@@ -213,9 +199,5 @@ const QPointF operator*(const QPointF &p, qreal c);
 const QPointF operator*(qreal c, const QPointF &p);
 const QPointF operator-(const QPointF &p);
 const QPointF operator/(const QPointF &p, qreal c);
-%If (Qt_5_0_0 -)
 const QPoint operator+(const QPoint &p);
-%End
-%If (Qt_5_0_0 -)
 const QPointF operator+(const QPointF &p);
-%End

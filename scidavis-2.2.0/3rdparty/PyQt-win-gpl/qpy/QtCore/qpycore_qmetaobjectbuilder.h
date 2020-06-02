@@ -4,9 +4,9 @@
 // internal code.  The alternative would be to reverse engineer other internal
 // data structures which would be even more fragile.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -26,16 +26,14 @@
 #define _QPYCORE_QMETAOBJECTBUILDER_H
 
 
-#include <qglobal.h>
-
-#if QT_VERSION >= 0x050000
-
 #include <QByteArray>
+#include <QList>
 #include <QMetaObject>
 
 QT_BEGIN_NAMESPACE
 
 
+class QMetaEnumBuilder;
 class QMetaMethodBuilder;
 class QMetaPropertyBuilder;
 
@@ -52,6 +50,7 @@ public:
     QMetaMethodBuilder addSignal(const QByteArray &signature);
     QMetaPropertyBuilder addProperty(const QByteArray &name,
             const QByteArray &type, int notifierId=-1);
+    QMetaEnumBuilder addEnumerator(const QByteArray &name);
     int addClassInfo(const QByteArray &name, const QByteArray &value);
     int addRelatedMetaObject(const QMetaObject *meta);
     int indexOfSignal(const QByteArray &signature);
@@ -70,6 +69,8 @@ public:
     QMetaMethodBuilder() : _mobj(0), _index(0) {}
 
     void setReturnType(const QByteArray &type);
+    void setParameterNames(const QList<QByteArray> &parameter_names);
+    void setRevision(int revision);
 
 private:
     const QMetaObjectBuilder *_mobj;
@@ -93,6 +94,24 @@ public:
     void setEnumOrFlag(bool value);
     void setConstant(bool value);
     void setFinal(bool value);
+    void setRevision(int revision);
+
+private:
+    const QMetaObjectBuilder *_mobj;
+    int _index;
+};
+
+
+class Q_CORE_EXPORT QMetaEnumBuilder
+{
+public:
+    QMetaEnumBuilder() : _mobj(0), _index(0) {}
+
+    void setIsFlag(bool value);
+#if QT_VERSION >= 0x050a00
+    void setIsScoped(bool value);
+#endif
+    int addKey(const QByteArray &name, int value);
 
 private:
     const QMetaObjectBuilder *_mobj;
@@ -101,8 +120,5 @@ private:
 
 
 QT_END_NAMESPACE
-
-#endif
-
 
 #endif

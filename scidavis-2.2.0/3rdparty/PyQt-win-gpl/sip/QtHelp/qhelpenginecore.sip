@@ -2,9 +2,9 @@
 //
 // This file is part of the QtHelp Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_4_0 -)
-
 class QHelpEngineCore : QObject
 {
 %TypeHeaderCode
@@ -30,38 +28,43 @@ class QHelpEngineCore : QObject
 
 %ConvertToSubClassCode
     static struct class_graph {
-            const char *name;
-            sipTypeDef **type;
-            int yes, no;
-        } graph[] = {
-            {sipName_QHelpIndexWidget,	&sipType_QHelpIndexWidget,	-1, 1},
-            {sipName_QHelpContentWidget,	&sipType_QHelpContentWidget,	-1, 2},
-            {sipName_QHelpContentModel,	&sipType_QHelpContentModel,	-1, 3},
-            {sipName_QHelpIndexModel,	&sipType_QHelpIndexModel,	-1, 4},
-            {sipName_QHelpSearchResultWidget,	&sipType_QHelpSearchResultWidget,	-1, 5},
-            {sipName_QHelpEngineCore,	&sipType_QHelpEngineCore,	8, 6},
-            {sipName_QHelpSearchQueryWidget,	&sipType_QHelpSearchQueryWidget,	-1, 7},
-            {sipName_QHelpSearchEngine,	&sipType_QHelpSearchEngine,	-1, -1},
-            {sipName_QHelpEngine,	&sipType_QHelpEngine,	-1, -1},
-        };
+        const char *name;
+        sipTypeDef **type;
+        int yes, no;
+    } graph[] = {
+        {sipName_QHelpContentModel, &sipType_QHelpContentModel, -1, 1},
+        {sipName_QHelpContentWidget, &sipType_QHelpContentWidget, -1, 2},
+        {sipName_QHelpEngineCore, &sipType_QHelpEngineCore, 9, 3},
+    #if QT_VERSION >= 0x050d00
+        {sipName_QHelpFilterEngine, &sipType_QHelpFilterEngine, -1, 4},
+    #else
+        {0, 0, -1, 4},
+    #endif
+        {sipName_QHelpIndexModel, &sipType_QHelpIndexModel, -1, 5},
+        {sipName_QHelpIndexWidget, &sipType_QHelpIndexWidget, -1, 6},
+        {sipName_QHelpSearchEngine, &sipType_QHelpSearchEngine, -1, 7},
+        {sipName_QHelpSearchQueryWidget, &sipType_QHelpSearchQueryWidget, -1, 8},
+        {sipName_QHelpSearchResultWidget, &sipType_QHelpSearchResultWidget, -1, -1},
+        {sipName_QHelpEngine, &sipType_QHelpEngine, -1, -1},
+    };
     
-        int i = 0;
+    int i = 0;
     
-        sipType = 0;
+    sipType = NULL;
     
-        do
+    do
+    {
+        struct class_graph *cg = &graph[i];
+    
+        if (cg->name != NULL && sipCpp->inherits(cg->name))
         {
-            struct class_graph *cg = &graph[i];
-    
-            if (cg->name != NULL && sipCpp->inherits(cg->name))
-            {
-                sipType = *cg->type;
-                i = cg->yes;
-            }
-            else
-                i = cg->no;
+            sipType = *cg->type;
+            i = cg->yes;
         }
-        while (i >= 0);
+        else
+            i = cg->no;
+    }
+    while (i >= 0);
 %End
 
 public:
@@ -88,23 +91,37 @@ public:
     QUrl findFile(const QUrl &url) const;
     QByteArray fileData(const QUrl &url) const;
     QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
+%If (Qt_5_9_0 -)
+    QMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
+%End
     bool removeCustomValue(const QString &key);
     QVariant customValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
     bool setCustomValue(const QString &key, const QVariant &value);
     static QVariant metaData(const QString &documentationFileName, const QString &name);
     QString error() const;
-%If (Qt_4_5_0 -)
     bool autoSaveFilter() const;
-%End
-%If (Qt_4_5_0 -)
     void setAutoSaveFilter(bool save);
-%End
 
 signals:
     void setupStarted();
     void setupFinished();
     void currentFilterChanged(const QString &newFilter);
     void warning(const QString &msg);
-};
-
+%If (Qt_5_4_0 -)
+    void readersAboutToBeInvalidated();
 %End
+
+public:
+%If (Qt_5_13_0 -)
+    QHelpFilterEngine *filterEngine() const;
+%End
+%If (Qt_5_13_0 -)
+    QList<QUrl> files(const QString namespaceName, const QString &filterName, const QString &extensionFilter = QString());
+%End
+%If (Qt_5_13_0 -)
+    void setUsesFilterEngine(bool uses);
+%End
+%If (Qt_5_13_0 -)
+    bool usesFilterEngine() const;
+%End
+};

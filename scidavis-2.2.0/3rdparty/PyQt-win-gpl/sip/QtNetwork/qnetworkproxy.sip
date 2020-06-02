@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -32,15 +32,9 @@ public:
         DefaultProxy,
         Socks5Proxy,
         NoProxy,
-%If (Qt_4_3_0 -)
         HttpProxy,
-%End
-%If (Qt_4_4_0 -)
         HttpCachingProxy,
-%End
-%If (Qt_4_4_0 -)
         FtpCachingProxy,
-%End
     };
 
     QNetworkProxy();
@@ -59,19 +53,10 @@ public:
     quint16 port() const;
     static void setApplicationProxy(const QNetworkProxy &proxy);
     static QNetworkProxy applicationProxy();
-%If (Qt_4_4_0 -)
     bool isCachingProxy() const;
-%End
-%If (Qt_4_4_0 -)
     bool isTransparentProxy() const;
-%End
-%If (Qt_4_4_0 -)
     bool operator==(const QNetworkProxy &other) const;
-%End
-%If (Qt_4_4_0 -)
     bool operator!=(const QNetworkProxy &other) const;
-%End
-%If (Qt_4_5_0 -)
 
     enum Capability
     {
@@ -80,42 +65,25 @@ public:
         UdpTunnelingCapability,
         CachingCapability,
         HostNameLookupCapability,
+%If (Qt_5_8_0 -)
+        SctpTunnelingCapability,
+%End
+%If (Qt_5_8_0 -)
+        SctpListeningCapability,
+%End
     };
 
-%End
-%If (Qt_4_5_0 -)
     typedef QFlags<QNetworkProxy::Capability> Capabilities;
-%End
-%If (Qt_4_5_0 -)
-    void setCapabilities(QFlags<QNetworkProxy::Capability> capab);
-%End
-%If (Qt_4_5_0 -)
-    QFlags<QNetworkProxy::Capability> capabilities() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkProxy &other);
-%End
-%If (Qt_5_0_0 -)
+    void setCapabilities(QNetworkProxy::Capabilities capab);
+    QNetworkProxy::Capabilities capabilities() const;
+    void swap(QNetworkProxy &other /Constrained/);
     QVariant header(QNetworkRequest::KnownHeaders header) const;
-%End
-%If (Qt_5_0_0 -)
     void setHeader(QNetworkRequest::KnownHeaders header, const QVariant &value);
-%End
-%If (Qt_5_0_0 -)
     bool hasRawHeader(const QByteArray &headerName) const;
-%End
-%If (Qt_5_0_0 -)
     QList<QByteArray> rawHeaderList() const;
-%End
-%If (Qt_5_0_0 -)
     QByteArray rawHeader(const QByteArray &headerName) const;
-%End
-%If (Qt_5_0_0 -)
     void setRawHeader(const QByteArray &headerName, const QByteArray &value);
-%End
 };
-
-%If (Qt_4_5_0 -)
 
 class QNetworkProxyQuery
 {
@@ -130,21 +98,21 @@ public:
         UdpSocket,
         TcpServer,
         UrlRequest,
+%If (Qt_5_8_0 -)
+        SctpSocket,
+%End
+%If (Qt_5_8_0 -)
+        SctpServer,
+%End
     };
 
     QNetworkProxyQuery();
     QNetworkProxyQuery(const QUrl &requestUrl, QNetworkProxyQuery::QueryType type = QNetworkProxyQuery::UrlRequest);
     QNetworkProxyQuery(const QString &hostname, int port, const QString &protocolTag = QString(), QNetworkProxyQuery::QueryType type = QNetworkProxyQuery::TcpSocket);
     QNetworkProxyQuery(quint16 bindPort, const QString &protocolTag = QString(), QNetworkProxyQuery::QueryType type = QNetworkProxyQuery::TcpServer);
-%If (Qt_4_8_0 -)
     QNetworkProxyQuery(const QNetworkConfiguration &networkConfiguration, const QUrl &requestUrl, QNetworkProxyQuery::QueryType queryType = QNetworkProxyQuery::UrlRequest);
-%End
-%If (Qt_4_8_0 -)
     QNetworkProxyQuery(const QNetworkConfiguration &networkConfiguration, const QString &hostname, int port, const QString &protocolTag = QString(), QNetworkProxyQuery::QueryType type = QNetworkProxyQuery::TcpSocket);
-%End
-%If (Qt_4_8_0 -)
     QNetworkProxyQuery(const QNetworkConfiguration &networkConfiguration, quint16 bindPort, const QString &protocolTag = QString(), QNetworkProxyQuery::QueryType type = QNetworkProxyQuery::TcpServer);
-%End
     QNetworkProxyQuery(const QNetworkProxyQuery &other);
     ~QNetworkProxyQuery();
     bool operator==(const QNetworkProxyQuery &other) const;
@@ -161,19 +129,10 @@ public:
     void setProtocolTag(const QString &protocolTag);
     QUrl url() const;
     void setUrl(const QUrl &url);
-%If (Qt_4_8_0 -)
     QNetworkConfiguration networkConfiguration() const;
-%End
-%If (Qt_4_8_0 -)
     void setNetworkConfiguration(const QNetworkConfiguration &networkConfiguration);
-%End
-%If (Qt_5_0_0 -)
-    void swap(QNetworkProxyQuery &other);
-%End
+    void swap(QNetworkProxyQuery &other /Constrained/);
 };
-
-%End
-%If (Qt_4_5_0 -)
 
 class QNetworkProxyFactory /Supertype=sip.wrapper/
 {
@@ -188,9 +147,8 @@ public:
     static void setApplicationProxyFactory(QNetworkProxyFactory *factory /Transfer/);
     static QList<QNetworkProxy> proxyForQuery(const QNetworkProxyQuery &query);
     static QList<QNetworkProxy> systemProxyForQuery(const QNetworkProxyQuery &query = QNetworkProxyQuery());
-%If (Qt_4_6_0 -)
     static void setUseSystemConfiguration(bool enable);
+%If (Qt_5_8_0 -)
+    static bool usesSystemConfiguration();
 %End
 };
-
-%End

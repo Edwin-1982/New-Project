@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,7 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix4x3.
 class QMatrix4x3
 {
@@ -73,7 +72,7 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix4x3("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix4x3("
                     "%R, %R, %R, "
                     "%R, %R, %R, "
                     "%R, %R, %R, "
@@ -83,7 +82,7 @@ public:
                     m[6], m[7], m[8],
                     m[9], m[10], m[11]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix4x3(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix4x3(");
 
             for (i = 0; i < 12; ++i)
             {
@@ -173,8 +172,6 @@ public:
     bool operator==(const QMatrix4x3 &) const;
     bool operator!=(const QMatrix4x3 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix4x2.
 class QMatrix4x2
 {
@@ -227,7 +224,7 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix4x2("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix4x2("
                     "%R, %R, "
                     "%R, %R, "
                     "%R, %R, "
@@ -237,7 +234,7 @@ public:
                     m[4], m[5],
                     m[6], m[7]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix4x2(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix4x2(");
 
             for (i = 0; i < 8; ++i)
             {
@@ -327,8 +324,6 @@ public:
     bool operator==(const QMatrix4x2 &) const;
     bool operator!=(const QMatrix4x2 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix3x4.
 class QMatrix3x4
 {
@@ -381,7 +376,7 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix3x4("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix3x4("
                     "%R, %R, %R, "
                     "%R, %R, %R, "
                     "%R, %R, %R, "
@@ -391,7 +386,7 @@ public:
                     m[6], m[7], m[8],
                     m[9], m[10], m[11]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix3x4(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix3x4(");
 
             for (i = 0; i < 12; ++i)
             {
@@ -481,8 +476,6 @@ public:
     bool operator==(const QMatrix3x4 &) const;
     bool operator!=(const QMatrix3x4 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix3x3.
 class QMatrix3x3
 {
@@ -534,7 +527,7 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix3x3("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix3x3("
                     "%R, %R, %R, "
                     "%R, %R, %R, "
                     "%R, %R, %R)",
@@ -542,7 +535,7 @@ public:
                     m[3], m[4], m[5],
                     m[6], m[7], m[8]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix3x3(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix3x3(");
 
             for (i = 0; i < 9; ++i)
             {
@@ -632,8 +625,6 @@ public:
     bool operator==(const QMatrix3x3 &) const;
     bool operator!=(const QMatrix3x3 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix3x2.
 class QMatrix3x2
 {
@@ -685,7 +676,7 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix3x2("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix3x2("
                     "%R, %R, "
                     "%R, %R, "
                     "%R, %R)",
@@ -693,7 +684,7 @@ public:
                     m[2], m[3],
                     m[4], m[5]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix3x2(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix3x2(");
 
             for (i = 0; i < 6; ++i)
             {
@@ -783,8 +774,6 @@ public:
     bool operator==(const QMatrix3x2 &) const;
     bool operator!=(const QMatrix3x2 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix2x4.
 class QMatrix2x4
 {
@@ -835,13 +824,13 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix2x4("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix2x4("
                     "%R, %R, %R, %R, "
                     "%R, %R, %R, %R)",
                     m[0], m[1], m[2], m[3],
                     m[4], m[5], m[6], m[7]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix2x4(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix2x4(");
 
             for (i = 0; i < 8; ++i)
             {
@@ -931,8 +920,6 @@ public:
     bool operator==(const QMatrix2x4 &) const;
     bool operator!=(const QMatrix2x4 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix2x3.
 class QMatrix2x3
 {
@@ -983,13 +970,13 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix2x3("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix2x3("
                     "%R, %R, %R, "
                     "%R, %R, %R)",
                     m[0], m[1], m[2],
                     m[3], m[4], m[5]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix2x3(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix2x3(");
 
             for (i = 0; i < 6; ++i)
             {
@@ -1079,8 +1066,6 @@ public:
     bool operator==(const QMatrix2x3 &) const;
     bool operator!=(const QMatrix2x3 &) const;
 };
-%End
-%If (Qt_4_6_0 -)
 // The implementation of QMatrix2x2.
 class QMatrix2x2
 {
@@ -1131,13 +1116,13 @@ public:
         if (!bad)
         {
 #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtGui.QMatrix2x2("
+            sipRes = PyUnicode_FromFormat("PyQt5.QtGui.QMatrix2x2("
                     "%R, %R, "
                     "%R, %R)",
                     m[0], m[1],
                     m[2], m[3]);
 #else
-            sipRes = PyString_FromString("PyQt4.QtGui.QMatrix2x2(");
+            sipRes = PyString_FromString("PyQt5.QtGui.QMatrix2x2(");
 
             for (i = 0; i < 4; ++i)
             {
@@ -1227,4 +1212,3 @@ public:
     bool operator==(const QMatrix2x2 &) const;
     bool operator!=(const QMatrix2x2 &) const;
 };
-%End

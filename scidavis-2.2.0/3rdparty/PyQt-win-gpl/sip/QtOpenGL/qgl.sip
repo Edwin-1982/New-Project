@@ -2,9 +2,9 @@
 //
 // This file is part of the QtOpenGL Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,6 +19,8 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+
+%If (PyQt_OpenGL)
 
 namespace QGL
 {
@@ -48,21 +50,18 @@ namespace QGL
         IndirectRendering,
         NoOverlay,
         NoSampleBuffers,
-%If (Qt_4_7_0 -)
         DeprecatedFunctions,
-%End
-%If (Qt_4_7_0 -)
         NoDeprecatedFunctions,
-%End
     };
 
     typedef QFlags<QGL::FormatOption> FormatOptions;
-%If (Qt_4_6_0 - Qt_5_0_0)
-    void setPreferredPaintEngine(QPaintEngine::Type engineType);
-%End
 };
 
+%End
+%If (PyQt_OpenGL)
 QFlags<QGL::FormatOption> operator|(QGL::FormatOption f1, QFlags<QGL::FormatOption> f2);
+%End
+%If (PyQt_OpenGL)
 
 class QGLFormat
 {
@@ -71,8 +70,6 @@ class QGLFormat
 %End
 
 public:
-%If (Qt_4_2_0 -)
-
     enum OpenGLVersionFlag
     {
         OpenGL_Version_None,
@@ -83,30 +80,14 @@ public:
         OpenGL_Version_1_5,
         OpenGL_Version_2_0,
         OpenGL_Version_2_1,
-%If (Qt_4_5_0 -)
         OpenGL_Version_3_0,
-%End
-%If (Qt_4_7_0 -)
         OpenGL_Version_3_1,
-%End
-%If (Qt_4_7_0 -)
         OpenGL_Version_3_2,
-%End
-%If (Qt_4_7_0 -)
         OpenGL_Version_3_3,
-%End
-%If (Qt_4_7_0 -)
         OpenGL_Version_4_0,
-%End
-%If (Qt_5_0_0 -)
         OpenGL_Version_4_1,
-%End
-%If (Qt_5_0_0 -)
         OpenGL_Version_4_2,
-%End
-%If (Qt_5_0_0 -)
         OpenGL_Version_4_3,
-%End
         OpenGL_ES_Common_Version_1_0,
         OpenGL_ES_CommonLite_Version_1_0,
         OpenGL_ES_Common_Version_1_1,
@@ -114,10 +95,7 @@ public:
         OpenGL_ES_Version_2_0,
     };
 
-%End
-%If (Qt_4_2_0 -)
     typedef QFlags<QGLFormat::OpenGLVersionFlag> OpenGLVersionFlags;
-%End
     QGLFormat();
     QGLFormat(QGL::FormatOptions options, int plane = 0);
     QGLFormat(const QGLFormat &other);
@@ -162,43 +140,18 @@ public:
     bool directRendering() const;
     bool hasOverlay() const;
     bool sampleBuffers() const;
-%If (Qt_4_2_0 -)
     void setRedBufferSize(int size);
-%End
-%If (Qt_4_2_0 -)
     int redBufferSize() const;
-%End
-%If (Qt_4_2_0 -)
     void setGreenBufferSize(int size);
-%End
-%If (Qt_4_2_0 -)
     int greenBufferSize() const;
-%End
-%If (Qt_4_2_0 -)
     void setBlueBufferSize(int size);
-%End
-%If (Qt_4_2_0 -)
     int blueBufferSize() const;
-%End
-%If (Qt_4_2_0 -)
     void setSwapInterval(int interval);
-%End
-%If (Qt_4_2_0 -)
     int swapInterval() const;
-%End
-%If (Qt_4_2_0 -)
-    static QFlags<QGLFormat::OpenGLVersionFlag> openGLVersionFlags();
-%End
-%If (Qt_4_7_0 -)
+    static QGLFormat::OpenGLVersionFlags openGLVersionFlags();
     void setVersion(int major, int minor);
-%End
-%If (Qt_4_7_0 -)
     int majorVersion() const;
-%End
-%If (Qt_4_7_0 -)
     int minorVersion() const;
-%End
-%If (Qt_4_7_0 -)
 
     enum OpenGLContextProfile
     {
@@ -207,17 +160,18 @@ public:
         CompatibilityProfile,
     };
 
-%End
-%If (Qt_4_7_0 -)
     void setProfile(QGLFormat::OpenGLContextProfile profile);
-%End
-%If (Qt_4_7_0 -)
     QGLFormat::OpenGLContextProfile profile() const;
-%End
 };
 
+%End
+%If (PyQt_OpenGL)
 bool operator==(const QGLFormat &, const QGLFormat &);
+%End
+%If (PyQt_OpenGL)
 bool operator!=(const QGLFormat &, const QGLFormat &);
+%End
+%If (PyQt_OpenGL)
 
 class QGLContext /Supertype=sip.wrapper/
 {
@@ -226,7 +180,7 @@ class QGLContext /Supertype=sip.wrapper/
 %End
 
 public:
-    QGLContext(const QGLFormat &format, QPaintDevice *device);
+    QGLContext(const QGLFormat &format);
     virtual ~QGLContext();
     virtual bool create(const QGLContext *shareContext = 0);
     bool isValid() const;
@@ -240,33 +194,13 @@ public:
     virtual void swapBuffers() const;
     GLuint bindTexture(const QImage &image, GLenum target = GL_TEXTURE_2D, GLint format = GL_RGBA);
     GLuint bindTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D, GLint format = GL_RGBA);
-%If (Qt_4_4_0 -)
     void drawTexture(const QRectF &target, GLuint textureId, GLenum textureTarget = GL_TEXTURE_2D);
-%End
-%If (Qt_4_4_0 -)
     void drawTexture(const QPointF &point, GLuint textureId, GLenum textureTarget = GL_TEXTURE_2D);
-%End
     GLuint bindTexture(const QString &fileName);
-
-protected:
-%If (- Qt_5_0_0)
-%If (WS_X11)
-%If (PyQt_NoOpenGLES)
-    virtual void *chooseVisual();
-%End
-%End
-%End
-
-public:
     void deleteTexture(GLuint tx_id);
     static void setTextureCacheLimit(int size);
     static int textureCacheLimit();
-%If (Qt_5_0_0 -)
     QFunctionPointer getProcAddress(const QString &proc) const;
-%End
-%If (- Qt_5_0_0)
-    void *getProcAddress(const QString &proc) const;
-%End
     QPaintDevice *device() const;
     QColor overlayTransparentColor() const;
     static const QGLContext *currentContext();
@@ -278,15 +212,9 @@ protected:
     void setWindowCreated(bool on);
     bool initialized() const;
     void setInitialized(bool on);
-%If (- Qt_5_0_0)
-    void generateFontDisplayLists(const QFont &fnt, int listBase);
-%End
 
 public:
-%If (Qt_4_6_0 -)
     static bool areSharing(const QGLContext *context1, const QGLContext *context2);
-%End
-%If (Qt_4_6_0 -)
 
     enum BindOption
     {
@@ -298,23 +226,17 @@ public:
         DefaultBindOption,
     };
 
-%End
-%If (Qt_4_6_0 -)
     typedef QFlags<QGLContext::BindOption> BindOptions;
-%End
-%If (Qt_4_6_0 -)
-    GLuint bindTexture(const QImage &image, GLenum target, GLint format, QFlags<QGLContext::BindOption> options);
-%End
-%If (Qt_4_6_0 -)
-    GLuint bindTexture(const QPixmap &pixmap, GLenum target, GLint format, QFlags<QGLContext::BindOption> options);
-%End
-%If (Qt_5_0_0 -)
+    GLuint bindTexture(const QImage &image, GLenum target, GLint format, QGLContext::BindOptions options);
+    GLuint bindTexture(const QPixmap &pixmap, GLenum target, GLint format, QGLContext::BindOptions options);
     void moveToThread(QThread *thread);
-%End
 
 private:
     QGLContext(const QGLContext &);
 };
+
+%End
+%If (PyQt_OpenGL)
 
 class QGLWidget : QWidget
 {
@@ -328,17 +250,7 @@ class QGLWidget : QWidget
         sipTypeDef **type;
         int yes, no;
     } graph[] = {
-        {sipName_QGLWidget, &sipType_QGLWidget, -1, 1},
-    #if QT_VERSION >= 0x040600 && defined(SIP_FEATURE_PyQt_Deprecated_5_0)
-        {sipName_QGLShaderProgram, &sipType_QGLShaderProgram, -1, 2},
-    #else
-        {0, 0, -1, 2},
-    #endif
-    #if QT_VERSION >= 0x040600 && defined(SIP_FEATURE_PyQt_Deprecated_5_0)
-        {sipName_QGLShader, &sipType_QGLShader, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
+        {sipName_QGLWidget, &sipType_QGLWidget, -1, -1},
     };
     
     int i = 0;
@@ -361,24 +273,9 @@ class QGLWidget : QWidget
 %End
 
 public:
-%If (- Qt_4_2_0)
-    QGLWidget(QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WFlags flags = 0);
-%End
-%If (Qt_4_2_0 -)
-    QGLWidget(QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = 0);
-%End
-%If (- Qt_4_2_0)
-    QGLWidget(QGLContext *context /Transfer/, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WFlags flags = 0);
-%End
-%If (Qt_4_2_0 -)
-    QGLWidget(QGLContext *context /Transfer/, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = 0);
-%End
-%If (- Qt_4_2_0)
-    QGLWidget(const QGLFormat &format, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WFlags flags = 0);
-%End
-%If (Qt_4_2_0 -)
-    QGLWidget(const QGLFormat &format, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = 0);
-%End
+    QGLWidget(QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = Qt::WindowFlags());
+    QGLWidget(QGLContext *context /Transfer/, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = Qt::WindowFlags());
+    QGLWidget(const QGLFormat &format, QWidget *parent /TransferThis/ = 0, const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QGLWidget();
     void qglColor(const QColor &c) const;
     void qglClearColor(const QColor &c) const;
@@ -389,50 +286,21 @@ public:
     bool doubleBuffer() const;
     void swapBuffers();
     QGLFormat format() const;
-    void setFormat(const QGLFormat &format);
-%If (Qt_5_0_0 -)
     QGLContext *context() const;
-%End
-%If (- Qt_5_0_0)
-    const QGLContext *context() const;
-%End
     void setContext(QGLContext *context /Transfer/, const QGLContext *shareContext = 0, bool deleteOldContext = true);
     QPixmap renderPixmap(int width = 0, int height = 0, bool useContext = false);
     QImage grabFrameBuffer(bool withAlpha = false);
     void makeOverlayCurrent();
     const QGLContext *overlayContext() const;
     static QImage convertToGLFormat(const QImage &img);
-%If (- Qt_5_0_0)
-    void setMouseTracking(bool enable);
-%End
-%If (PyQt_Deprecated_5_0)
-    const QGLColormap &colormap() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void setColormap(const QGLColormap &map);
-%End
-%If (Qt_5_0_0 -)
     void renderText(int x, int y, const QString &str, const QFont &font = QFont());
-%End
-%If (- Qt_5_0_0)
-    void renderText(int x, int y, const QString &str, const QFont &font = QFont(), int listBase = 2000);
-%End
-%If (Qt_5_0_0 -)
     void renderText(double x, double y, double z, const QString &str, const QFont &font = QFont());
-%End
-%If (- Qt_5_0_0)
-    void renderText(double x, double y, double z, const QString &str, const QFont &font = QFont(), int listBase = 2000);
-%End
     virtual QPaintEngine *paintEngine() const;
     GLuint bindTexture(const QImage &image, GLenum target = GL_TEXTURE_2D, GLint format = GL_RGBA);
     GLuint bindTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D, GLint format = GL_RGBA);
     GLuint bindTexture(const QString &fileName);
-%If (Qt_4_4_0 -)
     void drawTexture(const QRectF &target, GLuint textureId, GLenum textureTarget = GL_TEXTURE_2D);
-%End
-%If (Qt_4_4_0 -)
     void drawTexture(const QPointF &point, GLuint textureId, GLenum textureTarget = GL_TEXTURE_2D);
-%End
     void deleteTexture(GLuint tx_id);
 
 public slots:
@@ -453,29 +321,16 @@ protected:
     virtual void resizeEvent(QResizeEvent *);
     virtual void glInit();
     virtual void glDraw();
-%If (- Qt_5_0_0)
-    int fontDisplayListBase(const QFont &font, int listBase = 2000);
-%End
 
 public:
-%If (Qt_4_6_0 -)
-    GLuint bindTexture(const QImage &image, GLenum target, GLint format, QFlags<QGLContext::BindOption> options);
-%End
-%If (Qt_4_6_0 -)
-    GLuint bindTexture(const QPixmap &pixmap, GLenum target, GLint format, QFlags<QGLContext::BindOption> options);
-%End
-
-private:
-    QGLWidget(const QGLWidget &);
+    GLuint bindTexture(const QImage &image, GLenum target, GLint format, QGLContext::BindOptions options);
+    GLuint bindTexture(const QPixmap &pixmap, GLenum target, GLint format, QGLContext::BindOptions options);
 };
 
-%If (Qt_4_2_0 -)
+%End
+%If (PyQt_OpenGL)
 QFlags<QGLFormat::OpenGLVersionFlag> operator|(QGLFormat::OpenGLVersionFlag f1, QFlags<QGLFormat::OpenGLVersionFlag> f2);
 %End
-%If (Qt_4_6_0 -)
+%If (PyQt_OpenGL)
 QFlags<QGLContext::BindOption> operator|(QGLContext::BindOption f1, QFlags<QGLContext::BindOption> f2);
-%End
-
-%ModuleHeaderCode
-#include <qpyopengl_api.h>
 %End

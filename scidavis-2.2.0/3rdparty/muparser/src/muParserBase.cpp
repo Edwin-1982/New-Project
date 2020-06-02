@@ -69,8 +69,6 @@ namespace mu
     _T(")"),   _T("?"),  _T(":"), 0 
   };
 
-  const int ParserBase::s_MaxNumOpenMPThreads = 16;
-
   //------------------------------------------------------------------------------
   /** \brief Constructor.
       \param a_szFormula the formula to interpret.
@@ -378,8 +376,8 @@ namespace mu
     {
       switch(a_Callback.GetCode())
       {
-      case cmOPRT_POSTFIX: Error(ecINVALID_POSTFIX_IDENT, -1, a_sName); break;
-      case cmOPRT_INFIX:   Error(ecINVALID_INFIX_IDENT, -1, a_sName); break;
+      case cmOPRT_POSTFIX: Error(ecINVALID_POSTFIX_IDENT, -1, a_sName);
+      case cmOPRT_INFIX:   Error(ecINVALID_INFIX_IDENT, -1, a_sName);
       default:             Error(ecINVALID_NAME, -1, a_sName);
       }
     }
@@ -412,7 +410,8 @@ namespace mu
   void ParserBase::SetExpr(const string_type &a_sExpr)
   {
     // Check locale compatibility
-    if (m_pTokenReader->GetArgSep()==std::use_facet<numpunct<char_type> >(s_locale).decimal_point())
+    std::locale loc;
+    if (m_pTokenReader->GetArgSep()==std::use_facet<numpunct<char_type> >(loc).decimal_point())
       Error(ecLOCALE);
 
     // <ibg> 20060222: Bugfix for Borland-Kylix:
@@ -697,7 +696,7 @@ namespace mu
     }
     catch(exception_type & /*e*/)
     {
-      // Make sure to stay in string parse mode, don't call ReInit()
+      // Make sure to stay in string parse mode, dont call ReInit()
       // because it deletes the array with the used variables
       m_pParseFormula = &ParserBase::ParseString;
       m_pTokenReader->IgnoreUndefVar(false);
@@ -811,7 +810,7 @@ namespace mu
     // string parameter whilst GetArgCount() counts only numeric parameters.
     int iArgRequired = funTok.GetArgCount() + ((funTok.GetType()==tpSTR) ? 1 : 0);
 
-    // That's the number of numerical parameters
+    // Thats the number of numerical parameters
     int iArgNumerical = iArgCount - ((funTok.GetType()==tpSTR) ? 1 : 0);
 
     if (funTok.GetCode()==cmFUNC_STR && iArgCount-iArgNumerical>1)
@@ -860,8 +859,6 @@ namespace mu
 
           m_vRPN.AddFun(funTok.GetFuncAddr(), (funTok.GetArgCount()==-1) ? -iArgNumerical : iArgNumerical);
           break;
-    default:
-        break;
     }
 
     // Push dummy value representing the function result to the stack
@@ -1231,8 +1228,7 @@ namespace mu
                   Error(ecUNEXPECTED_ARG_SEP, m_pTokenReader->GetPos());
 
                 ++stArgCount.top();
-                // Falls through.
-                // intentional (no break!)
+                // fallthrough intentional (no break!)
 
         case cmEND:
                 ApplyRemainingOprt(stOpt, stVal);
@@ -1290,8 +1286,7 @@ namespace mu
         //case cmXOR:
         case cmIF:
                 m_nIfElseCounter++;
-                // Falls through.
-                // intentional (no break!)
+                // fallthrough intentional (no break!)
 
         case cmLAND:
         case cmLOR:
@@ -1440,7 +1435,7 @@ namespace mu
     \param a_iErrc [in] The error code of type #EErrorCodes.
     \param a_iPos [in] The position where the error was detected.
     \param a_strTok [in] The token string representation associated with the error.
-    \throw ParserException always throws that's the only purpose of this function.
+    \throw ParserException always throws thats the only purpose of this function.
   */
   void  ParserBase::Error(EErrorCodes a_iErrc, int a_iPos, const string_type &a_sTok) const
   {

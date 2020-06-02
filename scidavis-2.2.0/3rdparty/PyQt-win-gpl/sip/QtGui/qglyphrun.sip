@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,7 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_8_0 -)
 %If (PyQt_RawFont)
 
 class QGlyphRun
@@ -48,7 +47,6 @@ public:
     bool underline() const;
     void setStrikeOut(bool strikeOut);
     bool strikeOut() const;
-%If (Qt_5_0_0 -)
 
     enum GlyphRunFlag
     {
@@ -59,38 +57,16 @@ public:
         SplitLigature,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QGlyphRun::GlyphRunFlag> GlyphRunFlags;
-%End
-%If (Qt_5_0_0 -)
     void setRightToLeft(bool on);
-%End
-%If (Qt_5_0_0 -)
     bool isRightToLeft() const;
-%End
-%If (Qt_5_0_0 -)
     void setFlag(QGlyphRun::GlyphRunFlag flag, bool enabled = true);
-%End
-%If (Qt_5_0_0 -)
-    void setFlags(QFlags<QGlyphRun::GlyphRunFlag> flags);
-%End
-%If (Qt_5_0_0 -)
-    QFlags<QGlyphRun::GlyphRunFlag> flags() const;
-%End
-%If (Qt_5_0_0 -)
+    void setFlags(QGlyphRun::GlyphRunFlags flags);
+    QGlyphRun::GlyphRunFlags flags() const;
     void setBoundingRect(const QRectF &boundingRect);
-%End
-%If (Qt_5_0_0 -)
     QRectF boundingRect() const;
-%End
-%If (Qt_5_0_0 -)
     bool isEmpty() const;
-%End
-%If (Qt_5_0_0 -)
-    void swap(QGlyphRun &other);
-%End
+    void swap(QGlyphRun &other /Constrained/);
 };
 
-%End
 %End

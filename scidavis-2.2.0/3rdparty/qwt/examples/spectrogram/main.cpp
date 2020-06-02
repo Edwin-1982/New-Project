@@ -2,88 +2,90 @@
 #include <qmainwindow.h>
 #include <qtoolbar.h>
 #include <qtoolbutton.h>
-#include <qcombobox.h>
-#include <qslider.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
 #include "plot.h"
-#include "qwt_color_map.h"
 
 class MainWindow: public QMainWindow
 {
 public:
-    MainWindow( QWidget * = NULL );
+    MainWindow(QWidget * = NULL);
 
 private:
     Plot *d_plot;
 };
 
-MainWindow::MainWindow( QWidget *parent ):
-    QMainWindow( parent )
+MainWindow::MainWindow(QWidget *parent):
+    QMainWindow(parent)
 {
-    d_plot = new Plot( this );
+    d_plot = new Plot(this);
 
-    setCentralWidget( d_plot );
+    setCentralWidget(d_plot);
 
-    QToolBar *toolBar = new QToolBar( this );
+    QToolBar *toolBar = new QToolBar(this);
 
-#ifndef QT_NO_PRINTER
-    QToolButton *btnPrint = new QToolButton( toolBar );
-    btnPrint->setText( "Print" );
-    btnPrint->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
-    toolBar->addWidget( btnPrint );
-    connect( btnPrint, SIGNAL( clicked() ),
-        d_plot, SLOT( printPlot() ) );
+    QToolButton *btnSpectrogram = new QToolButton(toolBar);
+    QToolButton *btnContour = new QToolButton(toolBar);
+    QToolButton *btnPrint = new QToolButton(toolBar);
 
-    toolBar->addSeparator();
+#if QT_VERSION >= 0x040000
+    btnSpectrogram->setText("Spectrogram");
+    //btnSpectrogram->setIcon(QIcon());
+    btnSpectrogram->setCheckable(true);
+    btnSpectrogram->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolBar->addWidget(btnSpectrogram);
+
+    btnContour->setText("Contour");
+    //btnContour->setIcon(QIcon());
+    btnContour->setCheckable(true);
+    btnContour->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolBar->addWidget(btnContour);
+
+    btnPrint->setText("Print");
+    btnPrint->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolBar->addWidget(btnPrint);
+#else
+    btnSpectrogram->setTextLabel("Spectrogram");
+    //btnSpectrogram->setPixmap(zoom_xpm);
+    btnSpectrogram->setToggleButton(true);
+    btnSpectrogram->setUsesTextLabel(true);
+
+    btnContour->setTextLabel("Contour");
+    //btnContour->setPixmap(zoom_xpm);
+    btnContour->setToggleButton(true);
+    btnContour->setUsesTextLabel(true);
+
+    btnPrint->setTextLabel("Print");
+    btnPrint->setUsesTextLabel(true);
 #endif
 
-    toolBar->addWidget( new QLabel("Color Map " ) );
-    QComboBox *mapBox = new QComboBox( toolBar );
-    mapBox->addItem( "RGB" );
-    mapBox->addItem( "Indexed Colors" );
-    mapBox->addItem( "Hue" );
-    mapBox->addItem( "Alpha" );
-    mapBox->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    toolBar->addWidget( mapBox );
-    connect( mapBox, SIGNAL( currentIndexChanged( int ) ),
-             d_plot, SLOT( setColorMap( int ) ) );
+    addToolBar(toolBar);
 
-    toolBar->addWidget( new QLabel( " Opacity " ) );
-    QSlider *slider = new QSlider( Qt::Horizontal );
-    slider->setRange( 0, 255 );
-    slider->setValue( 255 );
-    connect( slider, SIGNAL( valueChanged( int ) ),
-        d_plot, SLOT( setAlpha( int ) ) );
+    connect(btnSpectrogram, SIGNAL(toggled(bool)), 
+        d_plot, SLOT(showSpectrogram(bool)));
+    connect(btnContour, SIGNAL(toggled(bool)), 
+        d_plot, SLOT(showContour(bool)));
+    connect(btnPrint, SIGNAL(clicked()), 
+        d_plot, SLOT(printPlot()) );
 
-    toolBar->addWidget( slider );
-    toolBar->addWidget( new QLabel("   " ) );
-
-    QCheckBox *btnSpectrogram = new QCheckBox( "Spectrogram", toolBar );
-    toolBar->addWidget( btnSpectrogram );
-    connect( btnSpectrogram, SIGNAL( toggled( bool ) ),
-        d_plot, SLOT( showSpectrogram( bool ) ) );
-
-    QCheckBox *btnContour = new QCheckBox( "Contour", toolBar );
-    toolBar->addWidget( btnContour );
-    connect( btnContour, SIGNAL( toggled( bool ) ),
-        d_plot, SLOT( showContour( bool ) ) );
-
-    addToolBar( toolBar );
-
-    btnSpectrogram->setChecked( true );
-    btnContour->setChecked( false );
-
+#if QT_VERSION >= 0x040000
+    btnSpectrogram->setChecked(true);
+    btnContour->setChecked(false);
+#else
+    btnSpectrogram->setOn(true);
+    btnContour->setOn(false);
+#endif
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    QApplication a( argc, argv );
-    a.setStyle( "Windows" );
+    QApplication a(argc, argv);
 
     MainWindow mainWindow;
-    mainWindow.resize( 600, 400 );
+#if QT_VERSION < 0x040000
+    a.setMainWidget(&mainWindow);
+#endif
+
+    mainWindow.resize(600,400);
     mainWindow.show();
 
-    return a.exec();
+    return a.exec(); 
 }

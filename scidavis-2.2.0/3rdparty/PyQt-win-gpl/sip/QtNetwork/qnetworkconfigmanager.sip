@@ -2,9 +2,9 @@
 //
 // This file is part of the QtNetwork Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QNetworkConfigurationManager : QObject
 {
@@ -41,16 +39,11 @@ public:
     };
 
     typedef QFlags<QNetworkConfigurationManager::Capability> Capabilities;
-%If (Qt_4_8_0 -)
     explicit QNetworkConfigurationManager(QObject *parent /TransferThis/ = 0);
-%End
-%If (- Qt_4_8_0)
-    QNetworkConfigurationManager(QObject *parent /TransferThis/ = 0);
-%End
     virtual ~QNetworkConfigurationManager();
-    QFlags<QNetworkConfigurationManager::Capability> capabilities() const;
+    QNetworkConfigurationManager::Capabilities capabilities() const;
     QNetworkConfiguration defaultConfiguration() const;
-    QList<QNetworkConfiguration> allConfigurations(QFlags<QNetworkConfiguration::StateFlag> flags = 0) const;
+    QList<QNetworkConfiguration> allConfigurations(QNetworkConfiguration::StateFlags flags = QNetworkConfiguration::StateFlags()) const;
     QNetworkConfiguration configurationFromIdentifier(const QString &identifier) const;
     void updateConfigurations();
     bool isOnline() const;
@@ -61,17 +54,7 @@ signals:
     void configurationChanged(const QNetworkConfiguration &config);
     void onlineStateChanged(bool isOnline);
     void updateCompleted();
-
-private:
-%If (Qt_5_0_0 -)
-    QNetworkConfigurationManager(const QNetworkConfigurationManager &);
-%End
 };
 
-%End
-%If (Qt_4_7_0 -)
 QFlags<QNetworkConfigurationManager::Capability> operator|(QNetworkConfigurationManager::Capability f1, QFlags<QNetworkConfigurationManager::Capability> f2);
-%End
-%If (Qt_4_7_0 -)
 QFlags<QNetworkConfigurationManager::Capability> operator|(QNetworkConfigurationManager::Capability f1, QNetworkConfigurationManager::Capability f2);
-%End

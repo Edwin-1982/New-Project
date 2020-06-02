@@ -1,8 +1,8 @@
 // This implements the helpers for QObject.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -27,15 +27,18 @@
 #include <QObject>
 #include <QVariant>
 
+#include "qpycore_api.h"
 #include "qpycore_chimera.h"
+#include "qpycore_misc.h"
+#include "qpycore_objectified_strings.h"
 #include "qpycore_pyqtboundsignal.h"
-#include "qpycore_pyqtproxy.h"
 #include "qpycore_pyqtproperty.h"
 #include "qpycore_pyqtpyobject.h"
+#include "qpycore_pyqtslot.h"
 #include "qpycore_qobject_helpers.h"
-#include "qpycore_sip.h"
-#include "qpycore_sip_helpers.h"
 #include "qpycore_types.h"
+
+#include "sipAPIQtCore.h"
 
 
 // Forward declarations.
@@ -47,14 +50,9 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
 const QMetaObject *qpycore_qobject_metaobject(sipSimpleWrapper *pySelf,
         sipTypeDef *base)
 {
-    // Return the dynamic meta-object if there is one.
-    if (pySelf && ((pyqtWrapperType *)Py_TYPE(pySelf))->metaobject)
-        return QPYCORE_QMETAOBJECT(((pyqtWrapperType *)Py_TYPE(pySelf))->metaobject);
+    sipWrapperType *wt = (pySelf ? (sipWrapperType *)Py_TYPE(pySelf) : 0);
 
-    // Fall back to the static Qt meta-object.
-    const pyqt4ClassPluginDef *cpd = reinterpret_cast<const pyqt4ClassPluginDef *>(sipTypePluginData(base));
-
-    return reinterpret_cast<const QMetaObject *>(cpd->static_metaobject);
+    return qpycore_get_qmetaobject(wt, base);
 }
 
 
@@ -82,13 +80,22 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
     if (pytype == sipTypeAsPyTypeObject(base))
         return _id;
 
-    _id = qt_metacall_worker(pySelf, pytype->tp_base, base, _c, _id, _a);
+    PyTypeObject *tp_base;
+
+#if PY_VERSION_HEX >= 0x03040000
+    tp_base = reinterpret_cast<PyTypeObject *>(
+            PyType_GetSlot(pytype, Py_tp_base));
+#else
+    tp_base = pytype->tp_base;
+#endif
+
+    _id = qt_metacall_worker(pySelf, tp_base, base, _c, _id, _a);
 
     if (_id < 0)
         return _id;
 
-    pyqtWrapperType *pyqt_wt = (pyqtWrapperType *)pytype;
-    qpycore_metaobject *qo = pyqt_wt->metaobject;
+    qpycore_metaobject *qo = reinterpret_cast<qpycore_metaobject *>(
+            sipGetTypeUserData((sipWrapperType *)pytype));
 
     bool ok = true;
 
@@ -101,30 +108,14 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
                 QObject *qthis = reinterpret_cast<QObject *>(sipGetCppPtr(pySelf, sipType_QObject));
 
                 Py_BEGIN_ALLOW_THREADS
-                QMetaObject::activate(qthis, QPYCORE_QMETAOBJECT(qo), _id, _a);
+                QMetaObject::activate(qthis, qo->mo, _id, _a);
                 Py_END_ALLOW_THREADS
             }
             else
             {
-                // We take a copy just to be safe.
-                qpycore_slot slot = qo->pslots.at(_id - qo->nr_signals);
+                PyQtSlot *slot = qo->pslots.at(_id - qo->nr_signals);
 
-                // Set up the instance specific parts.
-                slot.sip_slot.meth.mself = (PyObject *)pySelf;
-
-                PyObject *py = PyQtProxy::invokeSlot(slot, _a);
-
-                if (!py)
-                    ok = false;
-                else
-                {
-                    if (_a[0] && slot.signature->result)
-                    {
-                        ok = slot.signature->result->fromPyObject(py, _a[0]);
-                    }
-
-                    Py_DECREF(py);
-                }
+                ok = slot->invoke(_a, (PyObject *)pySelf, _a[0]);
             }
         }
 
@@ -143,27 +134,7 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
 
                 if (py)
                 {
-                    // Get the underlying QVariant.  As of Qt v4.7.0,
-                    // QtDeclarative doesn't pass a QVariant and this value is
-                    // 0.
-                    QVariant *var = reinterpret_cast<QVariant *>(_a[1]);
-
-                    if (var)
-                    {
-                        ok = prop->pyqtprop_parsed_type->fromPyObject(py, var);
-
-                        // Make sure that _a[0] still points to the QVariant
-                        // data (whose address we may have just changed) so
-                        // that QMetaProperty::read() doesn't try to create a 
-                        // new QVariant.
-                        if (ok)
-                            _a[0] = var->data();
-                    }
-                    else
-                    {
-                        ok = prop->pyqtprop_parsed_type->fromPyObject(py, _a[0]);
-                    }
-
+                    ok = prop->pyqtprop_parsed_type->fromPyObject(py, _a[0]);
                     Py_DECREF(py);
                 }
                 else
@@ -183,16 +154,6 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
 
             if (prop->pyqtprop_set)
             {
-                // _a is an array whose length and contents vary according to
-                // the version of Qt.  Prior to v4.6 _a[1] was the address of
-                // the QVariant containing the property value and _a[0] was the
-                // address of the actual data in the QVariant.  We used to
-                // convert the QVariant at _a[1], rather than the data at
-                // _a[0], which gave us a little bit more type checking.  In Qt
-                // v4.6 the QPropertyAnimation class contains an optimised path
-                // that bypasses QMetaProperty and only sets _a[0], so now
-                // that is all we can rely on.  
-
                 PyObject *py = prop->pyqtprop_parsed_type->toPyObject(_a[0]);
 
                 if (py)
@@ -208,7 +169,9 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
                     Py_DECREF(py);
                 }
                 else
+                {
                     ok = false;
+                }
             }
         }
 
@@ -248,7 +211,7 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
     // Handle any Python errors.
     if (!ok)
     {
-        PyErr_Print();
+        pyqt5_err_print();
         return -1;
     }
 
@@ -257,34 +220,77 @@ static int qt_metacall_worker(sipSimpleWrapper *pySelf, PyTypeObject *pytype,
 
 
 // This is the helper for all implementations of QObject::qt_metacast().
-int qpycore_qobject_qt_metacast(sipSimpleWrapper *pySelf, sipTypeDef *base,
-        const char *_clname)
+bool qpycore_qobject_qt_metacast(sipSimpleWrapper *pySelf,
+        const sipTypeDef *base, const char *_clname, void **sipCpp)
 {
+    *sipCpp = 0;
+
     if (!_clname)
-        return 0;
+        return true;
 
     // Check if the Python object has gone.
     if (!pySelf)
-        return 0;
+        return true;
 
-    int is_py_class = 0;
+    bool is_py_class = false;
 
     SIP_BLOCK_THREADS
 
-    PyObject *mro = Py_TYPE(pySelf)->tp_mro;
+    PyTypeObject *base_pytype = sipTypeAsPyTypeObject(base);
 
-    for (int i = 0; i < PyTuple_GET_SIZE(mro); ++i)
+    // We only need to look at the MRO if the object is a wrapped type (rather
+    // than a user sub-class).
+    if (base_pytype != Py_TYPE(pySelf))
     {
-        PyTypeObject *pytype = (PyTypeObject *)PyTuple_GET_ITEM(mro, i);
+        PyObject *mro;
 
-        if (pytype == sipTypeAsPyTypeObject(base))
-            break;
+#if PY_VERSION_HEX >= 0x03040000
+        mro = PyObject_GetAttr((PyObject *)Py_TYPE(pySelf),
+                qpycore_dunder_mro);
+        Q_ASSERT(mro);
+#else
+        mro = Py_TYPE(pySelf)->tp_mro;
+#endif
 
-        if (qstrcmp(pytype->tp_name, _clname) == 0)
+        for (Py_ssize_t i = 0; i < PyTuple_Size(mro); ++i)
         {
-            is_py_class = 1;
-            break;
+            PyTypeObject *pytype = (PyTypeObject *)PyTuple_GetItem(mro, i);
+
+            const sipTypeDef *td = sipTypeFromPyTypeObject(pytype);
+
+            if (!td || !qpycore_is_pyqt_class(td))
+                continue;
+
+            if (qstrcmp(sipPyTypeName(pytype), _clname) == 0)
+            {
+                // The generated type definitions represent the C++ (rather
+                // than Python) hierachy.  If the C++ hierachy doesn't match
+                // then the super-type must be provided by a mixin.  Note that
+                // we check the type in both "directions" as we may be either
+                // "side" of the base type in the MRO.
+                if (PyType_IsSubtype(pytype, base_pytype) || PyType_IsSubtype(base_pytype, pytype))
+                    *sipCpp = sipGetAddress(pySelf);
+                else
+                    *sipCpp = sipGetMixinAddress(pySelf, td);
+
+                is_py_class = true;
+                break;
+            }
+
+            const char *iface = reinterpret_cast<const pyqt5ClassPluginDef *>(
+                    sipTypePluginData(td))->qt_interface;
+
+            if (iface && qstrcmp(iface, _clname) == 0)
+            {
+                *sipCpp = sipGetMixinAddress(pySelf, td);
+                is_py_class = true;
+                break;
+            }
         }
+
+#if PY_VERSION_HEX >= 0x03040000
+        Py_DECREF(mro);
+#endif
     }
 
     SIP_UNBLOCK_THREADS
@@ -296,83 +302,19 @@ int qpycore_qobject_qt_metacast(sipSimpleWrapper *pySelf, sipTypeDef *base,
 // This is a helper for QObject.staticMetaObject %GetCode.
 PyObject *qpycore_qobject_staticmetaobject(PyObject *type_obj)
 {
-    pyqtWrapperType *pyqt_wt = (pyqtWrapperType *)type_obj;
-    const QMetaObject *mo;
+    const QMetaObject *mo = qpycore_get_qmetaobject((sipWrapperType *)type_obj);
 
-    if (pyqt_wt->metaobject)
+    if (!mo)
     {
-        // It's a sub-type of a wrapped type.
-        mo = QPYCORE_QMETAOBJECT(pyqt_wt->metaobject);
-    }
-    else
-    {
-        // It's a wrapped type.
-        const pyqt4ClassPluginDef *p4ctd = reinterpret_cast<const pyqt4ClassPluginDef *>(sipTypePluginData(((sipWrapperType *)pyqt_wt)->wt_td));
+        // We assume that this is a side effect of a wrapped class not being
+        // fully ready until sip's meta-class's __init__() has run (rather than
+        // after its __new__() method as might be expected).
+        PyErr_SetString(PyExc_AttributeError,
+                "staticMetaObject isn't available until the meta-class's __init__ returns");
 
-        if (!p4ctd)
-        {
-            /*
-             * This is a side effect of a wrapped class not being fully ready
-             * until sip's meta-class's __init__() has run (rather than after
-             * its __new__() method as might be expected).
-             */
-            PyErr_SetString(PyExc_AttributeError,
-                    "staticMetaObject isn't available until the meta-class's __init__ returns");
-            return 0;
-        }
-
-        mo = reinterpret_cast<const QMetaObject *>(p4ctd->static_metaobject);
-    }
-
-    return sipConvertFromType(const_cast<QMetaObject *>(mo), sipType_QMetaObject, 0);
-}
-
-
-// This is a helper for QObject.sender().
-QObject *qpycore_qobject_sender(QObject *obj)
-{
-    if (obj || !PyQtProxy::last_sender)
-        return obj;
-
-    // See if it is a short-circuit signal proxy.
-    PyQtShortcircuitSignalProxy *ssp = PyQtShortcircuitSignalProxy::shortcircuitSignal(PyQtProxy::last_sender);
-
-    if (ssp)
-        return ssp->parent();
-
-    // See if it is an ordinary signal proxy.
-    if (qstrcmp(PyQtProxy::last_sender->metaObject()->className(), "PyQtProxy") == 0)
-        return static_cast<PyQtProxy *>(PyQtProxy::last_sender)->transmitter;
-
-    return PyQtProxy::last_sender;
-}
-
-
-// This is a helper for QObject.receivers() that returns the number of
-// receivers for an object if it is a signal proxy.  It is exported because
-// QObject::receivers() is protected.
-int qpycore_qobject_receivers(QObject *obj, const char *signal, int nr)
-{
-    // Find the object that is really emitting the signal.
-    QObject *qtx = qpycore_find_signal(obj, &signal);
-
-    if (!qtx)
         return 0;
+    }
 
-    // If the emitter is the same then it is a Qt signal and the supplied
-    // value is the correct one.
-    if (qtx == obj)
-        return nr;
-
-    // See if it is a short-circuit signal proxy.
-    PyQtShortcircuitSignalProxy *ssp = PyQtShortcircuitSignalProxy::shortcircuitSignal(qtx);
-
-    if (ssp)
-        return ssp->getReceivers(signal);
-
-    if (qstrcmp(qtx->metaObject()->className(), "PyQtProxy") == 0)
-        return static_cast<const PyQtProxy *>(qtx)->getReceivers(signal);
-
-    // We should never get here.
-    return 0;
+    return sipConvertFromType(const_cast<QMetaObject *>(mo),
+            sipType_QMetaObject, 0);
 }

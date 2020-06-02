@@ -6,29 +6,13 @@ class Plot: public QwtPlot
     Q_OBJECT
 
 public:
-    enum ColorMap
-    {
-        RGBMap,
-        IndexMap,
-        HueMap,
-        AlphaMap
-    };
+    Plot(QWidget * = NULL);
 
-    Plot( QWidget * = NULL );
-
-public Q_SLOTS:
-    void showContour( bool on );
-    void showSpectrogram( bool on );
-    void setColorMap( int );
-    void setAlpha( int );
-
-#ifndef QT_NO_PRINTER
+public slots:
+    void showContour(bool on);
+    void showSpectrogram(bool on);
     void printPlot();
-#endif
 
 private:
     QwtPlotSpectrogram *d_spectrogram;
-
-    int d_mapType;
-    int d_alpha;
 };

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QEasingCurve /TypeHintIn="Union[QEasingCurve, QEasingCurve.Type]"/
 {
@@ -125,7 +123,7 @@ static qreal ec_call(int ec, qreal v)
     }
 
     if (!res_obj)
-        PyErr_Print();
+        pyqt5_err_print();
 
     SIP_UNBLOCK_THREADS
 
@@ -207,12 +205,8 @@ public:
         OutCurve,
         SineCurve,
         CosineCurve,
-%If (Qt_5_0_0 -)
         BezierSpline,
-%End
-%If (Qt_5_0_0 -)
         TCBSpline,
-%End
         Custom,
     };
 
@@ -281,24 +275,11 @@ public:
 %End
 
     qreal valueForProgress(qreal progress) const;
-%If (Qt_5_0_0 -)
-    void swap(QEasingCurve &other);
-%End
-%If (Qt_5_0_0 -)
+    void swap(QEasingCurve &other /Constrained/);
     void addCubicBezierSegment(const QPointF &c1, const QPointF &c2, const QPointF &endPoint);
-%End
-%If (Qt_5_0_0 -)
     void addTCBSegment(const QPointF &nextPoint, qreal t, qreal c, qreal b);
-%End
-%If (Qt_5_0_0 -)
     QVector<QPointF> toCubicSpline() const;
-%End
 };
 
-%End
-%If (Qt_4_7_0 -)
-QDataStream &operator<<(QDataStream &, const QEasingCurve & /Constrained/);
-%End
-%If (Qt_4_7_0 -)
-QDataStream &operator>>(QDataStream &, QEasingCurve & /Constrained/);
-%End
+QDataStream &operator<<(QDataStream &, const QEasingCurve & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QEasingCurve & /Constrained/) /ReleaseGIL/;

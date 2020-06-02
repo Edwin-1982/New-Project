@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,10 +20,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_5_0_0 -)
 // Template definition for QUrlTwoFlags.
 template<E1, E2>
-class QUrlTwoFlags /PyQtFlags=0x1/
+class QUrlTwoFlags /PyQtFlagsEnums="E1 E2"/
 {
     // These are handled by the %ConvertToTypeCode.
     //QUrlTwoFlags(E1);
@@ -90,7 +89,6 @@ if (PyObject_TypeCheck(sipPy, sipTypeAsPyTypeObject(sipType_E1)) ||
 return 0;
 %End
 };
-%End
 
 class QUrl
 {
@@ -107,38 +105,16 @@ public:
     {
         TolerantMode,
         StrictMode,
-%If (Qt_5_0_0 -)
         DecodedMode,
-%End
     };
 
     QUrl();
-%If (Qt_5_0_0 -)
     QUrl(const QString &url, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (- Qt_5_0_0)
-    QUrl(const QString &url);
-%End
-%If (- Qt_5_0_0)
-    QUrl(const QString &url, QUrl::ParsingMode mode);
-%End
     QUrl(const QUrl &copy);
     ~QUrl();
     long __hash__() const;
 %MethodCode
-        if (sipIsAPIEnabled("QUrl", 2, 0))
-        {
-        #if QT_VERSION >= 0x040700
-            sipRes = qHash(*sipCpp);
-        #else
-            sipRes = qHash(sipCpp->toString());
-        #endif
-        }
-        else
-        {
-            // Mimic Python's default behavour.
-            sipRes = _Py_HashPointer(sipSelf);
-        }
+        sipRes = qHash(*sipCpp);
 %End
 
     SIP_PYOBJECT __repr__() const /TypeHint="str"/;
@@ -148,9 +124,9 @@ public:
         if (uni)
         {
         #if PY_MAJOR_VERSION >= 3
-            sipRes = PyUnicode_FromFormat("PyQt4.QtCore.QUrl(%R)", uni);
+            sipRes = PyUnicode_FromFormat("PyQt5.QtCore.QUrl(%R)", uni);
         #else
-            sipRes = PyString_FromFormat("PyQt4.QtCore.QUrl(");
+            sipRes = PyString_FromFormat("PyQt5.QtCore.QUrl(");
             PyString_ConcatAndDel(&sipRes, PyObject_Repr(uni));
             PyString_ConcatAndDel(&sipRes, PyString_FromString(")"));
         #endif
@@ -158,8 +134,6 @@ public:
             Py_DECREF(uni);
         }
 %End
-
-%If (Qt_5_0_0 -)
 
     enum UrlFormattingOption
     {
@@ -174,33 +148,15 @@ public:
         RemoveFragment,
         PreferLocalFile,
         StripTrailingSlash,
+%If (Qt_5_2_0 -)
+        RemoveFilename,
+%End
+%If (Qt_5_2_0 -)
+        NormalizePathSegments,
+%End
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> FormattingOptions;
-%End
-%If (- Qt_5_0_0)
-
-    enum FormattingOption
-    {
-        None /PyName=None_/,
-        RemoveScheme,
-        RemovePassword,
-        RemoveUserInfo,
-        RemovePort,
-        RemoveAuthority,
-        RemovePath,
-        RemoveQuery,
-        RemoveFragment,
-        StripTrailingSlash,
-    };
-
-%End
-%If (- Qt_5_0_0)
-    typedef QFlags<QUrl::FormattingOption> FormattingOptions;
-%End
-%If (Qt_5_0_0 -)
 
     enum ComponentFormattingOption
     {
@@ -214,194 +170,78 @@ public:
         FullyDecoded,
     };
 
-%End
-%If (Qt_5_0_0 -)
     typedef QFlags<QUrl::ComponentFormattingOption> ComponentFormattingOptions;
-%End
-%If (Qt_5_0_0 -)
+    QString url(QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
     void setUrl(const QString &url, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (- Qt_5_0_0)
-    void setUrl(const QString &url);
-%End
-%If (- Qt_5_0_0)
-    void setUrl(const QString &url, QUrl::ParsingMode mode);
-%End
-%If (Qt_5_0_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedUrl(const QByteArray &url, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%End
-%If (- Qt_5_0_0)
-    void setEncodedUrl(const QByteArray &url);
-%End
-%If (- Qt_5_0_0)
-    void setEncodedUrl(const QByteArray &url, QUrl::ParsingMode mode);
-%End
     bool isValid() const;
     bool isEmpty() const;
     void clear();
     void setScheme(const QString &scheme);
     QString scheme() const;
-%If (Qt_5_0_0 -)
     void setAuthority(const QString &authority, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (- Qt_5_0_0)
-    void setAuthority(const QString &authority);
-%End
-%If (Qt_5_0_0 -)
-    QString authority(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
-%End
-%If (- Qt_5_0_0)
-    QString authority() const;
-%End
-%If (Qt_5_0_0 -)
+    QString authority(QUrl::ComponentFormattingOptions options = QUrl::PrettyDecoded) const;
     void setUserInfo(const QString &userInfo, QUrl::ParsingMode mode = QUrl::TolerantMode);
+    QString userInfo(QUrl::ComponentFormattingOptions options = QUrl::PrettyDecoded) const;
+%If (Qt_5_2_0 -)
+    void setUserName(const QString &userName, QUrl::ParsingMode mode = QUrl::DecodedMode);
 %End
-%If (- Qt_5_0_0)
-    void setUserInfo(const QString &userInfo);
-%End
-%If (Qt_5_0_0 -)
-    QString userInfo(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
-%End
-%If (- Qt_5_0_0)
-    QString userInfo() const;
-%End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     void setUserName(const QString &userName, QUrl::ParsingMode mode = QUrl::TolerantMode);
 %End
-%If (- Qt_5_0_0)
-    void setUserName(const QString &userName);
+%If (Qt_5_2_0 -)
+    QString userName(QUrl::ComponentFormattingOptions options = QUrl::FullyDecoded) const;
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     QString userName(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
 %End
-%If (- Qt_5_0_0)
-    QString userName() const;
+%If (Qt_5_2_0 -)
+    void setPassword(const QString &password, QUrl::ParsingMode mode = QUrl::DecodedMode);
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     void setPassword(const QString &password, QUrl::ParsingMode mode = QUrl::TolerantMode);
 %End
-%If (- Qt_5_0_0)
-    void setPassword(const QString &password);
+%If (Qt_5_2_0 -)
+    QString password(QUrl::ComponentFormattingOptions options = QUrl::FullyDecoded) const;
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     QString password(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
 %End
-%If (- Qt_5_0_0)
-    QString password() const;
+%If (Qt_5_2_0 -)
+    void setHost(const QString &host, QUrl::ParsingMode mode = QUrl::DecodedMode);
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     void setHost(const QString &host, QUrl::ParsingMode mode = QUrl::TolerantMode);
 %End
-%If (- Qt_5_0_0)
-    void setHost(const QString &host);
+%If (Qt_5_2_0 -)
+    QString host(QUrl::ComponentFormattingOptions = QUrl::FullyDecoded) const;
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     QString host(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
 %End
-%If (- Qt_5_0_0)
-    QString host() const;
-%End
     void setPort(int port);
-%If (Qt_5_0_0 -)
     int port(int defaultPort = -1) const;
+%If (Qt_5_2_0 -)
+    void setPath(const QString &path, QUrl::ParsingMode mode = QUrl::DecodedMode);
 %End
-%If (- Qt_5_0_0)
-    int port() const;
-%End
-%If (- Qt_5_0_0)
-    int port(int defaultPort) const;
-%End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     void setPath(const QString &path, QUrl::ParsingMode mode = QUrl::TolerantMode);
 %End
-%If (- Qt_5_0_0)
-    void setPath(const QString &path);
+%If (Qt_5_2_0 -)
+    QString path(QUrl::ComponentFormattingOptions options = QUrl::FullyDecoded) const;
 %End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     QString path(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
 %End
-%If (- Qt_5_0_0)
-    QString path() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void setEncodedQuery(const QByteArray &query);
-%End
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedQuery() const;
-%End
-%If (- Qt_5_0_0)
-    void setQueryDelimiters(char valueDelimiter, char pairDelimiter);
-%End
-%If (- Qt_5_0_0)
-    char queryValueDelimiter() const;
-%End
-%If (- Qt_5_0_0)
-    char queryPairDelimiter() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void setQueryItems(const QList<QPair<QString, QString>> &query);
-%End
-%If (PyQt_Deprecated_5_0)
-    void addQueryItem(const QString &key, const QString &value);
-%End
-%If (PyQt_Deprecated_5_0)
-    QList<QPair<QString, QString>> queryItems() const;
-%End
-%If (PyQt_Deprecated_5_0)
-    bool hasQueryItem(const QString &key) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QString queryItemValue(const QString &key) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    QStringList allQueryItemValues(const QString &key) const;
-%End
-%If (PyQt_Deprecated_5_0)
-    void removeQueryItem(const QString &key);
-%End
-%If (PyQt_Deprecated_5_0)
-    void removeAllQueryItems(const QString &key);
-%End
-%If (Qt_5_0_0 -)
     void setFragment(const QString &fragment, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (- Qt_5_0_0)
-    void setFragment(const QString &fragment);
-%End
-%If (Qt_5_0_0 -)
-    QString fragment(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
-%End
-%If (- Qt_5_0_0)
-    QString fragment() const;
-%End
+    QString fragment(QUrl::ComponentFormattingOptions options = QUrl::PrettyDecoded) const;
     QUrl resolved(const QUrl &relative) const;
     bool isRelative() const;
     bool isParentOf(const QUrl &url) const;
     static QUrl fromLocalFile(const QString &localfile);
     QString toLocalFile() const;
-%If (Qt_5_0_0 -)
     QString toString(QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
-%End
-%If (- Qt_5_0_0)
-    QString toString(QFlags<QUrl::FormattingOption> options /TypeHintValue="QUrl.None_"/ = QUrl::None) const;
-%End
-%If (Qt_5_0_0 -)
     QByteArray toEncoded(QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> options = QUrl::FullyEncoded) const;
-%End
-%If (- Qt_5_0_0)
-    QByteArray toEncoded(QFlags<QUrl::FormattingOption> options /TypeHintValue="QUrl.None_"/ = QUrl::None) const;
-%End
-%If (Qt_5_0_0 -)
     static QUrl fromEncoded(const QByteArray &u, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (- Qt_5_0_0)
-    static QUrl fromEncoded(const QByteArray &url);
-%End
-%If (- Qt_5_0_0)
-    static QUrl fromEncoded(const QByteArray &url, QUrl::ParsingMode mode);
-%End
     void detach();
     bool isDetached() const;
     bool operator<(const QUrl &url) const;
@@ -409,160 +249,60 @@ public:
     bool operator!=(const QUrl &url) const;
     static QString fromPercentEncoding(const QByteArray &);
     static QByteArray toPercentEncoding(const QString &input, const QByteArray &exclude = QByteArray(), const QByteArray &include = QByteArray());
-%If (PyQt_Deprecated_5_0)
-    static QString fromPunycode(const QByteArray &);
-%End
-%If (PyQt_Deprecated_5_0)
-    static QByteArray toPunycode(const QString &);
-%End
-%If (Qt_4_2_0 -)
     bool hasQuery() const;
-%End
-%If (Qt_4_2_0 -)
     bool hasFragment() const;
-%End
-%If (Qt_4_2_0 -)
     QString errorString() const;
-%End
-%If (Qt_4_2_0 -)
     static QString fromAce(const QByteArray &);
-%End
-%If (Qt_4_2_0 -)
     static QByteArray toAce(const QString &);
-%End
-%If (Qt_4_2_0 -)
     static QStringList idnWhitelist();
-%End
-%If (Qt_4_2_0 -)
     static void setIdnWhitelist(const QStringList &);
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedUserName(const QByteArray &userName);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedUserName() const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedPassword(const QByteArray &password);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedPassword() const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedHost(const QByteArray &host);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedHost() const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedPath(const QByteArray &path);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedPath() const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedQueryItems(const QList<QPair<QByteArray, QByteArray>> &query);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void addEncodedQueryItem(const QByteArray &key, const QByteArray &value);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QList<QPair<QByteArray, QByteArray>> encodedQueryItems() const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    bool hasEncodedQueryItem(const QByteArray &key) const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedQueryItemValue(const QByteArray &key) const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QList<QByteArray> allEncodedQueryItemValues(const QByteArray &key) const;
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void removeEncodedQueryItem(const QByteArray &key);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void removeAllEncodedQueryItems(const QByteArray &key);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    void setEncodedFragment(const QByteArray &fragment);
-%End
-%End
-%If (Qt_4_4_0 -)
-%If (PyQt_Deprecated_5_0)
-    QByteArray encodedFragment() const;
-%End
-%End
-%If (Qt_4_6_0 -)
     static QUrl fromUserInput(const QString &userInput);
+    void swap(QUrl &other /Constrained/);
+%If (Qt_5_2_0 -)
+    QString topLevelDomain(QUrl::ComponentFormattingOptions options = QUrl::FullyDecoded) const;
 %End
-%If (Qt_4_8_0 -)
-    void swap(QUrl &other);
-%End
-%If (Qt_5_0_0 -)
+%If (- Qt_5_2_0)
     QString topLevelDomain(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
 %End
-%If (Qt_4_8_0 - Qt_5_0_0)
-    QString topLevelDomain() const;
-%End
-%If (Qt_4_8_0 -)
     bool isLocalFile() const;
-%End
-%If (Qt_5_0_0 -)
+    QString toDisplayString(QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
     void setQuery(const QString &query, QUrl::ParsingMode mode = QUrl::TolerantMode);
-%End
-%If (Qt_5_0_0 -)
     void setQuery(const QUrlQuery &query);
+    QString query(QUrl::ComponentFormattingOptions options = QUrl::PrettyDecoded) const;
+%If (Qt_5_1_0 -)
+    static QStringList toStringList(const QList<QUrl> &uris, QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded);
 %End
-%If (Qt_5_0_0 -)
-    QString query(QFlags<QUrl::ComponentFormattingOption> options = QUrl::PrettyDecoded) const;
+%If (Qt_5_1_0 -)
+    static QList<QUrl> fromStringList(const QStringList &uris, QUrl::ParsingMode mode = QUrl::TolerantMode);
+%End
+%If (Qt_5_2_0 -)
+    QUrl adjusted(QUrl::FormattingOptions options) const;
+%End
+%If (Qt_5_2_0 -)
+    QString fileName(QUrl::ComponentFormattingOptions options = QUrl::FullyDecoded) const;
+%End
+%If (Qt_5_2_0 -)
+    bool matches(const QUrl &url, QUrl::FormattingOptions options) const;
+%End
+%If (Qt_5_4_0 -)
+
+    enum UserInputResolutionOption
+    {
+        DefaultResolution,
+        AssumeLocalFile,
+    };
+
+%End
+%If (Qt_5_4_0 -)
+    typedef QFlags<QUrl::UserInputResolutionOption> UserInputResolutionOptions;
+%End
+%If (Qt_5_4_0 -)
+    static QUrl fromUserInput(const QString &userInput, const QString &workingDirectory, QUrl::UserInputResolutionOptions options = QUrl::DefaultResolution);
 %End
 };
 
-%If (- Qt_5_0_0)
-QFlags<QUrl::FormattingOption> operator|(QUrl::FormattingOption f1, QFlags<QUrl::FormattingOption> f2);
-%End
-%If (Qt_5_0_0 -)
 QFlags<QUrl::ComponentFormattingOption> operator|(QUrl::ComponentFormattingOption f1, QFlags<QUrl::ComponentFormattingOption> f2);
-%End
-QDataStream &operator<<(QDataStream &, const QUrl & /Constrained/);
-QDataStream &operator>>(QDataStream &, QUrl & /Constrained/);
-%If (Qt_5_0_0 -)
+QDataStream &operator<<(QDataStream &, const QUrl & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QUrl & /Constrained/) /ReleaseGIL/;
 QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> operator|(QUrl::UrlFormattingOption f1, QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> f2);
-%End
-%If (Qt_5_0_0 -)
 QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> operator|(QUrl::ComponentFormattingOption f, QUrlTwoFlags<QUrl::UrlFormattingOption, QUrl::ComponentFormattingOption> i);
-%End

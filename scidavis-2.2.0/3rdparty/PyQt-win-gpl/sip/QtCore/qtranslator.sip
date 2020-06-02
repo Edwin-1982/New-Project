@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,27 +29,9 @@ class QTranslator : QObject
 public:
     explicit QTranslator(QObject *parent /TransferThis/ = 0);
     virtual ~QTranslator();
-%If (Qt_5_0_0 -)
     virtual QString translate(const char *context, const char *sourceText, const char *disambiguation = 0, int n = -1) const;
-%End
-%If (- Qt_5_0_0)
-    virtual QString translate(const char *context, const char *sourceText, const char *disambiguation = 0) const;
-%End
-%If (Qt_4_2_0 - Qt_5_0_0)
-    QString translate(const char *context, const char *sourceText, const char *comment, int n) const;
-%End
     virtual bool isEmpty() const;
     bool load(const QString &fileName, const QString &directory = QString(), const QString &searchDelimiters = QString(), const QString &suffix = QString()) /ReleaseGIL/;
-%If (Qt_4_8_0 -)
     bool load(const QLocale &locale, const QString &fileName, const QString &prefix = QString(), const QString &directory = QString(), const QString &suffix = QString()) /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
-    bool load(const uchar *data /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/, const QString &directory = QString()) /PyName=loadFromData,ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    bool load(const uchar *data /Array, TypeHint="Py_v3:bytes;str"/, int len /ArraySize/) /PyName=loadFromData,ReleaseGIL/;
-%End
-
-private:
-    QTranslator(const QTranslator &);
+    bool load(const uchar *data /Array/, int len /ArraySize/, const QString &directory = QString()) /PyName=loadFromData,ReleaseGIL/;
 };

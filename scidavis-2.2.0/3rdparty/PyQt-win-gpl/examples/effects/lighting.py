@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2010 Riverbank Computing Limited.
+## Copyright (C) 2013 Riverbank Computing Limited.
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -44,15 +44,19 @@
 
 import math
 
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import QPointF, Qt, QTimer
+from PyQt5.QtGui import (QBrush, QColor, QLinearGradient, QPen, QPainter,
+        QPixmap, QRadialGradient)
+from PyQt5.QtWidgets import (QApplication, QFrame, QGraphicsDropShadowEffect,
+        QGraphicsEllipseItem, QGraphicsRectItem, QGraphicsScene, QGraphicsView)
 
 
-class Lighting(QtGui.QGraphicsView):
+class Lighting(QGraphicsView):
     def __init__(self, parent=None):
         super(Lighting, self).__init__(parent)
 
         self.angle = 0.0
-        self.m_scene = QtGui.QGraphicsScene()
+        self.m_scene = QGraphicsScene()
         self.m_lightSource = None
         self.m_items = []
 
@@ -60,33 +64,32 @@ class Lighting(QtGui.QGraphicsView):
 
         self.setupScene()
 
-        timer = QtCore.QTimer(self)
+        timer = QTimer(self)
         timer.timeout.connect(self.animate)
         timer.setInterval(30)
         timer.start()
 
-        self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setFrameStyle(QtGui.QFrame.NoFrame)
+        self.setRenderHint(QPainter.Antialiasing)
+        self.setFrameStyle(QFrame.NoFrame)
 
     def setupScene(self):
         self.m_scene.setSceneRect(-300, -200, 600, 460)
 
-        linearGrad = QtGui.QLinearGradient(QtCore.QPointF(-100, -100),
-                QtCore.QPointF(100, 100))
-        linearGrad.setColorAt(0, QtGui.QColor(255, 255, 255))
-        linearGrad.setColorAt(1, QtGui.QColor(192, 192, 255))
+        linearGrad = QLinearGradient(QPointF(-100, -100), QPointF(100, 100))
+        linearGrad.setColorAt(0, QColor(255, 255, 255))
+        linearGrad.setColorAt(1, QColor(192, 192, 255))
         self.setBackgroundBrush(linearGrad)
 
-        radialGrad = QtGui.QRadialGradient(30, 30, 30)
-        radialGrad.setColorAt(0, QtCore.Qt.yellow)
-        radialGrad.setColorAt(0.2, QtCore.Qt.yellow)
-        radialGrad.setColorAt(1, QtCore.Qt.transparent)
+        radialGrad = QRadialGradient(30, 30, 30)
+        radialGrad.setColorAt(0, Qt.yellow)
+        radialGrad.setColorAt(0.2, Qt.yellow)
+        radialGrad.setColorAt(1, Qt.transparent)
 
-        pixmap = QtGui.QPixmap(60, 60)
-        pixmap.fill(QtCore.Qt.transparent)
+        pixmap = QPixmap(60, 60)
+        pixmap.fill(Qt.transparent)
 
-        painter = QtGui.QPainter(pixmap)
-        painter.setPen(QtCore.Qt.NoPen)
+        painter = QPainter(pixmap)
+        painter.setPen(Qt.NoPen)
         painter.setBrush(radialGrad)
         painter.drawEllipse(0, 0, 60, 60)
         painter.end()
@@ -97,14 +100,14 @@ class Lighting(QtGui.QGraphicsView):
         for i in range(-2, 3):
             for j in range(-2, 3):
                 if (i + j) & 1:
-                    item = QtGui.QGraphicsEllipseItem(0, 0, 50, 50)
+                    item = QGraphicsEllipseItem(0, 0, 50, 50)
                 else:
-                    item = QtGui.QGraphicsRectItem(0, 0, 50, 50)
+                    item = QGraphicsRectItem(0, 0, 50, 50)
 
-                item.setPen(QtGui.QPen(QtCore.Qt.black, 1))
-                item.setBrush(QtGui.QBrush(QtCore.Qt.white))
+                item.setPen(QPen(Qt.black, 1))
+                item.setBrush(QBrush(Qt.white))
 
-                effect = QtGui.QGraphicsDropShadowEffect(self)
+                effect = QGraphicsDropShadowEffect(self)
                 effect.setBlurRadius(8)
                 item.setGraphicsEffect(effect)
                 item.setZValue(1)
@@ -121,8 +124,8 @@ class Lighting(QtGui.QGraphicsView):
         for item in self.m_items:
             effect = item.graphicsEffect()
 
-            delta = QtCore.QPointF(item.x() - xs, item.y() - ys)
-            effect.setOffset(QtCore.QPointF(delta.toPoint() / 30))
+            delta = QPointF(item.x() - xs, item.y() - ys)
+            effect.setOffset(QPointF(delta.toPoint() / 30))
 
             dd = math.hypot(delta.x(), delta.y())
             color = effect.color()
@@ -136,7 +139,7 @@ if __name__ == '__main__':
 
     import sys
 
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
     lighting = Lighting()
     lighting.setWindowTitle("Lighting and Shadows")

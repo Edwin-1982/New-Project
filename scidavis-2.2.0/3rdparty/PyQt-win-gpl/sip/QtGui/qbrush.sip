@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -84,20 +84,12 @@ public:
     QBrush(const QColor &color, Qt::BrushStyle style = Qt::SolidPattern);
     QBrush(const QColor &color, const QPixmap &pixmap);
     QBrush(const QPixmap &pixmap);
-%If (Qt_4_2_0 -)
     QBrush(const QImage &image);
-%End
-    QBrush(const QGradient &gradient);
     QBrush(const QBrush &brush);
     QBrush(const QVariant &variant /GetWrapper/) /NoDerived/;
 %MethodCode
-        #if QT_VERSION >= 0x050000
         if (a0->canConvert<QBrush>())
             sipCpp = new QBrush(a0->value<QBrush>());
-        #else
-        if (qVariantCanConvert<QBrush>(*a0))
-            sipCpp = new QBrush(qVariantValue<QBrush>(*a0));
-        #endif
         else
             sipError = sipBadCallableArg(0, a0Wrapper);
 %End
@@ -114,31 +106,15 @@ public:
     void setColor(Qt::GlobalColor acolor);
     Qt::BrushStyle style() const;
     const QColor &color() const;
-%If (Qt_4_2_0 -)
-    void setMatrix(const QMatrix &mat);
-%End
-%If (Qt_4_2_0 -)
-    const QMatrix &matrix() const;
-%End
-%If (Qt_4_2_0 -)
     void setTextureImage(const QImage &image);
-%End
-%If (Qt_4_2_0 -)
     QImage textureImage() const;
-%End
-%If (Qt_4_3_0 -)
     void setTransform(const QTransform &);
-%End
-%If (Qt_4_3_0 -)
     QTransform transform() const;
-%End
-%If (Qt_4_8_0 -)
-    void swap(QBrush &other);
-%End
+    void swap(QBrush &other /Constrained/);
 };
 
-QDataStream &operator>>(QDataStream &, QBrush & /Constrained/);
-QDataStream &operator<<(QDataStream &, const QBrush & /Constrained/);
+QDataStream &operator>>(QDataStream &, QBrush & /Constrained/) /ReleaseGIL/;
+QDataStream &operator<<(QDataStream &, const QBrush & /Constrained/) /ReleaseGIL/;
 typedef QVector<QPair<qreal, QColor>> QGradientStops;
 
 class QGradient
@@ -148,16 +124,15 @@ class QGradient
 %End
 
 public:
-%If (Qt_4_4_0 -)
-
     enum CoordinateMode
     {
         LogicalMode,
         StretchToDeviceMode,
         ObjectBoundingMode,
-    };
-
+%If (Qt_5_12_0 -)
+        ObjectMode,
 %End
+    };
 
     enum Type
     {
@@ -174,23 +149,195 @@ public:
         RepeatSpread,
     };
 
+%If (Qt_5_12_0 -)
+
+    enum Preset
+    {
+        WarmFlame,
+        NightFade,
+        SpringWarmth,
+        JuicyPeach,
+        YoungPassion,
+        LadyLips,
+        SunnyMorning,
+        RainyAshville,
+        FrozenDreams,
+        WinterNeva,
+        DustyGrass,
+        TemptingAzure,
+        HeavyRain,
+        AmyCrisp,
+        MeanFruit,
+        DeepBlue,
+        RipeMalinka,
+        CloudyKnoxville,
+        MalibuBeach,
+        NewLife,
+        TrueSunset,
+        MorpheusDen,
+        RareWind,
+        NearMoon,
+        WildApple,
+        SaintPetersburg,
+        PlumPlate,
+        EverlastingSky,
+        HappyFisher,
+        Blessing,
+        SharpeyeEagle,
+        LadogaBottom,
+        LemonGate,
+        ItmeoBranding,
+        ZeusMiracle,
+        OldHat,
+        StarWine,
+        HappyAcid,
+        AwesomePine,
+        NewYork,
+        ShyRainbow,
+        MixedHopes,
+        FlyHigh,
+        StrongBliss,
+        FreshMilk,
+        SnowAgain,
+        FebruaryInk,
+        KindSteel,
+        SoftGrass,
+        GrownEarly,
+        SharpBlues,
+        ShadyWater,
+        DirtyBeauty,
+        GreatWhale,
+        TeenNotebook,
+        PoliteRumors,
+        SweetPeriod,
+        WideMatrix,
+        SoftCherish,
+        RedSalvation,
+        BurningSpring,
+        NightParty,
+        SkyGlider,
+        HeavenPeach,
+        PurpleDivision,
+        AquaSplash,
+        SpikyNaga,
+        LoveKiss,
+        CleanMirror,
+        PremiumDark,
+        ColdEvening,
+        CochitiLake,
+        SummerGames,
+        PassionateBed,
+        MountainRock,
+        DesertHump,
+        JungleDay,
+        PhoenixStart,
+        OctoberSilence,
+        FarawayRiver,
+        AlchemistLab,
+        OverSun,
+        PremiumWhite,
+        MarsParty,
+        EternalConstance,
+        JapanBlush,
+        SmilingRain,
+        CloudyApple,
+        BigMango,
+        HealthyWater,
+        AmourAmour,
+        RiskyConcrete,
+        StrongStick,
+        ViciousStance,
+        PaloAlto,
+        HappyMemories,
+        MidnightBloom,
+        Crystalline,
+        PartyBliss,
+        ConfidentCloud,
+        LeCocktail,
+        RiverCity,
+        FrozenBerry,
+        ChildCare,
+        FlyingLemon,
+        NewRetrowave,
+        HiddenJaguar,
+        AboveTheSky,
+        Nega,
+        DenseWater,
+        Seashore,
+        MarbleWall,
+        CheerfulCaramel,
+        NightSky,
+        MagicLake,
+        YoungGrass,
+        ColorfulPeach,
+        GentleCare,
+        PlumBath,
+        HappyUnicorn,
+        AfricanField,
+        SolidStone,
+        OrangeJuice,
+        GlassWater,
+        NorthMiracle,
+        FruitBlend,
+        MillenniumPine,
+        HighFlight,
+        MoleHall,
+        SpaceShift,
+        ForestInei,
+        RoyalGarden,
+        RichMetal,
+        JuicyCake,
+        SmartIndigo,
+        SandStrike,
+        NorseBeauty,
+        AquaGuidance,
+        SunVeggie,
+        SeaLord,
+        BlackSea,
+        GrassShampoo,
+        LandingAircraft,
+        WitchDance,
+        SleeplessNight,
+        AngelCare,
+        CrystalRiver,
+        SoftLipstick,
+        SaltMountain,
+        PerfectWhite,
+        FreshOasis,
+        StrictNovember,
+        MorningSalad,
+        DeepRelief,
+        SeaStrike,
+        NightCall,
+        SupremeSky,
+        LightBlue,
+        MindCrawl,
+        LilyMeadow,
+        SugarLollipop,
+        SweetDessert,
+        MagicRay,
+        TeenParty,
+        FrozenHeat,
+        GagarinView,
+        FabledSunset,
+        PerfectBlue,
+    };
+
+%End
     QGradient();
+%If (Qt_5_12_0 -)
+    QGradient(QGradient::Preset);
+%End
     QGradient::Type type() const;
     QGradient::Spread spread() const;
     void setColorAt(qreal pos, const QColor &color);
     void setStops(const QGradientStops &stops);
     QGradientStops stops() const;
     bool operator==(const QGradient &gradient) const;
-%If (Qt_4_2_0 -)
     bool operator!=(const QGradient &other) const;
-%End
     void setSpread(QGradient::Spread aspread);
-%If (Qt_4_4_0 -)
     QGradient::CoordinateMode coordinateMode() const;
-%End
-%If (Qt_4_4_0 -)
     void setCoordinateMode(QGradient::CoordinateMode mode);
-%End
 };
 
 class QLinearGradient : QGradient
@@ -200,25 +347,15 @@ class QLinearGradient : QGradient
 %End
 
 public:
-%If (Qt_4_2_0 -)
     QLinearGradient();
-%End
     QLinearGradient(const QPointF &start, const QPointF &finalStop);
     QLinearGradient(qreal xStart, qreal yStart, qreal xFinalStop, qreal yFinalStop);
     QPointF start() const;
     QPointF finalStop() const;
-%If (Qt_4_2_0 -)
     void setStart(const QPointF &start);
-%End
-%If (Qt_4_2_0 -)
     void setStart(qreal x, qreal y);
-%End
-%If (Qt_4_2_0 -)
     void setFinalStop(const QPointF &stop);
-%End
-%If (Qt_4_2_0 -)
     void setFinalStop(qreal x, qreal y);
-%End
 };
 
 class QRadialGradient : QGradient
@@ -228,63 +365,25 @@ class QRadialGradient : QGradient
 %End
 
 public:
-%If (Qt_4_2_0 -)
     QRadialGradient();
-%End
-%If (Qt_4_2_0 -)
     QRadialGradient(const QPointF &center, qreal radius, const QPointF &focalPoint);
-%End
-%If (Qt_4_8_0 -)
     QRadialGradient(const QPointF &center, qreal centerRadius, const QPointF &focalPoint, qreal focalRadius);
-%End
-%If (Qt_4_2_0 -)
     QRadialGradient(const QPointF &center, qreal radius);
-%End
-%If (- Qt_4_2_0)
-    QRadialGradient(const QPointF &center, qreal radius, const QPointF &focalPoint = QPointF());
-%End
-%If (Qt_4_2_0 -)
     QRadialGradient(qreal cx, qreal cy, qreal radius, qreal fx, qreal fy);
-%End
-%If (Qt_4_8_0 -)
     QRadialGradient(qreal cx, qreal cy, qreal centerRadius, qreal fx, qreal fy, qreal focalRadius);
-%End
-%If (Qt_4_2_0 -)
     QRadialGradient(qreal cx, qreal cy, qreal radius);
-%End
-%If (- Qt_4_2_0)
-    QRadialGradient(qreal cx, qreal cy, qreal radius, qreal fx = 0, qreal fy = 0);
-%End
     QPointF center() const;
     QPointF focalPoint() const;
     qreal radius() const;
-%If (Qt_4_2_0 -)
     void setCenter(const QPointF &center);
-%End
-%If (Qt_4_2_0 -)
     void setCenter(qreal x, qreal y);
-%End
-%If (Qt_4_2_0 -)
     void setFocalPoint(const QPointF &focalPoint);
-%End
-%If (Qt_4_2_0 -)
     void setFocalPoint(qreal x, qreal y);
-%End
-%If (Qt_4_2_0 -)
     void setRadius(qreal radius);
-%End
-%If (Qt_4_8_0 -)
     qreal centerRadius() const;
-%End
-%If (Qt_4_8_0 -)
     void setCenterRadius(qreal radius);
-%End
-%If (Qt_4_8_0 -)
     qreal focalRadius() const;
-%End
-%If (Qt_4_8_0 -)
     void setFocalRadius(qreal radius);
-%End
 };
 
 class QConicalGradient : QGradient
@@ -294,20 +393,12 @@ class QConicalGradient : QGradient
 %End
 
 public:
-%If (Qt_4_2_0 -)
     QConicalGradient();
-%End
     QConicalGradient(const QPointF &center, qreal startAngle);
     QConicalGradient(qreal cx, qreal cy, qreal startAngle);
     QPointF center() const;
     qreal angle() const;
-%If (Qt_4_2_0 -)
     void setCenter(const QPointF &center);
-%End
-%If (Qt_4_2_0 -)
     void setCenter(qreal x, qreal y);
-%End
-%If (Qt_4_2_0 -)
     void setAngle(qreal angle);
-%End
 };

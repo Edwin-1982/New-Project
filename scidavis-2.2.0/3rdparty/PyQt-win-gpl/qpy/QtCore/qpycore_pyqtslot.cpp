@@ -1,9 +1,8 @@
-// This is the implementation of the pySlot (and deprecated pyqtSignature)
-// decorator.
+// This contains the implementation of the PyQtSlot class.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -21,245 +20,332 @@
 
 #include <Python.h>
 
-#include <QtGlobal>
-#include <QByteArray>
-#include <QMetaObject>
-
 #include "qpycore_chimera.h"
-#include "qpycore_misc.h"
-#include "qpycore_sip.h"
+#include "qpycore_pyqtslot.h"
 
 
-// Forward declarations.
-static PyObject *decorate(Chimera::Signature *parsed_sig, PyObject *res_obj,
-        const char *context);
-extern "C" {static PyObject *decorator(PyObject *self, PyObject *f);}
-
-
-// Get the bound QObject and slot signature from a callable (which should be a
-// decorated method).
-sipErrorState pyqt4_get_pyqtslot_parts(PyObject *callable, QObject **qrx,
-        QByteArray &slot_signature)
+// Create the slot for an unbound method.
+PyQtSlot::PyQtSlot(PyObject *method, PyObject *type,
+        const Chimera::Signature *slot_signature)
+    : mfunc(method), mself(0), mself_wr(0), other(0), signature(slot_signature)
 {
-    PyObject *qobj_obj, *decorations;
-    int is_err;
-    void *qobj;
-    Chimera::Signature *sig;
-
-    // Get the QObject.
-    qobj_obj = PyMethod_Self(callable);
-
-    if (!qobj_obj)
-        goto bad_callable;
-
-    is_err = 0;
-
-    qobj = sipForceConvertToType(qobj_obj, sipType_QObject, 0,
-            SIP_NO_CONVERTORS, 0, &is_err);
-
-    if (is_err)
-        goto bad_callable;
-
-    *qrx = reinterpret_cast<QObject *>(qobj);
-
-    // Get the decoration.
-    decorations = PyObject_GetAttr(callable, qpycore_signature_attr_name);
-
-    if (!decorations)
-        goto bad_callable;
-
-    // Use the first one ignoring any others.
-    sig = Chimera::Signature::fromPyObject(PyList_GET_ITEM(decorations, 0));
-    Py_DECREF(decorations);
-
-    slot_signature = sig->signature;
-    slot_signature.prepend('1');
-
-    return sipErrorNone;
-
-bad_callable:
-    PyErr_SetString(PyExc_TypeError,
-            "callable must be a method of a QtCore.QObject instance decorated "
-            "by QtCore.pyqtSlot");
-
-    return sipErrorFail;
-}
-
-
-// This implements the pyqtSlot decorator.
-PyObject *qpycore_pyqtslot(PyObject *args, PyObject *kwds)
-{
-    const char *name_str = 0;
-    PyObject *res_obj = 0;
-    static const char *kwlist[] = {"name", "result", 0};
-
-    static PyObject *no_args = 0;
-
-    if (!no_args)
-    {
-        no_args = PyTuple_New(0);
-
-        if (!no_args)
-            return 0;
-    }
-
-    if (!PyArg_ParseTupleAndKeywords(no_args, kwds,
-#if PY_VERSION_HEX >= 0x02050000
-            "|sO:pyqtSlot",
+#if PY_MAJOR_VERSION < 3
+    mclass = type;
 #else
-            const_cast<char *>("|sO:pyqtSlot"),
+    Q_UNUSED(type)
 #endif
-            const_cast<char **>(kwlist), &name_str, &res_obj))
-        return 0;
-
-    Chimera::Signature *parsed_sig = Chimera::parse(args, name_str,
-            "a pyqtSlot type argument");
-
-    if (!parsed_sig)
-        return 0;
-
-    return decorate(parsed_sig, res_obj, "a pyqtSlot result");
 }
 
 
-// This implements the pyqtSignature decorator.
-PyObject *qpycore_pyqtsignature(PyObject *args, PyObject *kwds)
+// Create the slot for a callable.
+PyQtSlot::PyQtSlot(PyObject *callable, const Chimera::Signature *slot_signature)
+    : mfunc(0), mself(0), mself_wr(0), other(0), signature(slot_signature)
 {
-    const char *sig_str;
-    PyObject *res_obj = 0;
-    static const char *kwlist[] = {"signature", "result", 0};
+    sipMethodDef callable_m;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds,
-#if PY_VERSION_HEX >= 0x02050000
-            "s|O:pyqtSignature",
-#else
-            const_cast<char *>("s|O:pyqtSignature"),
+    if (sipGetMethod(callable, &callable_m))
+    {
+        // Save the component parts.
+        mfunc = callable_m.pm_function;
+        mself = callable_m.pm_self;
+#if PY_MAJOR_VERSION < 3
+        mclass = callable_m.pm_class;
 #endif
-            const_cast<char **>(kwlist), &sig_str, &res_obj))
-        return 0;
 
-    // Parse the signature.
-    QByteArray sig(sig_str);
-
-    // Make sure the signature has parentheses before normalising it.
-    if (!sig.contains('('))
-    {
-        sig.prepend('(');
-        sig.append(')');
-    }
-
-    sig = QMetaObject::normalizedSignature(sig);
-
-    Chimera::Signature *parsed_sig = Chimera::parse(sig,
-            "a pyqtSlot signature argument");
-
-    if (!parsed_sig)
-        return 0;
-
-    return decorate(parsed_sig, res_obj, "a pyqtSignature result");
-}
-
-
-// Decorate the method now the arguments have been parsed.
-static PyObject *decorate(Chimera::Signature *parsed_sig, PyObject *res_obj,
-        const char *context)
-{
-    // Parse any result type.
-    if (res_obj)
-    {
-        parsed_sig->result = Chimera::parse(res_obj);
-
-        if (!parsed_sig->result)
-        {
-            Chimera::raiseParseException(res_obj, context);
-            delete parsed_sig;
-            return 0;
-        }
-    }
-
-    // Wrap the parsed signature in a Python object.
-    PyObject *sig_obj = Chimera::Signature::toPyObject(parsed_sig);
-
-    if (!sig_obj)
-        return 0;
-
-    // Create the decorator function itself.  We stash the arguments in "self".
-    // This may be an abuse, but it seems to be Ok.
-    static PyMethodDef deco_method = {
-#if PY_VERSION_HEX >= 0x02050000
-        "_deco", decorator, METH_O, 0
-#else
-        const_cast<char *>("_deco"), decorator, METH_O, 0
-#endif
-    };
-
-    PyObject *obj = PyCFunction_New(&deco_method, sig_obj);
-    Py_DECREF(sig_obj);
-
-    return obj;
-}
-
-
-// This is the decorator function that saves the C++ signature as a function
-// attribute.
-static PyObject *decorator(PyObject *self, PyObject *f)
-{
-    Chimera::Signature *parsed_sig = Chimera::Signature::fromPyObject(self);
-    const QByteArray &sig = parsed_sig->signature;
-
-    // Use the function name if there isn't already one.
-    if (sig.startsWith('('))
-    {
-        // Get the function's name.
-        PyObject *nobj = PyObject_GetAttr(f, qpycore_name_attr_name);
-
-        if (!nobj)
-            return 0;
-
-        PyObject *ascii_obj = nobj;
-        const char *ascii = sipString_AsASCIIString(&ascii_obj);
-        Py_DECREF(nobj);
-
-        if (!ascii)
-            return 0;
-
-        parsed_sig->signature.prepend(ascii);
-        parsed_sig->py_signature.prepend(ascii);
-        Py_DECREF(ascii_obj);
-    }
-
-    // See if the function has already been decorated.
-    PyObject *decorations = PyObject_GetAttr(f, qpycore_signature_attr_name);
-    int rc;
-
-    if (decorations)
-    {
-        // Insert the new decoration at the head of the existing ones so that
-        // the list order matches the order they appear in the script.
-        rc = PyList_Insert(decorations, 0, self);
+        // Try and create a weak reference to the instance object.
+        mself_wr = PyWeakref_NewRef(mself, 0);
     }
     else
     {
-        PyErr_Clear();
+        // Give the slot an extra reference to keep it alive.
+        Py_INCREF(callable);
+        other = callable;
+    }
+}
 
-        decorations = PyList_New(1);
 
-        if (!decorations)
-            return 0;
+// Destroy the slot.
+PyQtSlot::~PyQtSlot()
+{
+    Py_XDECREF(mself_wr);
+    Py_XDECREF(other);
+}
 
-        Py_INCREF(self);
-        PyList_SET_ITEM(decorations, 0, self);
 
-        // Save the new decoration.
-        rc = PyObject_SetAttr(f, qpycore_signature_attr_name, decorations);
+// Invoke the slot on behalf of C++.
+PyQtSlot::Result PyQtSlot::invoke(void **qargs, bool no_receiver_check) const
+{
+    return invoke(qargs, 0, 0, no_receiver_check);
+}
+
+
+// Invoke the slot on behalf of C++.
+bool PyQtSlot::invoke(void **qargs, PyObject *self, void *result) const
+{
+    return (invoke(qargs, self, result, false) != PyQtSlot::Failed);
+}
+
+
+// Invoke the slot on behalf of C++.
+PyQtSlot::Result PyQtSlot::invoke(void **qargs, PyObject *self, void *result,
+        bool no_receiver_check) const
+{
+    // Get the callable.
+    PyObject *callable;
+
+    if (other)
+    {
+        callable = other;
+        Py_INCREF(callable);
+    }
+    else
+    {
+        // Use the value we have if one wasn't supplied.
+        if (!self)
+            self = instance();
+
+        // If self is NULL then we didn't have a method in the first place.
+        // Instead we had a callable that has been cleared during garbage
+        // collection - so we can simply ignore the invocation.
+        if (!self)
+            return PyQtSlot::Ignored;
+
+        // See if the instance has gone (which isn't an error).
+        if (self == Py_None)
+            return PyQtSlot::Ignored;
+
+        // If the receiver wraps a C++ object then ignore the call if it no
+        // longer exists.
+        if (!no_receiver_check && PyObject_TypeCheck(self, sipSimpleWrapper_Type) && !sipGetAddress((sipSimpleWrapper *)self))
+            return PyQtSlot::Ignored;
+
+        sipMethodDef callable_m;
+
+        callable_m.pm_function = mfunc;
+        callable_m.pm_self = self;
+#if PY_MAJOR_VERSION < 3
+        callable_m.pm_class = mclass;
+#endif
+
+        callable = sipFromMethod(&callable_m);
     }
 
-    Py_DECREF(decorations);
+    // Convert the C++ arguments to Python objects.
+    const QList<const Chimera *> &args = signature->parsed_arguments;
 
-    if (rc < 0)
-        return 0;
+    PyObject *argtup = PyTuple_New(args.size());
 
-    // Return the function.
-    Py_INCREF(f);
-    return f;
+    if (!argtup)
+        return PyQtSlot::Failed;
+
+    QList<const Chimera *>::const_iterator it = args.constBegin();
+
+    for (int a = 0; it != args.constEnd(); ++a)
+    {
+        PyObject *arg = (*it)->toPyObject(*++qargs);
+
+        if (!arg)
+        {
+            Py_DECREF(argtup);
+            return PyQtSlot::Failed;
+        }
+
+        PyTuple_SetItem(argtup, a, arg);
+
+        ++it;
+    }
+
+    // Dispatch to the real slot.
+    PyObject *res = call(callable, argtup);
+
+    Py_DECREF(argtup);
+    Py_DECREF(callable);
+
+    if (!res)
+        return PyQtSlot::Failed;
+
+    // Handle any result if required.
+    bool ok;
+
+    if (result && signature->result)
+        ok = signature->result->fromPyObject(res, result);
+    else
+        ok = true;
+
+    Py_DECREF(res);
+
+    return (ok ? PyQtSlot::Succeeded : PyQtSlot::Failed);
+}
+
+
+// See if this slot corresponds to the given callable.
+bool PyQtSlot::operator==(PyObject *callable) const
+{
+    sipMethodDef callable_m;
+
+    if (sipGetMethod(callable, &callable_m))
+    {
+        if (other)
+            return false;
+
+        return (mfunc == callable_m.pm_function
+                && instance() == callable_m.pm_self
+#if PY_MAJOR_VERSION < 3
+                && mclass == callable_m.pm_class
+#endif
+                );
+    }
+
+    if (!other)
+        return false;
+
+    // See if it is a wrapped C++ method.  Note that the PyQt4 behaviour is to
+    // not save a reference but to save the components (as we do with methods).
+    // Hopefully it won't make a difference.  However it begs the question as
+    // to whether we should do the same with methods and rely on the garbage
+    // collector - is the current way of handling methods purely historical?
+    sipCFunctionDef other_cf, callable_cf;
+
+    if (sipGetCFunction(other, &other_cf) && sipGetCFunction(callable, &callable_cf))
+        return (other_cf.cf_self == callable_cf.cf_self &&
+                other_cf.cf_function->ml_meth == callable_cf.cf_function->ml_meth);
+
+    return (other == callable);
+}
+
+
+// Get the instance object.
+PyObject *PyQtSlot::instance() const
+{
+    // Use the weak reference if possible.
+    if (mself_wr)
+        return PyWeakref_GetObject(mself_wr);
+
+    return mself;
+}
+
+
+// Call a single slot and return the result.
+PyObject *PyQtSlot::call(PyObject *callable, PyObject *args) const
+{
+    PyObject *sa, *oxtype, *oxvalue, *oxtb;
+
+    // Keep some compilers quiet.
+    oxtype = oxvalue = oxtb = 0;
+
+    // We make repeated attempts to call a slot.  If we work out that it failed
+    // because of an immediate type error we try again with one less argument.
+    // We keep going until we run out of arguments to drop.  This emulates the
+    // Qt ability of the slot to accept fewer arguments than a signal provides.
+    sa = args;
+    Py_INCREF(sa);
+
+    for (;;)
+    {
+        PyObject *nsa, *xtype, *xvalue, *xtb, *res;
+
+        if ((res = PyEval_CallObject(callable, sa)) != NULL)
+        {
+            // Remove any previous exception.
+
+            if (sa != args)
+            {
+                Py_XDECREF(oxtype);
+                Py_XDECREF(oxvalue);
+                Py_XDECREF(oxtb);
+                PyErr_Clear();
+            }
+
+            Py_DECREF(sa);
+
+            return res;
+        }
+
+        // Get the exception.
+        PyErr_Fetch(&xtype, &xvalue, &xtb);
+
+        // See if it is unacceptable.  An acceptable failure is a type error
+        // with no traceback - so long as we can still reduce the number of
+        // arguments and try again.
+        if (!PyErr_GivenExceptionMatches(xtype, PyExc_TypeError) || xtb ||
+            PyTuple_Size(sa) == 0)
+        {
+            // If there is a traceback then we must have called the slot and
+            // the exception was later on - so report the exception as is.
+            if (xtb)
+            {
+                if (sa != args)
+                {
+                    Py_XDECREF(oxtype);
+                    Py_XDECREF(oxvalue);
+                    Py_XDECREF(oxtb);
+                }
+
+                PyErr_Restore(xtype,xvalue,xtb);
+            }
+            else if (sa == args)
+            {
+                PyErr_Restore(xtype, xvalue, xtb);
+            }
+            else
+            {
+                // Discard the latest exception and restore the original one.
+                Py_XDECREF(xtype);
+                Py_XDECREF(xvalue);
+                Py_XDECREF(xtb);
+
+                PyErr_Restore(oxtype, oxvalue, oxtb);
+            }
+
+            break;
+        }
+
+        // If this is the first attempt, save the exception.
+        if (sa == args)
+        {
+            oxtype = xtype;
+            oxvalue = xvalue;
+            oxtb = xtb;
+        }
+        else
+        {
+            Py_XDECREF(xtype);
+            Py_XDECREF(xvalue);
+            Py_XDECREF(xtb);
+        }
+
+        // Create the new argument tuple.
+        if ((nsa = PyTuple_GetSlice(sa, 0, PyTuple_Size(sa) - 1)) == NULL)
+        {
+            // Tidy up.
+            Py_XDECREF(oxtype);
+            Py_XDECREF(oxvalue);
+            Py_XDECREF(oxtb);
+
+            break;
+        }
+
+        Py_DECREF(sa);
+        sa = nsa;
+    }
+
+    Py_DECREF(sa);
+
+    return 0;
+}
+
+
+// Clear the slot if it has an extra reference.
+void PyQtSlot::clearOther()
+{
+    Py_CLEAR(other);
+}
+
+
+// Visit the slot if it has an extra reference.
+int PyQtSlot::visitOther(visitproc visit, void *arg)
+{
+    Py_VISIT(other);
+
+    return 0;
 }

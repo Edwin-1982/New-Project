@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -29,13 +29,13 @@ int PYQT_VERSION;
 const char *PYQT_VERSION_STR;
 
 %ModuleCode
-static int PYQT_VERSION = 0x040c03;
-static const char *PYQT_VERSION_STR = "4.12.3";
+static int PYQT_VERSION = 0x050d02;
+static const char *PYQT_VERSION_STR = "5.13.2";
 %End
 const int QT_VERSION;
 const char *QT_VERSION_STR;
-typedef signed char qint8;
-typedef unsigned char quint8;
+typedef signed char qint8 /PyInt/;
+typedef unsigned char quint8 /PyInt/;
 typedef short qint16;
 typedef unsigned short quint16;
 typedef int qint32;
@@ -57,273 +57,11 @@ typedef unsigned long ulong;
 double qAbs(const double &t);
 int qRound(qreal d);
 qint64 qRound64(qreal d);
-
-class QSysInfo
-{
-%TypeHeaderCode
-#include <qglobal.h>
-%End
-
-public:
-%If (- Qt_4_2_0)
-
-    enum
-    {
-        WordSize,
-    };
-
-%End
-%If (Qt_4_2_0 -)
-
-    enum Sizes
-    {
-        WordSize,
-    };
-
-%End
-
-    enum Endian
-    {
-        BigEndian,
-        LittleEndian,
-        ByteOrder,
-    };
-
-%If (WS_WIN)
-// Windows specific system info.
-enum WinVersion {
-    WV_32s,
-    WV_95,
-    WV_98,
-    WV_Me,
-    WV_DOS_based,
-
-    WV_NT,
-    WV_2000,
-    WV_XP,
-    WV_2003,
-%If (Qt_4_2_0 -)
-    WV_VISTA,
-%End
-%If (Qt_4_5_1 -)
-    WV_WINDOWS7,
-%End
-%If (Qt_4_8_3 -)
-    WV_WINDOWS8,
-%End
-%If (Qt_4_8_6 -)
-    WV_WINDOWS8_1,
-%End
-%If (Qt_4_8_7 - Qt_5_0_0)
-    WV_WINDOWS10,
-%End
-    WV_NT_based,
-
-%If (Qt_4_5_0 -)
-    WV_4_0,
-    WV_5_0,
-    WV_5_1,
-    WV_5_2,
-    WV_6_0,
-%End
-%If (Qt_4_5_1 -)
-    WV_6_1,
-%End
-%If (Qt_4_8_3 -)
-    WV_6_2,
-%End
-%If (Qt_4_8_6 -)
-    WV_6_3,
-%End
-%If (Qt_4_8_7 - Qt_5_0_0)
-    WV_10_0,
-%End
-
-    WV_CE,
-    WV_CENET,
-%If (Qt_4_4_0 -)
-    WV_CE_5,
-    WV_CE_6,
-%End
-    WV_CE_based
-};
-
-static const WinVersion WindowsVersion;
-%End
-%If (WS_MACX)
-// Mac specific system info.
-enum MacVersion {
-    MV_Unknown,
-    MV_9,
-    MV_10_0,
-    MV_10_1,
-    MV_10_2,
-    MV_10_3,
-    MV_10_4,
-%If (Qt_4_2_0 -)
-    MV_10_5,
-%End
-%If (Qt_4_5_1 -)
-    MV_10_6,
-%End
-%If (Qt_4_8_0 -)
-    MV_10_7,
-%End
-%If (Qt_4_8_3 -)
-    MV_10_8,
-%End
-%If (Qt_4_8_6 -)
-    MV_10_9,
-%End
-%If (Qt_4_8_7 -)
-    MV_10_10,
-%End
-
-    MV_CHEETAH,
-    MV_PUMA,
-    MV_JAGUAR,
-    MV_PANTHER,
-    MV_TIGER,
-%If (Qt_4_2_0 -)
-    MV_LEOPARD,
-%End
-%If (Qt_4_5_1 -)
-    MV_SNOWLEOPARD,
-%End
-%If (Qt_4_8_0 -)
-    MV_LION,
-%End
-%If (Qt_4_8_3 -)
-    MV_MOUNTAINLION,
-%End
-%If (Qt_4_8_6 -)
-    MV_MAVERICKS,
-%End
-%If (Qt_4_8_7 -)
-    MV_YOSEMITE,
-%End
-};
-
-static const MacVersion MacintoshVersion;
-%End
-};
-
 const char *qVersion();
 bool qSharedBuild();
-void qDebug(const char *);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qDebug("%s", a0);
-    Py_END_ALLOW_THREADS
-%End
-
-void qWarning(const char *);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qWarning("%s", a0);
-    Py_END_ALLOW_THREADS
-%End
-
-void qCritical(const char *);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qCritical("%s", a0);
-    Py_END_ALLOW_THREADS
-%End
-
-void qFatal(const char *);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qFatal("%s", a0);
-    Py_END_ALLOW_THREADS
-%End
-
-void qErrnoWarning(int code, const char *msg);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qErrnoWarning(a0, "%s", a1);
-    Py_END_ALLOW_THREADS
-%End
-
-void qErrnoWarning(const char *msg);
-%MethodCode
-    Py_BEGIN_ALLOW_THREADS
-    qErrnoWarning("%s", a0);
-    Py_END_ALLOW_THREADS
-%End
-
-enum QtMsgType
-{
-    QtDebugMsg,
-    QtWarningMsg,
-    QtCriticalMsg,
-    QtFatalMsg,
-    QtSystemMsg,
-};
-
-SIP_PYCALLABLE qInstallMsgHandler(SIP_PYCALLABLE /AllowNone,TypeHint="Optional[Callable[[QtMsgType, str], None]]"/) /TypeHint="Optional[Callable[[QtMsgType, str], None]]"/;
-%MethodCode
-    // Treat None as the default handler.
-    #if QT_VERSION >= 0x050000
-    QtMessageHandler old = qInstallMessageHandler((a0 != Py_None) ? qtcore_MsgHandler : 0);
-    #else
-    QtMsgHandler old = qInstallMsgHandler((a0 != Py_None) ? qtcore_MsgHandler : 0);
-    #endif
-    
-    // If we recognise the old handler, then return it.  Otherwise return
-    // the default handler.  This doesn't exactly mimic the Qt behaviour
-    // but it is probably close enough for the way it will be used.
-    sipRes = (old == qtcore_MsgHandler) ? qtcore_PyMsgHandler : Py_None;
-    Py_INCREF(sipRes);
-    
-    // Save the new Python handler.
-    Py_XDECREF(qtcore_PyMsgHandler);
-    qtcore_PyMsgHandler = a0;
-    Py_INCREF(qtcore_PyMsgHandler);
-%End
-
-// Module code needed by qInstallMsgHandler().
-%ModuleCode
-// The user supplied Python handler.
-static PyObject *qtcore_PyMsgHandler = 0;
-
-// The C++ wrapper around the Python handler.
-#if QT_VERSION >= 0x050000
-static void qtcore_MsgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
-#else
-static void qtcore_MsgHandler(QtMsgType type, const char *msg)
-#endif
-{
-    PyObject *res;
-
-    SIP_BLOCK_THREADS
-    
-#if QT_VERSION >= 0x050000
-    res = sipCallMethod(0, qtcore_PyMsgHandler, "Fs", type, sipType_QtMsgType, msg.toLatin1().constData());
-#else
-    res = sipCallMethod(0, qtcore_PyMsgHandler, "Fs", type, sipType_QtMsgType, msg);
-#endif
-
-    Py_XDECREF(res);
-
-    if (res != NULL && res != Py_None)
-    {
-        PyErr_SetString(PyExc_TypeError, "invalid result type from PyQt message handler");
-        res = NULL;
-    }
-
-    if (res == NULL)
-        PyErr_Print();
-
-    SIP_UNBLOCK_THREADS
-}
-%End
-%If (- Qt_5_0_0)
-typedef bool QBool /NoTypeName/;
-%End
 // Template definition for QFlags.
 template<ENUM>
-class QFlags /NoDefaultCtors, PyQtFlags=0x1, TypeHintIn="Union[QFlags, ENUM]"/
+class QFlags /NoDefaultCtors, PyQtFlagsEnums="ENUM", TypeHintIn="Union[QFlags, ENUM]"/
 {
 public:
     // QFlags is supposed to be a more type safe version of an int (even though
@@ -360,29 +98,22 @@ public:
     // These are necessary to prevent Python comparing object IDs.
     bool operator==(const QFlags &f) const;
 %MethodCode
-#if QT_VERSION >= 0x050000
         sipRes = (sipCpp->operator QFlags::Int() == a0->operator QFlags::Int());
-#else
-        sipRes = (sipCpp->operator int() == a0->operator int());
-#endif
 %End
 
     bool operator!=(const QFlags &f) const;
 %MethodCode
-#if QT_VERSION >= 0x050000
         sipRes = (sipCpp->operator QFlags::Int() != a0->operator QFlags::Int());
-#else
-        sipRes = (sipCpp->operator int() != a0->operator int());
-#endif
 %End
 
     int __bool__() const;
 %MethodCode
-#if QT_VERSION >= 0x050000
         sipRes = (sipCpp->operator QFlags::Int() != 0);
-#else
-        sipRes = (sipCpp->operator int() != 0);
-#endif
+%End
+
+    long __hash__() const;
+%MethodCode
+        sipRes = sipCpp->operator QFlags::Int();
 %End
 
 
@@ -417,16 +148,9 @@ bool qRegisterResourceData(int, const unsigned char *, const unsigned char *, co
 bool qUnregisterResourceData(int, const unsigned char *, const unsigned char *, const unsigned char *);
 bool qFuzzyCompare(double p1, double p2);
 bool qIsNull(double d);
-%If (Qt_4_2_0 -)
 void qsrand(uint seed);
-%End
-%If (Qt_4_2_0 -)
 int qrand();
-%End
-%If (Qt_5_0_0 -)
 typedef void *QFunctionPointer;
-%End
-%If (Qt_5_0_0 -)
 // Mapped type for qintptr.
 // Map qintptr onto sip.voidptr.  This means either an address (on Windows) or
 // an integer file descriptor (on everything else) can be used.
@@ -456,7 +180,6 @@ typedef void *QFunctionPointer;
     return sipConvertFromVoidPtr((void *)*sipCpp);
 %End
 };
-%End
 // Mapped type for quintptr.
 // Map quintptr onto sip.voidptr.  This means either an address (on Windows) or
 // an integer file descriptor (on everything else) can be used.
@@ -501,4 +224,10 @@ SIP_PYOBJECT pyqtPickleProtocol() /TypeHint="Optional[int]"/;
         sipRes = Py_None;
     
     Py_INCREF(sipRes);
+%End
+%If (Qt_5_10_0 -)
+QString qEnvironmentVariable(const char *varName);
+%End
+%If (Qt_5_10_0 -)
+QString qEnvironmentVariable(const char *varName, const QString &defaultValue);
 %End

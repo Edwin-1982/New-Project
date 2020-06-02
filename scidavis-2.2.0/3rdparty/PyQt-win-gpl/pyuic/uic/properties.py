@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2015 Riverbank Computing Limited.
+## Copyright (C) 2019 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -42,20 +42,22 @@ import logging
 import os.path
 import sys
 
-from PyQt4.uic.exceptions import UnsupportedPropertyError
-from PyQt4.uic.icon_cache import IconCache
+from .exceptions import NoSuchClassError, UnsupportedPropertyError
+from .icon_cache import IconCache
 
 if sys.hexversion >= 0x03000000:
-    from PyQt4.uic.port_v3.ascii_upper import ascii_upper
+    from .port_v3.ascii_upper import ascii_upper
 else:
-    from PyQt4.uic.port_v2.ascii_upper import ascii_upper
+    from .port_v2.ascii_upper import ascii_upper
 
 
 logger = logging.getLogger(__name__)
 DEBUG = logger.debug
 
+
 QtCore = None
 QtGui = None
+QtWidgets = None
 
 
 def int_list(prop):
@@ -75,11 +77,13 @@ def needsWidget(func):
 
 
 class Properties(object):
-    def __init__(self, factory, QtCore_mod, QtGui_mod):
-        global QtGui, QtCore
-        QtGui = QtGui_mod
-        QtCore = QtCore_mod
+    def __init__(self, factory, qtcore_module, qtgui_module, qtwidgets_module):
         self.factory = factory
+
+        global QtCore, QtGui, QtWidgets
+        QtCore = qtcore_module
+        QtGui = qtgui_module
+        QtWidgets = qtwidgets_module
 
         self._base_dir = ''
 
@@ -100,15 +104,15 @@ class Properties(object):
         try:
             prefix, membername = cpp_name.split("::")
         except ValueError:
-            prefix = "Qt"
+            prefix = 'Qt'
             membername = cpp_name
 
-        if prefix == "Qt":
+        if prefix == 'Qt':
             return getattr(QtCore.Qt, membername)
 
         scope = self.factory.findQObjectType(prefix)
         if scope is None:
-            raise AttributeError("unknown enum %s" % cpp_name)
+            raise NoSuchClassError(prefix)
 
         return getattr(scope, membername)
 
@@ -127,7 +131,7 @@ class Properties(object):
     def _number(self, prop):
         return int(prop.text)
 
-    _uInt = _longLong = _uLongLong = _number
+    _UInt = _uInt = _longLong = _uLongLong = _number
 
     def _double(self, prop):
         return float(prop.text)
@@ -149,16 +153,7 @@ class Properties(object):
 
         disambig = prop.get('comment')
 
-        # Allow for Qt5 without deprecated features.
-        try:
-            encoding = QtGui.QApplication.UnicodeUTF8
-            translated = QtGui.QApplication.translate(self.uiname, text,
-                    disambig, encoding)
-        except AttributeError:
-            translated = QtGui.QApplication.translate(self.uiname, text,
-                    disambig)
-
-        return translated
+        return QtWidgets.QApplication.translate(self.uiname, text, disambig)
 
     _char = _string
 
@@ -279,7 +274,7 @@ class Properties(object):
 
             gradient.setColorAt(position, color)
 
-        return name
+        return gradient
 
     def _palette(self, prop):
         palette = self.factory.createQObject("QPalette", "palette", (),
@@ -326,14 +321,14 @@ class Properties(object):
         if len(values) == 2:
             # Qt v4.3.0 and later.
             horstretch, verstretch = values
-            hsizetype = getattr(QtGui.QSizePolicy, prop.get('hsizetype'))
-            vsizetype = getattr(QtGui.QSizePolicy, prop.get('vsizetype'))
+            hsizetype = getattr(QtWidgets.QSizePolicy, prop.get('hsizetype'))
+            vsizetype = getattr(QtWidgets.QSizePolicy, prop.get('vsizetype'))
         else:
             hsizetype, vsizetype, horstretch, verstretch = values
-            hsizetype = QtGui.QSizePolicy.Policy(hsizetype)
-            vsizetype = QtGui.QSizePolicy.Policy(vsizetype)
+            hsizetype = QtWidgets.QSizePolicy.Policy(hsizetype)
+            vsizetype = QtWidgets.QSizePolicy.Policy(vsizetype)
 
-        sizePolicy = self.factory.createQObject("QSizePolicy", "sizePolicy",
+        sizePolicy = self.factory.createQObject('QSizePolicy', 'sizePolicy',
                 (hsizetype, vsizetype), is_attribute=False)
         sizePolicy.setHorizontalStretch(horstretch)
         sizePolicy.setVerticalStretch(verstretch)
@@ -422,7 +417,7 @@ class Properties(object):
                     getattr(widget, 'set%s%s' % (ascii_upper(prop_name[0]), prop_name[1:]))(prop_value)
 
         if set_sunken:
-            widget.setFrameShadow(QtGui.QFrame.Sunken)
+            widget.setFrameShadow(QtWidgets.QFrame.Sunken)
 
     # SPECIAL PROPERTIES
     # If a property has a well-known value type but needs special,
@@ -441,7 +436,7 @@ class Properties(object):
     # These properties will be set with a widget.setProperty call rather than
     # calling the set<property> function.
     def _setViaSetProperty(self, widget, prop):
-        prop_value = self.convert(prop)
+        prop_value = self.convert(prop, widget)
         if prop_value is not None:
             prop_name = prop.attrib['name']
 
@@ -498,10 +493,10 @@ class Properties(object):
 
     def orientation(self, widget, prop):
         # If the class is a QFrame, it's a line.
-        if widget.metaObject().className() == "QFrame":
+        if widget.metaObject().className() == 'QFrame':
             widget.setFrameShape(
-                {"Qt::Horizontal": QtGui.QFrame.HLine,
-                 "Qt::Vertical"  : QtGui.QFrame.VLine}[prop[0].text])
+                {'Qt::Horizontal': QtWidgets.QFrame.HLine,
+                 'Qt::Vertical'  : QtWidgets.QFrame.VLine}[prop[0].text])
         else:
             widget.setOrientation(self._enum(prop[0]))
 
@@ -512,12 +507,7 @@ class Properties(object):
 
     # This is a pseudo-property injected to deal with margins.
     def pyuicMargins(self, widget, prop):
-        left, top, right, bottom = int_list(prop)
-
-        if left == top and left == right and left == bottom:
-            widget.setMargin(left)
-        else:
-            widget.setContentsMargins(left, top, right, bottom)
+        widget.setContentsMargins(*int_list(prop))
 
     # This is a pseudo-property injected to deal with spacing.
     def pyuicSpacing(self, widget, prop):

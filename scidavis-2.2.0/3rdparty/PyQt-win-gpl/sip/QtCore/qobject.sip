@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-class QWidget /External/;
-typedef QList<QObject*> QObjectList;
+typedef QList<QObject *> QObjectList;
 
 class QObject /Supertype=sip.wrapper/
 {
@@ -30,7 +29,7 @@ class QObject /Supertype=sip.wrapper/
 %End
 
 %TypeCode
-// This is needed by the tr() and trUt8() handwritten implementations.
+// This is needed by the tr() handwritten implementation.
 #include <qcoreapplication.h>
 
 
@@ -45,7 +44,7 @@ static PyObject *qtcore_type_to_tuple(PyObject *type)
     if (tuple)
     {
         Py_INCREF(type);
-        PyTuple_SET_ITEM(tuple, 0, type);
+        PyTuple_SetItem(tuple, 0, type);
     }
 
     return tuple;
@@ -56,8 +55,8 @@ static PyObject *qtcore_type_to_tuple(PyObject *type)
 // reference to the tuple if so.
 static PyObject *qtcore_check_tuple_types(PyObject *types)
 {
-    for (SIP_SSIZE_T i = 0; i < PyTuple_GET_SIZE(types); ++i)
-        if (!PyObject_TypeCheck(PyTuple_GET_ITEM(types, i), &PyType_Type))
+    for (Py_ssize_t i = 0; i < PyTuple_Size(types); ++i)
+        if (!PyObject_TypeCheck(PyTuple_GetItem(types, i), &PyType_Type))
         {
             PyErr_SetString(PyExc_TypeError,
                     "all elements of the types argument must be type objects");
@@ -70,7 +69,7 @@ static PyObject *qtcore_check_tuple_types(PyObject *types)
 
 
 // Do the main work of finding a child.
-static PyObject *qtcore_do_find_child(const QObject *parent, PyObject *types, const QString &name)
+static PyObject *qtcore_do_find_child(const QObject *parent, PyObject *types, const QString &name, Qt::FindChildOptions options)
 {
     const QObjectList &children = parent->children();
     int i;
@@ -83,23 +82,27 @@ static PyObject *qtcore_do_find_child(const QObject *parent, PyObject *types, co
         if (!pyo)
             return 0;
 
-        if (name.isNull() || obj->objectName() == name)
-            for (SIP_SSIZE_T t = 0; t < PyTuple_GET_SIZE(types); ++t)
-                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GET_ITEM(types, t)))
+        // Allow for proxies.
+        QObject *resolved = reinterpret_cast<QObject *>(sipGetAddress((sipSimpleWrapper *)pyo));
+
+        if (name.isNull() || resolved->objectName() == name)
+            for (Py_ssize_t t = 0; t < PyTuple_Size(types); ++t)
+                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GetItem(types, t)))
                     return pyo;
 
         Py_DECREF(pyo);
     }
 
-    for (i = 0; i < children.size(); ++i)
-    {
-        PyObject *pyo = qtcore_do_find_child(children.at(i), types, name);
+    if (options == Qt::FindChildrenRecursively)
+        for (i = 0; i < children.size(); ++i)
+        {
+            PyObject *pyo = qtcore_do_find_child(children.at(i), types, name, options);
 
-        if (pyo != Py_None)
-            return pyo;
+            if (pyo != Py_None)
+                return pyo;
 
-        Py_DECREF(pyo);
-    }
+            Py_DECREF(pyo);
+        }
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -107,13 +110,13 @@ static PyObject *qtcore_do_find_child(const QObject *parent, PyObject *types, co
 
 
 // Find a child that is one of a number of types and with an optional name.
-static PyObject *qtcore_FindChild(const QObject *parent, PyObject *types, const QString &name)
+static PyObject *qtcore_FindChild(const QObject *parent, PyObject *types, const QString &name, Qt::FindChildOptions options)
 {
     // Check that the types checking was successful.
     if (!types)
         return 0;
 
-    PyObject *child = qtcore_do_find_child(parent, types, name);
+    PyObject *child = qtcore_do_find_child(parent, types, name, options);
 
     Py_DECREF(types);
 
@@ -122,7 +125,7 @@ static PyObject *qtcore_FindChild(const QObject *parent, PyObject *types, const 
 
 
 // Do the main work of finding the children with a string name.
-static bool qtcore_do_find_children(const QObject *parent, PyObject *types, const QString &name, PyObject *list)
+static bool qtcore_do_find_children(const QObject *parent, PyObject *types, const QString &name, Qt::FindChildOptions options, PyObject *list)
 {
     const QObjectList &children = parent->children();
     int i;
@@ -135,9 +138,12 @@ static bool qtcore_do_find_children(const QObject *parent, PyObject *types, cons
         if (!pyo)
             return false;
 
-        if (name.isNull() || obj->objectName() == name)
-            for (SIP_SSIZE_T t = 0; t < PyTuple_GET_SIZE(types); ++t)
-                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GET_ITEM(types, t)))
+        // Allow for proxies.
+        QObject *resolved = reinterpret_cast<QObject *>(sipGetAddress((sipSimpleWrapper *)pyo));
+
+        if (name.isNull() || resolved->objectName() == name)
+            for (Py_ssize_t t = 0; t < PyTuple_Size(types); ++t)
+                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GetItem(types, t)))
                     if (PyList_Append(list, pyo) < 0)
                     {
                         Py_DECREF(pyo);
@@ -146,10 +152,13 @@ static bool qtcore_do_find_children(const QObject *parent, PyObject *types, cons
 
         Py_DECREF(pyo);
 
-        bool ok = qtcore_do_find_children(obj, types, name, list);
+        if (options == Qt::FindChildrenRecursively)
+        {
+            bool ok = qtcore_do_find_children(obj, types, name, options, list);
 
-        if (!ok)
-            return false;
+            if (!ok)
+                return false;
+        }
     }
 
     return true;
@@ -158,7 +167,7 @@ static bool qtcore_do_find_children(const QObject *parent, PyObject *types, cons
 
 // Find a child that is one of a number of types and with an optional string
 // name.
-static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, const QString &name)
+static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, const QString &name, Qt::FindChildOptions options)
 {
     // Check that the types checking was successful.
     if (!types)
@@ -167,7 +176,7 @@ static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, con
     PyObject *list = PyList_New(0);
 
     if (list)
-        if (!qtcore_do_find_children(parent, types, name, list))
+        if (!qtcore_do_find_children(parent, types, name, options, list))
             Py_DECREF(list);
 
     Py_DECREF(types);
@@ -176,8 +185,8 @@ static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, con
 }
 
 
-// Do the main work of finding the children with a regular expression name.
-static bool qtcore_do_find_children(const QObject *parent, PyObject *types, const QRegExp &re, PyObject *list)
+// Do the main work of finding the children with a QRegExp name.
+static bool qtcore_do_find_children(const QObject *parent, PyObject *types, const QRegExp &re, Qt::FindChildOptions options, PyObject *list)
 {
     const QObjectList &children = parent->children();
     int i;
@@ -191,8 +200,8 @@ static bool qtcore_do_find_children(const QObject *parent, PyObject *types, cons
             return false;
 
         if (re.indexIn(obj->objectName()) >= 0)
-            for (SIP_SSIZE_T t = 0; t < PyTuple_GET_SIZE(types); ++t)
-                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GET_ITEM(types, t)))
+            for (Py_ssize_t t = 0; t < PyTuple_Size(types); ++t)
+                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GetItem(types, t)))
                     if (PyList_Append(list, pyo) < 0)
                     {
                         Py_DECREF(pyo);
@@ -201,19 +210,22 @@ static bool qtcore_do_find_children(const QObject *parent, PyObject *types, cons
 
         Py_DECREF(pyo);
 
-        bool ok = qtcore_do_find_children(obj, types, re, list);
+        if (options == Qt::FindChildrenRecursively)
+        {
+            bool ok = qtcore_do_find_children(obj, types, re, options, list);
 
-        if (!ok)
-            return false;
+            if (!ok)
+                return false;
+        }
     }
 
     return true;
 }
 
 
-// Find a child that is one of a number of types and with an optional regular
-// expression name.
-static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, const QRegExp &re)
+// Find a child that is one of a number of types and with an optional QRegExp
+// name.
+static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, const QRegExp &re, Qt::FindChildOptions options)
 {
     // Check that the types checking was successful.
     if (!types)
@@ -222,7 +234,67 @@ static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, con
     PyObject *list = PyList_New(0);
 
     if (list)
-        if (!qtcore_do_find_children(parent, types, re, list))
+        if (!qtcore_do_find_children(parent, types, re, options, list))
+            Py_DECREF(list);
+
+    Py_DECREF(types);
+
+    return list;
+}
+
+
+// Do the main work of finding the children with a QRegularExpression name.
+static bool qtcore_do_find_children(const QObject *parent, PyObject *types, const QRegularExpression &re, Qt::FindChildOptions options, PyObject *list)
+{
+    const QObjectList &children = parent->children();
+    int i;
+
+    for (i = 0; i < children.size(); ++i)
+    {
+        QObject *obj = children.at(i);
+        PyObject *pyo = sipConvertFromType(obj, sipType_QObject, 0);
+
+        if (!pyo)
+            return false;
+
+        QRegularExpressionMatch m = re.match(obj->objectName());
+        
+        if (m.hasMatch())
+            for (Py_ssize_t t = 0; t < PyTuple_Size(types); ++t)
+                if (PyType_IsSubtype(Py_TYPE(pyo), (PyTypeObject *)PyTuple_GetItem(types, t)))
+                    if (PyList_Append(list, pyo) < 0)
+                    {
+                        Py_DECREF(pyo);
+                        return false;
+                    }
+
+        Py_DECREF(pyo);
+
+        if (options == Qt::FindChildrenRecursively)
+        {
+            bool ok = qtcore_do_find_children(obj, types, re, options, list);
+
+            if (!ok)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+
+// Find a child that is one of a number of types and with an optional
+// QRegularExpression name.
+static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, const QRegularExpression &re, Qt::FindChildOptions options)
+{
+    // Check that the types checking was successful.
+    if (!types)
+        return 0;
+
+    PyObject *list = PyList_New(0);
+
+    if (list)
+        if (!qtcore_do_find_children(parent, types, re, options, list))
             Py_DECREF(list);
 
     Py_DECREF(types);
@@ -241,126 +313,81 @@ static PyObject *qtcore_FindChildren(const QObject *parent, PyObject *types, con
         sipTypeDef **type;
         int yes, no;
     } graph[] = {
-        {sipName_QLibrary, &sipType_QLibrary, -1, 1},
-        {sipName_QMimeData, &sipType_QMimeData, -1, 2},
-        {sipName_QEventLoop, &sipType_QEventLoop, -1, 3},
-        {sipName_QAbstractEventDispatcher, &sipType_QAbstractEventDispatcher, -1, 4},
-        {sipName_QAbstractItemModel, &sipType_QAbstractItemModel, 22, 5},
-    #if QT_VERSION >= 0x040200
-        {sipName_QFileSystemWatcher, &sipType_QFileSystemWatcher, -1, 6},
+        {sipName_QAbstractAnimation, &sipType_QAbstractAnimation, 25, 1},
+        {sipName_QAbstractEventDispatcher, &sipType_QAbstractEventDispatcher, -1, 2},
+        {sipName_QAbstractItemModel, &sipType_QAbstractItemModel, 31, 3},
+        {sipName_QAbstractState, &sipType_QAbstractState, 39, 4},
+        {sipName_QAbstractTransition, &sipType_QAbstractTransition, 43, 5},
+        {sipName_QIODevice, &sipType_QIODevice, 45, 6},
+        {sipName_QCoreApplication, &sipType_QCoreApplication, -1, 7},
+        {sipName_QEventLoop, &sipType_QEventLoop, -1, 8},
+    #if QT_VERSION >= 0x050200
+        {sipName_QFileSelector, &sipType_QFileSelector, -1, 9},
     #else
-        {0, 0, -1, 6},
+        {0, 0, -1, 9},
     #endif
-        {sipName_QSignalMapper, &sipType_QSignalMapper, -1, 7},
-        {sipName_QCoreApplication, &sipType_QCoreApplication, -1, 8},
-        {sipName_QTranslator, &sipType_QTranslator, -1, 9},
-        {sipName_QThread, &sipType_QThread, -1, 10},
-        {sipName_QIODevice, &sipType_QIODevice, 24, 11},
-    #if QT_VERSION >= 0x040600
-        {sipName_QAbstractState, &sipType_QAbstractState, 28, 12},
-    #else
-        {0, 0, 28, 12},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QAbstractTransition, &sipType_QAbstractTransition, 32, 13},
-    #else
-        {0, 0, 32, 13},
-    #endif
-    #if QT_VERSION >= 0x040400
-        {sipName_QThreadPool, &sipType_QThreadPool, -1, 14},
-    #else
-        {0, 0, -1, 14},
-    #endif
-        {sipName_QSocketNotifier, &sipType_QSocketNotifier, -1, 15},
-        {sipName_QTimer, &sipType_QTimer, -1, 16},
-    #if QT_VERSION >= 0x040200
-        {sipName_QTimeLine, &sipType_QTimeLine, -1, 17},
-    #else
-        {0, 0, -1, 17},
-    #endif
-        {sipName_QObjectCleanupHandler, &sipType_QObjectCleanupHandler, -1, 18},
-    #if QT_VERSION >= 0x040400
-        {sipName_QSharedMemory, &sipType_QSharedMemory, -1, 19},
-    #else
-        {0, 0, -1, 19},
-    #endif
-        {sipName_QSettings, &sipType_QSettings, -1, 20},
-        {sipName_QPluginLoader, &sipType_QPluginLoader, -1, 21},
-    #if QT_VERSION >= 0x040600
-        {sipName_QAbstractAnimation, &sipType_QAbstractAnimation, 34, -1},
-    #else
-        {0, 0, 34, -1},
-    #endif
-        {sipName_QAbstractListModel, &sipType_QAbstractListModel, -1, 23},
-        {sipName_QAbstractTableModel, &sipType_QAbstractTableModel, -1, -1},
-    #if !defined(QT_NO_PROCESS)
-        {sipName_QProcess, &sipType_QProcess, -1, 25},
-    #else
-        {0, 0, -1, 25},
-    #endif
-        {sipName_QBuffer, &sipType_QBuffer, -1, 26},
-        {sipName_QFile, &sipType_QFile, 27, -1},
-        {sipName_QTemporaryFile, &sipType_QTemporaryFile, -1, -1},
-    #if QT_VERSION >= 0x040600
-        {sipName_QHistoryState, &sipType_QHistoryState, -1, 29},
-    #else
-        {0, 0, -1, 29},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QFinalState, &sipType_QFinalState, -1, 30},
-    #else
-        {0, 0, -1, 30},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QState, &sipType_QState, 31, -1},
-    #else
-        {0, 0, 31, -1},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QStateMachine, &sipType_QStateMachine, -1, -1},
+        {sipName_QFileSystemWatcher, &sipType_QFileSystemWatcher, -1, 10},
+        {sipName_QItemSelectionModel, &sipType_QItemSelectionModel, -1, 11},
+        {sipName_QLibrary, &sipType_QLibrary, -1, 12},
+        {sipName_QMimeData, &sipType_QMimeData, -1, 13},
+        {sipName_QObjectCleanupHandler, &sipType_QObjectCleanupHandler, -1, 14},
+        {sipName_QPluginLoader, &sipType_QPluginLoader, -1, 15},
+        {sipName_QSettings, &sipType_QSettings, -1, 16},
+        {sipName_QSharedMemory, &sipType_QSharedMemory, -1, 17},
+        {sipName_QSignalMapper, &sipType_QSignalMapper, -1, 18},
+        {sipName_QSocketNotifier, &sipType_QSocketNotifier, -1, 19},
+        {sipName_QThread, &sipType_QThread, -1, 20},
+        {sipName_QThreadPool, &sipType_QThreadPool, -1, 21},
+        {sipName_QTimeLine, &sipType_QTimeLine, -1, 22},
+        {sipName_QTimer, &sipType_QTimer, -1, 23},
+        {sipName_QTranslator, &sipType_QTranslator, -1, 24},
+    #if defined(Q_OS_WIN)
+        {sipName_QWinEventNotifier, &sipType_QWinEventNotifier, -1, -1},
     #else
         {0, 0, -1, -1},
     #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QSignalTransition, &sipType_QSignalTransition, -1, 33},
-    #else
-        {0, 0, -1, 33},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QEventTransition, &sipType_QEventTransition, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QAnimationGroup, &sipType_QAnimationGroup, 37, 35},
-    #else
-        {0, 0, 37, 35},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QVariantAnimation, &sipType_QVariantAnimation, 39, 36},
-    #else
-        {0, 0, 39, 36},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QPauseAnimation, &sipType_QPauseAnimation, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
-    #if QT_VERSION >= 0x040600
-        {sipName_QParallelAnimationGroup, &sipType_QParallelAnimationGroup, -1, 38},
-    #else
-        {0, 0, -1, 38},
-    #endif
-    #if QT_VERSION >= 0x040600
+        {sipName_QAnimationGroup, &sipType_QAnimationGroup, 28, 26},
+        {sipName_QPauseAnimation, &sipType_QPauseAnimation, -1, 27},
+        {sipName_QVariantAnimation, &sipType_QVariantAnimation, 30, -1},
+        {sipName_QParallelAnimationGroup, &sipType_QParallelAnimationGroup, -1, 29},
         {sipName_QSequentialAnimationGroup, &sipType_QSequentialAnimationGroup, -1, -1},
-    #else
-        {0, 0, -1, -1},
-    #endif
-    #if QT_VERSION >= 0x040600
         {sipName_QPropertyAnimation, &sipType_QPropertyAnimation, -1, -1},
+        {sipName_QAbstractListModel, &sipType_QAbstractListModel, 35, 32},
+        {sipName_QAbstractProxyModel, &sipType_QAbstractProxyModel, 36, 33},
+        {sipName_QAbstractTableModel, &sipType_QAbstractTableModel, -1, 34},
+    #if QT_VERSION >= 0x050d00
+        {sipName_QConcatenateTablesProxyModel, &sipType_QConcatenateTablesProxyModel, -1, -1},
     #else
         {0, 0, -1, -1},
     #endif
+        {sipName_QStringListModel, &sipType_QStringListModel, -1, -1},
+        {sipName_QIdentityProxyModel, &sipType_QIdentityProxyModel, -1, 37},
+        {sipName_QSortFilterProxyModel, &sipType_QSortFilterProxyModel, -1, 38},
+    #if QT_VERSION >= 0x050d00
+        {sipName_QTransposeProxyModel, &sipType_QTransposeProxyModel, -1, -1},
+    #else
+        {0, 0, -1, -1},
+    #endif
+        {sipName_QFinalState, &sipType_QFinalState, -1, 40},
+        {sipName_QHistoryState, &sipType_QHistoryState, -1, 41},
+        {sipName_QState, &sipType_QState, 42, -1},
+        {sipName_QStateMachine, &sipType_QStateMachine, -1, -1},
+        {sipName_QEventTransition, &sipType_QEventTransition, -1, 44},
+        {sipName_QSignalTransition, &sipType_QSignalTransition, -1, -1},
+        {sipName_QBuffer, &sipType_QBuffer, -1, 46},
+        {sipName_QFileDevice, &sipType_QFileDevice, 48, 47},
+    #if !defined(QT_NO_PROCESS)
+        {sipName_QProcess, &sipType_QProcess, -1, -1},
+    #else
+        {0, 0, -1, -1},
+    #endif
+        {sipName_QFile, &sipType_QFile, 50, 49},
+    #if QT_VERSION >= 0x050100
+        {sipName_QSaveFile, &sipType_QSaveFile, -1, -1},
+    #else
+        {0, 0, -1, -1},
+    #endif
+        {sipName_QTemporaryFile, &sipType_QTemporaryFile, -1, -1},
     };
     
     int i = 0;
@@ -402,9 +429,9 @@ public:
     const QMetaObject *metaObject() const;
     explicit QObject(QObject *parent /TransferThis/ = 0);
     virtual ~QObject();
-    void pyqtConfigure(... names /TypeHint="**"/) /NoArgParser/;
+    void pyqtConfigure(SIP_PYOBJECT) /NoArgParser/;
 %Docstring
-QObject.pyqtConfigure(**options)
+QObject.pyqtConfigure(...)
 
 Each keyword argument is either the name of a Qt property or a Qt signal.
 For properties the property is set to the given value which should be of an
@@ -417,253 +444,118 @@ callable.
         return qpycore_pyqtconfigure(sipSelf, sipArgs, sipKwds);
 %End
 
-    SIP_PYOBJECT __getattr__(const char *name) const;
+    SIP_PYOBJECT __getattr__(const char *name /Encoding="UTF-8"/) const;
 %MethodCode
-        sipRes = qpycore_qobject_getattr(const_cast<QObject *>(sipCpp), sipSelf, a0);
+        sipRes = qpycore_qobject_getattr(sipCpp, sipSelf, a0);
 %End
 
     virtual bool event(QEvent *);
     virtual bool eventFilter(QObject *, QEvent *);
-%If (Qt_5_0_0 -)
     QString tr(const char *sourceText /Encoding="UTF-8"/, const char *disambiguation = 0, int n = -1) const;
 %MethodCode
         // Note that tr() is really a static method.  We pretend it isn't so we can use
         // self to get hold of the class name.
         
-        sipRes = new QString(QCoreApplication::translate(Py_TYPE(sipSelf)->tp_name, a0, a1, a2));
+        sipRes = new QString(QCoreApplication::translate(sipPyTypeName(Py_TYPE(sipSelf)), a0, a1, a2));
 %End
 
-%End
-%If (Qt_4_2_0 - Qt_5_0_0)
-    QString tr(SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0, int n = -1) const;
+    SIP_PYOBJECT findChild(SIP_PYTYPE type, const QString &name = QString(), Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="QObject"/;
 %MethodCode
-        // Note that tr() is really a static method.  We pretend it isn't so we can use
-        // self to get hold of the class name.
-        
-        const char *source = qpycore_encode(&a0, QCoreApplication::CodecForTr);
-        
-        if (source)
-        {
-            sipRes = new QString(QCoreApplication::translate(Py_TYPE(sipSelf)->tp_name,
-                    source, a1, QCoreApplication::CodecForTr, a2));
-            Py_DECREF(a0);
-        }
-        else
-        {
-            sipIsErr = 1;
-        }
-%End
-
-%End
-%If (- Qt_4_2_0)
-    QString tr(SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0) const;
-%MethodCode
-        // Note that tr() is really a static method.  We pretend it isn't so we can use
-        // self to get hold of the class name.
-        
-        if (QCoreApplication::instance())
-        {
-            const char *source = qpycore_encode(&a0, QCoreApplication::DefaultCodec);
-        
-            if (source)
-            {
-                sipRes = new QString(QCoreApplication::instance()->translate(Py_TYPE(sipSelf)->tp_name, source, a1, QCoreApplication::DefaultCodec));
-                Py_DECREF(a0);
-            }
-            else
-            {
-                sipIsErr = 1;
-            }
-        }
-        else
-        {
-            const char *source = sipString_AsLatin1String(&a0);
-        
-            if (source)
-            {
-                sipRes = new QString(QString::fromLatin1(source));
-                Py_DECREF(a0);
-            }
-            else
-            {
-                sipIsErr = 1;
-            }
-        }
-%End
-
-%End
-%If (Qt_4_2_0 -)
-%If (PyQt_Deprecated_5_0)
-    QString trUtf8(SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0, int n = -1) const;
-%MethodCode
-        // Note that trUtf8() is really a static method.  We pretend it isn't aren't so
-        // we can use self to get hold of the class name.
-        
-        const char *source = qpycore_encode(&a0, QCoreApplication::UnicodeUTF8);
-        
-        if (source)
-        {
-            sipRes = new QString(QCoreApplication::translate(Py_TYPE(sipSelf)->tp_name,
-                    source, a1, QCoreApplication::UnicodeUTF8, a2));
-            Py_DECREF(a0);
-        }
-        else
-        {
-            sipIsErr = 1;
-        }
-%End
-
-%End
-%End
-%If (- Qt_4_2_0)
-    QString trUtf8(SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0) const;
-%MethodCode
-        // Note that trUtf8() is really a static method.  We pretend it isn't aren't so
-        // we can use self to get hold of the class name.
-        
-        if (QCoreApplication::instance())
-        {
-            const char *source = qpycore_encode(&a0, QCoreApplication::UnicodeUTF8);
-        
-            if (source)
-            {
-                sipRes = new QString(QCoreApplication::instance()->translate(Py_TYPE(sipSelf)->tp_name, source, a1, QCoreApplication::UnicodeUTF8));
-                Py_DECREF(a0);
-            }
-            else
-            {
-                sipIsErr = 1;
-            }
-        }
-        else
-        {
-            const char *source = sipString_AsUTF8String(&a0);
-        
-            if (source)
-            {
-                sipRes = new QString(QString::fromUtf8(source));
-                Py_DECREF(a0);
-            }
-            else
-            {
-                sipIsErr = 1;
-            }
-        }
-%End
-
-%End
-    SIP_PYOBJECT findChild(SIP_PYTYPE type, const QString &name = QString()) const /TypeHint="QObject"/;
-%MethodCode
-        sipRes = qtcore_FindChild(sipCpp, qtcore_type_to_tuple(a0), *a1);
+        sipRes = qtcore_FindChild(sipCpp, qtcore_type_to_tuple(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    SIP_PYOBJECT findChild(SIP_PYTUPLE types /TypeHintValue="()"/, const QString &name = QString()) const /TypeHint="QObject"/;
+    SIP_PYOBJECT findChild(SIP_PYTUPLE types /TypeHintValue="()"/, const QString &name = QString(), Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="QObject"/;
 %MethodCode
-        sipRes = qtcore_FindChild(sipCpp, qtcore_check_tuple_types(a0), *a1);
+        sipRes = qtcore_FindChild(sipCpp, qtcore_check_tuple_types(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    SIP_PYLIST findChildren(SIP_PYTYPE type, const QString &name = QString()) const /TypeHint="List[QObject]"/;
+    SIP_PYLIST findChildren(SIP_PYTYPE type, const QString &name = QString(), Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
 %MethodCode
-        sipRes = qtcore_FindChildren(sipCpp, qtcore_type_to_tuple(a0), *a1);
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_type_to_tuple(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    SIP_PYLIST findChildren(SIP_PYTUPLE types /TypeHintValue="()"/, const QString &name = QString()) const /TypeHint="List[QObject]"/;
+    SIP_PYLIST findChildren(SIP_PYTUPLE types /TypeHintValue="()"/, const QString &name = QString(), Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
 %MethodCode
-        sipRes = qtcore_FindChildren(sipCpp, qtcore_check_tuple_types(a0), *a1);
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_check_tuple_types(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    SIP_PYLIST findChildren(SIP_PYTYPE type, const QRegExp &regExp) const /TypeHint="List[QObject]"/;
+    SIP_PYLIST findChildren(SIP_PYTYPE type, const QRegExp &regExp, Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
 %MethodCode
-        sipRes = qtcore_FindChildren(sipCpp, qtcore_type_to_tuple(a0), *a1);
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_type_to_tuple(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    SIP_PYLIST findChildren(SIP_PYTUPLE types /TypeHintValue="()"/, const QRegExp &regExp) const /TypeHint="List[QObject]"/;
+    SIP_PYLIST findChildren(SIP_PYTUPLE types /TypeHintValue="()"/, const QRegExp &regExp, Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
 %MethodCode
-        sipRes = qtcore_FindChildren(sipCpp, qtcore_check_tuple_types(a0), *a1);
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_check_tuple_types(a0), *a1, *a2);
         
         if (!sipRes)
             sipIsErr = 1;
 %End
 
-    void emit(SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, ...);
+    SIP_PYLIST findChildren(SIP_PYTYPE type, const QRegularExpression &re, Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
 %MethodCode
-        sipError = qpycore_qobject_emit(sipCpp, a0, a1);
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_type_to_tuple(a0), *a1, *a2);
+        
+        if (!sipRes)
+            sipIsErr = 1;
+%End
+
+    SIP_PYLIST findChildren(SIP_PYTUPLE types /TypeHintValue="()"/, const QRegularExpression &re, Qt::FindChildOptions options = Qt::FindChildrenRecursively) const /TypeHint="List[QObject]"/;
+%MethodCode
+        sipRes = qtcore_FindChildren(sipCpp, qtcore_check_tuple_types(a0), *a1, *a2);
+        
+        if (!sipRes)
+            sipIsErr = 1;
 %End
 
     QString objectName() const;
     void setObjectName(const QString &name);
     bool isWidgetType() const;
-%If (Qt_5_0_0 -)
     bool isWindowType() const;
-%End
     bool signalsBlocked() const;
     bool blockSignals(bool b);
     QThread *thread() const;
     void moveToThread(QThread *thread);
-%If (Qt_5_0_0 -)
     int startTimer(int interval, Qt::TimerType timerType = Qt::CoarseTimer);
-%End
-%If (- Qt_5_0_0)
-    int startTimer(int interval);
-%End
     void killTimer(int id);
     const QObjectList &children() const;
     void setParent(QObject * /TransferThis/);
     void installEventFilter(QObject *);
     void removeEventFilter(QObject *);
-    static SIP_PYOBJECT connect(QObject * /GetWrapper/, SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, SIP_PYOBJECT /TypeHint="QObject"/, SIP_PYOBJECT /TypeHint="QT_SLOT"/, Qt::ConnectionType=Qt::AutoConnection) /TypeHint="bool"/;
-%MethodCode
-        sipRes = qpycore_qobject_connect(&sipError, a0, a0Wrapper, a1, a2, a3, (int)a4);
+%If (Qt_5_9_0 -)
+    void dumpObjectInfo() const;
 %End
-
-    static SIP_PYOBJECT connect(QObject * /GetWrapper/, SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, SIP_PYCALLABLE, Qt::ConnectionType=Qt::AutoConnection) /TypeHint="bool"/;
-%MethodCode
-        sipRes = qpycore_qobject_connect(&sipError, a0, a0Wrapper, a1, a2, 0, (int)a3);
-%End
-
-    SIP_PYOBJECT connect(QObject * /GetWrapper/, SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, SIP_PYOBJECT /TypeHint="QT_SLOT"/, Qt::ConnectionType=Qt::AutoConnection) const /TypeHint="bool"/;
-%MethodCode
-        sipRes = qpycore_qobject_connect(&sipError, a0, a0Wrapper, a1, sipSelf, a2, (int)a3);
-%End
-
-    static SIP_PYOBJECT disconnect(QObject *, SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, SIP_PYOBJECT /TypeHint="QObject"/, SIP_PYOBJECT /TypeHint="QT_SLOT"/) /TypeHint="bool"/;
-%MethodCode
-        sipRes = qpycore_qobject_disconnect(&sipError, a0, a1, a2, a3);
-%End
-
-    static SIP_PYOBJECT disconnect(QObject *, SIP_PYOBJECT /TypeHint="QT_SIGNAL"/, SIP_PYCALLABLE) /TypeHint="bool"/;
-%MethodCode
-        sipRes = qpycore_qobject_disconnect(&sipError, a0, a1, a2, 0);
-%End
-
+%If (- Qt_5_9_0)
     void dumpObjectInfo();
-    void dumpObjectTree();
-%If (Qt_4_2_0 -)
-    QList<QByteArray> dynamicPropertyNames() const;
 %End
+%If (Qt_5_9_0 -)
+    void dumpObjectTree() const;
+%End
+%If (- Qt_5_9_0)
+    void dumpObjectTree();
+%End
+    QList<QByteArray> dynamicPropertyNames() const;
     bool setProperty(const char *name, const QVariant &value);
     QVariant property(const char *name) const;
 
 signals:
-    void destroyed(QObject *object = 0) /PyQtSignalHack=1/;
-%If (Qt_5_0_0 -)
+    void destroyed(QObject *object = 0);
     void objectNameChanged(const QString &objectName);
-%End
 
 public:
     QObject *parent() const;
@@ -675,16 +567,6 @@ public slots:
 protected:
     QObject *sender() const /ReleaseGIL/;
 %MethodCode
-        typedef QObject *(*helper_func)(QObject *);
-        
-        static helper_func helper = 0;
-        
-        if (!helper)
-        {
-            helper = (helper_func)sipImportSymbol("qpycore_qobject_sender");
-            Q_ASSERT(helper);
-        }
-        
         // sender() must be called without the GIL to avoid possible deadlocks between
         // the GIL and Qt's internal thread data mutex.
         
@@ -698,43 +580,50 @@ protected:
         
         Py_END_ALLOW_THREADS
         
-        sipRes = helper(sipRes);
+        if (!sipRes)
+        {
+            typedef QObject *(*qtcore_qobject_sender_t)();
+        
+            static qtcore_qobject_sender_t qtcore_qobject_sender = 0;
+        
+            if (!qtcore_qobject_sender)
+            {
+                qtcore_qobject_sender = (qtcore_qobject_sender_t)sipImportSymbol("qtcore_qobject_sender");
+                Q_ASSERT(qtcore_qobject_sender);
+            }
+        
+            sipRes = qtcore_qobject_sender();
+        }
 %End
 
-    int receivers(SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/) const [int (const char *signal)];
+    int receivers(SIP_PYOBJECT signal /TypeHint="PYQT_SIGNAL"/) const [int (const char *signal)];
 %MethodCode
-        // We need to take into account any proxies for Python signals. Import the
-        // helpers if it hasn't already been done.
-        typedef const char *(*pyqt4_get_signal_t)(PyObject *);
-        typedef int (*receivers_helper_func)(QObject *, const char *, int);
+        // We need to handle the signal object.  Import the helper if it hasn't already
+        // been done.
+        typedef sipErrorState (*pyqt5_get_signal_signature_t)(PyObject *, const QObject *, const QByteArray &);
         
-        static pyqt4_get_signal_t pyqt4_get_signal = 0;
-        static receivers_helper_func receivers_helper = 0;
+        static pyqt5_get_signal_signature_t pyqt5_get_signal_signature = 0;
         
-        if (!pyqt4_get_signal)
+        if (!pyqt5_get_signal_signature)
         {
-            pyqt4_get_signal = (pyqt4_get_signal_t)sipImportSymbol("pyqt4_get_signal");
-            Q_ASSERT(pyqt4_get_signal);
+            pyqt5_get_signal_signature = (pyqt5_get_signal_signature_t)sipImportSymbol("pyqt5_get_signal_signature");
+            Q_ASSERT(pyqt5_get_signal_signature);
         }
         
-        if (!receivers_helper)
-        {
-            receivers_helper = (receivers_helper_func)sipImportSymbol("qpycore_qobject_receivers");
-            Q_ASSERT(receivers_helper);
-        }
-        
-        // PyQt5: Get rid of the const casts.
-        const char *sig = pyqt4_get_signal(a0);
+        QByteArray signal_signature;
             
-        if (sig)
-        {
         #if defined(SIP_PROTECTED_IS_PUBLIC)
-            sipRes = receivers_helper(const_cast<QObject *>(sipCpp), sig, sipCpp->receivers(sig));
-        #else
-            sipRes = receivers_helper(const_cast<QObject *>(static_cast<const QObject *>(sipCpp)), sig, sipCpp->sipProtect_receivers(sig));
-        #endif
+        if ((sipError = pyqt5_get_signal_signature(a0, sipCpp, signal_signature)) == sipErrorNone)
+        {
+            sipRes = sipCpp->receivers(signal_signature.constData());
         }
-        else
+        #else
+        if ((sipError = pyqt5_get_signal_signature(a0, static_cast<const QObject *>(sipCpp), signal_signature)) == sipErrorNone)
+        {
+            sipRes = sipCpp->sipProtect_receivers(signal_signature.constData());
+        }
+        #endif
+        else if (sipError == sipErrorContinue)
         {
             sipError = sipBadCallableArg(0, a0);
         }
@@ -743,77 +632,16 @@ protected:
     virtual void timerEvent(QTimerEvent *);
     virtual void childEvent(QChildEvent *);
     virtual void customEvent(QEvent *);
-%If (Qt_5_0_0 -)
     virtual void connectNotify(const QMetaMethod &signal);
-%End
-%If (- Qt_5_0_0)
-    virtual void connectNotify(SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/) [void (const char *signal)];
-%MethodCode
-        typedef const char *(*pyqt4_get_signal_t)(PyObject *);
-        
-        static pyqt4_get_signal_t pyqt4_get_signal = 0;
-        
-        if (!pyqt4_get_signal)
-        {
-            pyqt4_get_signal = (pyqt4_get_signal_t)sipImportSymbol("pyqt4_get_signal");
-            Q_ASSERT(pyqt4_get_signal);
-        }
-        
-        const char *sig = pyqt4_get_signal(a0);
-            
-        if (sig)
-        {
-        #if defined(SIP_PROTECTED_IS_PUBLIC)
-            (sipSelfWasArg ? sipCpp->QObject::connectNotify(sig) : sipCpp->connectNotify(sig));
-        #else
-            sipCpp->sipProtectVirt_connectNotify(sipSelfWasArg, sig);
-        #endif
-        }
-        else
-        {
-            sipError = sipBadCallableArg(0, a0);
-        }
-%End
-
-%End
-%If (Qt_5_0_0 -)
     virtual void disconnectNotify(const QMetaMethod &signal);
-%End
-%If (- Qt_5_0_0)
-    virtual void disconnectNotify(SIP_PYOBJECT signal /TypeHint="QT_SIGNAL"/) [void (const char *signal)];
-%MethodCode
-        typedef const char *(*pyqt4_get_signal_t)(PyObject *);
-        
-        static pyqt4_get_signal_t pyqt4_get_signal = 0;
-        
-        if (!pyqt4_get_signal)
-        {
-            pyqt4_get_signal = (pyqt4_get_signal_t)sipImportSymbol("pyqt4_get_signal");
-            Q_ASSERT(pyqt4_get_signal);
-        }
-        
-        const char *sig = pyqt4_get_signal(a0);
-            
-        if (sig)
-        {
-        #if defined(SIP_PROTECTED_IS_PUBLIC)
-            (sipSelfWasArg ? sipCpp->QObject::disconnectNotify(sig) : sipCpp->disconnectNotify(sig));
-        #else
-            sipCpp->sipProtectVirt_disconnectNotify(sipSelfWasArg, sig);
-        #endif
-        }
-        else
-        {
-            sipError = sipBadCallableArg(0, a0);
-        }
-%End
-
-%End
-%If (Qt_4_8_0 -)
     int senderSignalIndex() const;
-%End
-%If (Qt_5_0_0 -)
     bool isSignalConnected(const QMetaMethod &signal) const;
+
+public:
+    static bool disconnect(const QMetaObject::Connection &);
+    SIP_PYOBJECT disconnect() const /TypeHint=""/;
+%MethodCode
+        sipRes = qpycore_qobject_disconnect(sipCpp);
 %End
 
 private:
@@ -825,14 +653,24 @@ SIP_PYOBJECT Q_CLASSINFO(const char *name, const char *value) /TypeHint=""/;
     sipRes = qpycore_ClassInfo(a0, a1);
 %End
 
+SIP_PYOBJECT Q_ENUM(SIP_PYOBJECT /TypeHint="Union[type, enum.Enum]"/) /TypeHint=""/;
+%MethodCode
+    sipRes = qpycore_Enum(a0);
+%End
+
 SIP_PYOBJECT Q_ENUMS(...) /TypeHint=""/;
 %MethodCode
-    sipRes = qpycore_register_int_types(a0);
+    sipRes = qpycore_Enums(a0);
+%End
+
+SIP_PYOBJECT Q_FLAG(SIP_PYOBJECT /TypeHint="Union[type, enum.Enum]"/) /TypeHint=""/;
+%MethodCode
+    sipRes = qpycore_Flag(a0);
 %End
 
 SIP_PYOBJECT Q_FLAGS(...) /TypeHint=""/;
 %MethodCode
-    sipRes = qpycore_register_int_types(a0);
+    sipRes = qpycore_Flags(a0);
 %End
 
 SIP_PYOBJECT QT_TR_NOOP(SIP_PYOBJECT /TypeHint="str"/) /TypeHint="str"/;
@@ -853,25 +691,7 @@ SIP_PYOBJECT QT_TRANSLATE_NOOP(SIP_PYOBJECT /TypeHint="str"/, SIP_PYOBJECT /Type
     sipRes = a1;
 %End
 
-SIP_PYOBJECT SLOT(const char * /Encoding="ASCII"/) /TypeHint="QT_SLOT"/;
-%MethodCode
-    QByteArray ns = QMetaObject::normalizedSignature(a0);
-    ns.prepend('1');
-    
-    if ((sipRes = SIPBytes_FromString(ns.constData())) == NULL)
-        sipIsErr = 1;
-%End
-
-SIP_PYOBJECT SIGNAL(const char * /Encoding="ASCII"/) /TypeHint="QT_SIGNAL"/;
-%MethodCode
-    QByteArray ns = QMetaObject::normalizedSignature(a0);
-    ns.prepend('2');
-    
-    if ((sipRes = SIPBytes_FromString(ns.constData())) == NULL)
-        sipIsErr = 1;
-%End
-
-SIP_PYOBJECT pyqtSlot(... types, const char *name = 0, const char *result = 0) /NoArgParser, TypeHint="PYQT_SIGNAL"/;
+SIP_PYOBJECT pyqtSlot(... types, const char *name = 0, const char *result = 0) /NoArgParser, TypeHint="Callable[..., Optional[str]]"/;
 %Docstring
 @pyqtSlot(*types, name: Optional[str], result: Optional[str])
 
@@ -887,53 +707,50 @@ result is type of the value returned by the slot.
     return qpycore_pyqtslot(sipArgs, sipKwds);
 %End
 
-SIP_PYOBJECT pyqtSignature(const char *signature, const char *result = 0) /NoArgParser/;
-%Docstring
-@pyqtSignature(str,  result: Optional[str])
+%If (Qt_5_3_0 -)
 
-This is deprecated, use pyqtSlot() instead.
-
-This is a decorator applied to Python methods of a QObject that marks them
-as Qt slots.
-signature is a string specifying the C++ signature of the slot.
-result is type of the value returned by the slot.
+class QSignalBlocker
+{
+%TypeHeaderCode
+#include <qobject.h>
 %End
 
+public:
+    explicit QSignalBlocker(QObject *o);
+    ~QSignalBlocker();
+    void reblock();
+    void unblock();
+    SIP_PYOBJECT __enter__();
 %MethodCode
-    return qpycore_pyqtsignature(sipArgs, sipKwds);
+        // Just return a reference to self.
+        sipRes = sipSelf;
+        Py_INCREF(sipRes);
+%End
+
+    void __exit__(SIP_PYOBJECT type, SIP_PYOBJECT value, SIP_PYOBJECT traceback);
+%MethodCode
+        sipCpp->unblock();
+%End
+
+private:
+    QSignalBlocker(const QSignalBlocker &);
+};
+
 %End
 
 %ModuleHeaderCode
-#include <qpycore_api.h>
+#include "qpycore_api.h"
 %End
 
 %ModuleCode
-#if SIP_VERSION <0x050000
-
-// These optional parts of the legacy Qt support API for SIP are implemented.
-// This cannot go into qpycore_api.h as they need to be in a particular
-// position in the generated code.
-
-#undef sipQtCreateUniversalSignal
-#undef sipQtFindUniversalSignal
-
-extern "C"
-{
-    void *sipQtCreateUniversalSignal(void *tx, const char **sig);
-    void *sipQtFindUniversalSignal(void *tx, const char **sig);
-    void *sipQtCreateUniversalSlot(sipWrapper *tx, const char *sig,
-            PyObject *rxObj, const char *slot, const char **member, int flags);
-    void sipQtDestroyUniversalSlot(void *rx);
-    void *sipQtFindSlot(void *tx, const char *sig, PyObject *rxObj,
-            const char *slot, const char **member);
-    int sipQtConnect(void *tx, const char *sig, void *rx, const char *slot,
-            int type);
-    int sipQtDisconnect(void *tx, const char *sig, void *rx, const char *slot);
-    int sipQtSameSignalSlotName(const char *s1, const char *s2);
-    sipSlot *sipQtFindSipslot(void *tx, void **context);
-}
-
-#endif
+// Disable the (supposedly) compulsory parts of the Qt support API.
+#define sipQtCreateUniversalSlot    0
+#define sipQtDestroyUniversalSlot   0
+#define sipQtFindSlot               0
+#define sipQtConnect                0
+#define sipQtDisconnect             0
+#define sipQtSameSignalSlotName     0
+#define sipQtFindSipslot            0
 %End
 
 %InitialisationCode

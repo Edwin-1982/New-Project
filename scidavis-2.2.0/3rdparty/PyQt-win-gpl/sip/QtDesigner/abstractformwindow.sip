@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDesigner Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -41,14 +41,9 @@ public:
     virtual QString fileName() const = 0;
     virtual QDir absoluteDir() const = 0;
     virtual QString contents() const = 0;
-%If (Qt_5_0_0 -)
     virtual bool setContents(QIODevice *dev, QString *errorMessage = 0) = 0;
-%End
-%If (- Qt_5_0_0)
-    virtual void setContents(QIODevice *dev) = 0;
-%End
-    virtual QFlags<QDesignerFormWindowInterface::FeatureFlag> features() const = 0;
-    virtual bool hasFeature(QFlags<QDesignerFormWindowInterface::FeatureFlag> f) const = 0;
+    virtual QDesignerFormWindowInterface::Feature features() const = 0;
+    virtual bool hasFeature(QDesignerFormWindowInterface::Feature f) const = 0;
     virtual QString author() const = 0;
     virtual void setAuthor(const QString &author) = 0;
     virtual QString comment() const = 0;
@@ -71,9 +66,7 @@ public:
     virtual bool isManaged(QWidget *widget) const = 0;
     virtual bool isDirty() const = 0;
     static QDesignerFormWindowInterface *findFormWindow(QWidget *w);
-%If (Qt_4_4_0 -)
     static QDesignerFormWindowInterface *findFormWindow(QObject *obj);
-%End
     virtual void emitSelectionChanged() = 0;
     virtual QStringList resourceFiles() const = 0;
     virtual void addResourceFile(const QString &path) = 0;
@@ -82,23 +75,18 @@ public:
 public slots:
     virtual void manageWidget(QWidget *widget) = 0;
     virtual void unmanageWidget(QWidget *widget) = 0;
-    virtual void setFeatures(QFlags<QDesignerFormWindowInterface::FeatureFlag> f) = 0;
+    virtual void setFeatures(QDesignerFormWindowInterface::Feature f) = 0;
     virtual void setDirty(bool dirty) = 0;
     virtual void clearSelection(bool update = true) = 0;
     virtual void selectWidget(QWidget *widget, bool select = true) = 0;
     virtual void setGrid(const QPoint &grid) = 0;
     virtual void setFileName(const QString &fileName) = 0;
-%If (Qt_5_0_0 -)
     virtual bool setContents(const QString &contents) = 0;
-%End
-%If (- Qt_5_0_0)
-    virtual void setContents(const QString &contents) = 0;
-%End
 
 signals:
     void mainContainerChanged(QWidget *mainContainer);
     void fileNameChanged(const QString &fileName);
-    void featureChanged(QFlags<QDesignerFormWindowInterface::FeatureFlag> f);
+    void featureChanged(QDesignerFormWindowInterface::Feature f /ScopesStripped=1/);
     void selectionChanged();
     void geometryChanged();
     void resourceFilesChanged();
@@ -108,21 +96,11 @@ signals:
     void activated(QWidget *widget);
     void changed();
     void widgetRemoved(QWidget *w);
-%If (Qt_4_5_0 -)
     void objectRemoved(QObject *o);
-%End
 
 public:
-%If (Qt_5_0_0 -)
     virtual QStringList checkContents() const = 0;
-%End
-%If (Qt_5_0_0 -)
     QStringList activeResourceFilePaths() const;
-%End
-%If (Qt_5_0_0 -)
     virtual QWidget *formContainer() const = 0;
-%End
-%If (Qt_5_0_0 -)
     void activateResourceFilePaths(const QStringList &paths, int *errorCount = 0, QString *errorMessages /Out/ = 0);
-%End
 };

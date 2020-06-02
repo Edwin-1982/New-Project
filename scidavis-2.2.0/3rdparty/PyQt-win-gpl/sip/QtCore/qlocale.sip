@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -63,9 +63,6 @@ public:
         Esperanto,
         Estonian,
         Faroese,
-%If (- Qt_5_0_0)
-        FijiLanguage,
-%End
         Finnish,
         French,
         Frisian,
@@ -99,9 +96,6 @@ public:
         Korean,
         Kurdish,
         Kurundi,
-%If (- Qt_5_0_0)
-        Laothian,
-%End
         Latin,
         Latvian,
         Lingala,
@@ -130,26 +124,11 @@ public:
         Romanian,
         Russian,
         Samoan,
-%If (- Qt_5_0_0)
-        Sangho,
-%End
         Sanskrit,
         Serbian,
         SerboCroatian,
-%If (- Qt_5_0_0)
-        Sesotho,
-%End
-%If (- Qt_5_0_0)
-        Setswana,
-%End
         Shona,
         Sindhi,
-%If (- Qt_5_0_0)
-        Singhalese,
-%End
-%If (- Qt_5_0_0)
-        Siswati,
-%End
         Slovak,
         Slovenian,
         Somali,
@@ -165,9 +144,6 @@ public:
         Thai,
         Tibetan,
         Tigrinya,
-%If (- Qt_5_0_0)
-        TongaLanguage,
-%End
         Tsonga,
         Turkish,
         Turkmen,
@@ -185,427 +161,463 @@ public:
         Yoruba,
         Zhuang,
         Zulu,
-%If (- Qt_5_0_0)
-        Nynorsk,
-%End
         Bosnian,
         Divehi,
         Manx,
         Cornish,
         LastLanguage,
-%If (Qt_4_3_0 -)
         NorwegianBokmal,
-%End
-%If (Qt_4_3_0 -)
         NorwegianNynorsk,
-%End
-%If (Qt_4_3_0 -)
         Akan,
-%End
-%If (Qt_4_3_0 -)
         Konkani,
-%End
-%If (Qt_4_3_0 -)
         Ga,
-%End
-%If (Qt_4_3_0 -)
         Igbo,
-%End
-%If (Qt_4_3_0 -)
         Kamba,
-%End
-%If (Qt_4_3_0 -)
         Syriac,
-%End
-%If (Qt_4_3_0 -)
         Blin,
-%End
-%If (Qt_4_3_0 -)
         Geez,
-%End
-%If (Qt_4_3_0 -)
         Koro,
-%End
-%If (Qt_4_3_0 -)
         Sidamo,
-%End
-%If (Qt_4_3_0 -)
         Atsam,
-%End
-%If (Qt_4_3_0 -)
         Tigre,
-%End
-%If (Qt_4_3_0 -)
         Jju,
-%End
-%If (Qt_4_3_0 -)
         Friulian,
-%End
-%If (Qt_4_3_0 -)
         Venda,
-%End
-%If (Qt_4_3_0 -)
         Ewe,
-%End
-%If (Qt_4_3_0 -)
         Walamo,
-%End
-%If (Qt_4_3_0 -)
         Hawaiian,
-%End
-%If (Qt_4_3_0 -)
         Tyap,
-%End
-%If (Qt_4_3_0 -)
         Chewa,
-%End
-%If (Qt_4_7_0 -)
         Filipino,
-%End
-%If (Qt_4_7_0 -)
         SwissGerman,
-%End
-%If (Qt_4_7_0 -)
         SichuanYi,
-%End
-%If (Qt_4_7_0 -)
         Kpelle,
-%End
-%If (Qt_4_7_0 -)
         LowGerman,
-%End
-%If (Qt_4_7_0 -)
         SouthNdebele,
-%End
-%If (Qt_4_7_0 -)
         NorthernSotho,
-%End
-%If (Qt_4_7_0 -)
         NorthernSami,
-%End
-%If (Qt_4_7_0 -)
         Taroko,
-%End
-%If (Qt_4_7_0 -)
         Gusii,
-%End
-%If (Qt_4_7_0 -)
         Taita,
-%End
-%If (Qt_4_7_0 -)
         Fulah,
-%End
-%If (Qt_4_7_0 -)
         Kikuyu,
-%End
-%If (Qt_4_7_0 -)
         Samburu,
-%End
-%If (Qt_4_7_0 -)
         Sena,
-%End
-%If (Qt_4_7_0 -)
         NorthNdebele,
-%End
-%If (Qt_4_7_0 -)
         Rombo,
-%End
-%If (Qt_4_7_0 -)
         Tachelhit,
-%End
-%If (Qt_4_7_0 -)
         Kabyle,
-%End
-%If (Qt_4_7_0 -)
         Nyankole,
-%End
-%If (Qt_4_7_0 -)
         Bena,
-%End
-%If (Qt_4_7_0 -)
         Vunjo,
-%End
-%If (Qt_4_7_0 -)
         Bambara,
-%End
-%If (Qt_4_7_0 -)
         Embu,
-%End
-%If (Qt_4_7_0 -)
         Cherokee,
-%End
-%If (Qt_4_7_0 -)
         Morisyen,
-%End
-%If (Qt_4_7_0 -)
         Makonde,
-%End
-%If (Qt_4_7_0 -)
         Langi,
-%End
-%If (Qt_4_7_0 -)
         Ganda,
-%End
-%If (Qt_4_7_0 -)
         Bemba,
-%End
-%If (Qt_4_7_0 -)
         Kabuverdianu,
-%End
-%If (Qt_4_7_0 -)
         Meru,
-%End
-%If (Qt_4_7_0 -)
         Kalenjin,
-%End
-%If (Qt_4_7_0 -)
         Nama,
-%End
-%If (Qt_4_7_0 -)
         Machame,
-%End
-%If (Qt_4_7_0 -)
         Colognian,
-%End
-%If (Qt_4_7_0 -)
         Masai,
-%End
-%If (Qt_4_7_0 -)
         Soga,
-%End
-%If (Qt_4_7_0 -)
         Luyia,
-%End
-%If (Qt_4_7_0 -)
         Asu,
-%End
-%If (Qt_4_7_0 -)
         Teso,
-%End
-%If (Qt_4_7_0 -)
         Saho,
-%End
-%If (Qt_4_7_0 -)
         KoyraChiini,
-%End
-%If (Qt_4_7_0 -)
         Rwa,
-%End
-%If (Qt_4_7_0 -)
         Luo,
-%End
-%If (Qt_4_7_0 -)
         Chiga,
-%End
-%If (Qt_4_7_0 -)
         CentralMoroccoTamazight,
-%End
-%If (Qt_4_7_0 -)
         KoyraboroSenni,
-%End
-%If (Qt_4_7_0 -)
         Shambala,
-%End
-%If (Qt_4_8_0 -)
         AnyLanguage,
-%End
-%If (Qt_4_8_4 -)
         Rundi,
-%End
-%If (Qt_4_8_4 -)
         Bodo,
-%End
-%If (Qt_4_8_4 -)
         Aghem,
-%End
-%If (Qt_4_8_4 -)
         Basaa,
-%End
-%If (Qt_4_8_4 -)
         Zarma,
-%End
-%If (Qt_4_8_4 -)
         Duala,
-%End
-%If (Qt_4_8_4 -)
         JolaFonyi,
-%End
-%If (Qt_4_8_4 -)
         Ewondo,
-%End
-%If (Qt_4_8_4 -)
         Bafia,
-%End
-%If (Qt_4_8_4 -)
         LubaKatanga,
-%End
-%If (Qt_4_8_4 -)
         MakhuwaMeetto,
-%End
-%If (Qt_4_8_4 -)
         Mundang,
-%End
-%If (Qt_4_8_4 -)
         Kwasio,
-%End
-%If (Qt_4_8_4 -)
         Nuer,
-%End
-%If (Qt_4_8_4 -)
         Sakha,
-%End
-%If (Qt_4_8_4 -)
         Sangu,
-%End
-%If (Qt_4_8_4 -)
         CongoSwahili,
-%End
-%If (Qt_4_8_4 -)
         Tasawaq,
-%End
-%If (Qt_4_8_4 -)
         Vai,
-%End
-%If (Qt_4_8_4 -)
         Walser,
-%End
-%If (Qt_4_8_4 -)
         Yangben,
-%End
-%If (Qt_5_0_0 -)
         Oromo,
-%End
-%If (Qt_5_0_0 -)
         Dzongkha,
-%End
-%If (Qt_5_0_0 -)
         Belarusian,
-%End
-%If (Qt_5_0_0 -)
         Khmer,
-%End
-%If (Qt_5_0_0 -)
         Fijian,
-%End
-%If (Qt_5_0_0 -)
         WesternFrisian,
-%End
-%If (Qt_5_0_0 -)
         Lao,
-%End
-%If (Qt_5_0_0 -)
         Marshallese,
-%End
-%If (Qt_5_0_0 -)
         Romansh,
-%End
-%If (Qt_5_0_0 -)
         Sango,
-%End
-%If (Qt_5_0_0 -)
         Ossetic,
-%End
-%If (Qt_5_0_0 -)
         SouthernSotho,
-%End
-%If (Qt_5_0_0 -)
         Tswana,
-%End
-%If (Qt_5_0_0 -)
         Sinhala,
-%End
-%If (Qt_5_0_0 -)
         Swati,
-%End
-%If (Qt_5_0_0 -)
         Sardinian,
-%End
-%If (Qt_5_0_0 -)
         Tongan,
-%End
-%If (Qt_5_0_0 -)
         Tahitian,
-%End
-%If (Qt_5_0_0 -)
         Nyanja,
-%End
-%If (Qt_5_0_0 -)
         Avaric,
-%End
-%If (Qt_5_0_0 -)
         Chamorro,
-%End
-%If (Qt_5_0_0 -)
         Chechen,
-%End
-%If (Qt_5_0_0 -)
         Church,
-%End
-%If (Qt_5_0_0 -)
         Chuvash,
-%End
-%If (Qt_5_0_0 -)
         Cree,
-%End
-%If (Qt_5_0_0 -)
         Haitian,
-%End
-%If (Qt_5_0_0 -)
         Herero,
-%End
-%If (Qt_5_0_0 -)
         HiriMotu,
-%End
-%If (Qt_5_0_0 -)
         Kanuri,
-%End
-%If (Qt_5_0_0 -)
         Komi,
-%End
-%If (Qt_5_0_0 -)
         Kongo,
-%End
-%If (Qt_5_0_0 -)
         Kwanyama,
-%End
-%If (Qt_5_0_0 -)
         Limburgish,
-%End
-%If (Qt_5_0_0 -)
         Luxembourgish,
-%End
-%If (Qt_5_0_0 -)
         Navaho,
-%End
-%If (Qt_5_0_0 -)
         Ndonga,
-%End
-%If (Qt_5_0_0 -)
         Ojibwa,
-%End
-%If (Qt_5_0_0 -)
         Pali,
-%End
-%If (Qt_5_0_0 -)
         Walloon,
-%End
-%If (Qt_5_0_0 -)
         Avestan,
-%End
-%If (Qt_5_0_0 -)
         Asturian,
-%End
-%If (Qt_5_0_0 -)
         Ngomba,
-%End
-%If (Qt_5_0_0 -)
         Kako,
-%End
-%If (Qt_5_0_0 -)
         Meta,
-%End
-%If (Qt_5_0_0 -)
         Ngiemboon,
+%If (Qt_5_1_0 -)
+        Uighur,
+%End
+%If (Qt_5_1_0 -)
+        Aragonese,
+%End
+%If (Qt_5_1_0 -)
+        Akkadian,
+%End
+%If (Qt_5_1_0 -)
+        AncientEgyptian,
+%End
+%If (Qt_5_1_0 -)
+        AncientGreek,
+%End
+%If (Qt_5_1_0 -)
+        Aramaic,
+%End
+%If (Qt_5_1_0 -)
+        Balinese,
+%End
+%If (Qt_5_1_0 -)
+        Bamun,
+%End
+%If (Qt_5_1_0 -)
+        BatakToba,
+%End
+%If (Qt_5_1_0 -)
+        Buginese,
+%End
+%If (Qt_5_1_0 -)
+        Buhid,
+%End
+%If (Qt_5_1_0 -)
+        Carian,
+%End
+%If (Qt_5_1_0 -)
+        Chakma,
+%End
+%If (Qt_5_1_0 -)
+        ClassicalMandaic,
+%End
+%If (Qt_5_1_0 -)
+        Coptic,
+%End
+%If (Qt_5_1_0 -)
+        Dogri,
+%End
+%If (Qt_5_1_0 -)
+        EasternCham,
+%End
+%If (Qt_5_1_0 -)
+        EasternKayah,
+%End
+%If (Qt_5_1_0 -)
+        Etruscan,
+%End
+%If (Qt_5_1_0 -)
+        Gothic,
+%End
+%If (Qt_5_1_0 -)
+        Hanunoo,
+%End
+%If (Qt_5_1_0 -)
+        Ingush,
+%End
+%If (Qt_5_1_0 -)
+        LargeFloweryMiao,
+%End
+%If (Qt_5_1_0 -)
+        Lepcha,
+%End
+%If (Qt_5_1_0 -)
+        Limbu,
+%End
+%If (Qt_5_1_0 -)
+        Lisu,
+%End
+%If (Qt_5_1_0 -)
+        Lu,
+%End
+%If (Qt_5_1_0 -)
+        Lycian,
+%End
+%If (Qt_5_1_0 -)
+        Lydian,
+%End
+%If (Qt_5_1_0 -)
+        Mandingo,
+%End
+%If (Qt_5_1_0 -)
+        Manipuri,
+%End
+%If (Qt_5_1_0 -)
+        Meroitic,
+%End
+%If (Qt_5_1_0 -)
+        NorthernThai,
+%End
+%If (Qt_5_1_0 -)
+        OldIrish,
+%End
+%If (Qt_5_1_0 -)
+        OldNorse,
+%End
+%If (Qt_5_1_0 -)
+        OldPersian,
+%End
+%If (Qt_5_1_0 -)
+        OldTurkish,
+%End
+%If (Qt_5_1_0 -)
+        Pahlavi,
+%End
+%If (Qt_5_1_0 -)
+        Parthian,
+%End
+%If (Qt_5_1_0 -)
+        Phoenician,
+%End
+%If (Qt_5_1_0 -)
+        PrakritLanguage,
+%End
+%If (Qt_5_1_0 -)
+        Rejang,
+%End
+%If (Qt_5_1_0 -)
+        Sabaean,
+%End
+%If (Qt_5_1_0 -)
+        Samaritan,
+%End
+%If (Qt_5_1_0 -)
+        Santali,
+%End
+%If (Qt_5_1_0 -)
+        Saurashtra,
+%End
+%If (Qt_5_1_0 -)
+        Sora,
+%End
+%If (Qt_5_1_0 -)
+        Sylheti,
+%End
+%If (Qt_5_1_0 -)
+        Tagbanwa,
+%End
+%If (Qt_5_1_0 -)
+        TaiDam,
+%End
+%If (Qt_5_1_0 -)
+        TaiNua,
+%End
+%If (Qt_5_1_0 -)
+        Ugaritic,
+%End
+%If (Qt_5_3_0 -)
+        Akoose,
+%End
+%If (Qt_5_3_0 -)
+        Lakota,
+%End
+%If (Qt_5_3_0 -)
+        StandardMoroccanTamazight,
+%End
+%If (Qt_5_5_0 -)
+        Mapuche,
+%End
+%If (Qt_5_5_0 -)
+        CentralKurdish,
+%End
+%If (Qt_5_5_0 -)
+        LowerSorbian,
+%End
+%If (Qt_5_5_0 -)
+        UpperSorbian,
+%End
+%If (Qt_5_5_0 -)
+        Kenyang,
+%End
+%If (Qt_5_5_0 -)
+        Mohawk,
+%End
+%If (Qt_5_5_0 -)
+        Nko,
+%End
+%If (Qt_5_5_0 -)
+        Prussian,
+%End
+%If (Qt_5_5_0 -)
+        Kiche,
+%End
+%If (Qt_5_5_0 -)
+        SouthernSami,
+%End
+%If (Qt_5_5_0 -)
+        LuleSami,
+%End
+%If (Qt_5_5_0 -)
+        InariSami,
+%End
+%If (Qt_5_5_0 -)
+        SkoltSami,
+%End
+%If (Qt_5_5_0 -)
+        Warlpiri,
+%End
+%If (Qt_5_5_0 -)
+        ManichaeanMiddlePersian,
+%End
+%If (Qt_5_5_0 -)
+        Mende,
+%End
+%If (Qt_5_5_0 -)
+        AncientNorthArabian,
+%End
+%If (Qt_5_5_0 -)
+        LinearA,
+%End
+%If (Qt_5_5_0 -)
+        HmongNjua,
+%End
+%If (Qt_5_5_0 -)
+        Ho,
+%End
+%If (Qt_5_5_0 -)
+        Lezghian,
+%End
+%If (Qt_5_5_0 -)
+        Bassa,
+%End
+%If (Qt_5_5_0 -)
+        Mono,
+%End
+%If (Qt_5_5_0 -)
+        TedimChin,
+%End
+%If (Qt_5_5_0 -)
+        Maithili,
+%End
+%If (Qt_5_7_0 -)
+        Ahom,
+%End
+%If (Qt_5_7_0 -)
+        AmericanSignLanguage,
+%End
+%If (Qt_5_7_0 -)
+        ArdhamagadhiPrakrit,
+%End
+%If (Qt_5_7_0 -)
+        Bhojpuri,
+%End
+%If (Qt_5_7_0 -)
+        HieroglyphicLuwian,
+%End
+%If (Qt_5_7_0 -)
+        LiteraryChinese,
+%End
+%If (Qt_5_7_0 -)
+        Mazanderani,
+%End
+%If (Qt_5_7_0 -)
+        Mru,
+%End
+%If (Qt_5_7_0 -)
+        Newari,
+%End
+%If (Qt_5_7_0 -)
+        NorthernLuri,
+%End
+%If (Qt_5_7_0 -)
+        Palauan,
+%End
+%If (Qt_5_7_0 -)
+        Papiamento,
+%End
+%If (Qt_5_7_0 -)
+        Saraiki,
+%End
+%If (Qt_5_7_0 -)
+        TokelauLanguage,
+%End
+%If (Qt_5_7_0 -)
+        TokPisin,
+%End
+%If (Qt_5_7_0 -)
+        TuvaluLanguage,
+%End
+%If (Qt_5_7_0 -)
+        UncodedLanguages,
+%End
+%If (Qt_5_7_0 -)
+        Cantonese,
+%End
+%If (Qt_5_7_0 -)
+        Osage,
+%End
+%If (Qt_5_7_0 -)
+        Tangut,
+%End
+%If (Qt_5_13_0 -)
+        Ido,
+%End
+%If (Qt_5_13_0 -)
+        Lojban,
+%End
+%If (Qt_5_13_0 -)
+        Sicilian,
+%End
+%If (Qt_5_13_0 -)
+        SouthernKurdish,
+%End
+%If (Qt_5_13_0 -)
+        WesternBalochi,
 %End
     };
 
@@ -643,9 +655,6 @@ public:
         BouvetIsland,
         Brazil,
         BritishIndianOceanTerritory,
-%If (- Qt_5_0_0)
-        BruneiDarussalam,
-%End
         Bulgaria,
         BurkinaFaso,
         Burundi,
@@ -685,14 +694,8 @@ public:
         Ethiopia,
         FalklandIslands,
         FaroeIslands,
-%If (- Qt_5_0_0)
-        FijiCountry,
-%End
         Finland,
         France,
-%If (- Qt_5_0_0)
-        MetropolitanFrance,
-%End
         FrenchGuiana,
         FrenchPolynesia,
         FrenchSouthernTerritories,
@@ -734,16 +737,10 @@ public:
         RepublicOfKorea,
         Kuwait,
         Kyrgyzstan,
-%If (- Qt_5_0_0)
-        Lao,
-%End
         Latvia,
         Lebanon,
         Lesotho,
         Liberia,
-%If (- Qt_5_0_0)
-        LibyanArabJamahiriya,
-%End
         Liechtenstein,
         Lithuania,
         Luxembourg,
@@ -773,9 +770,6 @@ public:
         NauruCountry,
         Nepal,
         Netherlands,
-%If (- Qt_5_0_0)
-        NetherlandsAntilles,
-%End
         NewCaledonia,
         NewZealand,
         Nicaragua,
@@ -788,9 +782,6 @@ public:
         Oman,
         Pakistan,
         Palau,
-%If (- Qt_5_0_0)
-        PalestinianTerritory,
-%End
         Panama,
         PapuaNewGuinea,
         Paraguay,
@@ -806,12 +797,6 @@ public:
         RussianFederation,
         Rwanda,
         SaintKittsAndNevis,
-%If (- Qt_5_0_0)
-        StLucia,
-%End
-%If (- Qt_5_0_0)
-        StVincentAndTheGrenadines,
-%End
         Samoa,
         SanMarino,
         SaoTomeAndPrincipe,
@@ -828,12 +813,6 @@ public:
         SouthGeorgiaAndTheSouthSandwichIslands,
         Spain,
         SriLanka,
-%If (- Qt_5_0_0)
-        StHelena,
-%End
-%If (- Qt_5_0_0)
-        StPierreAndMiquelon,
-%End
         Sudan,
         Suriname,
         SvalbardAndJanMayenIslands,
@@ -847,9 +826,6 @@ public:
         Thailand,
         Togo,
         Tokelau,
-%If (- Qt_5_0_0)
-        TongaCountry,
-%End
         TrinidadAndTobago,
         Tunisia,
         Turkey,
@@ -867,202 +843,115 @@ public:
         Vanuatu,
         VaticanCityState,
         Venezuela,
-%If (- Qt_5_0_0)
-        VietNam,
-%End
         BritishVirginIslands,
-%If (- Qt_5_0_0)
-        USVirginIslands,
-%End
         WallisAndFutunaIslands,
         WesternSahara,
         Yemen,
-%If (- Qt_5_0_0)
-        Yugoslavia,
-%End
         Zambia,
         Zimbabwe,
-%If (- Qt_5_0_0)
-        SerbiaAndMontenegro,
-%End
-%If (Qt_4_7_0 -)
         Montenegro,
-%End
-%If (Qt_4_7_0 -)
         Serbia,
-%End
-%If (Qt_4_7_0 -)
         SaintBarthelemy,
-%End
-%If (Qt_4_7_0 -)
         SaintMartin,
-%End
-%If (Qt_4_7_0 -)
         LatinAmericaAndTheCaribbean,
-%End
         LastCountry,
-%If (Qt_5_0_0 -)
         Brunei,
-%End
-%If (Qt_5_0_0 -)
         CongoKinshasa,
-%End
-%If (Qt_5_0_0 -)
         CongoBrazzaville,
-%End
-%If (Qt_5_0_0 -)
         Fiji,
-%End
-%If (Qt_5_0_0 -)
         Guernsey,
-%End
-%If (Qt_5_0_0 -)
         NorthKorea,
-%End
-%If (Qt_5_0_0 -)
         SouthKorea,
-%End
-%If (Qt_5_0_0 -)
         Laos,
-%End
-%If (Qt_5_0_0 -)
         Libya,
-%End
-%If (Qt_5_0_0 -)
         CuraSao,
-%End
-%If (Qt_5_0_0 -)
         PalestinianTerritories,
-%End
-%If (Qt_5_0_0 -)
         Russia,
-%End
-%If (Qt_5_0_0 -)
         SaintLucia,
-%End
-%If (Qt_5_0_0 -)
         SaintVincentAndTheGrenadines,
-%End
-%If (Qt_5_0_0 -)
         SaintHelena,
-%End
-%If (Qt_5_0_0 -)
         SaintPierreAndMiquelon,
-%End
-%If (Qt_5_0_0 -)
         Syria,
-%End
-%If (Qt_5_0_0 -)
         Tonga,
-%End
-%If (Qt_5_0_0 -)
         Vietnam,
-%End
-%If (Qt_5_0_0 -)
         UnitedStatesVirginIslands,
-%End
-%If (Qt_5_0_0 -)
         CanaryIslands,
-%End
-%If (Qt_5_0_0 -)
         ClippertonIsland,
-%End
-%If (Qt_5_0_0 -)
         AscensionIsland,
-%End
-%If (Qt_5_0_0 -)
         AlandIslands,
-%End
-%If (Qt_5_0_0 -)
         DiegoGarcia,
-%End
-%If (Qt_5_0_0 -)
         CeutaAndMelilla,
-%End
-%If (Qt_5_0_0 -)
         IsleOfMan,
-%End
-%If (Qt_5_0_0 -)
         Jersey,
-%End
-%If (Qt_5_0_0 -)
         TristanDaCunha,
-%End
-%If (Qt_5_0_0 -)
         SouthSudan,
-%End
-%If (Qt_5_0_0 -)
         Bonaire,
-%End
-%If (Qt_5_0_0 -)
         SintMaarten,
+%If (Qt_5_2_0 -)
+        Kosovo,
+%End
+%If (Qt_5_7_0 -)
+        TokelauCountry,
+%End
+%If (Qt_5_7_0 -)
+        TuvaluCountry,
+%End
+%If (Qt_5_7_0 -)
+        EuropeanUnion,
+%End
+%If (Qt_5_7_0 -)
+        OutlyingOceania,
+%End
+%If (Qt_5_12_0 -)
+        LatinAmerica,
+%End
+%If (Qt_5_12_0 -)
+        World,
+%End
+%If (Qt_5_12_0 -)
+        Europe,
 %End
     };
-
-%If (Qt_4_2_0 -)
 
     enum NumberOption
     {
         OmitGroupSeparator,
         RejectGroupSeparator,
+%If (Qt_5_7_0 -)
+        DefaultNumberOptions,
+%End
+%If (Qt_5_7_0 -)
+        OmitLeadingZeroInExponent,
+%End
+%If (Qt_5_7_0 -)
+        RejectLeadingZeroInExponent,
+%End
+%If (Qt_5_9_0 -)
+        IncludeTrailingZeroesAfterDot,
+%End
+%If (Qt_5_9_0 -)
+        RejectTrailingZeroesAfterDot,
+%End
     };
 
-%End
-%If (Qt_4_2_0 -)
     typedef QFlags<QLocale::NumberOption> NumberOptions;
-%End
     QLocale();
     QLocale(const QString &name);
     QLocale(QLocale::Language language, QLocale::Country country = QLocale::AnyCountry);
     QLocale(const QLocale &other);
-%If (Qt_5_0_0 -)
     ~QLocale();
-%End
     QLocale::Language language() const;
     QLocale::Country country() const;
     QString name() const;
-%If (Qt_5_0_0 -)
     short toShort(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    short toShort(const QString &s, bool *ok = 0, int base = 0) const;
-%End
-%If (Qt_5_0_0 -)
     ushort toUShort(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    ushort toUShort(const QString &s, bool *ok = 0, int base = 0) const;
-%End
-%If (Qt_5_0_0 -)
     int toInt(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    int toInt(const QString &s, bool *ok = 0, int base = 0) const;
-%End
-%If (Qt_5_0_0 -)
     uint toUInt(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    uint toUInt(const QString &s, bool *ok = 0, int base = 0) const;
-%End
-%If (Qt_5_0_0 -)
     qlonglong toLongLong(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    qlonglong toLongLong(const QString &s, bool *ok = 0, int base = 0) const;
-%End
-%If (Qt_5_0_0 -)
     qulonglong toULongLong(const QString &s, bool *ok = 0) const;
-%End
-%If (- Qt_5_0_0)
-    qlonglong toULongLong(const QString &s, bool *ok = 0, int base = 0) const;
-%End
     float toFloat(const QString &s, bool *ok = 0) const;
     double toDouble(const QString &s, bool *ok = 0) const;
-    QString toString(int i /Constrained/) const;
     QString toString(double i /Constrained/, char format = 'g', int precision = 6) const;
-    QString toString(qlonglong i) const;
-    QString toString(qulonglong i) const;
     bool operator==(const QLocale &other) const;
     bool operator!=(const QLocale &other) const;
     static QString languageToString(QLocale::Language language);
@@ -1075,102 +964,50 @@ public:
     {
         LongFormat,
         ShortFormat,
-%If (Qt_4_5_0 -)
         NarrowFormat,
-%End
     };
 
-%If (Qt_4_4_0 -)
     QString toString(const QDateTime &dateTime, const QString &format) const;
-%End
-%If (Qt_4_4_0 -)
     QString toString(const QDateTime &dateTime, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
     QString toString(const QDate &date, const QString &formatStr) const;
     QString toString(const QDate &date, QLocale::FormatType format = QLocale::LongFormat) const;
     QString toString(const QTime &time, const QString &formatStr) const;
     QString toString(const QTime &time, QLocale::FormatType format = QLocale::LongFormat) const;
     QString dateFormat(QLocale::FormatType format = QLocale::LongFormat) const;
     QString timeFormat(QLocale::FormatType format = QLocale::LongFormat) const;
-%If (Qt_4_4_0 -)
     QString dateTimeFormat(QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_4_0 -)
     QDate toDate(const QString &string, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_4_0 -)
     QDate toDate(const QString &string, const QString &format) const;
-%End
-%If (Qt_4_4_0 -)
     QTime toTime(const QString &string, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_4_0 -)
     QTime toTime(const QString &string, const QString &format) const;
-%End
-%If (Qt_4_4_0 -)
     QDateTime toDateTime(const QString &string, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_4_0 -)
     QDateTime toDateTime(const QString &string, const QString &format) const;
-%End
     QChar decimalPoint() const;
     QChar groupSeparator() const;
     QChar percent() const;
     QChar zeroDigit() const;
     QChar negativeSign() const;
     QChar exponential() const;
-%If (Qt_4_2_0 -)
     QString monthName(int, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_2_0 -)
     QString dayName(int, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_2_0 -)
-    void setNumberOptions(QFlags<QLocale::NumberOption> options);
-%End
-%If (Qt_4_2_0 -)
-    QFlags<QLocale::NumberOption> numberOptions() const;
-%End
-%If (Qt_4_3_0 -)
-    static QList<QLocale::Country> countriesForLanguage(QLocale::Language lang);
-%End
-%If (Qt_4_4_0 -)
+    void setNumberOptions(QLocale::NumberOptions options);
+    QLocale::NumberOptions numberOptions() const;
 
     enum MeasurementSystem
     {
         MetricSystem,
         ImperialSystem,
-%If (Qt_5_0_0 -)
         ImperialUSSystem,
-%End
-%If (Qt_5_0_0 -)
         ImperialUKSystem,
-%End
     };
 
-%End
-%If (Qt_4_4_0 -)
     QLocale::MeasurementSystem measurementSystem() const;
-%End
-%If (Qt_4_5_0 -)
     QChar positiveSign() const;
-%End
-%If (Qt_4_5_0 -)
     QString standaloneMonthName(int, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_5_0 -)
     QString standaloneDayName(int, QLocale::FormatType format = QLocale::LongFormat) const;
-%End
-%If (Qt_4_5_0 -)
     QString amText() const;
-%End
-%If (Qt_4_5_0 -)
     QString pmText() const;
-%End
-%If (Qt_4_7_0 -)
     Qt::LayoutDirection textDirection() const;
-%End
-%If (Qt_4_8_0 -)
 
     enum Script
     {
@@ -1186,88 +1023,351 @@ public:
         TifinaghScript,
         SimplifiedChineseScript,
         TraditionalChineseScript,
-%If (Qt_5_0_0 -)
         ArmenianScript,
-%End
-%If (Qt_5_0_0 -)
         BengaliScript,
-%End
-%If (Qt_5_0_0 -)
         CherokeeScript,
-%End
-%If (Qt_5_0_0 -)
         DevanagariScript,
-%End
-%If (Qt_5_0_0 -)
         EthiopicScript,
-%End
-%If (Qt_5_0_0 -)
         GeorgianScript,
-%End
-%If (Qt_5_0_0 -)
         GreekScript,
-%End
-%If (Qt_5_0_0 -)
         GujaratiScript,
-%End
-%If (Qt_5_0_0 -)
         HebrewScript,
-%End
-%If (Qt_5_0_0 -)
         JapaneseScript,
-%End
-%If (Qt_5_0_0 -)
         KhmerScript,
-%End
-%If (Qt_5_0_0 -)
         KannadaScript,
-%End
-%If (Qt_5_0_0 -)
         KoreanScript,
-%End
-%If (Qt_5_0_0 -)
         LaoScript,
-%End
-%If (Qt_5_0_0 -)
         MalayalamScript,
-%End
-%If (Qt_5_0_0 -)
         MyanmarScript,
-%End
-%If (Qt_5_0_0 -)
         OriyaScript,
-%End
-%If (Qt_5_0_0 -)
         TamilScript,
-%End
-%If (Qt_5_0_0 -)
         TeluguScript,
-%End
-%If (Qt_5_0_0 -)
         ThaanaScript,
-%End
-%If (Qt_5_0_0 -)
         ThaiScript,
-%End
-%If (Qt_5_0_0 -)
         TibetanScript,
-%End
-%If (Qt_5_0_0 -)
         SinhalaScript,
-%End
-%If (Qt_5_0_0 -)
         SyriacScript,
-%End
-%If (Qt_5_0_0 -)
         YiScript,
-%End
-%If (Qt_5_0_0 -)
         VaiScript,
+%If (Qt_5_1_0 -)
+        AvestanScript,
+%End
+%If (Qt_5_1_0 -)
+        BalineseScript,
+%End
+%If (Qt_5_1_0 -)
+        BamumScript,
+%End
+%If (Qt_5_1_0 -)
+        BatakScript,
+%End
+%If (Qt_5_1_0 -)
+        BopomofoScript,
+%End
+%If (Qt_5_1_0 -)
+        BrahmiScript,
+%End
+%If (Qt_5_1_0 -)
+        BugineseScript,
+%End
+%If (Qt_5_1_0 -)
+        BuhidScript,
+%End
+%If (Qt_5_1_0 -)
+        CanadianAboriginalScript,
+%End
+%If (Qt_5_1_0 -)
+        CarianScript,
+%End
+%If (Qt_5_1_0 -)
+        ChakmaScript,
+%End
+%If (Qt_5_1_0 -)
+        ChamScript,
+%End
+%If (Qt_5_1_0 -)
+        CopticScript,
+%End
+%If (Qt_5_1_0 -)
+        CypriotScript,
+%End
+%If (Qt_5_1_0 -)
+        EgyptianHieroglyphsScript,
+%End
+%If (Qt_5_1_0 -)
+        FraserScript,
+%End
+%If (Qt_5_1_0 -)
+        GlagoliticScript,
+%End
+%If (Qt_5_1_0 -)
+        GothicScript,
+%End
+%If (Qt_5_1_0 -)
+        HanScript,
+%End
+%If (Qt_5_1_0 -)
+        HangulScript,
+%End
+%If (Qt_5_1_0 -)
+        HanunooScript,
+%End
+%If (Qt_5_1_0 -)
+        ImperialAramaicScript,
+%End
+%If (Qt_5_1_0 -)
+        InscriptionalPahlaviScript,
+%End
+%If (Qt_5_1_0 -)
+        InscriptionalParthianScript,
+%End
+%If (Qt_5_1_0 -)
+        JavaneseScript,
+%End
+%If (Qt_5_1_0 -)
+        KaithiScript,
+%End
+%If (Qt_5_1_0 -)
+        KatakanaScript,
+%End
+%If (Qt_5_1_0 -)
+        KayahLiScript,
+%End
+%If (Qt_5_1_0 -)
+        KharoshthiScript,
+%End
+%If (Qt_5_1_0 -)
+        LannaScript,
+%End
+%If (Qt_5_1_0 -)
+        LepchaScript,
+%End
+%If (Qt_5_1_0 -)
+        LimbuScript,
+%End
+%If (Qt_5_1_0 -)
+        LinearBScript,
+%End
+%If (Qt_5_1_0 -)
+        LycianScript,
+%End
+%If (Qt_5_1_0 -)
+        LydianScript,
+%End
+%If (Qt_5_1_0 -)
+        MandaeanScript,
+%End
+%If (Qt_5_1_0 -)
+        MeiteiMayekScript,
+%End
+%If (Qt_5_1_0 -)
+        MeroiticScript,
+%End
+%If (Qt_5_1_0 -)
+        MeroiticCursiveScript,
+%End
+%If (Qt_5_1_0 -)
+        NkoScript,
+%End
+%If (Qt_5_1_0 -)
+        NewTaiLueScript,
+%End
+%If (Qt_5_1_0 -)
+        OghamScript,
+%End
+%If (Qt_5_1_0 -)
+        OlChikiScript,
+%End
+%If (Qt_5_1_0 -)
+        OldItalicScript,
+%End
+%If (Qt_5_1_0 -)
+        OldPersianScript,
+%End
+%If (Qt_5_1_0 -)
+        OldSouthArabianScript,
+%End
+%If (Qt_5_1_0 -)
+        OrkhonScript,
+%End
+%If (Qt_5_1_0 -)
+        OsmanyaScript,
+%End
+%If (Qt_5_1_0 -)
+        PhagsPaScript,
+%End
+%If (Qt_5_1_0 -)
+        PhoenicianScript,
+%End
+%If (Qt_5_1_0 -)
+        PollardPhoneticScript,
+%End
+%If (Qt_5_1_0 -)
+        RejangScript,
+%End
+%If (Qt_5_1_0 -)
+        RunicScript,
+%End
+%If (Qt_5_1_0 -)
+        SamaritanScript,
+%End
+%If (Qt_5_1_0 -)
+        SaurashtraScript,
+%End
+%If (Qt_5_1_0 -)
+        SharadaScript,
+%End
+%If (Qt_5_1_0 -)
+        ShavianScript,
+%End
+%If (Qt_5_1_0 -)
+        SoraSompengScript,
+%End
+%If (Qt_5_1_0 -)
+        CuneiformScript,
+%End
+%If (Qt_5_1_0 -)
+        SundaneseScript,
+%End
+%If (Qt_5_1_0 -)
+        SylotiNagriScript,
+%End
+%If (Qt_5_1_0 -)
+        TagalogScript,
+%End
+%If (Qt_5_1_0 -)
+        TagbanwaScript,
+%End
+%If (Qt_5_1_0 -)
+        TaiLeScript,
+%End
+%If (Qt_5_1_0 -)
+        TaiVietScript,
+%End
+%If (Qt_5_1_0 -)
+        TakriScript,
+%End
+%If (Qt_5_1_0 -)
+        UgariticScript,
+%End
+%If (Qt_5_1_0 -)
+        BrailleScript,
+%End
+%If (Qt_5_1_0 -)
+        HiraganaScript,
+%End
+%If (Qt_5_5_0 -)
+        CaucasianAlbanianScript,
+%End
+%If (Qt_5_5_0 -)
+        BassaVahScript,
+%End
+%If (Qt_5_5_0 -)
+        DuployanScript,
+%End
+%If (Qt_5_5_0 -)
+        ElbasanScript,
+%End
+%If (Qt_5_5_0 -)
+        GranthaScript,
+%End
+%If (Qt_5_5_0 -)
+        PahawhHmongScript,
+%End
+%If (Qt_5_5_0 -)
+        KhojkiScript,
+%End
+%If (Qt_5_5_0 -)
+        LinearAScript,
+%End
+%If (Qt_5_5_0 -)
+        MahajaniScript,
+%End
+%If (Qt_5_5_0 -)
+        ManichaeanScript,
+%End
+%If (Qt_5_5_0 -)
+        MendeKikakuiScript,
+%End
+%If (Qt_5_5_0 -)
+        ModiScript,
+%End
+%If (Qt_5_5_0 -)
+        MroScript,
+%End
+%If (Qt_5_5_0 -)
+        OldNorthArabianScript,
+%End
+%If (Qt_5_5_0 -)
+        NabataeanScript,
+%End
+%If (Qt_5_5_0 -)
+        PalmyreneScript,
+%End
+%If (Qt_5_5_0 -)
+        PauCinHauScript,
+%End
+%If (Qt_5_5_0 -)
+        OldPermicScript,
+%End
+%If (Qt_5_5_0 -)
+        PsalterPahlaviScript,
+%End
+%If (Qt_5_5_0 -)
+        SiddhamScript,
+%End
+%If (Qt_5_5_0 -)
+        KhudawadiScript,
+%End
+%If (Qt_5_5_0 -)
+        TirhutaScript,
+%End
+%If (Qt_5_5_0 -)
+        VarangKshitiScript,
+%End
+%If (Qt_5_7_0 -)
+        AhomScript,
+%End
+%If (Qt_5_7_0 -)
+        AnatolianHieroglyphsScript,
+%End
+%If (Qt_5_7_0 -)
+        HatranScript,
+%End
+%If (Qt_5_7_0 -)
+        MultaniScript,
+%End
+%If (Qt_5_7_0 -)
+        OldHungarianScript,
+%End
+%If (Qt_5_7_0 -)
+        SignWritingScript,
+%End
+%If (Qt_5_7_0 -)
+        AdlamScript,
+%End
+%If (Qt_5_7_0 -)
+        BhaiksukiScript,
+%End
+%If (Qt_5_7_0 -)
+        MarchenScript,
+%End
+%If (Qt_5_7_0 -)
+        NewaScript,
+%End
+%If (Qt_5_7_0 -)
+        OsageScript,
+%End
+%If (Qt_5_7_0 -)
+        TangutScript,
+%End
+%If (Qt_5_7_0 -)
+        HanWithBopomofoScript,
+%End
+%If (Qt_5_7_0 -)
+        JamoScript,
 %End
     };
-
-%End
-%If (Qt_4_8_0 -)
 
     enum CurrencySymbolFormat
     {
@@ -1276,59 +1376,23 @@ public:
         CurrencyDisplayName,
     };
 
-%End
-%If (Qt_4_8_0 -)
     QLocale(QLocale::Language language, QLocale::Script script, QLocale::Country country);
-%End
-%If (Qt_4_8_0 -)
     QLocale::Script script() const;
-%End
-%If (Qt_4_8_0 -)
     QString bcp47Name() const;
-%End
-%If (Qt_4_8_0 -)
     QString nativeLanguageName() const;
-%End
-%If (Qt_4_8_0 -)
     QString nativeCountryName() const;
-%End
-%If (Qt_4_8_0 -)
     Qt::DayOfWeek firstDayOfWeek() const;
-%End
-%If (Qt_4_8_0 -)
     QList<Qt::DayOfWeek> weekdays() const;
-%End
-%If (Qt_4_8_0 -)
     QString toUpper(const QString &str) const;
-%End
-%If (Qt_4_8_0 -)
     QString toLower(const QString &str) const;
-%End
-%If (Qt_4_8_0 -)
     QString currencySymbol(QLocale::CurrencySymbolFormat format = QLocale::CurrencySymbol) const;
-%End
-%If (Qt_4_8_0 -)
-    QString toCurrencyString(int value /Constrained/, const QString &symbol = QString()) const;
-%End
-%If (Qt_4_8_0 -)
     QString toCurrencyString(double value /Constrained/, const QString &symbol = QString()) const;
+%If (Qt_5_7_0 -)
+    QString toCurrencyString(double value /Constrained/, const QString &symbol, int precision) const;
 %End
-%If (Qt_4_8_0 -)
-    QString toCurrencyString(qlonglong value, const QString &symbol = QString()) const;
-%End
-%If (Qt_4_8_0 -)
-    QString toCurrencyString(qulonglong value, const QString &symbol = QString()) const;
-%End
-%If (Qt_4_8_0 -)
     QStringList uiLanguages() const;
-%End
-%If (Qt_4_8_0 -)
     static QString scriptToString(QLocale::Script script);
-%End
-%If (Qt_4_8_0 -)
     static QList<QLocale> matchingLocales(QLocale::Language language, QLocale::Script script, QLocale::Country country);
-%End
-%If (Qt_4_8_0 -)
 
     enum QuotationStyle
     {
@@ -1336,178 +1400,162 @@ public:
         AlternateQuotation,
     };
 
-%End
-%If (Qt_4_8_0 -)
     QString quoteString(const QString &str, QLocale::QuotationStyle style = QLocale::StandardQuotation) const;
-%End
-%If (Qt_4_8_0 -)
     QString createSeparatedList(const QStringList &list) const;
-%End
-};
-
-QDataStream &operator<<(QDataStream &, const QLocale & /Constrained/);
-QDataStream &operator>>(QDataStream &, QLocale & /Constrained/);
-%If (Qt_4_2_0 -)
-QFlags<QLocale::NumberOption> operator|(QLocale::NumberOption f1, QFlags<QLocale::NumberOption> f2);
-%End
-%If (Qt_4_2_0 - Qt_5_0_0)
-
-class QSystemLocale
-{
-%TypeHeaderCode
-#include <qlocale.h>
+%If (Qt_5_6_0 -)
+    long __hash__() const;
+%MethodCode
+        sipRes = qHash(*sipCpp);
 %End
 
-public:
-    QSystemLocale();
-    virtual ~QSystemLocale();
+%End
+%If (Qt_5_7_0 -)
 
-    enum QueryType
+    enum FloatingPointPrecisionOption
     {
-        LanguageId,
-%If (Qt_4_8_0 -)
-        ScriptId,
-%End
-        CountryId,
-        DecimalPoint,
-        GroupSeparator,
-        ZeroDigit,
-        NegativeSign,
-        DateFormatLong,
-        DateFormatShort,
-        TimeFormatLong,
-        TimeFormatShort,
-        DayNameLong,
-        DayNameShort,
-        MonthNameLong,
-        MonthNameShort,
-        DateToStringLong,
-        DateToStringShort,
-        TimeToStringLong,
-        TimeToStringShort,
-%If (Qt_4_4_0 -)
-        DateTimeFormatLong,
-%End
-%If (Qt_4_4_0 -)
-        DateTimeFormatShort,
-%End
-%If (Qt_4_4_0 -)
-        DateTimeToStringLong,
-%End
-%If (Qt_4_4_0 -)
-        DateTimeToStringShort,
-%End
-%If (Qt_4_4_0 -)
-        MeasurementSystem,
-%End
-%If (Qt_4_5_0 -)
-        PositiveSign,
-%End
-%If (Qt_4_5_0 -)
-        AMText,
-%End
-%If (Qt_4_5_0 -)
-        PMText,
-%End
-%If (Qt_4_8_0 -)
-        FirstDayOfWeek,
-%End
-%If (Qt_4_8_0 -)
-        Weekdays,
-%End
-%If (Qt_4_8_0 -)
-        CurrencySymbol,
-%End
-%If (Qt_4_8_0 -)
-        CurrencyToString,
-%End
-%If (Qt_4_8_0 -)
-        UILanguages,
-%End
-%If (Qt_4_8_0 -)
-        StringToStandardQuotation,
-%End
-%If (Qt_4_8_0 -)
-        StringToAlternateQuotation,
-%End
-%If (Qt_4_8_0 -)
-        ListToSeparatedString,
-%End
-%If (Qt_4_8_0 -)
-        LocaleChanged,
-%End
-%If (Qt_4_8_0 -)
-        NativeLanguageName,
-%End
-%If (Qt_4_8_0 -)
-        NativeCountryName,
-%End
+        FloatingPointShortest,
     };
 
-    virtual QVariant query(QSystemLocale::QueryType type, QVariant in) const;
-    virtual QLocale fallbackLocale() const;
-};
-
 %End
-%If (Qt_4_3_0 -)
-// Mapped type for QList<QLocale::Country>.
-%MappedType QList<QLocale::Country> /TypeHint="List[QLocale.Country]", TypeHintValue="[]"/
-{
-%TypeHeaderCode
-#include <qlocale.h>
+%If (Qt_5_7_0 -)
+    void swap(QLocale &other);
 %End
-
-%ConvertFromTypeCode
-    // Create the list.
-    PyObject *l;
-
-    if ((l = PyList_New(sipCpp->size())) == NULL)
-        return NULL;
-
-    // Set the list elements.
-    for (int i = 0; i < sipCpp->size(); ++i)
-    {
-        QLocale::Country e = sipCpp->at(i);
-        PyObject *eobj;
-
-        if ((eobj = sipConvertFromEnum(e, sipType_QLocale_Country)) == NULL)
+    QString toString(SIP_PYOBJECT i /TypeHint="int"/) const;
+%MethodCode
+        // Convert a Python int avoiding overflow as much as possible.
+        
+        static PyObject *zero = 0;
+        if (!zero)
+            zero = PyLong_FromLong(0);
+        
+        int rc = PyObject_RichCompareBool(a0, zero, Py_LT);
+        
+        PyErr_Clear();
+        
+        if (rc < 0)
         {
-            Py_DECREF(l);
-
-            return NULL;
+            sipError = sipBadCallableArg(0, a0);
         }
-
-        PyList_SET_ITEM(l, i, eobj);
-    }
-
-    return l;
+        else if (rc)
+        {
+        #if defined(HAVE_LONG_LONG)
+            PY_LONG_LONG value = PyLong_AsLongLong(a0);
+        #else
+            long value = PyLong_AsLong(a0);
+        #endif
+        
+            if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_OverflowError))
+            {
+                sipError = sipBadCallableArg(0, a0);
+            }
+            else
+            {
+                sipRes = new QString(sipCpp->toString(value));
+            }
+        }
+        else
+        {
+        #if PY_MAJOR_VERSION >= 3
+        #if defined(HAVE_LONG_LONG)
+            unsigned PY_LONG_LONG value = PyLong_AsUnsignedLongLongMask(a0);
+        #else
+            unsigned long value = PyLong_AsUnsignedLongMask(a0);
+        #endif
+        #else
+        #if defined(HAVE_LONG_LONG)
+            unsigned PY_LONG_LONG value = PyInt_AsUnsignedLongLongMask(a0);
+        #else
+            unsigned long value = PyInt_AsUnsignedLongMask(a0);
+        #endif
+        #endif
+        
+            if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_OverflowError))
+            {
+                sipError = sipBadCallableArg(0, a0);
+            }
+            else
+            {
+                sipRes = new QString(sipCpp->toString(value));
+            }
+        }
 %End
 
-%ConvertToTypeCode
-    // Check the type if that is all that is required.
-    if (sipIsErr == NULL)
+    QString toCurrencyString(SIP_PYOBJECT value /TypeHint="int"/, const QString &symbol = QString()) const;
+%MethodCode
+        // Convert a Python int avoiding overflow as much as possible.
+        
+        static PyObject *zero = 0;
+        if (!zero)
+            zero = PyLong_FromLong(0);
+        
+        int rc = PyObject_RichCompareBool(a0, zero, Py_LT);
+        
+        PyErr_Clear();
+        
+        if (rc < 0)
+        {
+            sipError = sipBadCallableArg(0, a0);
+        }
+        else if (rc)
+        {
+        #if defined(HAVE_LONG_LONG)
+            PY_LONG_LONG value = PyLong_AsLongLong(a0);
+        #else
+            long value = PyLong_AsLong(a0);
+        #endif
+        
+            if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_OverflowError))
+            {
+                sipError = sipBadCallableArg(0, a0);
+            }
+            else
+            {
+                sipRes = new QString(sipCpp->toCurrencyString(value, *a1));
+            }
+        }
+        else
+        {
+        #if defined(HAVE_LONG_LONG)
+            unsigned PY_LONG_LONG value = PyLong_AsUnsignedLongLongMask(a0);
+        #else
+            unsigned long value = PyLong_AsUnsignedLongMask(a0);
+        #endif
+        
+            if (PyErr_Occurred() && !PyErr_ExceptionMatches(PyExc_OverflowError))
+            {
+                sipError = sipBadCallableArg(0, a0);
+            }
+            else
+            {
+                sipRes = new QString(sipCpp->toCurrencyString(value, *a1));
+            }
+        }
+%End
+
+%If (Qt_5_10_0 -)
+
+    enum DataSizeFormat
     {
-        if (!PyList_Check(sipPy))
-            return 0;
+        DataSizeIecFormat,
+        DataSizeTraditionalFormat,
+        DataSizeSIFormat,
+    };
 
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-            if (!sipCanConvertToEnum(PyList_GET_ITEM(sipPy, i), sipType_QLocale_Country))
-                return 0;
-
-        return 1;
-    }
-
-    QList<QLocale::Country> *ql = new QList<QLocale::Country>;
- 
-    for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(sipPy); ++i)
-    {
-        long l = SIPLong_AsLong(PyList_GET_ITEM(sipPy, i));
-        ql->append(static_cast<QLocale::Country>(l));
-    }
- 
-    *sipCppPtr = ql;
- 
-    return sipGetState(sipTransferObj);
+%End
+%If (Qt_5_10_0 -)
+    typedef QFlags<QLocale::DataSizeFormat> DataSizeFormats;
+%End
+%If (Qt_5_10_0 -)
+    QString formattedDataSize(qint64 bytes, int precision = 2, QLocale::DataSizeFormats format = QLocale::DataSizeIecFormat);
+%End
+%If (Qt_5_13_0 -)
+    long toLong(const QString &s, bool *ok = 0) const;
+%End
+%If (Qt_5_13_0 -)
+    ulong toULong(const QString &s, bool *ok = 0) const;
 %End
 };
-%End
+
+QDataStream &operator<<(QDataStream &, const QLocale & /Constrained/) /ReleaseGIL/;
+QDataStream &operator>>(QDataStream &, QLocale & /Constrained/) /ReleaseGIL/;
+QFlags<QLocale::NumberOption> operator|(QLocale::NumberOption f1, QFlags<QLocale::NumberOption> f2);

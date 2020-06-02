@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -24,44 +24,6 @@
 #include <qcoreapplication.h>
 %End
 
-%If (- Qt_5_0_0)
-%If (WS_WIN)
-// Windows specific definitions.
-// These would normally be in qwindowdefs.h but are needed by
-// qcoreapplication.h.
-typedef struct HWND__ *HWND;
-typedef unsigned UINT;
-typedef long LONG;
-typedef unsigned long DWORD;
-typedef UINT WPARAM;
-typedef LONG LPARAM;
-
-struct POINT
-{
-%TypeHeaderCode
-#include <wtypes.h>
-%End
-
-    LONG x;
-    LONG y;
-};
-
-struct MSG
-{
-%TypeHeaderCode
-#include <wtypes.h>
-%End
-
-    HWND hwnd;
-    UINT message;
-    WPARAM wParam;
-    LPARAM lParam;
-    DWORD time;
-    POINT pt;
-};
-%End
-%End
-
 class QCoreApplication : QObject
 {
 %TypeHeaderCode
@@ -77,10 +39,8 @@ public:
         char **argv;
         
         // Convert the list.
-        if ((argv = pyqt4_from_argv_list(a0, argc)) == NULL)
-        {
+        if ((argv = pyqt5_from_argv_list(a0, argc)) == NULL)
             sipIsErr = 1;
-        }
         else
         {
             // Create it now the arguments are right.
@@ -92,50 +52,15 @@ public:
             Py_END_ALLOW_THREADS
         
             // Now modify the original list.
-            pyqt4_update_argv_list(a0, argc, argv);
+            pyqt5_update_argv_list(a0, argc, argv);
         }
 %End
 
-    virtual ~QCoreApplication();
-%If (- Qt_5_0_0)
-    static int argc();
-%End
-%If (- Qt_5_0_0)
-    static SIP_PYLIST argv() /TypeHint="List[str]"/;
+    virtual ~QCoreApplication() /ReleaseGIL/;
 %MethodCode
-        // The Python interface returns a list of strings.
-        
-        int argc = QCoreApplication::argc();
-        
-        if ((sipRes = PyList_New(argc)) == NULL)
-        {
-            sipIsErr = 1;
-        }
-        else
-        {
-            char **argv = QCoreApplication::argv();
-        
-            for (int a = 0; a < argc; ++a)
-            {
-        #if PY_MAJOR_VERSION >= 3
-                PyObject *arg_obj = PyUnicode_FromString(argv[a]);
-        #else
-                PyObject *arg_obj = PyString_FromString(argv[a]);
-        #endif
-        
-                if (!arg_obj)
-                {
-                    Py_DECREF(sipRes);
-                    sipIsErr = 1;
-                    break;
-                }
-        
-                PyList_SET_ITEM(sipRes, a, arg_obj);
-            }
-        }
+        pyqt5_cleanup_qobjects();
 %End
 
-%End
     static void setOrganizationDomain(const QString &orgDomain);
     static QString organizationDomain();
     static void setOrganizationName(const QString &orgName);
@@ -148,37 +73,13 @@ public:
 %If (Py_v3)
     static int exec() /PostHook=__pyQtPostEventLoopHook__,PreHook=__pyQtPreEventLoopHook__,ReleaseGIL/;
 %End
-    static void processEvents(QFlags<QEventLoop::ProcessEventsFlag> flags = QEventLoop::AllEvents) /ReleaseGIL/;
-    static void processEvents(QFlags<QEventLoop::ProcessEventsFlag> flags, int maxtime) /ReleaseGIL/;
+    static void processEvents(QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents) /ReleaseGIL/;
+    static void processEvents(QEventLoop::ProcessEventsFlags flags, int maxtime) /ReleaseGIL/;
     static void exit(int returnCode = 0);
     static bool sendEvent(QObject *receiver, QEvent *event) /ReleaseGIL/;
-%If (Qt_5_0_0 -)
     static void postEvent(QObject *receiver, QEvent *event /Transfer/, int priority = Qt::NormalEventPriority);
-%End
-%If (- Qt_5_0_0)
-    static void postEvent(QObject *receiver, QEvent *event /Transfer/);
-%End
-%If (Qt_4_3_0 - Qt_5_0_0)
-    static void postEvent(QObject *receiver, QEvent *event /Transfer/, int priority);
-%End
-%If (Qt_5_0_0 -)
     static void sendPostedEvents(QObject *receiver = 0, int eventType = 0) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    static void sendPostedEvents(QObject *receiver, int event_type) /ReleaseGIL/;
-%End
-%If (- Qt_5_0_0)
-    static void sendPostedEvents() /ReleaseGIL/;
-%End
-%If (Qt_5_0_0 -)
     static void removePostedEvents(QObject *receiver, int eventType = 0);
-%End
-%If (- Qt_5_0_0)
-    static void removePostedEvents(QObject *receiver);
-%End
-%If (Qt_4_3_0 - Qt_5_0_0)
-    static void removePostedEvents(QObject *receiver, int eventType);
-%End
     static bool hasPendingEvents();
     virtual bool notify(QObject *, QEvent *) /ReleaseGIL/;
     static bool startingUp();
@@ -189,103 +90,12 @@ public:
     static QStringList libraryPaths();
     static void addLibraryPath(const QString &);
     static void removeLibraryPath(const QString &);
-%If (Qt_5_0_0 -)
     static bool installTranslator(QTranslator *messageFile);
-%End
-%If (- Qt_5_0_0)
-    static void installTranslator(QTranslator *);
-%End
-%If (Qt_5_0_0 -)
     static bool removeTranslator(QTranslator *messageFile);
-%End
-%If (- Qt_5_0_0)
-    static void removeTranslator(QTranslator *);
-%End
-%If (PyQt_Deprecated_5_0)
-
-    enum Encoding
-    {
-%If (Qt_4_2_0 -)
-        CodecForTr,
-%End
-        UnicodeUTF8,
-        DefaultCodec,
-%If (Qt_5_0_0 -)
-        Latin1,
-%End
-    };
-
-%End
-%If (Qt_5_0_0 -)
     static QString translate(const char *context, const char *sourceText /Encoding="UTF-8"/, const char *disambiguation = 0, int n = -1);
-%End
-%If (Qt_4_2_0 -)
-%If (PyQt_Deprecated_5_0)
-    static QString translate(const char *context, SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0, QCoreApplication::Encoding encoding = QCoreApplication::CodecForTr);
-%MethodCode
-        const char *source = qpycore_encode(&a1, a3);
-        
-        if (source)
-        {
-            sipRes = new QString(QCoreApplication::translate(a0, source, a2, a3));
-            Py_DECREF(a1);
-        }
-        else
-        {
-            sipIsErr = 1;
-        }
-%End
-
-%End
-%End
-%If (Qt_4_2_0 -)
-%If (PyQt_Deprecated_5_0)
-    static QString translate(const char *context, SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation, QCoreApplication::Encoding encoding, int n);
-%MethodCode
-        const char *source = qpycore_encode(&a1, a3);
-        
-        if (source)
-        {
-            sipRes = new QString(QCoreApplication::translate(a0, source, a2, a3, a4));
-            Py_DECREF(a1);
-        }
-        else
-        {
-            sipIsErr = 1;
-        }
-%End
-
-%End
-%End
-%If (- Qt_4_2_0)
-    static QString translate(const char *context, SIP_PYOBJECT sourceText /TypeHint="str"/, const char *disambiguation = 0, QCoreApplication::Encoding encoding = QCoreApplication::DefaultCodec);
-%MethodCode
-        const char *source = qpycore_encode(&a1, a3);
-        
-        if (source)
-        {
-            sipRes = new QString(QCoreApplication::translate(a0, source, a2, a3));
-            Py_DECREF(a1);
-        }
-        else
-        {
-            sipIsErr = 1;
-        }
-%End
-
-%End
     static void flush() /ReleaseGIL/;
-%If (Qt_4_2_0 -)
     static void setAttribute(Qt::ApplicationAttribute attribute, bool on = true);
-%End
-%If (Qt_4_2_0 -)
     static bool testAttribute(Qt::ApplicationAttribute attribute);
-%End
-%If (- Qt_5_0_0)
-%If (WS_WIN)
-    virtual bool winEventFilter(MSG *message, long *result);
-%End
-%End
 
 public slots:
     static void quit();
@@ -297,37 +107,32 @@ protected:
     virtual bool event(QEvent *);
 
 public:
-%If (Qt_4_4_0 -)
     static void setApplicationVersion(const QString &version);
-%End
-%If (Qt_4_4_0 -)
     static QString applicationVersion();
-%End
-%If (Qt_4_4_0 -)
     static qint64 applicationPid();
-%End
-%If (Qt_5_0_0 -)
     static QAbstractEventDispatcher *eventDispatcher();
-%End
-%If (Qt_5_0_0 -)
     static void setEventDispatcher(QAbstractEventDispatcher *eventDispatcher /Transfer/);
-%End
-%If (Qt_5_0_0 -)
     static bool isQuitLockEnabled();
-%End
-%If (Qt_5_0_0 -)
     static void setQuitLockEnabled(bool enabled);
-%End
-%If (Qt_5_0_0 -)
     void installNativeEventFilter(QAbstractNativeEventFilter *filterObj);
-%End
-%If (Qt_5_0_0 -)
     void removeNativeEventFilter(QAbstractNativeEventFilter *filterObj);
+%If (Qt_5_3_0 -)
+    static void setSetuidAllowed(bool allow);
+%End
+%If (Qt_5_3_0 -)
+    static bool isSetuidAllowed();
+%End
+    SIP_PYOBJECT __enter__();
+%MethodCode
+        // Just return a reference to self.
+        sipRes = sipSelf;
+        Py_INCREF(sipRes);
 %End
 
-private:
-%If (Qt_4_6_0 -)
-    QCoreApplication(const QCoreApplication &);
+    void __exit__(SIP_PYOBJECT type, SIP_PYOBJECT value, SIP_PYOBJECT traceback);
+%MethodCode
+        // Make sure the QCoreApplication is destroyed.
+        delete sipCpp;
 %End
 };
 
@@ -339,12 +144,11 @@ void qAddPostRoutine(SIP_PYCALLABLE);
         // See if there is an empty slot.
         bool app = true;
     
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(qtcore_PostRoutines); ++i)
-            if (PyList_GET_ITEM(qtcore_PostRoutines, i) == Py_None)
+        for (Py_ssize_t i = 0; i < PyList_Size(qtcore_PostRoutines); ++i)
+            if (PyList_GetItem(qtcore_PostRoutines, i) == Py_None)
             {
-                Py_DECREF(Py_None);
                 Py_INCREF(a0);
-                PyList_SET_ITEM(qtcore_PostRoutines, i, a0);
+                PyList_SetItem(qtcore_PostRoutines, i, a0);
     
                 app = false;
     
@@ -357,41 +161,86 @@ void qAddPostRoutine(SIP_PYCALLABLE);
     else if ((qtcore_PostRoutines = PyList_New(1)) != NULL)
     {
         Py_INCREF(a0);
-        PyList_SET_ITEM(qtcore_PostRoutines, 0, a0);
+        PyList_SetItem(qtcore_PostRoutines, 0, a0);
     
         qAddPostRoutine(qtcore_CallPostRoutines);
     }
     else
+    {
         sipIsErr = 1;
+    }
 %End
 
 void qRemovePostRoutine(SIP_PYCALLABLE);
 %MethodCode
     // Remove it from the list of post routines if it exists.
     if (qtcore_PostRoutines != NULL)
-        for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(qtcore_PostRoutines); ++i)
-            if (PyList_GET_ITEM(qtcore_PostRoutines, i) == a0)
+        for (Py_ssize_t i = 0; i < PyList_Size(qtcore_PostRoutines); ++i)
+            if (PyList_GetItem(qtcore_PostRoutines, i) == a0)
             {
-                Py_DECREF(a0);
                 Py_INCREF(Py_None);
-                PyList_SET_ITEM(qtcore_PostRoutines, i, Py_None);
+                PyList_SetItem(qtcore_PostRoutines, i, Py_None);
     
                 break;
             }
 %End
 
-// Module code needed by qAddPostRoutine() and qRemovePostRoutine().
+%If (Qt_5_1_0 -)
+void qAddPreRoutine(SIP_PYCALLABLE routine /TypeHint="Callable[[], None]"/);
+%MethodCode
+    // Add it to the list of pre routines if it already exists.
+    if (qtcore_PreRoutines != NULL)
+    {
+        if (PyList_Append(qtcore_PreRoutines, a0) < 0)
+            sipIsErr = 1;
+    }
+    else if ((qtcore_PreRoutines = PyList_New(1)) != NULL)
+    {
+        Py_INCREF(a0);
+        PyList_SetItem(qtcore_PreRoutines, 0, a0);
+    
+        qAddPreRoutine(qtcore_CallPreRoutines);
+    }
+    else
+    {
+        sipIsErr = 1;
+    }
+%End
+
+%End
+// Module code needed by qAddPreRoutine, qAddPostRoutine() and qRemovePostRoutine().
 %ModuleCode
+#if QT_VERSION >= 0x050100
+// The list of Python pre routines.
+static PyObject *qtcore_PreRoutines = NULL;
+
+// Call all of the registered Python pre routines.
+static void qtcore_CallPreRoutines()
+{
+    for (Py_ssize_t i = 0; i < PyList_Size(qtcore_PreRoutines); ++i)
+    {
+        PyObject *pr = PyList_GetItem(qtcore_PreRoutines, i);
+
+        if (pr != Py_None)
+        {
+            PyObject *res = PyObject_CallObject(pr, NULL);
+
+            Py_XDECREF(res);
+        }
+    }
+}
+#endif
+
+
 // The list of Python post routines.
 static PyObject *qtcore_PostRoutines = NULL;
-
 
 // Call all of the registered Python post routines.
 static void qtcore_CallPostRoutines()
 {
-    for (SIP_SSIZE_T i = 0; i < PyList_GET_SIZE(qtcore_PostRoutines); ++i)
+    for (Py_ssize_t i = 0; i < PyList_Size(qtcore_PostRoutines); ++i)
     {
-        PyObject *pr = PyList_GET_ITEM(qtcore_PostRoutines, i);
+        PyObject *pr = PyList_GetItem(qtcore_PostRoutines, i);
 
         if (pr != Py_None)
         {
@@ -472,10 +321,6 @@ import datetime
 # Convenient type aliases.
 PYQT_SIGNAL = typing.Union[QtCore.pyqtSignal, QtCore.pyqtBoundSignal]
 PYQT_SLOT = typing.Union[typing.Callable[..., None], QtCore.pyqtBoundSignal]
-
-# Support for old-style signals and slots.
-QT_SIGNAL = str
-QT_SLOT = str
 %End
 
 %TypeHintCode
@@ -492,8 +337,4 @@ class pyqtBoundSignal:
 # Convenient type aliases.
 PYQT_SIGNAL = typing.Union[pyqtSignal, pyqtBoundSignal]
 PYQT_SLOT = typing.Union[typing.Callable[..., None], pyqtBoundSignal]
-
-# Support for old-style signals and slots.
-QT_SIGNAL = str
-QT_SLOT = str
 %End

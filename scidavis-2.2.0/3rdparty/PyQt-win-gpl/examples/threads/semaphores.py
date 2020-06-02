@@ -3,7 +3,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2010 Riverbank Computing Limited.
+## Copyright (C) 2014 Riverbank Computing Limited.
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ## All rights reserved.
 ##
@@ -45,18 +45,18 @@
 import sys
 import random
 
-from PyQt4 import QtCore
+from PyQt5.QtCore import QCoreApplication, QSemaphore, QThread
 
 
 DataSize = 100000
 BufferSize = 8192
 buffer = list(range(BufferSize))
 
-freeBytes = QtCore.QSemaphore(BufferSize)
-usedBytes = QtCore.QSemaphore()
+freeBytes = QSemaphore(BufferSize)
+usedBytes = QSemaphore()
 
 
-class Producer(QtCore.QThread):
+class Producer(QThread):
     def run(self):
         for i in range(DataSize):
             freeBytes.acquire()
@@ -64,7 +64,7 @@ class Producer(QtCore.QThread):
             usedBytes.release()
 
 
-class Consumer(QtCore.QThread):
+class Consumer(QThread):
     def run(self):
         for i in range(DataSize):
             usedBytes.acquire()
@@ -75,7 +75,7 @@ class Consumer(QtCore.QThread):
 
 
 if __name__ == '__main__':
-    app = QtCore.QCoreApplication(sys.argv)
+    app = QCoreApplication(sys.argv)
     producer = Producer()
     consumer = Consumer()
     producer.start()

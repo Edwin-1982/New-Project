@@ -2,9 +2,9 @@
 //
 // This file is part of the QtMultimedia Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,15 +20,16 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%Module(name=PyQt4.QtMultimedia, keyword_arguments="Optional")
+%Module(name=PyQt5.QtMultimedia, keyword_arguments="Optional", use_limited_api=True)
 
 %Import QtCore/QtCoremod.sip
 %Import QtGui/QtGuimod.sip
+%Import QtNetwork/QtNetworkmod.sip
 
 %Copying
-Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 
-This file is part of PyQt4.
+This file is part of PyQt5.
 
 This file may be used under the terms of the GNU General Public License
 version 3.0 as published by the Free Software Foundation and appearing in
@@ -47,11 +48,42 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %DefaultSupertype sip.simplewrapper
 
 %Include qabstractvideobuffer.sip
+%Include qabstractvideofilter.sip
 %Include qabstractvideosurface.sip
 %Include qaudio.sip
+%Include qaudiobuffer.sip
+%Include qaudiodecoder.sip
 %Include qaudiodeviceinfo.sip
 %Include qaudioformat.sip
 %Include qaudioinput.sip
 %Include qaudiooutput.sip
+%Include qaudioprobe.sip
+%Include qaudiorecorder.sip
+%Include qcamera.sip
+%Include qcameraexposure.sip
+%Include qcamerafocus.sip
+%Include qcameraimagecapture.sip
+%Include qcameraimageprocessing.sip
+%Include qcamerainfo.sip
+%Include qcameraviewfindersettings.sip
+%Include qmediabindableinterface.sip
+%Include qmediacontent.sip
+%Include qmediacontrol.sip
+%Include qmediaencodersettings.sip
+%Include qmediametadata.sip
+%Include qmediaobject.sip
+%Include qmediaplayer.sip
+%Include qmediaplaylist.sip
+%Include qmediarecorder.sip
+%Include qmediaresource.sip
+%Include qmediaservice.sip
+%Include qmediatimerange.sip
+%Include qmultimedia.sip
+%Include qradiodata.sip
+%Include qradiotuner.sip
+%Include qsound.sip
+%Include qsoundeffect.sip
 %Include qvideoframe.sip
+%Include qvideoprobe.sip
 %Include qvideosurfaceformat.sip
+%Include qpymultimedia_qlist.sip

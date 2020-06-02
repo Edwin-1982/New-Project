@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDBus Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_7_0 -)
 
 class QDBusServiceWatcher : QObject
 {
@@ -44,8 +42,8 @@ public:
     void setWatchedServices(const QStringList &services);
     void addWatchedService(const QString &newService);
     bool removeWatchedService(const QString &service);
-    QFlags<QDBusServiceWatcher::WatchModeFlag> watchMode() const;
-    void setWatchMode(QFlags<QDBusServiceWatcher::WatchModeFlag> mode);
+    QDBusServiceWatcher::WatchMode watchMode() const;
+    void setWatchMode(QDBusServiceWatcher::WatchMode mode);
     QDBusConnection connection() const;
     void setConnection(const QDBusConnection &connection);
 
@@ -53,15 +51,7 @@ signals:
     void serviceRegistered(const QString &service);
     void serviceUnregistered(const QString &service);
     void serviceOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
-
-private:
-    QDBusServiceWatcher(const QDBusServiceWatcher &);
 };
 
-%End
-%If (Qt_4_7_0 -)
 QFlags<QDBusServiceWatcher::WatchModeFlag> operator|(QDBusServiceWatcher::WatchModeFlag f1, QFlags<QDBusServiceWatcher::WatchModeFlag> f2);
-%End
-%If (Qt_4_7_0 -)
 QFlags<QDBusServiceWatcher::WatchModeFlag> operator|(QDBusServiceWatcher::WatchModeFlag f1, QDBusServiceWatcher::WatchModeFlag f2);
-%End

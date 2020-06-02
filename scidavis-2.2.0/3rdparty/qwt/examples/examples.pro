@@ -1,51 +1,49 @@
-################################################################
+# -*- mode: sh -*- ################################################
 # Qwt Widget Library
 # Copyright (C) 1997   Josef Wilgen
 # Copyright (C) 2002   Uwe Rathmann
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the Qwt License, Version 1.0
-################################################################
+###################################################################
 
-include( $${PWD}/../qwtconfig.pri )
+include( ../qwtconfig.pri )
 
 TEMPLATE = subdirs
 
-contains(QWT_CONFIG, QwtPlot) {
+contains(CONFIG, QwtPlot) {
     
     SUBDIRS += \
-        animation \
-        barchart \
         cpuplot \
         curvdemo1   \
-        distrowatch \
-        friedberg \
-        itemeditor \
-        legends \
-        stockchart \
-        simpleplot \
-        sinusplot \
-        realtime \
-        refreshtest \
-        scatterplot \
+        curvdemo2 \
+        simple_plot \
+        realtime_plot \
         spectrogram \
-        rasterview \
-        tvplot 
+        histogram 
 
-    contains(QWT_CONFIG, QwtWidgets) {
+    contains(CONFIG, QwtWidgets) {
 
         SUBDIRS += \
             bode \
-            event_filter \
-            oscilloscope  
+            data_plot \
+            event_filter
+    }
+    
+    contains(CONFIG, QwtSVGItem) {
+
+        SUBDIRS += \
+            svgmap
     }
 }
 
-contains(QWT_CONFIG, QwtWidgets) {
+contains(CONFIG, QwtWidgets) {
 
     SUBDIRS += \
         sysinfo \
         radio \
         dials \
-        controls
+        sliders
 }
+
+

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtDesigner Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -35,10 +35,6 @@ public:
     virtual void addWidget(QWidget *widget) = 0;
     virtual void insertWidget(int index, QWidget *widget) = 0;
     virtual void remove(int index) = 0;
-%If (Qt_5_0_0 -)
     virtual bool canAddWidget() const;
-%End
-%If (Qt_5_0_0 -)
     virtual bool canRemove(int index) const;
-%End
 };

@@ -2,50 +2,45 @@
 
 # Form implementation generated from reading ui file 'window.ui'
 #
-# Created: Mon Nov 29 16:50:32 2010
-#      by: PyQt4 UI code generator snapshot-4.8.2-241fbaf4620d
+# Created: Fri Jul 26 06:50:59 2013
+#      by: PyQt5 UI code generator 5.0.1-snapshot-2a99e59669ee
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
-
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Window(object):
     def setupUi(self, Window):
-        Window.setObjectName(_fromUtf8("Window"))
+        Window.setObjectName("Window")
         Window.resize(800, 600)
-        self.centralwidget = QtGui.QWidget(Window)
-        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.verticalLayout_2 = QtGui.QVBoxLayout(self.centralwidget)
+        self.centralwidget = QtWidgets.QWidget(Window)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setContentsMargins(-1, 4, -1, 4)
-        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.webView = QtWebKit.QWebView(self.centralwidget)
-        self.webView.setUrl(QtCore.QUrl(_fromUtf8("http://qt.nokia.com/")))
-        self.webView.setObjectName(_fromUtf8("webView"))
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.webView = QtWebKitWidgets.QWebView(self.centralwidget)
+        self.webView.setUrl(QtCore.QUrl("http://qt.nokia.com/"))
+        self.webView.setObjectName("webView")
         self.verticalLayout_2.addWidget(self.webView)
         Window.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(Window)
+        self.menubar = QtWidgets.QMenuBar(Window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 27))
-        self.menubar.setObjectName(_fromUtf8("menubar"))
+        self.menubar.setObjectName("menubar")
         Window.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(Window)
-        self.statusbar.setObjectName(_fromUtf8("statusbar"))
+        self.statusbar = QtWidgets.QStatusBar(Window)
+        self.statusbar.setObjectName("statusbar")
         Window.setStatusBar(self.statusbar)
-        self.dockWidget = QtGui.QDockWidget(Window)
+        self.dockWidget = QtWidgets.QDockWidget(Window)
         self.dockWidget.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea|QtCore.Qt.RightDockWidgetArea)
-        self.dockWidget.setObjectName(_fromUtf8("dockWidget"))
-        self.dockWidgetContents = QtGui.QWidget()
-        self.dockWidgetContents.setObjectName(_fromUtf8("dockWidgetContents"))
-        self.verticalLayout = QtGui.QVBoxLayout(self.dockWidgetContents)
-        self.verticalLayout.setMargin(4)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.treeWidget = QtGui.QTreeWidget(self.dockWidgetContents)
-        self.treeWidget.setObjectName(_fromUtf8("treeWidget"))
-        self.treeWidget.headerItem().setText(0, _fromUtf8("1"))
+        self.dockWidget.setObjectName("dockWidget")
+        self.dockWidgetContents = QtWidgets.QWidget()
+        self.dockWidgetContents.setObjectName("dockWidgetContents")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.dockWidgetContents)
+        self.verticalLayout.setContentsMargins(4, 4, 4, 4)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.treeWidget = QtWidgets.QTreeWidget(self.dockWidgetContents)
+        self.treeWidget.setObjectName("treeWidget")
+        self.treeWidget.headerItem().setText(0, "1")
         self.treeWidget.header().setVisible(False)
         self.verticalLayout.addWidget(self.treeWidget)
         self.dockWidget.setWidget(self.dockWidgetContents)
@@ -55,7 +50,8 @@ class Ui_Window(object):
         QtCore.QMetaObject.connectSlotsByName(Window)
 
     def retranslateUi(self, Window):
-        Window.setWindowTitle(QtGui.QApplication.translate("Window", "Web Element DOM Traversal", None, QtGui.QApplication.UnicodeUTF8))
-        self.dockWidget.setWindowTitle(QtGui.QApplication.translate("Window", "Document Structure", None, QtGui.QApplication.UnicodeUTF8))
+        _translate = QtCore.QCoreApplication.translate
+        Window.setWindowTitle(_translate("Window", "Web Element DOM Traversal"))
+        self.dockWidget.setWindowTitle(_translate("Window", "Document Structure"))
 
-from PyQt4 import QtWebKit
+from PyQt5 import QtWebKitWidgets

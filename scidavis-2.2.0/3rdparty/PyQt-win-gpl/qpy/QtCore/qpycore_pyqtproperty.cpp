@@ -1,8 +1,8 @@
 // This is the implementation of pyqtProperty.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -24,6 +24,10 @@
 #include "qpycore_chimera.h"
 #include "qpycore_pyqtproperty.h"
 #include "qpycore_pyqtsignal.h"
+
+
+// The type object.
+PyTypeObject *qpycore_pyqtProperty_TypeObject;
 
 
 // Forward declarations.
@@ -51,7 +55,8 @@ static PyObject *getter_docstring(PyObject *getter);
 PyDoc_STRVAR(pyqtProperty_doc,
 "pyqtProperty(type, fget=None, fset=None, freset=None, fdel=None, doc=None,\n"
 "        designable=True, scriptable=True, stored=True, user=False,\n"
-"        constant=False, final=False, notify=None) -> property attribute\n"
+"        constant=False, final=False, notify=None,\n"
+"        revision=0) -> property attribute\n"
 "\n"
 "type is the type of the property.  It is either a type object or a string\n"
 "that is the name of a C++ type.\n"
@@ -64,6 +69,7 @@ PyDoc_STRVAR(pyqtProperty_doc,
 "constant sets the CONSTANT flag.\n"
 "final sets the FINAL flag.\n"
 "notify is the NOTIFY signal.\n"
+"revision is the REVISION.\n"
 "The other parameters are the same as those required by the standard Python\n"
 "property type.  Properties defined using pyqtProperty behave as both Python\n"
 "and Qt properties."
@@ -106,13 +112,42 @@ static PyMethodDef pyqtProperty_methods[] = {
 };
 
 
-// This implements the PyQt version of the standard Python property type.
-PyTypeObject qpycore_pyqtProperty_Type = {
+#if PY_VERSION_HEX >= 0x03040000
+// Define the slots.
+static PyType_Slot qpycore_pyqtProperty_Slots[] = {
+    {Py_tp_new,         (void *)PyType_GenericNew},
+    {Py_tp_alloc,       (void *)PyType_GenericAlloc},
+    {Py_tp_init,        (void *)pyqtProperty_init},
+    {Py_tp_dealloc,     (void *)pyqtProperty_dealloc},
+    {Py_tp_free,        (void *)PyObject_GC_Del},
+    {Py_tp_call,        (void *)pyqtProperty_call},
+    {Py_tp_getattro,    (void *)PyObject_GenericGetAttr},
+    {Py_tp_doc,         (void *)pyqtProperty_doc},
+    {Py_tp_traverse,    (void *)pyqtProperty_traverse},
+    {Py_tp_descr_get,   (void *)pyqtProperty_descr_get},
+    {Py_tp_descr_set,   (void *)pyqtProperty_descr_set},
+    {Py_tp_methods,     pyqtProperty_methods},
+    {Py_tp_members,     pyqtProperty_members},
+    {0,                 0}
+};
+
+
+// Define the type.
+static PyType_Spec qpycore_pyqtProperty_Spec = {
+    "PyQt5.QtCore.pyqtProperty",
+    sizeof (qpycore_pyqtProperty),
+    0,
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_GC|Py_TPFLAGS_BASETYPE,
+    qpycore_pyqtProperty_Slots
+};
+#else
+// Define the type.
+static PyTypeObject qpycore_pyqtProperty_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
 #if PY_VERSION_HEX >= 0x02050000
-    "PyQt4.QtCore.pyqtProperty",
+    "PyQt5.QtCore.pyqtProperty",
 #else
-    const_cast<char *>("PyQt4.QtCore.pyqtProperty"),
+    const_cast<char *>("PyQt5.QtCore.pyqtProperty"),
 #endif
     sizeof (qpycore_pyqtProperty),
     0,
@@ -158,13 +193,12 @@ PyTypeObject qpycore_pyqtProperty_Type = {
     0,
     0,
     0,
-#if PY_VERSION_HEX >= 0x02060000
     0,
-#endif
 #if PY_VERSION_HEX >= 0x03040000
     0,
 #endif
 };
+#endif
 
 
 // This is the sequence number to allocate to the next PyQt property to be
@@ -190,7 +224,11 @@ static void pyqtProperty_dealloc(PyObject *self)
 
     delete pp->pyqtprop_parsed_type;
 
+#if PY_VERSION_HEX >= 0x03040000
+    ((destructor)PyType_GetSlot(Py_TYPE(self), Py_tp_free))(self);
+#else
     Py_TYPE(self)->tp_free(self);
+#endif
 }
 
 
@@ -319,27 +357,19 @@ static int pyqtProperty_init(PyObject *self, PyObject *args, PyObject *kwds)
     PyObject *type, *get = 0, *set = 0, *reset = 0, *del = 0, *doc = 0,
             *notify = 0;
     int scriptable = 1, stored = 1, user = 0, constant = 0, final = 0;
-#if QT_VERSION >= 0x040600
-    int designable = 1;
-#else
-    int designable = -1;
-#endif
+    int designable = 1, revision = 0;
     static const char *kwlist[] = {"type", "fget", "fset", "freset", "fdel",
             "doc", "designable", "scriptable", "stored", "user", "constant",
-            "final", "notify", 0};
+            "final", "notify", "revision", 0};
     qpycore_pyqtProperty *pp = (qpycore_pyqtProperty *)self;
 
     pp->pyqtprop_sequence = pyqtprop_sequence_nr++;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds,
-#if PY_VERSION_HEX >= 0x02050000
-            "O|OOOOOiiiiiiO!:pyqtProperty",
-#else
-            const_cast<char *>("O|OOOOOiiiiiiO!:pyqtProperty"),
-#endif
+            "O|OOOOOiiiiiiO!i:pyqtProperty",
             const_cast<char **>(kwlist), &type, &get, &set, &reset, &del, &doc,
             &designable, &scriptable, &stored, &user, &constant, &final,
-            &qpycore_pyqtSignal_Type, &notify))
+            qpycore_pyqtSignal_TypeObject, &notify, &revision))
         return -1;
 
     if (get == Py_None)
@@ -356,13 +386,6 @@ static int pyqtProperty_init(PyObject *self, PyObject *args, PyObject *kwds)
 
     if (notify == Py_None)
         notify = 0;
-
-#if QT_VERSION < 0x040600
-    // The default value of designable depends on whether the property is
-    // writable.
-    if (designable < 0)
-        designable = (set != 0);
-#endif
 
     // Parse the type.
     const Chimera *ptype = Chimera::parse(type);
@@ -426,6 +449,8 @@ static int pyqtProperty_init(PyObject *self, PyObject *args, PyObject *kwds)
 
     pp->pyqtprop_flags = flags;
 
+    pp->pyqtprop_revision = revision;
+
     return 0;
 }
 
@@ -437,12 +462,7 @@ static PyObject *pyqtProperty_call(PyObject *self, PyObject *args,
     PyObject *get;
     static const char *kwlist[] = {"fget", 0};
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds,
-#if PY_VERSION_HEX >= 0x02050000
-            "O:pyqtProperty",
-#else
-            const_cast<char *>("O:pyqtProperty"),
-#endif
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:pyqtProperty",
             const_cast<char **>(kwlist), &get))
         return 0;
 
@@ -583,6 +603,7 @@ static qpycore_pyqtProperty *clone(qpycore_pyqtProperty *orig)
         pp->pyqtprop_parsed_type = new Chimera(*orig->pyqtprop_parsed_type);
 
         pp->pyqtprop_flags = orig->pyqtprop_flags;
+        pp->pyqtprop_revision = orig->pyqtprop_revision;
         pp->pyqtprop_sequence = orig->pyqtprop_sequence;
     }
 
@@ -597,11 +618,7 @@ static PyObject *getter_docstring(PyObject *getter)
     if (!getter)
         return 0;
 
-#if PY_VERSION_HEX >= 0x02050000
     PyObject *getter_doc = PyObject_GetAttrString(getter, "__doc__");
-#else
-    PyObject *getter_doc = PyObject_GetAttrString(getter, const_cast<char *>("__doc__"));
-#endif
 
     if (!getter_doc)
     {
@@ -616,4 +633,23 @@ static PyObject *getter_docstring(PyObject *getter)
     }
 
     return getter_doc;
+}
+
+
+// Initialise the type and return true if there was no error.
+bool qpycore_pyqtProperty_init_type()
+{
+#if PY_VERSION_HEX >= 0x03040000
+    qpycore_pyqtProperty_TypeObject = (PyTypeObject *)PyType_FromSpec(
+            &qpycore_pyqtProperty_Spec);
+
+    return qpycore_pyqtProperty_TypeObject;
+#else
+    if (PyType_Ready(&qpycore_pyqtProperty_Type) < 0)
+        return false;
+
+    qpycore_pyqtProperty_TypeObject = &qpycore_pyqtProperty_Type;
+
+    return true;
+#endif
 }

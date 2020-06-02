@@ -1,8 +1,8 @@
 // This defines the interfaces for the pyqtSignal type.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -23,6 +23,10 @@
 
 
 #include <Python.h>
+#include <sip.h>
+
+#include <QByteArray>
+#include <QList>
 
 #include "qpycore_chimera.h"
 
@@ -43,25 +47,34 @@ typedef struct _qpycore_pyqtSignal {
     // The docstring.
     const char *docstring;
 
-    // The parsed signature.
-    Chimera::Signature *signature;
+    // The optional parameter names.
+    const QList<QByteArray> *parameter_names;
+
+    // The revision.
+    int revision;
+
+    // The parsed signature, not set if there is an emitter.
+    Chimera::Signature *parsed_signature;
+
+    // An optional emitter.
+    pyqt5EmitFunc emitter;
 
     // The non-signal overloads (if any).  This is only set for the default.
     PyMethodDef *non_signals;
-
-    // The signal hack to apply when built against Qt5.
-    int hack;
 } qpycore_pyqtSignal;
 
-
-extern PyTypeObject qpycore_pyqtSignal_Type;
 
 int qpycore_get_lazy_attr(const sipTypeDef *td, PyObject *dict);
 
 }
 
 
-qpycore_pyqtSignal *qpycore_pyqtSignal_New(const char *signature_str,
+// The type object.
+extern PyTypeObject *qpycore_pyqtSignal_TypeObject;
+
+
+bool qpycore_pyqtSignal_init_type();
+qpycore_pyqtSignal *qpycore_pyqtSignal_New(const char *signature,
         bool *fatal = 0);
 qpycore_pyqtSignal *qpycore_find_signal(qpycore_pyqtSignal *ps,
         PyObject *subscript, const char *context);

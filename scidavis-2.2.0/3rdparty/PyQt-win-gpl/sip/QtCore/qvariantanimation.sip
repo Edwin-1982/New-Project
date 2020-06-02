@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -19,8 +19,6 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-%If (Qt_4_6_0 -)
 
 class QVariantAnimation : QAbstractAnimation
 {
@@ -39,8 +37,8 @@ public:
     void setEndValue(const QVariant &value);
     QVariant keyValueAt(qreal step) const;
     void setKeyValueAt(qreal step, const QVariant &value);
-    KeyValues keyValues() const;
-    void setKeyValues(const KeyValues &values);
+    QVariantAnimation::KeyValues keyValues() const;
+    void setKeyValues(const QVariantAnimation::KeyValues &values);
     QVariant currentValue() const;
     virtual int duration() const;
     void setDuration(int msecs);
@@ -54,16 +52,6 @@ protected:
     virtual bool event(QEvent *event);
     virtual void updateCurrentTime(int);
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
-%If (Qt_5_0_0 -)
     virtual void updateCurrentValue(const QVariant &value);
-%End
-%If (- Qt_5_0_0)
-    virtual void updateCurrentValue(const QVariant &value) = 0;
-%End
     virtual QVariant interpolated(const QVariant &from, const QVariant &to, qreal progress) const;
-
-private:
-    QVariantAnimation(const QVariantAnimation &);
 };
-
-%End

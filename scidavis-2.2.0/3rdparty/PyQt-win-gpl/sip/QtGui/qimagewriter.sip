@@ -2,9 +2,9 @@
 //
 // This file is part of the QtGui Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -32,6 +32,9 @@ public:
         UnknownError,
         DeviceError,
         UnsupportedFormatError,
+%If (Qt_5_10_0 -)
+        InvalidImageError,
+%End
     };
 
     QImageWriter();
@@ -48,22 +51,47 @@ public:
     int quality() const;
     void setGamma(float gamma);
     float gamma() const;
-    void setDescription(const QString &description);
-    QString description() const;
     bool canWrite() const;
     bool write(const QImage &image) /ReleaseGIL/;
     QImageWriter::ImageWriterError error() const;
     QString errorString() const;
     static QList<QByteArray> supportedImageFormats();
     void setText(const QString &key, const QString &text);
-%If (Qt_4_2_0 -)
     bool supportsOption(QImageIOHandler::ImageOption option) const;
-%End
-%If (Qt_4_3_0 -)
     void setCompression(int compression);
-%End
-%If (Qt_4_3_0 -)
     int compression() const;
+%If (Qt_5_1_0 -)
+    static QList<QByteArray> supportedMimeTypes();
+%End
+%If (Qt_5_4_0 -)
+    void setSubType(const QByteArray &type);
+%End
+%If (Qt_5_4_0 -)
+    QByteArray subType() const;
+%End
+%If (Qt_5_4_0 -)
+    QList<QByteArray> supportedSubTypes() const;
+%End
+%If (Qt_5_5_0 -)
+    void setOptimizedWrite(bool optimize);
+%End
+%If (Qt_5_5_0 -)
+    bool optimizedWrite() const;
+%End
+%If (Qt_5_5_0 -)
+    void setProgressiveScanWrite(bool progressive);
+%End
+%If (Qt_5_5_0 -)
+    bool progressiveScanWrite() const;
+%End
+%If (Qt_5_5_0 -)
+    QImageIOHandler::Transformations transformation() const;
+%End
+%If (Qt_5_5_0 -)
+    void setTransformation(QImageIOHandler::Transformations orientation);
+%End
+%If (Qt_5_12_0 -)
+    static QList<QByteArray> imageFormatsForMimeType(const QByteArray &mimeType);
 %End
 
 private:

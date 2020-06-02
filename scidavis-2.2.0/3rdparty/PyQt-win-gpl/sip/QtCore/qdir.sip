@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -47,12 +47,8 @@ public:
         CaseSensitive,
         NoDotAndDotDot,
         NoFilter,
-%If (Qt_4_7_0 -)
         NoDot,
-%End
-%If (Qt_4_7_0 -)
         NoDotDot,
-%End
     };
 
     typedef QFlags<QDir::Filter> Filters;
@@ -82,26 +78,22 @@ public:
     QString path() const;
     QString absolutePath() const;
     QString canonicalPath() const;
-    static void addResourceSearchPath(const QString &path);
     QString dirName() const;
     QString filePath(const QString &fileName) const;
     QString absoluteFilePath(const QString &fileName) const;
     QString relativeFilePath(const QString &fileName) const;
-%If (- Qt_5_0_0)
-    static QString convertSeparators(const QString &pathName);
-%End
     bool cd(const QString &dirName);
     bool cdUp();
     QStringList nameFilters() const;
     void setNameFilters(const QStringList &nameFilters);
-    QFlags<QDir::Filter> filter() const;
-    void setFilter(QFlags<QDir::Filter> filter);
-    QFlags<QDir::SortFlag> sorting() const;
-    void setSorting(QFlags<QDir::SortFlag> sort);
+    QDir::Filters filter() const;
+    void setFilter(QDir::Filters filter);
+    QDir::SortFlags sorting() const;
+    void setSorting(QDir::SortFlags sort);
     uint count() const /__len__/;
     QString operator[](int) const;
 %MethodCode
-        SIP_SSIZE_T idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
+        Py_ssize_t idx = sipConvertFromSequenceIndex(a0, sipCpp->count());
         
         if (idx < 0)
             sipIsErr = 1;
@@ -111,17 +103,17 @@ public:
 
     QStringList operator[](SIP_PYSLICE) const;
 %MethodCode
-        SIP_SSIZE_T len, start, stop, step, slicelength, i;
+        Py_ssize_t start, stop, step, slicelength;
         
-        len = sipCpp->count();
-        
-        if (sipConvertFromSliceObject(a0, len, &start, &stop, &step, &slicelength) < 0)
+        if (sipConvertFromSliceObject(a0, sipCpp->count(), &start, &stop, &step, &slicelength) < 0)
+        {
             sipIsErr = 1;
+        }
         else
         {
             sipRes = new QStringList();
         
-            for (i = 0; i < slicelength; ++i)
+            for (Py_ssize_t i = 0; i < slicelength; ++i)
             {
                 (*sipRes) += (*sipCpp)[start];
                 start += step;
@@ -135,10 +127,10 @@ public:
 %End
 
     static QStringList nameFiltersFromString(const QString &nameFilter);
-    QStringList entryList(QFlags<QDir::Filter> filters = NoFilter, QFlags<QDir::SortFlag> sort = NoSort) const;
-    QStringList entryList(const QStringList &nameFilters, QFlags<QDir::Filter> filters = NoFilter, QFlags<QDir::SortFlag> sort = NoSort) const;
-    QFileInfoList entryInfoList(QFlags<QDir::Filter> filters = NoFilter, QFlags<QDir::SortFlag> sort = NoSort) const;
-    QFileInfoList entryInfoList(const QStringList &nameFilters, QFlags<QDir::Filter> filters = NoFilter, QFlags<QDir::SortFlag> sort = NoSort) const;
+    QStringList entryList(QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort) const;
+    QStringList entryList(const QStringList &nameFilters, QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort) const;
+    QFileInfoList entryInfoList(QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort) const;
+    QFileInfoList entryInfoList(const QStringList &nameFilters, QDir::Filters filters = QDir::NoFilter, QDir::SortFlags sort = QDir::NoSort) const;
     bool mkdir(const QString &dirName) const;
     bool rmdir(const QString &dirName) const;
     bool mkpath(const QString &dirPath) const;
@@ -171,26 +163,18 @@ public:
     static bool match(const QStringList &filters, const QString &fileName);
     static bool match(const QString &filter, const QString &fileName);
     static QString cleanPath(const QString &path);
-%If (Qt_4_2_0 -)
     static QString toNativeSeparators(const QString &pathName);
-%End
-%If (Qt_4_2_0 -)
     static QString fromNativeSeparators(const QString &pathName);
-%End
-%If (Qt_4_3_0 -)
     static void setSearchPaths(const QString &prefix, const QStringList &searchPaths);
-%End
-%If (Qt_4_3_0 -)
     static void addSearchPath(const QString &prefix, const QString &path);
-%End
-%If (Qt_4_3_0 -)
     static QStringList searchPaths(const QString &prefix);
-%End
-%If (Qt_5_0_0 -)
     bool removeRecursively();
+    void swap(QDir &other /Constrained/);
+%If (Qt_5_6_0 -)
+    static QChar listSeparator();
 %End
-%If (Qt_5_0_0 -)
-    void swap(QDir &other);
+%If (Qt_5_9_0 -)
+    bool isEmpty(QDir::Filters filters = QDir::AllEntries | QDir::NoDotAndDotDot) const;
 %End
 };
 

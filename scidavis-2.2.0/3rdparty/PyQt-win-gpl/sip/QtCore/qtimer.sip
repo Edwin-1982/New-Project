@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -35,36 +35,33 @@ public:
     int interval() const;
     bool isSingleShot() const;
     void setSingleShot(bool asingleShot);
-    static void singleShot(int msec, QObject *receiver, SIP_PYOBJECT member /TypeHint="QT_SLOT"/);
-%MethodCode
-        const char *slot = pyqt4_get_slot(a2);
-        
-        if (slot)
-        {
-            Py_BEGIN_ALLOW_THREADS
-            QTimer::singleShot(a0, a1, slot);
-            Py_END_ALLOW_THREADS
-        }
-        else
-        {
-            sipError = sipBadCallableArg(2, a2);
-        }
-%End
-
     static void singleShot(int msec, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/);
 %MethodCode
         QObject *receiver;
         QByteArray slot_signature;
         
-        if ((sipError = pyqt4_get_connection_parts(a1, 0, "()", true, &receiver, slot_signature)) == sipErrorNone)
+        if ((sipError = pyqt5_get_connection_parts(a1, 0, "()", true, &receiver, slot_signature)) == sipErrorNone)
         {
-            Py_BEGIN_ALLOW_THREADS
             QTimer::singleShot(a0, receiver, slot_signature.constData());
-            Py_END_ALLOW_THREADS
         }
         else if (sipError == sipErrorContinue)
         {
             sipError = sipBadCallableArg(1, a1);
+        }
+%End
+
+    static void singleShot(int msec, Qt::TimerType timerType, SIP_PYOBJECT slot /TypeHint="PYQT_SLOT"/);
+%MethodCode
+        QObject *receiver;
+        QByteArray slot_signature;
+        
+        if ((sipError = pyqt5_get_connection_parts(a2, 0, "()", true, &receiver, slot_signature)) == sipErrorNone)
+        {
+            QTimer::singleShot(a0, a1, receiver, slot_signature.constData());
+        }
+        else if (sipError == sipErrorContinue)
+        {
+            sipError = sipBadCallableArg(2, a2);
         }
 %End
 
@@ -80,16 +77,7 @@ protected:
     virtual void timerEvent(QTimerEvent *);
 
 public:
-%If (Qt_5_0_0 -)
     void setTimerType(Qt::TimerType atype);
-%End
-%If (Qt_5_0_0 -)
     Qt::TimerType timerType() const;
-%End
-%If (Qt_5_0_0 -)
     int remainingTime() const;
-%End
-
-private:
-    QTimer(const QTimer &);
 };

@@ -2,9 +2,9 @@
 //
 // This file is part of the QtXml Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -41,9 +41,7 @@ public:
     void reset();
 
 private:
-%If (Qt_4_2_0 -)
     QXmlNamespaceSupport(const QXmlNamespaceSupport &);
-%End
 };
 
 class QXmlAttributes
@@ -54,6 +52,9 @@ class QXmlAttributes
 
 public:
     QXmlAttributes();
+%If (Qt_5_8_0 -)
+    QXmlAttributes(const QXmlAttributes &);
+%End
     virtual ~QXmlAttributes();
     int index(const QString &qName) const;
     int index(const QString &uri, const QString &localPart) const;
@@ -70,6 +71,9 @@ public:
     void clear();
     void append(const QString &qName, const QString &uri, const QString &localPart, const QString &value);
     int count() const /__len__/;
+%If (Qt_5_8_0 -)
+    void swap(QXmlAttributes &other /Constrained/);
+%End
 };
 
 class QXmlInputSource
@@ -80,12 +84,7 @@ class QXmlInputSource
 
 public:
     QXmlInputSource();
-%If (Qt_5_0_0 -)
     explicit QXmlInputSource(QIODevice *dev);
-%End
-%If (- Qt_5_0_0)
-    QXmlInputSource(QIODevice *dev);
-%End
     virtual ~QXmlInputSource();
     virtual void setData(const QString &dat);
     virtual void setData(const QByteArray &dat);
@@ -98,11 +97,6 @@ public:
 
 protected:
     virtual QString fromRawData(const QByteArray &data, bool beginning = false);
-
-private:
-%If (- Qt_4_2_0)
-    QXmlInputSource(const QXmlInputSource &);
-%End
 };
 
 class QXmlParseException
@@ -113,20 +107,15 @@ class QXmlParseException
 
 public:
     QXmlParseException(const QString &name = QString(), int column = -1, int line = -1, const QString &publicId = QString(), const QString &systemId = QString());
+    QXmlParseException(const QXmlParseException &other);
     ~QXmlParseException();
     int columnNumber() const;
     int lineNumber() const;
     QString publicId() const;
     QString systemId() const;
     QString message() const;
-%If (Qt_4_6_0 -)
-    QXmlParseException(const QXmlParseException &other);
-%End
 
 private:
-%If (- Qt_4_2_0)
-    QXmlParseException(const QXmlParseException &);
-%End
     QXmlParseException &operator=(const QXmlParseException &);
 };
 
@@ -177,7 +166,7 @@ public:
     virtual bool hasProperty(const QString &name) const;
     virtual void setEntityResolver(QXmlEntityResolver *handler /KeepReference/);
     virtual QXmlEntityResolver *entityResolver() const;
-    virtual void setDTDHandler(QXmlDTDHandler *handler /KeepReference/);
+    virtual void setDTDHandler(QXmlDTDHandler *handler);
     virtual QXmlDTDHandler *DTDHandler() const;
     virtual void setContentHandler(QXmlContentHandler *handler /KeepReference/);
     virtual QXmlContentHandler *contentHandler() const;
@@ -340,7 +329,5 @@ public:
     virtual QString errorString() const;
 
 private:
-%If (Qt_4_2_0 -)
     QXmlDefaultHandler(const QXmlDefaultHandler &);
-%End
 };

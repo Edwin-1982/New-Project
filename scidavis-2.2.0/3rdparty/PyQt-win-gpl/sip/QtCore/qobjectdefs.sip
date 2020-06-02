@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -36,9 +36,7 @@ static void qtcore_invokeMethod_exception()
 
     const char *className() const;
     const QMetaObject *superClass() const;
-%If (Qt_4_2_0 -)
     QMetaProperty userProperty() const;
-%End
     int methodOffset() const;
     int enumeratorOffset() const;
     int propertyOffset() const;
@@ -61,13 +59,14 @@ static void qtcore_invokeMethod_exception()
     static void connectSlotsByName(QObject *o /GetWrapper/);
 %MethodCode
         qpycore_qmetaobject_connectslotsbyname(a0, a0Wrapper);
+        
+        // Make sure there is no (benign) Python exception.
+        PyErr_Clear();
 %End
 
     static QByteArray normalizedSignature(const char *method);
-%If (Qt_4_2_0 -)
     static QByteArray normalizedType(const char *type);
-%End
-    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, Qt::ConnectionType type, QGenericReturnArgument ret /GetWrapper/, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0));
+    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, Qt::ConnectionType type, QGenericReturnArgument ret /GetWrapper/, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u));
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -82,7 +81,7 @@ static void qtcore_invokeMethod_exception()
             qtcore_invokeMethod_exception();
 %End
 
-    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, QGenericReturnArgument ret /GetWrapper/, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0));
+    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, QGenericReturnArgument ret /GetWrapper/, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u));
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -97,7 +96,7 @@ static void qtcore_invokeMethod_exception()
             qtcore_invokeMethod_exception();
 %End
 
-    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, Qt::ConnectionType type, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0));
+    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, Qt::ConnectionType type, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u));
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -115,7 +114,7 @@ static void qtcore_invokeMethod_exception()
             qtcore_invokeMethod_exception();
 %End
 
-    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0));
+    static SIP_PYOBJECT invokeMethod(QObject *obj, const char *member, QGenericArgument value0 = QGenericArgument(0u, 0u), QGenericArgument value1 = QGenericArgument(0u, 0u), QGenericArgument value2 = QGenericArgument(0u, 0u), QGenericArgument value3 = QGenericArgument(0u, 0u), QGenericArgument value4 = QGenericArgument(0u, 0u), QGenericArgument value5 = QGenericArgument(0u, 0u), QGenericArgument value6 = QGenericArgument(0u, 0u), QGenericArgument value7 = QGenericArgument(0u, 0u), QGenericArgument value8 = QGenericArgument(0u, 0u), QGenericArgument value9 = QGenericArgument(0u, 0u));
 %MethodCode
         // Raise an exception if the call failed.
         bool ok;
@@ -133,18 +132,25 @@ static void qtcore_invokeMethod_exception()
             qtcore_invokeMethod_exception();
 %End
 
-%If (Qt_4_5_0 -)
     int constructorCount() const;
-%End
-%If (Qt_4_5_0 -)
     int indexOfConstructor(const char *constructor) const;
-%End
-%If (Qt_4_5_0 -)
     QMetaMethod constructor(int index) const;
+    static bool checkConnectArgs(const QMetaMethod &signal, const QMetaMethod &method);
+%If (Qt_5_7_0 -)
+    bool inherits(const QMetaObject *metaObject) const;
 %End
-%If (Qt_4_5_0 - Qt_5_0_0)
-    QObject *newInstance(QGenericArgument value0 = QGenericArgument(0, 0), QGenericArgument value1 = QGenericArgument(0, 0), QGenericArgument value2 = QGenericArgument(0, 0), QGenericArgument value3 = QGenericArgument(0, 0), QGenericArgument value4 = QGenericArgument(0, 0), QGenericArgument value5 = QGenericArgument(0, 0), QGenericArgument value6 = QGenericArgument(0, 0), QGenericArgument value7 = QGenericArgument(0, 0), QGenericArgument value8 = QGenericArgument(0, 0), QGenericArgument value9 = QGenericArgument(0, 0)) const /Factory/;
+
+    class Connection
+    {
+%TypeHeaderCode
+#include <qobjectdefs.h>
 %End
+
+    public:
+        Connection();
+        Connection(const QMetaObject::Connection &other);
+        ~Connection();
+    };
 };
 
 // The support for Q_ARG(), Q_RETURN_ARG() and supporting classes.

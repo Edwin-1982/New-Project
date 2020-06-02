@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,38 +20,33 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%Module(name=PyQt4.QtCore, keyword_arguments="Optional")
+%Module(name=PyQt5.QtCore, call_super_init=True, default_VirtualErrorHandler=PyQt5, keyword_arguments="Optional", use_limited_api=True)
 
-%Timeline {Qt_4_1_0 Qt_4_1_1 Qt_4_1_2 Qt_4_1_3 Qt_4_2_0 Qt_4_2_1 Qt_4_2_2 Qt_4_2_3 Qt_4_3_0 Qt_4_3_1 Qt_4_3_2 Qt_4_3_3 Qt_4_3_4 Qt_4_4_0 Qt_4_4_1 Qt_4_4_2 Qt_4_5_0 Qt_4_5_1 Qt_4_5_2 Qt_4_5_3 Qt_4_6_0 Qt_4_6_1 Qt_4_6_2 Qt_4_6_3 Qt_4_7_0 Qt_4_7_1 Qt_4_7_2 Qt_4_7_3 Qt_4_7_4 Qt_4_8_0 Qt_4_8_1 Qt_4_8_2 Qt_4_8_3 Qt_4_8_4 Qt_4_8_5 Qt_4_8_6 Qt_4_8_7 Qt_5_0_0}
+%Timeline {Qt_5_0_0 Qt_5_0_1 Qt_5_0_2 Qt_5_1_0 Qt_5_1_1 Qt_5_2_0 Qt_5_2_1 Qt_5_3_0 Qt_5_3_1 Qt_5_3_2 Qt_5_4_0 Qt_5_4_1 Qt_5_4_2 Qt_5_5_0 Qt_5_5_1 Qt_5_6_0 Qt_5_6_1 Qt_5_6_2 Qt_5_6_3 Qt_5_6_4 Qt_5_6_5 Qt_5_6_6 Qt_5_6_7 Qt_5_6_8 Qt_5_6_9 Qt_5_7_0 Qt_5_7_1 Qt_5_8_0 Qt_5_8_1 Qt_5_9_0 Qt_5_9_1 Qt_5_9_2 Qt_5_9_3 Qt_5_9_4 Qt_5_9_5 Qt_5_9_6 Qt_5_9_7 Qt_5_9_8 Qt_5_9_9 Qt_5_10_0 Qt_5_10_1 Qt_5_11_0 Qt_5_11_1 Qt_5_11_2 Qt_5_11_3 Qt_5_12_0 Qt_5_12_1 Qt_5_12_2 Qt_5_12_3 Qt_5_12_4 Qt_5_13_0}
 
 %Platforms {WS_X11 WS_WIN WS_MACX}
 
 %Feature PyQt_Accessibility
 %Feature PyQt_SessionManager
-%Feature PyQt_StatusTip
-%Feature PyQt_ToolTip
-%Feature PyQt_WhatsThis
-%Feature PyQt_NoQtPrintRangeBug
-%Feature Py_DateTime
-%Feature PyQt_OpenSSL
-%Feature PyQt_SizeGrip
+%Feature PyQt_SSL
 %Feature PyQt_qreal_double
 %Feature Py_v3
 %Feature PyQt_PrintDialog
 %Feature PyQt_Printer
 %Feature PyQt_PrintPreviewWidget
 %Feature PyQt_PrintPreviewDialog
-%Feature PyQt_SystemTrayIcon
 %Feature PyQt_RawFont
-%Feature PyQt_NoOpenGLES
-%Feature PyQt_Deprecated_5_0
+%Feature PyQt_OpenGL
+%Feature PyQt_Desktop_OpenGL
 %Feature PyQt_NotBootstrapped
 %Feature PyQt_Process
+%Feature PyQt_MacOSXOnly
+%Feature PyQt_WebChannel
 
 %Copying
-Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 
-This file is part of PyQt4.
+This file is part of PyQt5.
 
 This file may be used under the terms of the GNU General Public License
 version 3.0 as published by the Free Software Foundation and appearing in
@@ -67,33 +62,11 @@ This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %End
 
-%Plugin PyQt4
+%Plugin PyQt5
 
 %If (Py_v3)
-// Default to new, incompatible APIs for Python v3.
-%API(name=QDate, version=2)
-%API(name=QDateTime, version=2)
-%API(name=QString, version=2)
-%API(name=QTextStream, version=2)
-%API(name=QTime, version=2)
-%API(name=QUrl, version=2)
-%API(name=QVariant, version=2)
-
 %DefaultEncoding "ASCII"
 %End
-
-%If (!Py_v3)
-// Default to the compatible APIs for Python v2.
-%API(name=QDate, version=1)
-%API(name=QDateTime, version=1)
-%API(name=QString, version=1)
-%API(name=QTextStream, version=1)
-%API(name=QTime, version=1)
-%API(name=QUrl, version=1)
-%API(name=QVariant, version=1)
-%End
-
-%Include(name=staticplugins.sip, optional=True)
 
 %If (!Py_v3)
 // Hook into the VendorID package if it is enabled.
@@ -122,16 +95,15 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include(name=pyqt-gpl.sip5, optional=True)
 %Include(name=pyqt-commercial.sip5, optional=True)
 
-%DefaultMetatype PyQt4.QtCore.pyqtWrapperType
 %DefaultSupertype sip.simplewrapper
 
 %Include qglobal.sip
 %Include qnamespace.sip
 %Include qabstractanimation.sip
 %Include qabstracteventdispatcher.sip
-%Include qabstractfileengine.sip
 %Include qabstractitemmodel.sip
 %Include qabstractnativeeventfilter.sip
+%Include qabstractproxymodel.sip
 %Include qabstractstate.sip
 %Include qabstracttransition.sip
 %Include qanimationgroup.sip
@@ -140,12 +112,19 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include qbuffer.sip
 %Include qbytearray.sip
 %Include qbytearraymatcher.sip
+%Include qcborcommon.sip
+%Include qcborstream.sip
 %Include qchar.sip
+%Include qcollator.sip
+%Include qcommandlineoption.sip
+%Include qcommandlineparser.sip
+%Include qconcatenatetablesproxymodel.sip
 %Include qcoreapplication.sip
 %Include qcoreevent.sip
 %Include qcryptographichash.sip
 %Include qdatastream.sip
 %Include qdatetime.sip
+%Include qdeadlinetimer.sip
 %Include qdir.sip
 %Include qdiriterator.sip
 %Include qeasingcurve.sip
@@ -155,54 +134,66 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include qfile.sip
 %Include qfiledevice.sip
 %Include qfileinfo.sip
+%Include qfileselector.sip
 %Include qfilesystemwatcher.sip
 %Include qfinalstate.sip
-%Include qfsfileengine.sip
-%Include qhash.sip
 %Include qhistorystate.sip
+%Include qidentityproxymodel.sip
 %Include qiodevice.sip
+%Include qitemselectionmodel.sip
+%Include qjsondocument.sip
+%Include qjsonvalue.sip
 %Include qlibrary.sip
 %Include qlibraryinfo.sip
 %Include qline.sip
-%Include qlist.sip
 %Include qlocale.sip
-%Include qmap.sip
+%Include qlockfile.sip
+%Include qlogging.sip
+%Include qloggingcategory.sip
 %Include qmargins.sip
+%Include qmessageauthenticationcode.sip
 %Include qmetaobject.sip
 %Include qmetatype.sip
 %Include qmimedata.sip
+%Include qmimedatabase.sip
+%Include qmimetype.sip
 %Include qmutex.sip
 %Include qnumeric.sip
 %Include qobject.sip
 %Include qobjectcleanuphandler.sip
 %Include qobjectdefs.sip
-%Include qpair.sip
+%Include qoperatingsystemversion.sip
 %Include qparallelanimationgroup.sip
 %Include qpauseanimation.sip
 %Include qpropertyanimation.sip
 %Include qpluginloader.sip
 %Include qpoint.sip
 %Include qprocess.sip
+%Include qrandom.sip
 %Include qreadwritelock.sip
 %Include qrect.sip
 %Include qregexp.sip
+%Include qregularexpression.sip
 %Include qresource.sip
 %Include qrunnable.sip
+%Include qsavefile.sip
 %Include qsemaphore.sip
 %Include qsequentialanimationgroup.sip
-%Include qset.sip
 %Include qsettings.sip
 %Include qsharedmemory.sip
 %Include qsignalmapper.sip
 %Include qsignaltransition.sip
 %Include qsize.sip
 %Include qsocketnotifier.sip
+%Include qsortfilterproxymodel.sip
+%Include qstandardpaths.sip
 %Include qstate.sip
 %Include qstatemachine.sip
+%Include qstorageinfo.sip
 %Include qstring.sip
-%Include qstringlist.sip
-%Include qstringmatcher.sip
+%Include qstringlistmodel.sip
 %Include qsystemsemaphore.sip
+%Include qtemporarydir.sip
 %Include qtemporaryfile.sip
 %Include qtextboundaryfinder.sip
 %Include qtextcodec.sip
@@ -211,14 +202,28 @@ WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 %Include qthreadpool.sip
 %Include qtimeline.sip
 %Include qtimer.sip
+%Include qtimezone.sip
 %Include qtranslator.sip
+%Include qtransposeproxymodel.sip
 %Include qurl.sip
 %Include qurlquery.sip
 %Include quuid.sip
 %Include qvariant.sip
 %Include qvariantanimation.sip
-%Include qvector.sip
+%Include qversionnumber.sip
 %Include qwaitcondition.sip
 %Include qxmlstream.sip
-%Include qpynullvariant.sip
+%Include qsysinfo.sip
+%Include qjsonobject.sip
+%Include qpycore_qset.sip
+%Include qpycore_qlist.sip
 %Include qwineventnotifier.sip
+%Include qstringlist.sip
+%Include qpycore_onexit.sip
+%Include qjsonarray.sip
+%Include qpycore_virtual_error_handler.sip
+%Include qpycore_qvariantmap.sip
+%Include qpycore_qpair.sip
+%Include qpycore_qmap.sip
+%Include qpycore_qhash.sip
+%Include qpycore_qvector.sip

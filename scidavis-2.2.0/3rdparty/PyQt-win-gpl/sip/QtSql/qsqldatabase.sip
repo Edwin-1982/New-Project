@@ -2,9 +2,9 @@
 //
 // This file is part of the QtSql Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -71,13 +71,14 @@ public:
     QString driverName() const;
     int port() const;
     QString connectOptions() const;
-%If (Qt_4_4_0 -)
     QString connectionName() const;
-%End
     QSqlDriver *driver() const;
     static QSqlDatabase addDatabase(const QString &type, const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
     static QSqlDatabase addDatabase(QSqlDriver *driver, const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
     static QSqlDatabase cloneDatabase(const QSqlDatabase &other, const QString &connectionName);
+%If (Qt_5_13_0 -)
+    static QSqlDatabase cloneDatabase(const QString &other, const QString &connectionName);
+%End
     static QSqlDatabase database(const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection), bool open = true);
     static void removeDatabase(const QString &connectionName);
     static bool contains(const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
@@ -91,10 +92,6 @@ protected:
     explicit QSqlDatabase(QSqlDriver *driver);
 
 public:
-%If (Qt_4_6_0 -)
     void setNumericalPrecisionPolicy(QSql::NumericalPrecisionPolicy precisionPolicy);
-%End
-%If (Qt_4_6_0 -)
     QSql::NumericalPrecisionPolicy numericalPrecisionPolicy() const;
-%End
 };

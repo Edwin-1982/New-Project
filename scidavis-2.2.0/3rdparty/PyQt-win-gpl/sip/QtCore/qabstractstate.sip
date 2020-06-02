@@ -2,9 +2,9 @@
 //
 // This file is part of the QtCore Python extension module.
 //
-// Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
-// This file is part of PyQt4.
+// This file is part of PyQt5.
 // 
 // This file may be used under the terms of the GNU General Public License
 // version 3.0 as published by the Free Software Foundation and appearing in
@@ -20,8 +20,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-%If (Qt_4_6_0 -)
-
 class QAbstractState : QObject
 {
 %TypeHeaderCode
@@ -32,8 +30,14 @@ public:
     virtual ~QAbstractState();
     QState *parentState() const;
     QStateMachine *machine() const;
+%If (Qt_5_4_0 -)
+    bool active() const;
+%End
 
 signals:
+%If (Qt_5_4_0 -)
+    void activeChanged(bool active);
+%End
     void entered();
     void exited();
 
@@ -42,9 +46,4 @@ protected:
     virtual void onEntry(QEvent *event) = 0;
     virtual void onExit(QEvent *event) = 0;
     virtual bool event(QEvent *e);
-
-private:
-    QAbstractState(const QAbstractState &);
 };
-
-%End
