@@ -34,8 +34,8 @@
 #include "Filter.h"
 #include "Script.h"
 
-#include <gsl_multifit_nlin.h>
-#include <gsl_multimin.h>
+#include <gsl/gsl_multifit_nlin.h>
+#include <gsl/gsl_multimin.h>
 
 #include <vector>
 

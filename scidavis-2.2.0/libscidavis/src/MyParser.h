@@ -30,8 +30,8 @@
 #define MYPARSER_H
 
 #include <muParser.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_sf.h>
+#include <gsl/gls_math.h>
+#include <gsl/gls_sf.h>
 
 #include <qstringlist.h>
 
