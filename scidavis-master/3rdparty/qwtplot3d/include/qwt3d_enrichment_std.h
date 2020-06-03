@@ -93,10 +93,10 @@ public:
 
 private:
 
-	GLUquadricObj *hat;
-	GLUquadricObj *disk;
-	GLUquadricObj *base;
-	GLUquadricObj *bottom;
+        GLUquadricObj * hat;
+        GLUquadricObj * disk;
+        GLUquadricObj * base;
+        GLUquadricObj * bottom;
   GLboolean oldstate_;
 
 	double calcRotation(Qwt3D::Triple& axis, Qwt3D::FreeVector const& vec);

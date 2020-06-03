@@ -62,8 +62,8 @@ public:
 	void setStartPoint(double x, double y);
 
 	//! Axes values coordinates of the end point
-	QwtDoublePoint endPointCoord();
-	//! Sets the end point in axes values coordinates
+    QwtDoublePoint endPointCoord();
+    //! Sets the end point in axes values coordinates
 	void setEndPoint(double x, double y);
 
 	void setColor(const QColor& c);
@@ -111,58 +111,58 @@ public:
 	//! Returns the length of the arrow line
 	double length();
 
-    //! Returns the bounding rectangle in paint coordinates.
+//    ! Returns the bounding rectangle in paint coordinates.
 	QRect rect() const {return QRect(startPoint(), endPoint()).normalized();};
 
-	//! Returns the bounding rectangle in plot coordinates.
+//    ! Returns the bounding rectangle in plot coordinates.
 	QwtDoubleRect boundingRect() const;
 	void setBoundingRect(double xs, double ys, double xe, double ye);
 
-	//! Recalculates the bounding rectangle in values coordinates using the pixel coordinats when the scales change
+//	! Recalculates the bounding rectangle in values coordinates using the pixel coordinats when the scales change
 	void updateBoundingRect();
 
-	//! Returns the state of #d_editable.
+//	! Returns the state of #d_editable.
 	bool editable() const { return d_editable; }
-	//! Starts/ends editing of end points by the user.
+//	! Starts/ends editing of end points by the user.
 	void setEditable(bool yes);
 
-	//! Filters events for the canvas while #d_editable is true.
+//	! Filters events for the canvas while #d_editable is true.
 	bool eventFilter(QObject *o, QEvent *e);
 
 private:
 	void draw(QPainter *p, const QwtScaleMap &xMap, const QwtScaleMap &yMap, const QRect &r) const;
 	double theta(int xs, int ys, int xe, int ye) const;
 
-	//! Flag specifying if the start arrow is visible
+//	! Flag specifying if the start arrow is visible
 	bool d_start_arrow;
 
-	//! Flag specifying if the end arrow is visible
+//	! Flag specifying if the end arrow is visible
 	bool d_end_arrow;
 
-	//! Flag specifying if the arrow head is filled with a brush
+//	! Flag specifying if the arrow head is filled with a brush
 	bool d_fill_head;
 
-	//! Angle of the arrow head
+//	! Angle of the arrow head
 	int d_head_angle;
 
-	//! Length of the arrow head
+//	! Length of the arrow head
 	int d_head_length;
 
-	//! Custom dash pattern
+//	! Custom dash pattern
 	QString d_custom_dash;
 
-	//! Pixel coordinates of the start point
+//	! Pixel coordinates of the start point
 	QPoint d_start;
 
-	//! Pixel coordinates of the end point
+//	! Pixel coordinates of the end point
 	QPoint d_end;
 
-	//! Bounding rectangle of the arrow in axes values coordinates
-	QwtDoubleRect d_rect;
-	//! Whether start and end point can be moved by the user.
+//	! Bounding rectangle of the arrow in axes values coordinates
+    QwtDoubleRect d_rect;
+//	! Whether start and end point can be moved by the user.
 	bool d_editable;
 
-	//! What editing operation is in progress.
+//	! What editing operation is in progress.
 	Operation d_op;
 
 	/*!\brief Difference between mouse position where a MoveBoth operation started and startPoint().

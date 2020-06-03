@@ -82,7 +82,8 @@
 #endif
 
 #ifndef WIN32 /* unlink already in stdio.h for WIN32 */
-  extern int unlink OF((const char *));
+
+extern int unlink OF((const char *));
 #endif
 
 #ifndef GZ_SUFFIX
@@ -194,6 +195,7 @@ int gz_compress_mmap(in, out)
 /* ===========================================================================
  * Uncompress input to output then close both files.
  */
+
 void gz_uncompress(in, out)
     gzFile in;
     FILE   *out;
@@ -251,6 +253,7 @@ void file_compress(file, mode)
 /* ===========================================================================
  * Uncompress the given file and remove the original.
  */
+
 void file_uncompress(file)
     char  *file;
 {
