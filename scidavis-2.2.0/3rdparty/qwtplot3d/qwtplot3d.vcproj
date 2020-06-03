@@ -20,7 +20,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.6\include\QtCore&quot;,&quot;c:\Qt\4.8.6\include\QtGui&quot;,&quot;c:\Qt\4.8.6\include\QtOpenGL&quot;,&quot;c:\Qt\4.8.6\include&quot;,&quot;include&quot;,&quot;c:\Qt\4.8.6\include\ActiveQt&quot;,&quot;tmp&quot;,c:\Qt\4.8.6\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories="&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot;,&quot;include&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot;,&quot;tmp&quot;,c:\Python27\Lib\site-packages\PyQt4\mkspecs\default"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				AssemblerListingLocation="tmp\"
 				DebugInformationFormat="3"
@@ -39,8 +39,8 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glu32.lib opengl32.lib gdi32.lib user32.lib c:\Qt\4.8.6\lib\QtOpenGLd4.lib c:\Qt\4.8.6\lib\QtGuid4.lib c:\Qt\4.8.6\lib\QtCored4.lib"
-				AdditionalLibraryDirectories="c:\Qt\4.8.6\lib"
+				AdditionalDependencies="glu32.lib opengl32.lib gdi32.lib user32.lib QtOpenGLd.lib QtGuid.lib QtCored.lib"
+				AdditionalLibraryDirectories="c:\Python27\Lib\site-packages\PyQt4\lib"
 				GenerateDebugInformation="true"
 				IgnoreImportLibrary="true"
 				LinkTimeCodeGeneration="0"
@@ -73,7 +73,7 @@
 			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.6\include\QtCore&quot;,&quot;c:\Qt\4.8.6\include\QtGui&quot;,&quot;c:\Qt\4.8.6\include\QtOpenGL&quot;,&quot;c:\Qt\4.8.6\include&quot;,&quot;include&quot;,&quot;c:\Qt\4.8.6\include\ActiveQt&quot;,&quot;tmp&quot;,c:\Qt\4.8.6\mkspecs\win32-msvc2008"
+				AdditionalIncludeDirectories="&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot;,&quot;include&quot;,&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot;,&quot;tmp&quot;,c:\Python27\Lib\site-packages\PyQt4\mkspecs\default"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				AssemblerListingLocation="tmp\"
 				DebugInformationFormat="0"
@@ -92,8 +92,8 @@
 				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glu32.lib opengl32.lib gdi32.lib user32.lib c:\Qt\4.8.6\lib\QtOpenGL4.lib c:\Qt\4.8.6\lib\QtGui4.lib c:\Qt\4.8.6\lib\QtCore4.lib"
-				AdditionalLibraryDirectories="c:\Qt\4.8.6\lib"
+				AdditionalDependencies="glu32.lib opengl32.lib gdi32.lib user32.lib QtOpenGL.lib QtGui.lib QtCore.lib"
+				AdditionalLibraryDirectories="c:\Python27\Lib\site-packages\PyQt4\lib"
 				GenerateDebugInformation="false"
 				IgnoreImportLibrary="true"
 				LinkIncremental="1"
@@ -228,21 +228,21 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.8.6\bin\moc.exe;include\qwt3d_plot.h"
-						CommandLine="C:\Qt\4.8.6\bin\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.6\include\QtCore&quot; -I&quot;c:\Qt\4.8.6\include\QtGui&quot; -I&quot;c:\Qt\4.8.6\include\QtOpenGL&quot; -I&quot;c:\Qt\4.8.6\include&quot; -I&quot;include&quot; -I&quot;c:\Qt\4.8.6\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Qt\4.8.6\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 include\qwt3d_plot.h -o tmp\moc_qwt3d_plot.cpp"
+						AdditionalDependencies="C:\Python27\Lib\site-packages\PyQt4\moc.exe;include\qwt3d_plot.h"
+						CommandLine="C:\Python27\Lib\site-packages\PyQt4\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot; -I&quot;include&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Python27\Lib\site-packages\PyQt4\mkspecs\default -D_MSC_VER=1500 -DWIN32 include\qwt3d_plot.h -o tmp\moc_qwt3d_plot.cpp"
 						Description="MOC include\qwt3d_plot.h"
 						Outputs="tmp\moc_qwt3d_plot.cpp"
-						Path="c:\Qt\4.8.6\bin" />
+						Path="c:\Python27\Lib\site-packages\PyQt4" />
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.8.6\bin\moc.exe;include\qwt3d_plot.h"
-						CommandLine="C:\Qt\4.8.6\bin\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.6\include\QtCore&quot; -I&quot;c:\Qt\4.8.6\include\QtGui&quot; -I&quot;c:\Qt\4.8.6\include\QtOpenGL&quot; -I&quot;c:\Qt\4.8.6\include&quot; -I&quot;include&quot; -I&quot;c:\Qt\4.8.6\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Qt\4.8.6\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 include\qwt3d_plot.h -o tmp\moc_qwt3d_plot.cpp"
+						AdditionalDependencies="C:\Python27\Lib\site-packages\PyQt4\moc.exe;include\qwt3d_plot.h"
+						CommandLine="C:\Python27\Lib\site-packages\PyQt4\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot; -I&quot;include&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Python27\Lib\site-packages\PyQt4\mkspecs\default -D_MSC_VER=1500 -DWIN32 include\qwt3d_plot.h -o tmp\moc_qwt3d_plot.cpp"
 						Description="MOC include\qwt3d_plot.h"
 						Outputs="tmp\moc_qwt3d_plot.cpp"
-						Path="c:\Qt\4.8.6\bin" />
+						Path="c:\Python27\Lib\site-packages\PyQt4" />
 				</FileConfiguration>
 			</File>
 			<File
@@ -255,21 +255,21 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.8.6\bin\moc.exe;include\qwt3d_surfaceplot.h"
-						CommandLine="C:\Qt\4.8.6\bin\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.6\include\QtCore&quot; -I&quot;c:\Qt\4.8.6\include\QtGui&quot; -I&quot;c:\Qt\4.8.6\include\QtOpenGL&quot; -I&quot;c:\Qt\4.8.6\include&quot; -I&quot;include&quot; -I&quot;c:\Qt\4.8.6\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Qt\4.8.6\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 include\qwt3d_surfaceplot.h -o tmp\moc_qwt3d_surfaceplot.cpp"
+						AdditionalDependencies="C:\Python27\Lib\site-packages\PyQt4\moc.exe;include\qwt3d_surfaceplot.h"
+						CommandLine="C:\Python27\Lib\site-packages\PyQt4\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot; -I&quot;include&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Python27\Lib\site-packages\PyQt4\mkspecs\default -D_MSC_VER=1500 -DWIN32 include\qwt3d_surfaceplot.h -o tmp\moc_qwt3d_surfaceplot.cpp"
 						Description="MOC include\qwt3d_surfaceplot.h"
 						Outputs="tmp\moc_qwt3d_surfaceplot.cpp"
-						Path="c:\Qt\4.8.6\bin" />
+						Path="c:\Python27\Lib\site-packages\PyQt4" />
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.8.6\bin\moc.exe;include\qwt3d_surfaceplot.h"
-						CommandLine="C:\Qt\4.8.6\bin\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.6\include\QtCore&quot; -I&quot;c:\Qt\4.8.6\include\QtGui&quot; -I&quot;c:\Qt\4.8.6\include\QtOpenGL&quot; -I&quot;c:\Qt\4.8.6\include&quot; -I&quot;include&quot; -I&quot;c:\Qt\4.8.6\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Qt\4.8.6\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 include\qwt3d_surfaceplot.h -o tmp\moc_qwt3d_surfaceplot.cpp"
+						AdditionalDependencies="C:\Python27\Lib\site-packages\PyQt4\moc.exe;include\qwt3d_surfaceplot.h"
+						CommandLine="C:\Python27\Lib\site-packages\PyQt4\moc.exe  -DUNICODE -DWIN32 -DQT_DLL -DQWT3D_DLL -DQWT3D_MAKEDLL -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtCore&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtGui&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\QtOpenGL&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include&quot; -I&quot;include&quot; -I&quot;c:\Python27\Lib\site-packages\PyQt4\include\ActiveQt&quot; -I&quot;tmp&quot; -Ic:\Python27\Lib\site-packages\PyQt4\mkspecs\default -D_MSC_VER=1500 -DWIN32 include\qwt3d_surfaceplot.h -o tmp\moc_qwt3d_surfaceplot.cpp"
 						Description="MOC include\qwt3d_surfaceplot.h"
 						Outputs="tmp\moc_qwt3d_surfaceplot.cpp"
-						Path="c:\Qt\4.8.6\bin" />
+						Path="c:\Python27\Lib\site-packages\PyQt4" />
 				</FileConfiguration>
 			</File>
 			<File

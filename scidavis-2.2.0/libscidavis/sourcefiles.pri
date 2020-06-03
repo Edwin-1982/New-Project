@@ -106,7 +106,7 @@ HEADERS  += src/ApplicationWindow.h \
             src/PlotEnrichement.h\
             src/ExtensibleFileDialog.h\
             src/OpenProjectDialog.h\
-        src/Grid.h\
+            src/Grid.h\
             src/DataPointPicker.h \
             src/TeXTableSettings.h \
             src/TeXTableSettingsWidget.h \

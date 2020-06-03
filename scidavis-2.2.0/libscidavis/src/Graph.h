@@ -607,26 +607,26 @@ public slots:
 		//@{
 		bool modifyFunctionCurve(ApplicationWindow * parent, int curve, int type, const QStringList &formulas, const QString &var,QList<double> &ranges, int points);
 		bool addFunctionCurve(ApplicationWindow *parent, int type, const QStringList &formulas, const QString& var,
-				QList<double> &ranges, int points, const QString& title = QString::null);
-		//! Used when reading from a project file.
+                QList<double> &ranges, int points, const QString& title = QString());
+//		! Used when reading from a project file.
 		bool insertFunctionCurve(ApplicationWindow * parent, const QStringList& func_spec, int points, int fileVersion);
-		//! Returns an unique function name
+//		! Returns an unique function name
         QString generateFunctionName(const QString& name = tr("F"));
 		//@}
 
-        //! Provided for convenience in scripts.
+//       ! Provided for convenience in scripts.
 		void createTable(const QString& curveName);
         void createTable(const QwtPlotCurve* curve);
 		void activateGraph();
 
-		//! \name Vector Curves
+//		! \name Vector Curves
 		//@{
 		void plotVectorCurve(Table* w, const QStringList& colList, int style, int startRow = 0, int endRow = -1);
 		void updateVectorsLayout(int curve, const QColor& color, int width, int arrowLength, int arrowAngle, bool filled, int position,
 				const QString& xEndColName = QString(), const QString& yEndColName = QString());
 		//@}
 
-		//! \name Box Plots
+//		! \name Box Plots
 		//@{
 		void openBoxDiagram(Table *w, const QStringList& l, int fileVersion);
 		void plotBoxDiagram(Table *w, const QStringList& names, int startRow = 0, int endRow = -1);
@@ -639,7 +639,7 @@ public slots:
 		void setCurveBrush(int index, const QBrush& b);
 		void setCurveStyle(int index, int s);
 
-		//! \name Resizing
+//		! \name Resizing
 		//@{
 		bool ignoresResizeEvents(){return ignoreResize;};
 		void setIgnoreResizeEvents(bool ok){ignoreResize=ok;};
@@ -676,21 +676,21 @@ public slots:
 		void hideSelectedAxis();
 		void showGrids();
 
-		//! Convenience function enabling the grid for QwtScaleDraw::Left and Bottom Scales
+//		! Convenience function enabling the grid for QwtScaleDraw::Left and Bottom Scales
 		void showGrid();
-		//! Convenience function enabling the grid for a user defined axis
+//		! Convenience function enabling the grid for a user defined axis
 		void showGrid(int axis);
 
 		void showAxisDialog();
 		void showScaleDialog();
 
-		//! Add a spectrogram to the graph
+//		! Add a spectrogram to the graph
   		void plotSpectrogram(Matrix *m, CurveType type);
-		//! Restores a spectrogram. Used when opening a project file.
+//		! Restores a spectrogram. Used when opening a project file.
   		void restoreSpectrogram(ApplicationWindow *app, const QStringList& lst);
 
 		bool antialiasing(){return d_antialiasing;};
-		//! Enables/Disables antialiasing of plot items.
+//		! Enables/Disables antialiasing of plot items.
 		void setAntialiasing(bool on = true, bool update = true);
 
 		void deselect();
@@ -728,32 +728,32 @@ signals:
 		void showFitResults(const QString&);
 
 	private:
-		//! List storing pointers to the curves resulting after a fit session, in case the user wants to delete them later on.
+//		! List storing pointers to the curves resulting after a fit session, in case the user wants to delete them later on.
 		QList<QwtPlotCurve *>d_fit_curves;
-		//! Render hint for plot items.
+//		! Render hint for plot items.
 		bool d_antialiasing;
 		bool autoScaleFonts;
 		QSize hidden_size;
 		bool d_scale_on_print, d_print_cropmarks;
 		int selectedAxis;
 		QStringList axesFormulas;
-		//! Stores columns used for axes with text labels or time/date format info
+//		! Stores columns used for axes with text labels or time/date format info
 		QStringList axesFormatInfo;
 		QList <int> axisType;
 		MarkerType selectedMarkerType;
 		QwtPlotMarker::LineStyle mrklStyle;
 
-		//! Stores the step the user specified for the four scale. If step = 0.0, the step will be calculated automatically by the Qwt scale engine.
+//		! Stores the step the user specified for the four scale. If step = 0.0, the step will be calculated automatically by the Qwt scale engine.
 		QVector<double> d_user_step;
-		//! Curve types
+//		! Curve types
 		QVector<int> c_type;
-		//! Curves on plot keys
+//		! Curves on plot keys
 		QVector<int> c_keys;
-		//! Arrows/lines on plot keys
+//		! Arrows/lines on plot keys
 		QVector<int> d_lines;
-		//! Images on plot keys
+//		! Images on plot keys
 		QVector<int> d_images;
-		//! Stores the identifiers (keys) of the text objects on the plot
+//		! Stores the identifiers (keys) of the text objects on the plot
 		QVector<int> d_texts;
 
 		QPen mrkLinePen;
@@ -779,11 +779,11 @@ signals:
 		bool defaultArrowHeadFill;
 		Qt::PenStyle defaultArrowLineStyle;
 
-		//! The markers selected for move/resize operations or NULL if none are selected.
+//		! The markers selected for move/resize operations or NULL if none are selected.
 		QPointer<SelectionMoveResizer> d_markers_selector;
-		//! The current curve selection, or NULL if none is active.
+//		! The current curve selection, or NULL if none is active.
 		QPointer<RangeSelectorTool> d_range_selector;
-		//! The currently active tool, or NULL for default (pointer).
+//		! The currently active tool, or NULL for default (pointer).
 		PlotToolInterface *d_active_tool;
 };
 #endif // GRAPH_H

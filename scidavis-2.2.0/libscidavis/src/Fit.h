@@ -62,10 +62,10 @@ public:
   Fit(ApplicationWindow *parent, Graph *g = 0, QString name = QString());
   virtual ~Fit();
 
-  //! Actually does the fit. Should be reimplemented in derived classes.
+  // ! Actually does the fit. Should be reimplemented in derived classes.
   virtual void fit();
 
-  //! Sets the data set to be used as source of Y errors.
+  // ! Sets the data set to be used as source of Y errors.
   bool setYErrorSource(ErrorSource err, const QString& colName = QString::null, bool fail_silently=false);
 
   void setDataCurve(int curve, double start, double end);
@@ -80,25 +80,25 @@ public:
 
   void setAlgorithm(Algorithm s){d_solver = s;};
 
-  //! Specifies weather the result of the fit is a function curve
+  // ! Specifies weather the result of the fit is a function curve
   void generateFunction(bool yes, int points = 100);
 
-  //! Output string added to the plot as a new legend
+  // ! Output string added to the plot as a new legend
   virtual QString legendInfo();
 
-  //! Returns a vector with the fit results
+  // ! Returns a vector with the fit results
   const std::vector<double>& results() const {return d_results;};
 
-  //! Returns a vector with the standard deviations of the results
+  // ! Returns a vector with the standard deviations of the results
   const std::vector<double>& errors();
 
-  //! Returns the sum of squares of the residuals from the best-fit line
+  // ! Returns the sum of squares of the residuals from the best-fit line
   double chiSquare() {return chi_2;};
 
-  //! Returns the coefficient of determination, R^2
+  // ! Returns the coefficient of determination, R^2
   double rSquare();
 
-  //! Specifies wheather the errors must be scaled with sqrt(chi_2/dof)
+  // ! Specifies wheather the errors must be scaled with sqrt(chi_2/dof)
   void scaleErrors(bool yes = true){d_scale_errors = yes;};
 
   Table* parametersTable(const QString& tableName);
@@ -113,27 +113,27 @@ protected slots:
   void scriptError(const QString& message,const QString& script_name,int line_number);
 
 private:
-  //! Execute the fit using GSL multidimensional minimization (Nelder-Mead Simplex).
+  // ! Execute the fit using GSL multidimensional minimization (Nelder-Mead Simplex).
   std::vector<double> fitGslMultimin(int &iterations, int &status);
 
-  //! Execute the fit using GSL non-linear least-squares fitting (Levenberg-Marquardt).
+  // ! Execute the fit using GSL non-linear least-squares fitting (Levenberg-Marquardt).
   std::vector<double> fitGslMultifit(int &iterations, int &status);
 
-  //! Customs and stores the fit results according to the derived class specifications. Used by exponential fits.
+  // ! Customs and stores the fit results according to the derived class specifications. Used by exponential fits.
   virtual void storeCustomFitResults(const std::vector<double>& par)
   {d_results = par;}
 
 protected:
-  //! Adds the result curve as a FunctionCurve to the plot, if d_gen_function = true
+  // ! Adds the result curve as a FunctionCurve to the plot, if d_gen_function = true
   void insertFitFunctionCurve(const QString& name, double *x, double *y, int penWidth = 1);
 
-  //! Adds the result curve to the plot
+  // ! Adds the result curve to the plot
   virtual void generateFitCurve(const std::vector<double>&);
 
-  //! Calculates the data for the output fit curve and store itin the X an Y vectors
+  // ! Calculates the data for the output fit curve and store itin the X an Y vectors
   virtual void calculateFitCurveData(const std::vector<double>&, double *, double *){}
 
-  //! Output string added to the result log
+  // ! Output string added to the result log
   virtual QString logFitInfo(const std::vector<double>& par, int iterations, int status, const QString& plotName);
 
   fit_function d_f=nullptr;
@@ -141,57 +141,58 @@ protected:
   fit_function_fdf d_fdf=nullptr;
   fit_function_simplex d_fsimplex=nullptr;
 
-  //! Number of fit parameters
+  // ! Number of fit parameters
   unsigned d_p;
 
-  //! Initial guesses for the fit parameters 
+  // ! Initial guesses for the fit parameters
   gsl_vector *d_param_init=nullptr;
 
-  /*! \brief Tells whether the fitter uses non-linear/simplex fitting 
-   * with an initial parameters set, that must be freed in the destructor.
-   */
+  /*  ! \brief Tells whether the fitter uses non-linear/simplex fitting
+  * with an initial parameters set, that must be freed in the destructor.
+  * */
+
   bool is_non_linear=true;
 
-  //! Standard deviations of Y input data.
+  // ! Standard deviations of Y input data.
   std::vector<double> d_y_errors;
 
-  //! Names of the fit parameters
+  // ! Names of the fit parameters
   QStringList d_param_names;
 
-  //! Stores a list of short explanations for the significance of the fit parameters
+  // ! Stores a list of short explanations for the significance of the fit parameters
   QStringList d_param_explain;
 
-  //! Specifies weather the result curve is a FunctionCurve or a normal curve with the same x values as the fit data
+  // ! Specifies weather the result curve is a FunctionCurve or a normal curve with the same x values as the fit data
   bool d_gen_function;
 
-  //! Algorithm type
+  // ! Algorithm type
   Algorithm d_solver;
 
-  //! The fit formula
+  // ! The fit formula
   QString d_formula;
 
-  //! Covariance matrix
+  // ! Covariance matrix
   gsl_matrix *covar=nullptr;
 
-  //! Where standard errors of the input data are taken from.
+  // ! Where standard errors of the input data are taken from.
   ErrorSource d_y_error_source;
 
-  //! The name of the dataset containing Y standard errors (if applicable).
+  // ! The name of the dataset containing Y standard errors (if applicable).
   QString d_y_error_dataset;
 
-  //! Stores the result parameters
+  // ! Stores the result parameters
   std::vector<double> d_results;
 
-  //! Stores standard deviations of the result parameters
+  // ! Stores standard deviations of the result parameters
   std::vector<double> d_result_errors;
 
-  //! The sum of squares of the residuals from the best-fit line
+  // ! The sum of squares of the residuals from the best-fit line
   double chi_2;
 
-  //! Specifies wheather the errors must be scaled with sqrt(chi_2/dof)
+  // ! Specifies wheather the errors must be scaled with sqrt(chi_2/dof)
   bool d_scale_errors;
 
-  //! Script used to evaluate user-defined functions.
+  // ! Script used to evaluate user-defined functions.
   std::unique_ptr<Script> d_script;
 };
 

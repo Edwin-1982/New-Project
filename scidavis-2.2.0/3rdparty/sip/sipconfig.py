@@ -35,7 +35,7 @@ _pkg_config = {
     'py_conf_inc_dir':    'D:\\Program Files\\Python\\Python38\\include',
     'py_inc_dir':         'D:\\Program Files\\Python\\Python38\\include',
     'py_lib_dir':         'D:\\Program Files\\Python\\Python38\\libs',
-    'py_version':         0x030802,
+    'py_version':         0x030803,
     'qt_framework':       0,
     'sip_bin':            'D:\\Program Files\\Python\\Python38\\sip',
     'sip_config_args':    '',

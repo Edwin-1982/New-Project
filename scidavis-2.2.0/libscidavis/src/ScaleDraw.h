@@ -42,8 +42,8 @@ class ScaleDraw: public QwtScaleDraw
 public:
 	enum TicksStyle{None = 0, Out = 1, Both = 2, In = 3};
 
-	ScaleDraw(const QString& s = QString::null);
-	ScaleDraw(const ScaleDraw &other, const QString &s = QString::null);
+    ScaleDraw(const QString& s = QString());
+    ScaleDraw(const ScaleDraw &other, const QString &s = QString());
 	virtual ~ScaleDraw(){};
 
 	QString formulaString() {return formula_string;};
@@ -191,8 +191,8 @@ private:
 class QwtSupersciptsScaleDraw: public ScaleDraw
 {
 public:
-	QwtSupersciptsScaleDraw(const QString& s = QString::null);
-	QwtSupersciptsScaleDraw(const ScaleDraw &other, const QString& s = QString::null) :
+    QwtSupersciptsScaleDraw(const QString& s = QString());
+    QwtSupersciptsScaleDraw(const ScaleDraw &other, const QString& s = QString()) :
 		ScaleDraw(other)
 	{
 		setFormulaString(s);

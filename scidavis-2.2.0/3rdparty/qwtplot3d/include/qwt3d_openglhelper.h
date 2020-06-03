@@ -62,7 +62,7 @@ inline const GLubyte* gl_error()
 	GLenum errcode;
 	const GLubyte* err = 0;
 	
-	if ((errcode = glGetError()) != GL_NO_ERROR)
+        if ((errcode = glGetError()) != GL_NO_ERROR)
 	{
 		err = gluErrorString(errcode);
 	}

@@ -197,7 +197,7 @@ ApplicationWindow::ApplicationWindow()
       appStyle(qApp->style()->objectName()),
       appFont(QFont()),
       projectname("untitled"),
-      logInfo(QString()),
+      logInfo(QString::null),
       savingTimerId(0),
       copiedLayer(false),
       renamedTables(QStringList()),
@@ -240,7 +240,7 @@ ApplicationWindow::ApplicationWindow()
 	folders.setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	folders.setContextMenuPolicy(Qt::CustomContextMenu);
 
-	folders.setHeaderLabels(QStringList() << tr("Folder") << QString() );
+    folders.setHeaderLabels(QStringList() << tr("Folder") << QString::null );
 	folders.setRootIsDecorated( true );
 	folders.setColumnWidth(1,0); // helps autoScroll
 	folders.hideColumn(1); // helps autoScroll
@@ -5839,7 +5839,7 @@ QDialog* ApplicationWindow::showPlot3dDialog()
 			pd->disableGridOptions();
 
 		if (g->userFunction())
-			pd->customWorksheetBtn(QString());
+            pd->customWorksheetBtn(QString::null);
 		else if (g->getTable())
 			pd->customWorksheetBtn(tr("&Worksheet"));
 		else if (g->matrix())
@@ -13175,7 +13175,7 @@ void ApplicationWindow::windowProperties()
 	if (!w)
 		return;
 
-	QMessageBox *mbox = new QMessageBox ( tr("Properties"), QString(), QMessageBox::NoIcon,
+    QMessageBox *mbox = new QMessageBox ( tr("Properties"), QString::null, QMessageBox::NoIcon,
 			QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton, this);
 
 	QString s = QString(w->name()) + "\n\n";
@@ -13448,7 +13448,7 @@ void ApplicationWindow::receivedVersionFile(QNetworkReply* netreply)
 
 	if ( version_buffer.size() > 0 )
 	{
-		QString available_versionString = QString();
+        QString available_versionString = QString::null;
 		int available_version = 0;
 		bool intok = false;
 		QTextStream t( version_buffer );
@@ -13537,7 +13537,7 @@ void ApplicationWindow::clearTable()
 
 	if (QMessageBox::question(this, tr("Warning"),
 				tr("This will clear the contents of all the data associated with the table. Are you sure?"),
-				tr("&Yes"), tr("&No"), QString(), 0, 1 ) )
+                tr("&Yes"), tr("&No"), QString::null, 0, 1 ) )
 		return;
 	else
 		t->clear();
