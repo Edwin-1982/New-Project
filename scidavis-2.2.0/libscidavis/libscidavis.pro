@@ -11,6 +11,7 @@ QMAKE_CLEAN += $$TARGET
 include(../config.pri)
 
 INCLUDEPATH += ../scidavis
+INCLUDEPATH += ../3rdparty
 
 liborigin {
   !packagesExist(liborigin) | !contains(PRESET, linux_package) {
