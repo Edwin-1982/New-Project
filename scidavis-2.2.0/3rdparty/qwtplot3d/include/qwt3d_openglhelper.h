@@ -64,7 +64,7 @@ inline const GLubyte* gl_error()
 	
         if ((errcode = glGetError()) != GL_NO_ERROR)
 	{
-		err = gluErrorString(errcode);
+                err = gluErrorString(errcode);       //gluerrorString was not declared in this scope
 	}
 	return err;
 }
@@ -101,7 +101,7 @@ inline bool ViewPort2World(double& objx, double& objy, double& objz, double winx
   GLint viewport[4];
 
 	getMatrices(modelMatrix, projMatrix, viewport);
-	int res = gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, &objx, &objy, &objz);
+        int res = gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, &objx, &objy, &objz);  //gluUnproject was not decalared int this scope
 
 	return (res == GL_FALSE) ? false : true;
 }
